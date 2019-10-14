@@ -18,6 +18,6 @@ namespace TimeKeeper.Domain.Entities
         public DateTime Created { get; set; }
         public int Creator { get; set; }
         public bool Deleted { get; set; }
-
     }
 }
+
