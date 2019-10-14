@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace TimeKeeper.Domain.Entities
 {
@@ -18,3 +20,4 @@ namespace TimeKeeper.Domain.Entities
         public bool Deleted { get; set; }
     }
 }
+
