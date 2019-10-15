@@ -16,7 +16,7 @@ namespace TimeKeeper.Domain.Entities
         }
 
         [Required]
-        public Employee Employees{ get; set; }
+        public Employee Employee{ get; set; }
         [Required]
         public DateTime Date { get; set; }
         
