@@ -21,7 +21,6 @@ namespace TimeKeeper.Domain.Entities
         public Customer Customer { get; set; }
         [Required]
         public DateTime StartDate { get; set; }
-        [Required]
         public DateTime EndDate { get; set; }
         [Required]
         public ProjectStatus Status { get; set; }
