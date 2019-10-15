@@ -24,6 +24,7 @@ namespace TimeKeeper.DAL
         private Repository<Role> _roles;
         private Repository<Team> _teams;
 
+        //Will the context injection here necessary?
         public UnitOfWork(TimeKeeperContext context=null)
         {
             if (context != null)
