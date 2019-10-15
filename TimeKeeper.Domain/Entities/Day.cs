@@ -25,10 +25,13 @@ namespace TimeKeeper.Domain.Entities
         public IList<JobDetail> JobDetails { get; set; }
 
         [NotMapped]
-        public decimal TotalHours { get;// {
-                                        //if (DayType == DayType.WorkDay) return JobDetails.Sum(x => x.Hours);
-                                        //else return 8;
-                                        // } set; 
-        }
+        public decimal TotalHours { get; }
+        
+        //TO DO: implementation of a DayType enum is still needed
+        // {
+        //if (DayType == DayType.WorkDay) return JobDetails.Sum(x => x.Hours);
+        //else return 8;
+        // } set; 
+        
     }
 }

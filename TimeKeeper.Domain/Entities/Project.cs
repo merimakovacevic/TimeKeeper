@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TimeKeeper.Domain.Entities
 {
-    public class Project :BaseClass
+    public class Project: BaseClass
     {
         public Project()
         {

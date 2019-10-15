@@ -30,6 +30,7 @@ namespace TimeKeeper.DAL
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.Entity<Customer>().OwnsOne(x => x.HomeAddress);
             builder.Entity<Customer>().HasQueryFilter(x => !x.Deleted);
             builder.Entity<Member>().HasQueryFilter(x => !x.Deleted);
             builder.Entity<CustomerStatus>().HasQueryFilter(x => !x.Deleted);
