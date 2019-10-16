@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using TimeKeeper.Domain.Entities;
 
@@ -47,6 +48,16 @@ namespace TimeKeeper.DAL
             builder.Entity<ProjectStatus>().HasQueryFilter(x => !x.Deleted);
             builder.Entity<Role>().HasQueryFilter(x => !x.Deleted);
             builder.Entity<Team>().HasQueryFilter(x => !x.Deleted);
+        }
+
+        public override int SaveChanges()
+        {
+            foreach (var entry in ChangeTracker.Entries().Where(x => x.State == EntityState.Deleted && x.Entity is BaseClass<int>))//how to imlement generic type?
+            {
+                entry.State = EntityState.Modified;
+                entry.CurrentValues["Deleted"] = true;
+            }
+            return base.SaveChanges();
         }
     }
 }
