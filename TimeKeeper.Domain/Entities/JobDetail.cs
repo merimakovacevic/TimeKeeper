@@ -10,9 +10,9 @@ namespace TimeKeeper.Domain.Entities
     public class JobDetail:BaseClass
     {
         [Required]
-        public Day Day { get; set; }
+        public virtual Day Day { get; set; }
         [Required]
-        public Project Project { get; set; }
+        public  virtual Project Project { get; set; }
         [Required]
         public string Description { get; set; }
         [Required]

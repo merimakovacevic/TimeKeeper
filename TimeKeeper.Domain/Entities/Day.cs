@@ -16,12 +16,18 @@ namespace TimeKeeper.Domain.Entities
         }
 
         [Required]
-        public Employee Employee{ get; set; }
+        public virtual Employee Employee{ get; set; }
         [Required]
         public DateTime Date { get; set; }        
         [Required]
+<<<<<<< HEAD
         public DayType DayType { get; set; }
         public IList<JobDetail> JobDetails { get; set; }
+=======
+        public virtual DayType DayType { get; set; }
+        public virtual IList<JobDetail> JobDetails { get; set; }
+
+>>>>>>> 3f11d97fa3a2e0de35654db6f02de2b80a2ac891
         [NotMapped]
         public decimal TotalHours { get; }
         

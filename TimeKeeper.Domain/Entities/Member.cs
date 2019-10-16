@@ -8,11 +8,11 @@ namespace TimeKeeper.Domain.Entities
     public class Member: BaseClass
     {
         [Required]
-        public Team Team { get; set; }
+        public  virtual Team Team { get; set; }
         [Required]
-        public Employee Employee { get; set; }
+        public virtual Employee Employee { get; set; }
         [Required]
-        public Role Role { get; set; }
+        public virtual Role Role { get; set; }
         [Required]
         public decimal HoursWeekly { get; set; }
     }

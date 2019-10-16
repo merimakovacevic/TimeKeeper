@@ -10,6 +10,6 @@ namespace TimeKeeper.Domain.Entities
         {
             Calendar = new List<Day>();
         }
-        public IList<Day> Calendar { get; set; }
+        public virtual IList<Day> Calendar { get; set; }
     }
 }

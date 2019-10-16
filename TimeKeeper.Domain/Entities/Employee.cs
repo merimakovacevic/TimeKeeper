@@ -23,14 +23,14 @@ namespace TimeKeeper.Domain.Entities
         [Required]
         public string Phone { get; set; }
         [Required]
-        public EmployeePosition Position { get; set; }
+        public virtual EmployeePosition Position { get; set; }
         [Required]
         public DateTime Birthday { get; set; }
         [Required]
         public DateTime BeginDate { get; set; }
         public DateTime EndDate { get; set; }
         [Required]
-        public EmploymentStatus Status { get; set; }
-        public IList<Member> Members { get; set; }
+        public virtual EmploymentStatus Status { get; set; }
+        public virtual IList<Member> Members { get; set; }
     }
 }
