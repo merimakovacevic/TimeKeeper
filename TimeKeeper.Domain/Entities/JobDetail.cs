@@ -7,7 +7,7 @@ using System.Text;
 namespace TimeKeeper.Domain.Entities
 {
     [Table("Tasks")]
-    public class JobDetail: BaseClass<int>
+    public class JobDetail: BaseClass
     {
         [Required]
         public virtual Day Day { get; set; }

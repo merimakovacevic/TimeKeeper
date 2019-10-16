@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TimeKeeper.Domain.Entities
 {
-    public class PricingStatus: BaseStatus<int>
+    public class PricingStatus: BaseStatus
     {
         public PricingStatus()
         {

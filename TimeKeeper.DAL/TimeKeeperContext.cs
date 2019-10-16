@@ -52,7 +52,7 @@ namespace TimeKeeper.DAL
 
         public override int SaveChanges()
         {
-            foreach (var entry in ChangeTracker.Entries().Where(x => x.State == EntityState.Deleted && x.Entity is BaseClass<int>))//how to imlement generic type?
+            foreach (var entry in ChangeTracker.Entries().Where(x => x.State == EntityState.Deleted && x.Entity is BaseClass))//how to imlement generic type?
             {
                 entry.State = EntityState.Modified;
                 entry.CurrentValues["Deleted"] = true;

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TimeKeeper.Domain.Entities
 {
-    public class Employee: BaseClass<int>
+    public class Employee: BaseClass
     {
         public Employee()
         {

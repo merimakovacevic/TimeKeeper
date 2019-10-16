@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TimeKeeper.Domain.Entities
 {
-    public class BaseClass<K>
+    public class BaseClass
     {
         public BaseClass()
         {
@@ -14,7 +14,7 @@ namespace TimeKeeper.Domain.Entities
             Deleted = false;
         }
         [Key]
-        public K Id { get; set; }
+        public int Id { get; set; }
         public DateTime Created { get; set; }
         public int Creator { get; set; }
         public bool Deleted { get; set; }

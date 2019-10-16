@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TimeKeeper.Domain.Entities
 {
-    public class Member: BaseClass<int>
+    public class Member: BaseClass
     {
         [Required]
         public  virtual Team Team { get; set; }

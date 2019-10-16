@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TimeKeeper.Domain.Entities
 {
-    public class DayType: BaseStatus<int>
+    public class DayType: BaseStatus
     {
         public DayType()
         {
