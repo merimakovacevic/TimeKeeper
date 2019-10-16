@@ -28,6 +28,6 @@ namespace TimeKeeper.Domain.Entities
         public PricingStatus Pricing { get; set; }
         [Required]
         public decimal Amount { get; set; }
-        public IList<JobDetail> Tasks;
+        public virtual IList<JobDetail> Tasks { get; set; }
     }
 }
