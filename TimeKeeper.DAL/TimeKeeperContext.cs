@@ -26,7 +26,9 @@ namespace TimeKeeper.DAL
         public DbSet<Team> Teams { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
         {
+            optionBuilder.UseLazyLoadingProxies();
             optionBuilder.UseNpgsql("User ID=postgres; Password=postgres; Server=localhost; Port=5432; Database=TimeKeeper; Integrated Security=true; Pooling=true;");
+            base.OnConfiguring(optionBuilder);
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -50,7 +52,7 @@ namespace TimeKeeper.DAL
 
         public override int SaveChanges()
         {
-            foreach (var entry in ChangeTracker.Entries().Where(x => x.State == EntityState.Deleted && x.Entity is BaseClass))
+            foreach (var entry in ChangeTracker.Entries().Where(x => x.State == EntityState.Deleted && x.Entity is BaseClass))//how to imlement generic type?
             {
                 entry.State = EntityState.Modified;
                 entry.CurrentValues["Deleted"] = true;

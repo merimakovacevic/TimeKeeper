@@ -9,6 +9,7 @@ namespace TimeKeeper.DAL
     public class UnitOfWork : IDisposable
     {
         private readonly TimeKeeperContext _context;
+
         private IRepository<Project> _projects;
         private IRepository<PricingStatus> _pricingStatuses;
         private IRepository<Customer> _customers;
@@ -24,7 +25,7 @@ namespace TimeKeeper.DAL
         private IRepository<Role> _roles;
         private IRepository<Team> _teams;
 
-        //Will the context injection here necessary?
+        //Will the context injection here be necessary?
         public UnitOfWork(TimeKeeperContext context=null)
         {
             if (context != null)

@@ -18,8 +18,7 @@ namespace TimeKeeper.Domain.Entities
         [Required]
         public virtual Employee Employee{ get; set; }
         [Required]
-        public DateTime Date { get; set; }
-        
+        public DateTime Date { get; set; }        
         [Required]
         public virtual DayType DayType { get; set; }
         public virtual IList<JobDetail> JobDetails { get; set; }
