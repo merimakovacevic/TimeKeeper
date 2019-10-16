@@ -20,7 +20,7 @@ namespace TimeKeeper.Domain.Entities
         [Required]
         public string EmailAddress { get; set; }
         [Required]
-        public Address HomeAddress { get; set; }        
+        public virtual Address HomeAddress { get; set; }        
         [Required]
         public virtual CustomerStatus Status { get; set; }
         public virtual IList<Project> Projects { get; set; }
