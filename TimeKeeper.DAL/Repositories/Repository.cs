@@ -6,7 +6,7 @@ using System.Text;
 
 namespace TimeKeeper.DAL.Repositories
 {
-    public class Repository<Entity>: IRepository<Entity> where Entity : class
+    public class Repository<Entity, K>: IRepository<Entity, K> where Entity : class
     {
         protected TimeKeeperContext _context;
         protected DbSet<Entity> _dbSet;
@@ -21,11 +21,11 @@ namespace TimeKeeper.DAL.Repositories
 
         public virtual IList<Entity> Get(Func<Entity, bool> where) => Get().Where(where).ToList();
 
-        public virtual Entity Get(int id) => _dbSet.Find(id);
+        public virtual Entity Get(K id) => _dbSet.Find(id);
 
         public virtual void Insert(Entity entity) => _dbSet.Add(entity);
 
-        public virtual void Update(Entity entity, int id)
+        public virtual void Update(Entity entity, K id)
         {
             Entity old = Get(id);
             if (old != null) _context.Entry(old).CurrentValues.SetValues(entity);
@@ -33,7 +33,7 @@ namespace TimeKeeper.DAL.Repositories
 
         public void Delete(Entity entity) => _dbSet.Remove(entity);
 
-        public void Delete(int id)
+        public void Delete(K id)
         {
             Entity entity = Get(id);
             if (entity != null) Delete(entity);

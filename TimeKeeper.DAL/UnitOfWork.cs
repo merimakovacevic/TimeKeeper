@@ -9,20 +9,20 @@ namespace TimeKeeper.DAL
     public class UnitOfWork : IDisposable
     {
         private readonly TimeKeeperContext _context;
-        private Repository<Project> _projects;
-        private Repository<PricingStatus> _pricingstatuses;
-        private Repository<Customer> _customers;
-        private Repository<CustomerStatus> _customerstatuses;
-        private Repository<Day> _calendar;
-        private Repository<DayType> _daytypes;
-        private Repository<Employee> _employees;
-        private Repository<EmployeePosition> _employeepositions;
-        private Repository<EmploymentStatus> _employmentstatuses;
-        private Repository<JobDetail> _tasks;
-        private Repository<Member> _members;
-        private Repository<ProjectStatus> _projectstatuses;
-        private Repository<Role> _roles;
-        private Repository<Team> _teams;
+        private Repository<Project, int> _projects;
+        private Repository<PricingStatus, int> _pricingstatuses;
+        private Repository<Customer, int> _customers;
+        private Repository<CustomerStatus, int> _customerstatuses;
+        private Repository<Day, int> _calendar;
+        private Repository<DayType, int> _daytypes;
+        private Repository<Employee, int> _employees;
+        private Repository<EmployeePosition, int> _employeepositions;
+        private Repository<EmploymentStatus, int> _employmentstatuses;
+        private Repository<JobDetail, int> _tasks;
+        private Repository<Member, int> _members;
+        private Repository<ProjectStatus, int> _projectstatuses;
+        private Repository<Role, int> _roles;
+        private Repository<Team, int> _teams;
 
         //Will the context injection here be necessary?
         public UnitOfWork(TimeKeeperContext context=null)

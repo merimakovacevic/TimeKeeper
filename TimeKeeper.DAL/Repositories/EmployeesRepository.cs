@@ -5,7 +5,7 @@ using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.DAL.Repositories
 {
-    public class EmployeesRepository: Repository<Employee>
+    public class EmployeesRepository: Repository<Employee, int>
     {
         public EmployeesRepository(TimeKeeperContext context): base(context) { }
 

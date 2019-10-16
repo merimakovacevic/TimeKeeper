@@ -8,7 +8,7 @@ using System.Text;
 namespace TimeKeeper.Domain.Entities
 {
     [Table("Calendar")]
-    public class Day : BaseClass
+    public class Day : BaseClass<int>
     {
         public Day()
         {
