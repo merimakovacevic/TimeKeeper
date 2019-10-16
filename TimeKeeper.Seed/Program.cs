@@ -14,18 +14,17 @@ namespace TimeKeeper.Seed
 
             using (UnitOfWork unit = new UnitOfWork())
             {
-                using (ExcelPackage packageStatuses = new ExcelPackage(fileStatuses))
-                {
-                    unit.Context.Database.EnsureDeleted();
-                    unit.Context.Database.EnsureCreated();
+                unit.Context.Database.EnsureDeleted();
+                unit.Context.Database.EnsureCreated();
 
+                using (ExcelPackage packageStatuses = new ExcelPackage(fileStatuses))
+                {                 
                     EmployeePositions.Collect(packageStatuses.Workbook.Worksheets["EmployeePosition"], unit);
                     EmploymentStatuses.Collect(packageStatuses.Workbook.Worksheets["EmploymentStatus"], unit);
                     DayTypes.Collect(packageStatuses.Workbook.Worksheets["DayType"], unit);
                     CustomerStatuses.Collect(packageStatuses.Workbook.Worksheets["CustomerStatus"], unit);
                     ProjectStatuses.Collect(packageStatuses.Workbook.Worksheets["ProjectStatus"], unit);
                     PricingStatuses.Collect(packageStatuses.Workbook.Worksheets["PricingStatus"], unit);
-                    
                 }
                 using (ExcelPackage package = new ExcelPackage(file))
                 {
