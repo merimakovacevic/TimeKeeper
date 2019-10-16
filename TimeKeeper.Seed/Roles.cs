@@ -7,22 +7,23 @@ using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.Seed
 {
-    public class ProjectStatuses
+    public class Roles
     {
         public static void Collect(ExcelWorksheet rawData, UnitOfWork unit)
         {
             for (int row = 2; row <= rawData.Dimension.Rows; row++)
             {
-                int oldId = rawData.ReadInteger(row, 1);
-                ProjectStatus projectStatus = new ProjectStatus
+                string oldId = rawData.ReadString(row, 1);
+                Role r = new Role
                 {
-                    Name = rawData.ReadString(row, 2)
+                    Name = rawData.ReadString(row, 2),
+                    HourlyPrice= rawData.ReadDecimal(row,3),
+                    MonthlyPrice=rawData.ReadDecimal(row, 4)
                 };
-                unit.ProjectStatuses.Insert(projectStatus);
+                unit.Roles.Insert(r);
                 unit.Save();
-                Utility.projectStatusesDictionary.Add(oldId, projectStatus.Id);
+                Utility.rolesDictionary.Add(oldId, r.Id);
             }
         }
     }
 }
-
