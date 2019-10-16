@@ -16,16 +16,16 @@ namespace TimeKeeper.Domain.Entities
         [Required]
         public string Description { get; set; }
         [Required]
-        public Team Team { get; set; }
+        public virtual Team Team { get; set; }
         [Required]
-        public Customer Customer { get; set; }
+        public virtual Customer Customer { get; set; }
         [Required]
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         [Required]
-        public ProjectStatus Status { get; set; }
+        public virtual ProjectStatus Status { get; set; }
         [Required]
-        public PricingStatus Pricing { get; set; }
+        public virtual PricingStatus Pricing { get; set; }
         [Required]
         public decimal Amount { get; set; }
         public IList<JobDetail> Tasks;

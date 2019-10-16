@@ -10,6 +10,6 @@ namespace TimeKeeper.Domain.Entities
         {
             Projects = new List<Project>();
         }
-        public IList<Project> Projects;
+        public virtual IList<Project> Projects { get; set; }
     }
 }
