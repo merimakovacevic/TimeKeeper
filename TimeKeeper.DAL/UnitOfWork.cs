@@ -38,6 +38,8 @@ namespace TimeKeeper.DAL
             }
         }
 
+        public TimeKeeperContext Context => _context;
+
 
         //public IRepository<Customer> Customers => _customers ?? (_customers = new CustomersRepository(_context));
         public IRepository<Customer> Customers => _customers ?? (_customers = new Repository<Customer>(_context));
@@ -60,6 +62,7 @@ namespace TimeKeeper.DAL
         public IRepository<Team> Teams => _teams ?? (_teams = new Repository<Team>(_context));
 
 
+        public int Save() => _context.SaveChanges();
 
         public void Dispose()
         {
