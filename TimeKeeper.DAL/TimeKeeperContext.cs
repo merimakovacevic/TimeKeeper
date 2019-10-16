@@ -27,7 +27,7 @@ namespace TimeKeeper.DAL
         protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
         {
             optionBuilder.UseLazyLoadingProxies();
-            optionBuilder.UseNpgsql("User ID=postgres; Password=postgres; Server=localhost; Port=5432; Database=TimeKeeper; Integrated Security=true; Pooling=true;");
+            optionBuilder.UseNpgsql("User ID=postgres; Password=meri2a; Server=localhost; Port=5432; Database=TimeKeeper; Integrated Security=true; Pooling=true;");
             base.OnConfiguring(optionBuilder);
         }
         protected override void OnModelCreating(ModelBuilder builder)

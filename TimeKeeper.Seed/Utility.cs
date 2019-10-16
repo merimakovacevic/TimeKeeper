@@ -8,6 +8,8 @@ namespace TimeKeeper.Seed
     public static class Utility
     {
         public static Dictionary<int, int> employeesDictionary = new Dictionary<int, int>();
+        public static Dictionary<int, int> customersDictionary = new Dictionary<int, int>();
+        public static Dictionary<int, int> calendarDictionary = new Dictionary<int, int>();
         public static Dictionary<int, int> projectsDictionary = new Dictionary<int, int>();
         public static Dictionary<string, int> teamsDictionary = new Dictionary<string, int>();
         public static Dictionary<string, int> rolesDictionary = new Dictionary<string, int>();

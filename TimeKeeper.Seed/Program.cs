@@ -9,7 +9,7 @@ namespace TimeKeeper.Seed
     {
         static void Main(string[] args)
         {
-            FileInfo file = new FileInfo(@"C:\Users\merimako\Documents\Projects\Library Final\Library Final\Library.xlsx");
+            FileInfo file = new FileInfo(@"C:\TimeKeeper\TimeKeeper.xlsx");
             using (ExcelPackage package = new ExcelPackage(file))
             {
                 using (UnitOfWork unit = new UnitOfWork())
