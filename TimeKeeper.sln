@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.29230.47
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeKeeper.Domain", "TimeKeeper.Domain\TimeKeeper.Domain.csproj", "{F9B6ABFA-8E08-495C-98DE-589DB88EAE9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeKeeper.DAL", "TimeKeeper.DAL\TimeKeeper.DAL.csproj", "{DB4BAE40-EDAB-43E4-A2A8-D4A19CDDECFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeKeeper.DAL", "TimeKeeper.DAL\TimeKeeper.DAL.csproj", "{DB4BAE40-EDAB-43E4-A2A8-D4A19CDDECFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeKeeper.Seed", "TimeKeeper.Seed\TimeKeeper.Seed.csproj", "{15D11FEB-D360-45BC-9B2E-C2516F0DA932}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{DB4BAE40-EDAB-43E4-A2A8-D4A19CDDECFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB4BAE40-EDAB-43E4-A2A8-D4A19CDDECFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB4BAE40-EDAB-43E4-A2A8-D4A19CDDECFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15D11FEB-D360-45BC-9B2E-C2516F0DA932}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15D11FEB-D360-45BC-9B2E-C2516F0DA932}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15D11FEB-D360-45BC-9B2E-C2516F0DA932}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15D11FEB-D360-45BC-9B2E-C2516F0DA932}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
