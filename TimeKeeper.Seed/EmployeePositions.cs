@@ -7,20 +7,20 @@ using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.Seed
 {
-    public class Teams
+    public class EmployeePositions
     {
         public static void Collect(ExcelWorksheet rawData, UnitOfWork unit)
         {
             for (int row = 2; row <= rawData.Dimension.Rows; row++)
             {
                 string oldId = rawData.ReadString(row, 1);
-                Team t = new Team
+                EmployeePosition employeePosition = new EmployeePosition
                 {
                     Name = rawData.ReadString(row, 2)
                 };
-                unit.Teams.Insert(t);
+                unit.EmployeePositions.Insert(employeePosition);
                 unit.Save();
-                Utility.teamsDictionary.Add(oldId, t.Id);
+                Utility.employeePositionsDictionary.Add(oldId, employeePosition.Id);
             }
         }
     }
