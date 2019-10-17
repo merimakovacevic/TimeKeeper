@@ -12,6 +12,7 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class TeamsController : ControllerBase
     {
+
         private UnitOfWork unit;
         public TeamsController(TimeKeeperContext context)
         {
@@ -23,7 +24,7 @@ namespace TimeKeeper.API.Controllers
             var result = unit.Teams.Get().Select(t=> new { Id=t.Id, Name=t.Name,
                                                             Members=t.Members.Select(m=> new{m.Employee.FirstName, m.Role.Name}).ToList()}).ToList();
             return Ok(result);
-        }
-        
+        }       
+
     }
 }
