@@ -11,7 +11,7 @@ namespace TimeKeeper.Seed
     {
         public static void Collect(ExcelWorksheet rawData, UnitOfWork unit)
         {
-            for (int row = 2; row <= rawData.Dimension.Rows; row++)
+            for (int row = 6; row <= rawData.Dimension.Rows; row++)
             {
                 int oldId = rawData.ReadInteger(row, 1);
                 Member member = new Member
@@ -23,7 +23,7 @@ namespace TimeKeeper.Seed
                 };
                 unit.Members.Insert(member);
                 unit.Save();
-                Utility.projectsDictionary.Add(oldId, member.Id);
+                Utility.membersDictionary.Add(oldId, member.Id);
             }
         }
     }

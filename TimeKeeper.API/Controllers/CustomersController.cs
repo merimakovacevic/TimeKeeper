@@ -11,10 +11,10 @@ namespace TimeKeeper.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TeamsController : ControllerBase
+    public class CustomersController : ControllerBase
     {
         private UnitOfWork unit;
-        public TeamsController(TimeKeeperContext context)
+        public CustomersController(TimeKeeperContext context)
         {
             unit = new UnitOfWork(context);
         }
@@ -22,9 +22,8 @@ namespace TimeKeeper.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var result = unit.Teams.Get().ToList().Select(x => x.Create()).ToList();
+            var result = unit.Customers.Get().ToList().Select(x => x.Create()).ToList();
             return Ok(result);
         }
-
     }
 }
