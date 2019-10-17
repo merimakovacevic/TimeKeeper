@@ -63,12 +63,21 @@ namespace TimeKeeper.API.Factory
             };
         }
 
-        public static MasterModel Master(Employee e)
+        public static MasterModel Master(Employee e)//this Employee?
         {
             return new MasterModel
             {
                 Id = e.Id,
                 Name = $"{e.FirstName} {e.LastName}, {e.Position}"
+            };
+        }
+
+        public static MasterModel Master(this JobDetail jd)
+        {
+            return new MasterModel
+            {
+                Id = jd.Id,
+                Name = $"{jd.Description}"
             };
         }
     }

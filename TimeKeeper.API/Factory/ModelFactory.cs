@@ -25,14 +25,14 @@ namespace TimeKeeper.API.Factory
             {
                 Id = employee.Id,
                 FirstName = employee.FirstName,
-                LastName=employee.LastName,
-                Email=employee.Email,
-                Phone=employee.Phone,
-                Position=new MasterModel { Id=employee.Position.Id, Name=employee.Position.Name},
-                Birthday=employee.Birthday,
-                BeginDate=employee.BeginDate,
-                EndDate=employee.EndDate,
-                Status=new MasterModel { Id=employee.Status.Id, Name=employee.Status.Name},
+                LastName = employee.LastName,
+                Email = employee.Email,
+                Phone = employee.Phone,
+                Position = new MasterModel { Id=employee.Position.Id, Name=employee.Position.Name},
+                Birthday = employee.Birthday,
+                BeginDate = employee.BeginDate,
+                EndDate = employee.EndDate,
+                Status = new MasterModel { Id=employee.Status.Id, Name=employee.Status.Name},
                 Members = employee.Members.Select(x => x.Master()).ToList()
             };
         }
@@ -62,7 +62,7 @@ namespace TimeKeeper.API.Factory
                 Amount=project.Amount,
                 Status = new MasterModel { Id = project.Status.Id, Name = project.Status.Name },
                 Pricing=new MasterModel { Id=project.Pricing.Id, Name=project.Pricing.Name},
-                //Tasks = project.Tasks.Select(x => x.Master()).ToList()
+                Tasks = project.Tasks.Select(x => x.Master()).ToList()
             };
         }
         public static RoleModel Create(this Role role)
@@ -76,17 +76,16 @@ namespace TimeKeeper.API.Factory
                 Members = role.Members.Select(x => x.Master()).ToList()
             };
         }
-        public static JobDetailModel Create(this JobDetail job)
+
+        public static JobDetailModel Create(this JobDetail jobDetail)
         {
             return new JobDetailModel
             {
-                Id = job.Id,
-                Description = job.Description,
-                Hours=job.Hours,
-               // Day = new MasterModel { Id = job.Day.Id, Name = job.Day.Name },
-                Project = new MasterModel { Id = job.Project.Id, Name = job.Project.Name }
+                Id = jobDetail.Id,
+                Description = jobDetail.Description
             };
         }
+
 
     }
 }
