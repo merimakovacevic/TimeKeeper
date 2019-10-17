@@ -33,6 +33,7 @@ namespace TimeKeeper.Seed
                     Projects.Collect(package.Workbook.Worksheets["Projects"], unit);
                     Employees.Collect(package.Workbook.Worksheets["Employees"], unit);
                     Calendar.Collect(package.Workbook.Worksheets["Calendar"], unit);
+                    Members.Collect(package.Workbook.Worksheets["Engagement"], unit);
                 }
             }
         }
