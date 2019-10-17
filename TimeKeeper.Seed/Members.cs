@@ -11,7 +11,7 @@ namespace TimeKeeper.Seed
     {
         public static void Collect(ExcelWorksheet rawData, UnitOfWork unit)
         {
-            for (int row = 6; row <= rawData.Dimension.Rows; row++)
+            for (int row = 2; row <= rawData.Dimension.Rows; row++)
             {
                 Member member = new Member
                 {
