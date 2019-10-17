@@ -49,5 +49,21 @@ namespace TimeKeeper.API.Factory
                 Projects = customer.Projects.Select(x => x.Master()).ToList()
             };
         }
+        public static ProjectModel Create(this Project project)
+        {
+            return new ProjectModel
+            {
+                Id = project.Id,
+                Name = project.Name,
+                StartDate = project.StartDate,
+                EndDate = project.EndDate,
+                Team=new MasterModel { Id=project.Team.Id, Name=project.Team.Name},
+                Customer=new MasterModel { Id=project.Customer.Id, Name=project.Customer.Name},
+                Amount=project.Amount,
+                Status = new MasterModel { Id = project.Status.Id, Name = project.Status.Name },
+                Pricing=new MasterModel { Id=project.Pricing.Id, Name=project.Pricing.Name},
+                //Tasks = project.Tasks.Select(x => x.Master()).ToList()
+            };
+        }
     }
 }

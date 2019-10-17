@@ -26,6 +26,7 @@ namespace TimeKeeper.API.Factory
             };
         }
 
+
         public static MasterModel Master(this Team t)
         {
             return new MasterModel
