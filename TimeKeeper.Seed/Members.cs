@@ -13,7 +13,6 @@ namespace TimeKeeper.Seed
         {
             for (int row = 6; row <= rawData.Dimension.Rows; row++)
             {
-                int oldId = rawData.ReadInteger(row, 1);
                 Member member = new Member
                 {
                     Employee = unit.Employees.Get(Utility.employeesDictionary[rawData.ReadInteger(row, 1)]),
@@ -23,7 +22,6 @@ namespace TimeKeeper.Seed
                 };
                 unit.Members.Insert(member);
                 unit.Save();
-                Utility.membersDictionary.Add(oldId, member.Id);
             }
         }
     }

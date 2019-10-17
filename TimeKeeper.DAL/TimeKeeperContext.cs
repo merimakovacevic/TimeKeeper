@@ -16,7 +16,6 @@ namespace TimeKeeper.DAL
         {
             _conStr = conStr;
         }
-
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Member> Members { get; set; }
         public DbSet<CustomerStatus> CustomerStatuses { get; set; }
@@ -33,11 +32,11 @@ namespace TimeKeeper.DAL
         public DbSet<Team> Teams { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
         {
-            if (_conStr != null)
+            if(_conStr != null)
             {
                 optionBuilder.UseNpgsql(_conStr);
             }
-            optionBuilder.UseLazyLoadingProxies();
+            optionBuilder.UseLazyLoadingProxies(true);
             base.OnConfiguring(optionBuilder);
         }
         protected override void OnModelCreating(ModelBuilder builder)

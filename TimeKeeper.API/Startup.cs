@@ -20,13 +20,16 @@ namespace TimeKeeper.API
         {
             var builder = new ConfigurationBuilder().SetBasePath(env.ContentRootPath)
                                                     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
             Configuration = builder.Build();
         }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
 
             string connectionString = Configuration["ConnectionString"];
+
             services.AddDbContext<TimeKeeperContext>(o=> { o.UseNpgsql(connectionString); });
         }
 
