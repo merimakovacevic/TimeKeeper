@@ -9,11 +9,13 @@ namespace TimeKeeper.Seed
     {
         static void Main(string[] args)
         {
+
             /*
             FileInfo fileStatuses = new FileInfo(@"C:\Projects\TimeKeeper\TimeKeeperStatuses.xlsx");
             FileInfo file = new FileInfo(@"C:\Projects\TimeKeeper\TimeKeeper.xlsx");
 
             string conString = "User ID=postgres; Password=postgres; Server=localhost; Port=5432; Database=TimeKeeper; Integrated Security=true; Pooling=true;";
+
             using (UnitOfWork unit = new UnitOfWork(new TimeKeeperContext(conString)))
             {
                 using (ExcelPackage packageStatuses = new ExcelPackage(fileStatuses))
