@@ -25,5 +25,11 @@ namespace TimeKeeper.API.Controllers
             var result = unit.Customers.Get().ToList().Select(x => x.Create()).ToList();
             return Ok(result);
         }
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            var result = unit.Customers.Get(id);
+            return Ok(result.Create());
+        }
     }
 }

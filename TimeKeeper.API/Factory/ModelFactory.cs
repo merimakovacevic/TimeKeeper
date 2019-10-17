@@ -71,10 +71,22 @@ namespace TimeKeeper.API.Factory
             {
                 Id = role.Id,
                 Name = role.Name,
-                HourlyPrice=role.HourlyPrice,
-                MonthlyPrice=role.MonthlyPrice,
+                HourlyPrice = role.HourlyPrice,
+                MonthlyPrice = role.MonthlyPrice,
                 Members = role.Members.Select(x => x.Master()).ToList()
             };
         }
+        public static JobDetailModel Create(this JobDetail job)
+        {
+            return new JobDetailModel
+            {
+                Id = job.Id,
+                Description = job.Description,
+                Hours=job.Hours,
+               // Day = new MasterModel { Id = job.Day.Id, Name = job.Day.Name },
+                Project = new MasterModel { Id = job.Project.Id, Name = job.Project.Name }
+            };
+        }
+
     }
 }
