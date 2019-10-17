@@ -1,6 +1,7 @@
 ﻿using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace TimeKeeper.Seed
@@ -21,12 +22,24 @@ namespace TimeKeeper.Seed
         public static Dictionary<int, int> customerStatusesDictionary = new Dictionary<int, int>();
         public static Dictionary<int, int> projectStatusesDictionary = new Dictionary<int, int>();//this dictionary is not necessary, because the day types are in orderly fashion in the database, starting from 1
         public static Dictionary<int, int> pricingStatusesDictionary = new Dictionary<int, int>();
+        public static Dictionary<int, int> tasksDictionary = new Dictionary<int, int>();
 
         public static string ReadString(this ExcelWorksheet sht, int row, int col) => sht.Cells[row, col].Value.ToString().Trim();
 
         public static int ReadInteger(this ExcelWorksheet sht, int row, int col) => int.Parse(sht.ReadString(row, col));
 
-        public static DateTime ReadDate(this ExcelWorksheet sht, int row, int col) => DateTime.Parse(sht.ReadString(row, col));
+        public static DateTime ReadDate(this ExcelWorksheet sht, int row, int col)
+        {
+            var data = sht.Cells[row, col].Value;
+            if (data == null) return DateTime.MinValue;
+            return DateTime.Parse(data.ToString());
+        }
+        public static DateTime ReadDate1(this ExcelWorksheet sht, int row, int col)
+        {
+            var data = sht.Cells[row, col].Value;
+            if (data == null) return DateTime.MinValue;
+            return DateTime.FromOADate(double.Parse(data.ToString()));
+        }
 
         public static bool ReadBool(this ExcelWorksheet sht, int row, int col) => sht.ReadString(row, col) == "-1";
 

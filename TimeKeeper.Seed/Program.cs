@@ -31,6 +31,8 @@ namespace TimeKeeper.Seed
                     Roles.Collect(package.Workbook.Worksheets["Roles"], unit);
                     Customers.Collect(package.Workbook.Worksheets["Customers"], unit);
                     Projects.Collect(package.Workbook.Worksheets["Projects"], unit);
+                    Employees.Collect(package.Workbook.Worksheets["Employees"], unit);
+                    Calendar.Collect(package.Workbook.Worksheets["Calendar"], unit);
                 }
             }
         }

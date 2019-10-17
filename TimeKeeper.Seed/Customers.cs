@@ -20,7 +20,7 @@ namespace TimeKeeper.Seed
                     Image = rawData.ReadString(row, 3),
                     ContactName = rawData.ReadString(row, 4),
                     EmailAddress = rawData.ReadString(row, 5),
-                    Status = unit.CustomerStatuses.Get(rawData.ReadInteger(row, 10)),
+                    Status = unit.CustomerStatuses.Get(Utility.customerStatusesDictionary[rawData.ReadInteger(row, 10)]),
                     HomeAddress=new Address()
                 };
                 //Address a = new Address();
