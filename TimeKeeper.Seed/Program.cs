@@ -28,12 +28,12 @@ namespace TimeKeeper.Seed
                 }
                 using (ExcelPackage package = new ExcelPackage(file))
                 {
-                    //Teams.Collect(package.Workbook.Worksheets["Teams"], unit);
-                    //Roles.Collect(package.Workbook.Worksheets["Roles"], unit);
-                    //Customers.Collect(package.Workbook.Worksheets["Customers"], unit);
-                    //Projects.Collect(package.Workbook.Worksheets["Projects"], unit);
-                    //Employees.Collect(package.Workbook.Worksheets["Employees"], unit);
-                    //Calendar.Collect(package.Workbook.Worksheets["Calendar"], unit);
+                    Teams.Collect(package.Workbook.Worksheets["Teams"], unit);
+                    Roles.Collect(package.Workbook.Worksheets["Roles"], unit);
+                    Customers.Collect(package.Workbook.Worksheets["Customers"], unit);
+                    Projects.Collect(package.Workbook.Worksheets["Projects"], unit);
+                    Employees.Collect(package.Workbook.Worksheets["Employees"], unit);
+                    Calendar.Collect(package.Workbook.Worksheets["Calendar"], unit);
                     Details.Collect(package.Workbook.Worksheets["Details"], unit);
                     
                 }
