@@ -16,12 +16,14 @@ namespace TimeKeeper.Seed
                 int oldId = rawData.ReadInteger(row, 4);
                 JobDetail j = new JobDetail
                 {
-                    Day = unit.Calendar.Get(Utility.calendarDictionary[rawData.ReadInteger(row, 1)]),
-                    Position = unit.EmployeePositions.Get(Utility.employeePositionsDictionary[rawData.ReadString(row, 12)])
+                    Description=rawData.ReadString(row, 1),
+                    Hours=rawData.ReadDecimal(row, 2),
+                    Day = unit.Calendar.Get(Utility.calendarDictionary[rawData.ReadInteger(row, 4)]),
+                    Project = unit.Projects.Get(Utility.projectsDictionary[rawData.ReadInteger(row, 3)])
                 };
-                unit.Employees.Insert(j);
+                unit.Tasks.Insert(j);
                 unit.Save();
-                Utility..Add(oldId, e.Id);
+                Utility.tasksDictionary.Add(oldId, j.Id);
             }
         }
     }
