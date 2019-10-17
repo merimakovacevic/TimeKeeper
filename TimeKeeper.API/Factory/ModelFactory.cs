@@ -65,5 +65,16 @@ namespace TimeKeeper.API.Factory
                 //Tasks = project.Tasks.Select(x => x.Master()).ToList()
             };
         }
+        public static RoleModel Create(this Role role)
+        {
+            return new RoleModel
+            {
+                Id = role.Id,
+                Name = role.Name,
+                HourlyPrice=role.HourlyPrice,
+                MonthlyPrice=role.MonthlyPrice,
+                Members = role.Members.Select(x => x.Master()).ToList()
+            };
+        }
     }
 }
