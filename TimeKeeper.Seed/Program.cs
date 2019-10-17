@@ -9,8 +9,9 @@ namespace TimeKeeper.Seed
     {
         static void Main(string[] args)
         {
-            FileInfo fileStatuses = new FileInfo(@"C:\TimeKeeper\TimeKeeperStatuses.xlsx");
-            FileInfo file = new FileInfo(@"C:\TimeKeeper\TimeKeeper.xlsx");
+
+            FileInfo fileStatuses = new FileInfo(@"C:\Projects\TimeKeeper\TimeKeeperStatuses.xlsx");
+            FileInfo file = new FileInfo(@"C:\Projects\TimeKeeper\TimeKeeper.xlsx");
             using (UnitOfWork unit = new UnitOfWork())
             {
                 using (ExcelPackage packageStatuses = new ExcelPackage(fileStatuses))
@@ -23,8 +24,6 @@ namespace TimeKeeper.Seed
                     CustomerStatuses.Collect(packageStatuses.Workbook.Worksheets["CustomerStatus"], unit);
                     ProjectStatuses.Collect(packageStatuses.Workbook.Worksheets["ProjectStatus"], unit);
                     PricingStatuses.Collect(packageStatuses.Workbook.Worksheets["PricingStatus"], unit);
-
-
                 }
                 using (ExcelPackage package = new ExcelPackage(file))
                 {
@@ -34,8 +33,8 @@ namespace TimeKeeper.Seed
                     Projects.Collect(package.Workbook.Worksheets["Projects"], unit);
                     Employees.Collect(package.Workbook.Worksheets["Employees"], unit);
                     Calendar.Collect(package.Workbook.Worksheets["Calendar"], unit);
+                    Members.Collect(package.Workbook.Worksheets["Engagement"], unit);
                     Details.Collect(package.Workbook.Worksheets["Details"], unit);
-                    
                 }
             }
         }

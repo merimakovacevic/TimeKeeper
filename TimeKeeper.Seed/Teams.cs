@@ -16,7 +16,7 @@ namespace TimeKeeper.Seed
                 string oldId = rawData.ReadString(row, 1);
                 Team t = new Team
                 {
-                    Name= rawData.ReadString(row, 2)
+                    Name = rawData.ReadString(row, 2)
                 };
                 unit.Teams.Insert(t);
                 unit.Save();
