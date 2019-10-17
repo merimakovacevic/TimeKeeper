@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeKeeper.DAL", "TimeKeepe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeKeeper.Seed", "TimeKeeper.Seed\TimeKeeper.Seed.csproj", "{C0EA0BED-99EA-4F2C-BE1B-1248A8DAAFF8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeKeeper.API", "TimeKeeper.API\TimeKeeper.API.csproj", "{D9802E5C-CA0A-4038-9463-4967B1034DB5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{C0EA0BED-99EA-4F2C-BE1B-1248A8DAAFF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0EA0BED-99EA-4F2C-BE1B-1248A8DAAFF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0EA0BED-99EA-4F2C-BE1B-1248A8DAAFF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9802E5C-CA0A-4038-9463-4967B1034DB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9802E5C-CA0A-4038-9463-4967B1034DB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9802E5C-CA0A-4038-9463-4967B1034DB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9802E5C-CA0A-4038-9463-4967B1034DB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
