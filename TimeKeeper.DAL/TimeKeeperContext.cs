@@ -9,7 +9,13 @@ namespace TimeKeeper.DAL
 {
     public class TimeKeeperContext : DbContext
     {
+        private string _conStr;
         public TimeKeeperContext() : base() { }
+        public TimeKeeperContext(DbContextOptions<TimeKeeperContext> options): base(options){ }
+        public TimeKeeperContext(string conStr)
+        {
+            _conStr = conStr;
+        }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Member> Members { get; set; }
         public DbSet<CustomerStatus> CustomerStatuses { get; set; }
@@ -26,8 +32,11 @@ namespace TimeKeeper.DAL
         public DbSet<Team> Teams { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
         {
-            optionBuilder.UseLazyLoadingProxies();
-            optionBuilder.UseNpgsql("User ID=postgres; Password=postgres; Server=localhost; Port=5432; Database=TimeKeeper; Integrated Security=true; Pooling=true;");
+            if(_conStr != null)
+            {
+                optionBuilder.UseNpgsql(_conStr);
+            }
+            optionBuilder.UseLazyLoadingProxies(true);
             base.OnConfiguring(optionBuilder);
         }
         protected override void OnModelCreating(ModelBuilder builder)
