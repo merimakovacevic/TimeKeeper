@@ -23,7 +23,7 @@ namespace TimeKeeper.Seed
                     StartDate = rawData.ReadDate(row, 5),
                     EndDate = rawData.ReadDate(row, 6),
                     Status = unit.ProjectStatuses.Get(rawData.ReadInteger(row, 7)),
-                    Pricing = unit.PricingStatuses.Get(rawData.ReadInteger(row, 10))
+                    Pricing = unit.PositionStatuses.Get(Utility.positionStatusesDictionary[rawData.ReadInteger(row, 10)])
                 };
                 unit.Projects.Insert(p);
                 unit.Save();

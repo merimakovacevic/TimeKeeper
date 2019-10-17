@@ -18,9 +18,9 @@ namespace TimeKeeper.Seed
                 {
                     Name = rawData.ReadString(row, 2)
                 };
-                unit.PricingStatuses.Insert(pricingStatus);
+                unit.PositionStatuses.Insert(pricingStatus);
                 unit.Save();
-                Utility.pricingStatusesDictionary.Add(oldId, pricingStatus.Id);
+                Utility.positionStatusesDictionary.Add(oldId, pricingStatus.Id);
             }
         }
     }
