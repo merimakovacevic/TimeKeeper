@@ -11,7 +11,7 @@ namespace TimeKeeper.DAL
     {
         private string _conStr;
         public TimeKeeperContext() : base() { }
-        public TimeKeeperContext(DbContextOptions<TimeKeeperContext> options): base(options){ }
+        public TimeKeeperContext(DbContextOptions<TimeKeeperContext> options) : base(options) { }
         public TimeKeeperContext(string conStr)
         {
             _conStr = conStr;

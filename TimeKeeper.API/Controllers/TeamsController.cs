@@ -12,18 +12,19 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class TeamsController : ControllerBase
     {
-        private UnitOfWork _unit;
+
+        private UnitOfWork unit;
         public TeamsController(TimeKeeperContext context)
         {
-            _unit = new UnitOfWork();
+            unit = new UnitOfWork(context);
         }
-
         [HttpGet]
         public IActionResult Get()
         {
-            var result = _unit.Teams.Get().Select(t => new { t.Id, t.Name, Members = t.Members.Select(m => new { m.Employee.FirstName, m.Role.Name })
-                                          .ToList() }).ToList();//Team Description property needs implementation
-            return Ok();
-        }
+            var result = unit.Teams.Get().Select(t=> new { Id=t.Id, Name=t.Name,
+                                                            Members=t.Members.Select(m=> new{m.Employee.FirstName, m.Role.Name}).ToList()}).ToList();
+            return Ok(result);
+        }       
+
     }
 }
