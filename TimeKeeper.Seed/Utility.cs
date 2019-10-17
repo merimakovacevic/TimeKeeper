@@ -21,7 +21,8 @@ namespace TimeKeeper.Seed
         public static Dictionary<int, int> dayTypesDictionary = new Dictionary<int, int>(); //this dictionary is not necessary, because the day types are in orderly fashion in the database, starting from 1
         public static Dictionary<int, int> customerStatusesDictionary = new Dictionary<int, int>();
         public static Dictionary<int, int> projectStatusesDictionary = new Dictionary<int, int>();//this dictionary is not necessary, because the day types are in orderly fashion in the database, starting from 1
-        public static Dictionary<int, int> positionStatusesDictionary = new Dictionary<int, int>();
+        public static Dictionary<int, int> pricingStatusesDictionary = new Dictionary<int, int>();
+        public static Dictionary<int, int> tasksDictionary = new Dictionary<int, int>();
 
         public static string ReadString(this ExcelWorksheet sht, int row, int col) => sht.Cells[row, col].Value.ToString().Trim();
 
