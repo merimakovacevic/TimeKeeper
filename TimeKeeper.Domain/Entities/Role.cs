@@ -15,6 +15,6 @@ namespace TimeKeeper.Domain.Entities
         public decimal HourlyPrice { get; set; }
         [Required]
         public decimal MonthlyPrice { get; set; }
-        public IList<Member> Members { get; set; }
+        public virtual IList<Member> Members { get; set; }
     }
 }

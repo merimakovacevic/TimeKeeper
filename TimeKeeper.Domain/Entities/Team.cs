@@ -14,7 +14,7 @@ namespace TimeKeeper.Domain.Entities
         }
         [Required]
         public string Name { get; set; }
-        public IList<Member> Members { get; set; }
-        public IList<Project> Projects { get; set; }
+        public virtual IList<Member> Members { get; set; }
+        public virtual IList<Project> Projects { get; set; }
     }
 }
