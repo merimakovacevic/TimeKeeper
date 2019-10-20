@@ -57,6 +57,7 @@ namespace TimeKeeper.API.Controllers
                 project.Customer = Unit.Customers.Get(project.Customer.Id);
                 project.Status = Unit.ProjectStatuses.Get(project.Status.Id);
                 project.Pricing = Unit.PricingStatuses.Get(project.Pricing.Id);
+
                 Unit.Projects.Insert(project);
                 Unit.Save();
                 return Ok(project.Create());
