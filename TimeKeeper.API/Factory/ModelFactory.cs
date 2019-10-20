@@ -29,6 +29,7 @@ namespace TimeKeeper.API.Factory
                 Email = employee.Email,
                 Phone = employee.Phone,
                 Position = new MasterModel { Id=employee.Position.Id, Name=employee.Position.Name},
+                Salary = employee.Salary,
                 Birthday = employee.Birthday,
                 BeginDate = employee.BeginDate,
                 EndDate = employee.EndDate,

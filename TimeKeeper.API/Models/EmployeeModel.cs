@@ -19,6 +19,7 @@ namespace TimeKeeper.API.Models
         public string Email { get; set; }
         public string Phone { get; set; }
         public virtual MasterModel Position { get; set; }
+        public decimal Salary { get; set; }
         public DateTime Birthday { get; set; }
         public DateTime BeginDate { get; set; }
         public DateTime EndDate { get; set; }

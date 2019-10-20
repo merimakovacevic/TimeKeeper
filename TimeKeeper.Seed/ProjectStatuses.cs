@@ -13,14 +13,15 @@ namespace TimeKeeper.Seed
         {
             for (int row = 2; row <= rawData.Dimension.Rows; row++)
             {
-                int oldId = rawData.ReadInteger(row, 1);
+                //int oldId = rawData.ReadInteger(row, 1);
                 ProjectStatus projectStatus = new ProjectStatus
                 {
+                    Id = rawData.ReadInteger(row, 1),
                     Name = rawData.ReadString(row, 2)
                 };
                 unit.ProjectStatuses.Insert(projectStatus);
                 unit.Save();
-                Utility.projectStatusesDictionary.Add(oldId, projectStatus.Id);
+                //Utility.projectStatusesDictionary.Add(oldId, projectStatus.Id);
             }
         }
     }

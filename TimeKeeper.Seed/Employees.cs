@@ -13,9 +13,10 @@ namespace TimeKeeper.Seed
         {
             for (int row = 2; row <= rawData.Dimension.Rows; row++)
             {
-                int oldId = rawData.ReadInteger(row, 1);
+                //int oldId = rawData.ReadInteger(row, 1);
                 Employee e = new Employee
                 {
+                    Id = rawData.ReadInteger(row, 1),
                     FirstName = rawData.ReadString(row, 2),
                     LastName = rawData.ReadString(row, 3),
                     Image = rawData.ReadString(row, 4),
@@ -24,13 +25,14 @@ namespace TimeKeeper.Seed
                     Birthday = rawData.ReadDate(row, 8),
                     BeginDate = rawData.ReadDate(row, 9),
                     EndDate = rawData.ReadDate(row, 10),
-                    Status = unit.EmploymentStatuses.Get(Utility.employmentStatusesDictionary[rawData.ReadInteger(row, 11)]),
-                    Position = unit.EmployeePositions.Get(Utility.employeePositionsDictionary[rawData.ReadString(row, 12)])
+                    Status = unit.EmploymentStatuses.Get(rawData.ReadInteger(row, 11)), //unit.EmploymentStatuses.Get(Utility.employmentStatusesDictionary[rawData.ReadInteger(row, 11)]),
+                    Position = unit.EmployeePositions.Get(Utility.employeePositionsDictionary[rawData.ReadString(row, 12)]),
+                    Salary = rawData.ReadDecimal(row, 13)//additionally added to entity properties
                 };
-                unit.Employees.Insert(e);
-                unit.Save();
-                Utility.employeesDictionary.Add(oldId, e.Id);
+                unit.Employees.Insert(e);                
+                //Utility.employeesDictionary.Add(oldId, e.Id);
             }
+            unit.Save();
         }
     }
 }
