@@ -11,24 +11,20 @@ namespace TimeKeeper.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProjectsController : ControllerBase
+    public class ProjectsController : BaseController
     {
-        private UnitOfWork unit;
-        public ProjectsController(TimeKeeperContext context)
-        {
-            unit = new UnitOfWork(context);
-        }
+        public ProjectsController(TimeKeeperContext context) : base(context) { }
 
         [HttpGet]
         public IActionResult Get()
         {
-            var result = unit.Projects.Get().ToList().Select(x => x.Create()).ToList();
+            var result = Unit.Projects.Get().ToList().Select(x => x.Create()).ToList();
             return Ok(result);
         }
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var result = unit.Projects.Get(id);
+            var result = Unit.Projects.Get(id);
             return Ok(result.Create());
         }
     }

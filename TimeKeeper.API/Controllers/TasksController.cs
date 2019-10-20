@@ -9,27 +9,23 @@ using TimeKeeper.DAL;
 
 namespace TimeKeeper.API.Controllers
 {
+    //Will the route for this Controller require refactoring? Employees/{id}/Calendar/{id}/Tasks?
     [Route("api/[controller]")]
     [ApiController]
-    public class TasksController : ControllerBase
+    public class TasksController : BaseController
     {
-
-        private UnitOfWork unit;
-        public TasksController(TimeKeeperContext context)
-        {
-            unit = new UnitOfWork(context);
-        }
+        public TasksController(TimeKeeperContext context) : base(context) { }
 
         [HttpGet]
         public IActionResult Get()
         {
-            var result = unit.Tasks.Get().ToList().Select(x => x.Create()).ToList();
+            var result = Unit.Tasks.Get().ToList().Select(x => x.Create()).ToList();
             return Ok(result);
         }
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var result = unit.Tasks.Get(id);
+            var result = Unit.Tasks.Get(id);
             return Ok(result.Create());
         }
     }

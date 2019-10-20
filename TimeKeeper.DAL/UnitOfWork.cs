@@ -8,7 +8,7 @@ namespace TimeKeeper.DAL
 {
     public class UnitOfWork : IDisposable
     {
-        private readonly TimeKeeperContext _context;
+        protected TimeKeeperContext _context;
 
         private IRepository<Project> _projects;
         private IRepository<PricingStatus> _pricingStatuses;
@@ -26,16 +26,10 @@ namespace TimeKeeper.DAL
         private IRepository<Team> _teams;
 
         //Will the context injection here be necessary?
-        public UnitOfWork(TimeKeeperContext context = null)
+        //It is ensured that the context is always instantiated, so a default argument in UnitOfWork contstructor is not neccessary
+        public UnitOfWork(TimeKeeperContext context)
         {
-            if (context != null)
-            {
-                _context = context;
-            }
-            else
-            {
-                _context = new TimeKeeperContext();
-            }
+            _context = context;
         }
 
         public TimeKeeperContext Context => _context;

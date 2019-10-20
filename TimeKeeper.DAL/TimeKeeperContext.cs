@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +39,7 @@ namespace TimeKeeper.DAL
                 optionBuilder.UseNpgsql(_conStr);
             }
             optionBuilder.UseLazyLoadingProxies(true);
+            optionBuilder.ConfigureWarnings(w => w.Ignore(CoreEventId.DetachedLazyLoadingWarning));
             base.OnConfiguring(optionBuilder);
         }
         protected override void OnModelCreating(ModelBuilder builder)

@@ -8,7 +8,8 @@ namespace TimeKeeper.Seed
     class Program
     {
         static void Main(string[] args)
-        {            
+        {    
+            /*
             FileInfo fileStatuses = new FileInfo(@"C:\Projects\TimeKeeper\TimeKeeperStatuses.xlsx");
             FileInfo file = new FileInfo(@"C:\Projects\TimeKeeper\TimeKeeper.xlsx");
             
@@ -39,6 +40,7 @@ namespace TimeKeeper.Seed
                     Details.Collect(package.Workbook.Worksheets["Details"], unit);
                 }
             }
+            */
             
         }
     }
