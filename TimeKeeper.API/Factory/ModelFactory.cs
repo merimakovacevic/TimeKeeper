@@ -82,7 +82,8 @@ namespace TimeKeeper.API.Factory
             return new JobDetailModel
             {
                 Id = jobDetail.Id,
-                Description = jobDetail.Description
+                Description = jobDetail.Description,
+                Project = jobDetail.Project.Master()
             };
         }
 
