@@ -19,8 +19,14 @@ namespace TimeKeeper.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var result = Unit.Roles.Get().ToList().Select(x => x.Create()).ToList();
-            return Ok(result);
+            try
+            {
+                return Ok(Unit.Roles.Get().ToList().Select(x => x.Create()).ToList());
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
         [HttpGet("{id}")]
         public IActionResult Get(int id)
