@@ -84,7 +84,8 @@ namespace TimeKeeper.API.Factory
             {
                 Id = jobDetail.Id,
                 Description = jobDetail.Description,
-                Project = jobDetail.Project.Master()
+                Project = jobDetail.Project.Master(),
+                Hours = jobDetail.Hours
             };
         }
 

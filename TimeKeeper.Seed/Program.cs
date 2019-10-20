@@ -11,9 +11,8 @@ namespace TimeKeeper.Seed
         {            
             FileInfo fileStatuses = new FileInfo(@"C:\Projects\TimeKeeper\TimeKeeperStatuses.xlsx");
             FileInfo file = new FileInfo(@"C:\Projects\TimeKeeper\TimeKeeper.xlsx");
-
-            //Database name was changed to TimeKeeperTest in order to test the seed
-            string conString = "User ID=postgres; Password=postgres; Server=localhost; Port=5432; Database=TimeKeeperTest; Integrated Security=true; Pooling=true;";
+            
+            string conString = "User ID=postgres; Password=postgres; Server=localhost; Port=5432; Database=TimeKeeper; Integrated Security=true; Pooling=true;";
 
             using (UnitOfWork unit = new UnitOfWork(new TimeKeeperContext(conString)))
             {

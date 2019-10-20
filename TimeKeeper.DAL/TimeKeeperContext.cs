@@ -11,7 +11,7 @@ namespace TimeKeeper.DAL
     {
         private string _conStr;
         //The default connection string in the constructor below would be for context calls outside of API
-        public TimeKeeperContext() : base() { /*"User ID=postgres; Password=postgres; Server=localhost; Port=5432; Database=TimeKeeper; Integrated Security=true; Pooling=true;" */}
+        public TimeKeeperContext() : base() { _conStr = "User ID=postgres; Password=postgres; Server=localhost; Port=5432; Database=TimeKeeper; Integrated Security=true; Pooling=true;"; }
         public TimeKeeperContext(DbContextOptions<TimeKeeperContext> options) : base(options) { }
         public TimeKeeperContext(string conStr)
         {
