@@ -25,7 +25,7 @@ namespace TimeKeeper.Seed
                     Status = unit.CustomerStatuses.Get(rawData.ReadInteger(row, 10) + 1),  //unit.CustomerStatuses.Get(Utility.customerStatusesDictionary[rawData.ReadInteger(row, 10)]),
                     HomeAddress = new Address()
                 };
-                //Address a = new Address();
+
                 c.HomeAddress.Street = rawData.ReadString(row, 7);
                 c.HomeAddress.Zip = rawData.ReadString(row, 8);
                 c.HomeAddress.City = rawData.SelectCity(row, 9);

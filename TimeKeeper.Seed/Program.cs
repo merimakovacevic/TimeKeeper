@@ -20,22 +20,22 @@ namespace TimeKeeper.Seed
                 {
                     unit.Context.Database.EnsureDeleted();
                     unit.Context.Database.EnsureCreated();
-                    EmployeePositions.Collect(packageStatuses.Workbook.Worksheets["EmployeePosition"], unit);//refactoring complete
-                    EmploymentStatuses.Collect(packageStatuses.Workbook.Worksheets["EmploymentStatus"], unit);//refactoring complete
-                    DayTypes.Collect(packageStatuses.Workbook.Worksheets["DayType"], unit);//refactoring complete
-                    CustomerStatuses.Collect(packageStatuses.Workbook.Worksheets["CustomerStatus"], unit);//refactoring complete
-                    ProjectStatuses.Collect(packageStatuses.Workbook.Worksheets["ProjectStatus"], unit);//refactoring complete
-                    PricingStatuses.Collect(packageStatuses.Workbook.Worksheets["PricingStatus"], unit);//refactoring complete
+                    EmployeePositions.Collect(packageStatuses.Workbook.Worksheets["EmployeePosition"], unit);
+                    EmploymentStatuses.Collect(packageStatuses.Workbook.Worksheets["EmploymentStatus"], unit);
+                    DayTypes.Collect(packageStatuses.Workbook.Worksheets["DayType"], unit);
+                    CustomerStatuses.Collect(packageStatuses.Workbook.Worksheets["CustomerStatus"], unit);
+                    ProjectStatuses.Collect(packageStatuses.Workbook.Worksheets["ProjectStatus"], unit);
+                    PricingStatuses.Collect(packageStatuses.Workbook.Worksheets["PricingStatus"], unit);
                 }
                 using (ExcelPackage package = new ExcelPackage(file))
                 {
-                    Teams.Collect(package.Workbook.Worksheets["Teams"], unit);//refactoring complete
-                    Roles.Collect(package.Workbook.Worksheets["Roles"], unit);//refactoring complete
-                    Customers.Collect(package.Workbook.Worksheets["Customers"], unit);//refactoring complete
-                    Projects.Collect(package.Workbook.Worksheets["Projects"], unit);//refactoring complete
-                    Employees.Collect(package.Workbook.Worksheets["Employees"], unit);//refactoring complete
-                    Calendar.Collect(package.Workbook.Worksheets["Calendar"], unit);//refactoring complete
-                    Members.Collect(package.Workbook.Worksheets["Engagement"], unit);//refactoring complete
+                    Teams.Collect(package.Workbook.Worksheets["Teams"], unit);
+                    Roles.Collect(package.Workbook.Worksheets["Roles"], unit);
+                    Customers.Collect(package.Workbook.Worksheets["Customers"], unit);
+                    Projects.Collect(package.Workbook.Worksheets["Projects"], unit);
+                    Employees.Collect(package.Workbook.Worksheets["Employees"], unit);
+                    Calendar.Collect(package.Workbook.Worksheets["Calendar"], unit);
+                    Members.Collect(package.Workbook.Worksheets["Engagement"], unit);
                     Details.Collect(package.Workbook.Worksheets["Details"], unit);
                 }
             }

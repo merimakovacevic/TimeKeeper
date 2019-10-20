@@ -11,7 +11,6 @@ namespace TimeKeeper.Seed
     {
         public static void Collect(ExcelWorksheet rawData, UnitOfWork unit)
         {
-            Console.WriteLine("Calendar: ");
             int N = 0;
             for (int row = 2; row <= rawData.Dimension.Rows; row++)
             {
