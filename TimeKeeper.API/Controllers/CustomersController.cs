@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TimeKeeper.API.Factory;
 using TimeKeeper.DAL;
+using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Controllers
 {
@@ -18,14 +19,93 @@ namespace TimeKeeper.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var result = Unit.Customers.Get().ToList().Select(x => x.Create()).ToList();
-            return Ok(result);
+            try
+            {
+                return Ok(Unit.Customers.Get().OrderBy(x => x.Name).ToList().Select(x => x.Create()).ToList());
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var result = Unit.Customers.Get(id);
-            return Ok(result.Create());
+            try
+            {
+                Customer customer = Unit.Customers.Get(id);
+                if(customer == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(customer.Create());
+                }
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Post([FromBody] Customer customer)
+        {
+            try
+            {
+                customer.Status = Unit.CustomerStatuses.Get(customer.Status.Id);
+                Unit.Customers.Insert(customer);
+                Unit.Save();
+                return Ok(customer.Create());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] Customer customer)
+        {
+            try
+            {
+                customer.Status = Unit.CustomerStatuses.Get(customer.Status.Id);
+                Unit.Customers.Update(customer, id);
+                int numberOfChanges = Unit.Save();
+
+                if(numberOfChanges == 0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(customer.Create());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                Unit.Customers.Delete(id);
+                int numberOfChanges = Unit.Save();
+
+                if(numberOfChanges == 0)
+                {
+                    return NotFound();
+                }
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
     }
 }
