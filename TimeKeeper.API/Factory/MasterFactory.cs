@@ -63,7 +63,7 @@ namespace TimeKeeper.API.Factory
             };
         }
 
-        public static MasterModel Master(Employee e)//this Employee?
+        public static MasterModel Master(this Employee e)
         {
             return new MasterModel
             {
@@ -78,6 +78,16 @@ namespace TimeKeeper.API.Factory
             {
                 Id = jd.Id,
                 Name = $"{jd.Description}"
+            };
+        }
+
+        //MasterModel with polymorphism for all statuses
+        public static MasterModel Master(this BaseStatus status)
+        {
+            return new MasterModel
+            {
+                Id = status.Id,
+                Name = status.Name
             };
         }
     }
