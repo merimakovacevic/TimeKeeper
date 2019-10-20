@@ -95,7 +95,9 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Unit.Employees.Delete(id);
+
                 int numberOfChanges = Unit.Save();
+
                 if(numberOfChanges == 0)
                 {
                     return NotFound();
