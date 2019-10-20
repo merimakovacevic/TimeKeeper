@@ -24,7 +24,8 @@ namespace TimeKeeper.Seed
                     Status = unit.ProjectStatuses.Get(rawData.ReadInteger(row, 7)),
                     Customer = unit.Customers.Get(rawData.ReadInteger(row, 8)), //unit.Customers.Get(Utility.customersDictionary[rawData.ReadInteger(row, 8)]),
                     Team = unit.Teams.Get(Utility.teamsDictionary[rawData.ReadString(row, 9)]),
-                    Pricing = unit.PricingStatuses.Get(rawData.ReadInteger(row, 10)),//.PricingStatuses.Get(Utility.pricingStatusesDictionary[rawData.ReadInteger(row, 10)]),
+                    //pricing is + 1, because the Id in the status table has only been incremented for 1 value compared to the legacy database
+                    Pricing = unit.PricingStatuses.Get(rawData.ReadInteger(row, 10) + 1),//.PricingStatuses.Get(Utility.pricingStatusesDictionary[rawData.ReadInteger(row, 10)]),
                     Amount = rawData.ReadDecimal(row, 11)
                 };
                 unit.Projects.Insert(p);                

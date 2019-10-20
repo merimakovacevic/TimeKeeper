@@ -21,7 +21,8 @@ namespace TimeKeeper.Seed
                     Image = rawData.ReadString(row, 3),
                     ContactName = rawData.ReadString(row, 4),
                     EmailAddress = rawData.ReadString(row, 5),
-                    Status = unit.CustomerStatuses.Get(rawData.ReadInteger(row, 10)),  //unit.CustomerStatuses.Get(Utility.customerStatusesDictionary[rawData.ReadInteger(row, 10)]),
+                    //status is + 1, because the Id in the status table has only been incremented for 1 value compared to the legacy database
+                    Status = unit.CustomerStatuses.Get(rawData.ReadInteger(row, 10) + 1),  //unit.CustomerStatuses.Get(Utility.customerStatusesDictionary[rawData.ReadInteger(row, 10)]),
                     HomeAddress = new Address()
                 };
                 //Address a = new Address();

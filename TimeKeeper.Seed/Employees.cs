@@ -25,7 +25,8 @@ namespace TimeKeeper.Seed
                     Birthday = rawData.ReadDate(row, 8),
                     BeginDate = rawData.ReadDate(row, 9),
                     EndDate = rawData.ReadDate(row, 10),
-                    Status = unit.EmploymentStatuses.Get(rawData.ReadInteger(row, 11)), //unit.EmploymentStatuses.Get(Utility.employmentStatusesDictionary[rawData.ReadInteger(row, 11)]),
+                    //status is + 1, because the Id in the status table has only been incremented for 1 value compared to the legacy database
+                    Status = unit.EmploymentStatuses.Get(rawData.ReadInteger(row, 11) + 1), //unit.EmploymentStatuses.Get(Utility.employmentStatusesDictionary[rawData.ReadInteger(row, 11)]),
                     Position = unit.EmployeePositions.Get(Utility.employeePositionsDictionary[rawData.ReadString(row, 12)]),
                     Salary = rawData.ReadDecimal(row, 13)//additionally added to entity properties
                 };
