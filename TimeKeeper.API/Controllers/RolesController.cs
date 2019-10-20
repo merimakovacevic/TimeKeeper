@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TimeKeeper.API.Factory;
 using TimeKeeper.DAL;
+using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Controllers
 {
@@ -18,14 +19,34 @@ namespace TimeKeeper.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var result = Unit.Roles.Get().ToList().Select(x => x.Create()).ToList();
-            return Ok(result);
+            try
+            {
+                return Ok(Unit.Roles.Get().ToList().Select(x => x.Create()).ToList());
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var result = Unit.Roles.Get(id);
-            return Ok(result.Create());
+            try
+            {
+                Role role = Unit.Roles.Get(id);
+                if (role == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(role.Create());
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
     }
 }

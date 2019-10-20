@@ -36,5 +36,13 @@ namespace TimeKeeper.API.Controllers
         [HttpGet("employment-statuses")]
         public IActionResult GetEmploymentStatuses() => Ok(Unit.EmploymentStatuses.Get().Select(x => x.Master()).ToList());
 
+        [HttpGet("customer-statuses")]
+        public IActionResult GetCustomerStatuses() => Ok(Unit.CustomerStatuses.Get().Select(x => x.Master()).ToList());
+
+        [HttpGet("pricing-statuses")]
+        public IActionResult GetPricingStatuses() => Ok(Unit.PricingStatuses.Get().Select(x => x.Master()).ToList());
+
+        [HttpGet("project-statuses")]
+        public IActionResult GetProjectStatuses() => Ok(Unit.ProjectStatuses.Get().Select(x => x.Master()).ToList());
     }
 }
