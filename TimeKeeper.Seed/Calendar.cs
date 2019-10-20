@@ -11,19 +11,26 @@ namespace TimeKeeper.Seed
     {
         public static void Collect(ExcelWorksheet rawData, UnitOfWork unit)
         {
+            int N = 0;
             for (int row = 2; row <= rawData.Dimension.Rows; row++)
             {
-                int oldId = rawData.ReadInteger(row, 1);
+                //int oldId = rawData.ReadInteger(row, 1);
                 Day d = new Day
                 {
-                    Employee = unit.Employees.Get(Utility.employeesDictionary[rawData.ReadInteger(row, 2)]),
-                    Date = rawData.ReadDate1(row, 4),
-                    DayType = unit.DayTypes.Get(Utility.dayTypesDictionary[rawData.ReadInteger(row, 3)])
+                    Id = rawData.ReadInteger(row, 1),
+                    Employee = unit.Employees.Get(rawData.ReadInteger(row, 2)), //unit.Employees.Get(Utility.employeesDictionary[rawData.ReadInteger(row, 2)]),
+                    Date = rawData.ReadDateValue(row, 4),
+                    DayType = unit.DayTypes.Get(rawData.ReadInteger(row, 3))//unit.DayTypes.Get(Utility.dayTypesDictionary[rawData.ReadInteger(row, 3)])
                 };
                 unit.Calendar.Insert(d);
-                unit.Save();
-                Utility.calendarDictionary.Add(oldId, d.Id);
+                if(N % 100 == 0)
+                {
+                    unit.Save();
+                }
+                N++;
+                //Utility.calendarDictionary.Add(oldId, d.Id);
             }
+            unit.Save(); //save after all instances have been inserted into the unit, in case ther are instances after N % 100
         }
     }
 }

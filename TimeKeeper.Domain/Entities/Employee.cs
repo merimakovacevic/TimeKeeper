@@ -25,6 +25,8 @@ namespace TimeKeeper.Domain.Entities
         [Required]
         public virtual EmployeePosition Position { get; set; }
         [Required]
+        public decimal Salary { get; set; }//this property has been added since the last seed - it can be found in the Requirements
+        [Required]
         public DateTime Birthday { get; set; }
         [Required]
         public DateTime BeginDate { get; set; }

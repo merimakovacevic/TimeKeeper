@@ -13,14 +13,15 @@ namespace TimeKeeper.Seed
         {
             for (int row = 2; row <= rawData.Dimension.Rows; row++)
             {
-                int oldId = rawData.ReadInteger(row, 1);
+                //int oldId = rawData.ReadInteger(row, 1);
                 PricingStatus pricingStatus = new PricingStatus
                 {
+                    Id = rawData.ReadInteger(row, 1) + 1,
                     Name = rawData.ReadString(row, 2)
                 };
                 unit.PricingStatuses.Insert(pricingStatus);
                 unit.Save();
-                Utility.pricingStatusesDictionary.Add(oldId, pricingStatus.Id);
+                //Utility.pricingStatusesDictionary.Add(oldId, pricingStatus.Id);
             }
         }
     }

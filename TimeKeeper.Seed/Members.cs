@@ -15,14 +15,14 @@ namespace TimeKeeper.Seed
             {
                 Member member = new Member
                 {
-                    Employee = unit.Employees.Get(Utility.employeesDictionary[rawData.ReadInteger(row, 1)]),
+                    Employee = unit.Employees.Get(rawData.ReadInteger(row, 1)),//unit.Employees.Get(Utility.employeesDictionary[rawData.ReadInteger(row, 1)]),
                     Team = unit.Teams.Get(Utility.teamsDictionary[rawData.ReadString(row, 2)]),
                     Role = unit.Roles.Get(Utility.rolesDictionary[rawData.ReadString(row, 3)]),
                     HoursWeekly = rawData.ReadDecimal(row, 4)
                 };
-                unit.Members.Insert(member);
-                unit.Save();
+                unit.Members.Insert(member);                
             }
+            unit.Save();
         }
     }
 }
