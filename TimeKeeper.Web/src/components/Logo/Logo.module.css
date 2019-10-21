@@ -1,0 +1,9 @@
+.Logo {
+    color: white;
+}
+
+@media (min-width: 500px) {
+    .Logo {
+        margin-left: 2rem;
+    }
+}

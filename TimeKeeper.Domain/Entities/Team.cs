@@ -12,7 +12,6 @@ namespace TimeKeeper.Domain.Entities
             Members = new List<Member>();
             Projects = new List<Project>();
         }
-        [Required]
         public string Name { get; set; }
         public virtual IList<Member> Members { get; set; }
         public virtual IList<Project> Projects { get; set; }
