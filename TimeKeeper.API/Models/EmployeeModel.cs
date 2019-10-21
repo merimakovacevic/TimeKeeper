@@ -11,6 +11,7 @@ namespace TimeKeeper.API.Models
         public EmployeeModel()
         {
             Members = new List<MasterModel>();
+            Calendar = new List<MasterModel>();
         }
 
         public int Id { get; set; }
@@ -25,5 +26,6 @@ namespace TimeKeeper.API.Models
         public DateTime EndDate { get; set; }
         public virtual MasterModel Status { get; set; }
         public IList<MasterModel> Members { get; set; }
+        public IList<MasterModel> Calendar { get; set; }
     }
 }
