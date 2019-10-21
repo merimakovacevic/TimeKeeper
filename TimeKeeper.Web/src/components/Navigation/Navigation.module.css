@@ -1,0 +1,30 @@
+.Navigation {
+    height: 4rem;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    z-index: 10;
+}
+
+.Button {
+    margin-right: 2rem !important;
+}
+
+.Navigation nav {
+    height: 100%;
+}
+
+@media (max-width: 768px) {
+    .DesktopOnly {
+        display: none;
+    }
+    .Button {
+        display: none !important;
+    }
+}
