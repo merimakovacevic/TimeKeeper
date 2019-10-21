@@ -84,11 +84,33 @@ namespace TimeKeeper.API.Factory
             {
                 Id = jobDetail.Id,
                 Description = jobDetail.Description,
+                Day=jobDetail.Day.Master(),
                 Project = jobDetail.Project.Master(),
                 Hours = jobDetail.Hours
             };
         }
 
+        public static MemberModel Create(this Member member)
+        {
+            return new MemberModel
+            {
+                Id = member.Id,
+                Team = new MasterModel { Id = member.Team.Id, Name = member.Team.Name },
+                Employee = new MasterModelEmployee { Id = member.Employee.Id, FirstName = member.Employee.FirstName, LastName = member.Employee.LastName },
+                Role = new MasterModel { Id = member.Role.Id, Name = member.Role.Name },
+                HoursWeekly = member.HoursWeekly
+            };
+        }
 
+        public static DayModel Create(this Day day)
+        {
+            return new DayModel
+            {
+                Id = day.Id,
+                Employee = new MasterModelEmployee { Id = day.Employee.Id, FirstName = day.Employee.FirstName, LastName = day.Employee.LastName },
+                Date = day.Date,
+                DayType = new MasterModel { Id = day.DayType.Id, Name = day.DayType.Name }
+            };
+        }
     }
 }
