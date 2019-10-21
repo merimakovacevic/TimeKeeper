@@ -7,7 +7,6 @@ namespace TimeKeeper.Domain.Entities
 {
     public class BaseStatus : BaseClass
     {
-        [Required]
         public string Name { get; set; }
     }
 }

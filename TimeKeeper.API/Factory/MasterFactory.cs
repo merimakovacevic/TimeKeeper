@@ -81,6 +81,7 @@ namespace TimeKeeper.API.Factory
             };
         }
 
+
         public static MasterModel Master(this Day day)
         {
             return new MasterModel

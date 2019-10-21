@@ -12,7 +12,7 @@ namespace TimeKeeper.API.Models
             JobDetails = new List<MasterModel>();
         }
         public int Id { get; set; }
-        public MasterModelEmployee Employee { get; set; }
+        public MasterModel Employee { get; set; }
         public DateTime Date { get; set; }
         public MasterModel DayType { get; set; }
         public List<MasterModel> JobDetails { get; set; }
