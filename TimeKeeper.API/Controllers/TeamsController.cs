@@ -26,6 +26,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
+                Log.LogCritical(ex, "Server error");
                 return BadRequest(ex);
             }
         }
@@ -61,10 +62,12 @@ namespace TimeKeeper.API.Controllers
             {
                 Unit.Teams.Insert(team);
                 Unit.Save();
+                Log.LogInformation($"Team {team.Name} added with id {team.Id}");
                 return Ok(team.Create());
             }
             catch (Exception ex)
             {
+                Log.LogCritical(ex, "Server error");
                 return BadRequest(ex);
             }
         }
@@ -86,6 +89,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
+                Log.LogCritical(ex, "Server error");
                 return BadRequest(ex);
             }
         }
@@ -98,7 +102,7 @@ namespace TimeKeeper.API.Controllers
                 Unit.Teams.Delete(id);
 
                 int numberOfChanges = Unit.Save();
-
+                Log.LogInformation($"Attempt to delete team with id {id}");
                 if (numberOfChanges == 0)
                 {
                     return NotFound();
@@ -108,6 +112,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
+                Log.LogCritical(ex, "Server error");
                 return BadRequest(ex);
             }
         }
