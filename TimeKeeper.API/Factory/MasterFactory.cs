@@ -41,7 +41,7 @@ namespace TimeKeeper.API.Factory
             return new MasterModel
             {
                 Id = m.Id,
-                Name = m.Employee.FirstName+ m.Employee.LastName + ", " + m.Role.Name.Monogram()
+                Name = m.Employee.FirstName + m.Employee.LastName + ", " + m.Role.Name.Monogram()
             };
         }
 
