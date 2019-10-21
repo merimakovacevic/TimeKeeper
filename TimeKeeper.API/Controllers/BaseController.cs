@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using TimeKeeper.DAL;
 
 namespace TimeKeeper.API.Controllers
@@ -12,9 +13,11 @@ namespace TimeKeeper.API.Controllers
     public class BaseController : ControllerBase
     {
         protected UnitOfWork Unit;
-        public BaseController(TimeKeeperContext context)
+        protected static ILogger<BaseController> Log;
+        public BaseController(TimeKeeperContext context, ILogger<BaseController> log)
         {
             Unit = new UnitOfWork(context);
+            Log = log;
         }
     }
 }

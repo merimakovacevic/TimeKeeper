@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using TimeKeeper.API.Factory;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
@@ -14,7 +15,7 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class CustomersController : BaseController
     {
-        public CustomersController(TimeKeeperContext context) : base(context) { }
+        public CustomersController(TimeKeeperContext context, ILogger<CustomersController> log) : base(context, log) { }
 
         [HttpGet]
         public IActionResult Get()

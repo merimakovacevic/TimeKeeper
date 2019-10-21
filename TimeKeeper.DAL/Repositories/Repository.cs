@@ -17,7 +17,7 @@ namespace TimeKeeper.DAL.Repositories
             _dbSet = _context.Set<Entity>();
         }
 
-        public virtual IQueryable<Entity> Get() => _dbSet;
+        public virtual IQueryable<Entity> Get() => _dbSet;//adjust to Sulejman's code?
 
         public virtual IList<Entity> Get(Func<Entity, bool> where) => Get().Where(where).ToList();
 
