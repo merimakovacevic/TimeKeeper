@@ -28,12 +28,12 @@ namespace TimeKeeper.API.Factory
                 LastName = employee.LastName,
                 Email = employee.Email,
                 Phone = employee.Phone,
-                Position = new MasterModel { Id=employee.Position.Id, Name=employee.Position.Name},
+                Position = employee.Position.Master(),
                 Salary = employee.Salary,
                 Birthday = employee.Birthday,
                 BeginDate = employee.BeginDate,
                 EndDate = employee.EndDate,
-                Status = new MasterModel { Id=employee.Status.Id, Name=employee.Status.Name},
+                Status = employee.Status.Master(),
                 Members = employee.Members.Select(x => x.Master()).ToList()
             };
         }
@@ -46,7 +46,7 @@ namespace TimeKeeper.API.Factory
                 ContactName = customer.ContactName,
                 EmailAddress = customer.EmailAddress,
                 HomeAddress = new MasterModelAddress { Street = customer.HomeAddress.Street, City=customer.HomeAddress.City },
-                Status = new MasterModel { Id = customer.Status.Id, Name = customer.Status.Name },
+                Status = customer.Status.Master(),
                 Projects = customer.Projects.Select(x => x.Master()).ToList()
             };
         }
@@ -58,11 +58,11 @@ namespace TimeKeeper.API.Factory
                 Name = project.Name,
                 StartDate = project.StartDate,
                 EndDate = project.EndDate,
-                Team=new MasterModel { Id=project.Team.Id, Name=project.Team.Name},
-                Customer=new MasterModel { Id=project.Customer.Id, Name=project.Customer.Name},
+                Team=project.Team.Master(),
+                Customer=project.Customer.Master(),
                 Amount=project.Amount,
-                Status = new MasterModel { Id = project.Status.Id, Name = project.Status.Name },
-                Pricing=new MasterModel { Id=project.Pricing.Id, Name=project.Pricing.Name},
+                Status = project.Status.Master(),
+                Pricing=project.Pricing.Master(),
                 Tasks = project.Tasks.Select(x => x.Master()).ToList()
             };
         }
@@ -95,9 +95,9 @@ namespace TimeKeeper.API.Factory
             return new MemberModel
             {
                 Id = member.Id,
-                Team = new MasterModel { Id = member.Team.Id, Name = member.Team.Name },
-                Employee = new MasterModelEmployee { Id = member.Employee.Id, FirstName = member.Employee.FirstName, LastName = member.Employee.LastName },
-                Role = new MasterModel { Id = member.Role.Id, Name = member.Role.Name },
+                Team = member.Team.Master(),
+                Employee = member.Employee.Master(),
+                Role = member.Role.Master(),
                 HoursWeekly = member.HoursWeekly
             };
         }
@@ -107,9 +107,9 @@ namespace TimeKeeper.API.Factory
             return new DayModel
             {
                 Id = day.Id,
-                Employee = new MasterModelEmployee { Id = day.Employee.Id, FirstName = day.Employee.FirstName, LastName = day.Employee.LastName },
+                Employee = day.Employee.Master(),
                 Date = day.Date,
-                DayType = new MasterModel { Id = day.DayType.Id, Name = day.DayType.Name }
+                DayType = day.DayType.Master()
             };
         }
     }

@@ -11,17 +11,11 @@ namespace TimeKeeper.Domain.Entities
         {
             Projects = new List<Project>();
         }
-        [Required]
         public string Name { get; set; }
-        [Required]
         public string Image { get; set; }
-        [Required]
         public string ContactName { get; set; }
-        [Required]
         public string EmailAddress { get; set; }
-        [Required]
         public virtual Address HomeAddress { get; set; }        
-        [Required]
         public virtual CustomerStatus Status { get; set; }
         public virtual IList<Project> Projects { get; set; }
     }

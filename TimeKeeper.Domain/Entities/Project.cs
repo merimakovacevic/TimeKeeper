@@ -11,22 +11,14 @@ namespace TimeKeeper.Domain.Entities
         {
             Tasks = new List<JobDetail>();
         }
-        [Required]
         public string Name { get; set; }
-        [Required]
         public string Description { get; set; }
-        [Required]
         public virtual Team Team { get; set; }
-        [Required]
         public virtual Customer Customer { get; set; }
-        [Required]
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        [Required]
         public virtual ProjectStatus Status { get; set; }
-        [Required]
         public virtual PricingStatus Pricing { get; set; }
-        [Required]
         public decimal Amount { get; set; }
         public virtual IList<JobDetail> Tasks { get; set; }
     }
