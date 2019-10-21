@@ -14,7 +14,7 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class MasterController : BaseController
     {
-        public MasterController(TimeKeeperContext context, ILogger<TeamsController> log) : base(context, log) { }
+        public MasterController(TimeKeeperContext context, ILogger<MasterController> log) : base(context, log) { }
 
         [HttpGet("teams")]
         public IActionResult GetTeams() => Ok(Unit.Teams.Get().Select(x => x.Master()).ToList());

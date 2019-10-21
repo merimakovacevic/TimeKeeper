@@ -22,7 +22,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                return Ok(Unit.Teams.Get().ToList().Select(x => x.Create()).ToList());
+                return Ok(Unit.Teams.Get().ToList().Select(x => x.Create()).ToList());//without the first ToList(), we will have a lazy loading exception?
             }
             catch (Exception ex)
             {
@@ -103,7 +103,7 @@ namespace TimeKeeper.API.Controllers
                 Unit.Teams.Delete(id);
 
                 int numberOfChanges = Unit.Save();
-
+                Log.LogInformation($"Attempt to delete team with id {id}");
                 if (numberOfChanges == 0)
                 {
                     Log.LogInformation($"Attempt to delete team with id {id}");

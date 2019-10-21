@@ -24,21 +24,20 @@ namespace TimeKeeper.API
             catch(Exception ex)
             {
                 logger.Error(ex, "Stopped program!");
+                throw;
             }
             finally
             {
                 NLog.LogManager.Shutdown();
-            }
+            }            
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .ConfigureLogging(log =>
-                {
-                    log.ClearProviders();
-                    log.SetMinimumLevel(LogLevel.Information);
-                }).UseNLog()
-            ;
+            WebHost.CreateDefaultBuilder(args).UseStartup<Startup>()
+                   .ConfigureLogging(log =>
+                   {
+                       log.ClearProviders();
+                       log.SetMinimumLevel(LogLevel.Information);
+                   }).UseNLog();
     }
 }

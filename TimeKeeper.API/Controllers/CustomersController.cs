@@ -15,17 +15,19 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class CustomersController : BaseController
     {
-        public CustomersController(TimeKeeperContext context, ILogger<TeamsController> log) : base(context, log) { }
+        public CustomersController(TimeKeeperContext context, ILogger<CustomersController> log) : base(context, log) { }
 
         [HttpGet]
         public IActionResult Get()
         {
             try
             {
+                Log.LogInformation($"Try to fetch all customers");
                 return Ok(Unit.Customers.Get().OrderBy(x => x.Name).ToList().Select(x => x.Create()).ToList());
             }
             catch(Exception ex)
             {
+                Log.LogCritical(ex, "Server error");
                 return BadRequest(ex);
             }
         }
@@ -34,9 +36,11 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
+                Log.LogInformation($"Try to fetch customer with id {id}");
                 Customer customer = Unit.Customers.Get(id);
                 if(customer == null)
                 {
+                    Log.LogError($"Customer with id {id} cannot be found");
                     return NotFound();
                 }
                 else
@@ -46,6 +50,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch(Exception ex)
             {
+                Log.LogCritical(ex, "Server error");
                 return BadRequest(ex);
             }
         }
@@ -58,10 +63,12 @@ namespace TimeKeeper.API.Controllers
                 customer.Status = Unit.CustomerStatuses.Get(customer.Status.Id);
                 Unit.Customers.Insert(customer);
                 Unit.Save();
+                Log.LogInformation($"Customer {customer.Name} added with id {customer.Id}");
                 return Ok(customer.Create());
             }
             catch (Exception ex)
             {
+                Log.LogCritical(ex, "Server error");
                 return BadRequest(ex);
             }
         }
@@ -74,16 +81,20 @@ namespace TimeKeeper.API.Controllers
                 customer.Status = Unit.CustomerStatuses.Get(customer.Status.Id);
                 Unit.Customers.Update(customer, id);
                 int numberOfChanges = Unit.Save();
+                Log.LogInformation($"Attempt to update customer with id {id}");
 
-                if(numberOfChanges == 0)
+                if (numberOfChanges == 0)
                 {
+                    Log.LogError($"Customer with id {id} cannot be found");
                     return NotFound();
                 }
 
+                Log.LogInformation($"Customer {customer.Name} with id {customer.Id} updated");
                 return Ok(customer.Create());
             }
             catch (Exception ex)
             {
+                Log.LogCritical(ex, "Server error");
                 return BadRequest(ex);
             }
         }
@@ -95,16 +106,19 @@ namespace TimeKeeper.API.Controllers
             {
                 Unit.Customers.Delete(id);
                 int numberOfChanges = Unit.Save();
-
-                if(numberOfChanges == 0)
+                Log.LogInformation($"Attempt to delete customer with id {id}");
+                if (numberOfChanges == 0)
                 {
+                    Log.LogError($"Customer with id {id} cannot be found");
                     return NotFound();
                 }
 
+                Log.LogInformation($"Customer with id {id} deleted");
                 return NoContent();
             }
             catch (Exception ex)
             {
+                Log.LogCritical(ex, "Server error");
                 return BadRequest(ex);
             }
         }
