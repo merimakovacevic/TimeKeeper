@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using TimeKeeper.API.Factory;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
@@ -14,17 +15,18 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class TeamsController : BaseController
     {
-        public TeamsController(TimeKeeperContext context) : base(context) { }
+        public TeamsController(TimeKeeperContext context, ILogger<TeamsController> log) : base(context, log) { }
 
         [HttpGet]
         public IActionResult Get()
         {
             try
             {
-                return Ok(Unit.Teams.Get().ToList().Select(x => x.Create()).ToList());
+                return Ok(Unit.Teams.Get().ToList().Select(x => x.Create()).ToList());//without the first ToList(), we will have a lazy loading exception?
             }
             catch (Exception ex)
             {
+                Log.LogCritical(ex, "Server error");
                 return BadRequest(ex);
             }
         }
@@ -34,9 +36,11 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
+                Log.LogInformation($"Try to fetch team with id {id}");
                 Team team = Unit.Teams.Get(id);
                 if (team == null)
                 {
+                    Log.LogError($"There is no team with id {id}");
                     return NotFound();
                 }
                 else
@@ -46,6 +50,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
+                Log.LogCritical(ex, "Server error");
                 return BadRequest(ex);
             }
         }
@@ -57,10 +62,12 @@ namespace TimeKeeper.API.Controllers
             {
                 Unit.Teams.Insert(team);
                 Unit.Save();
+                Log.LogInformation($"Team {team.Name} added with id {team.Id}");
                 return Ok(team.Create());
             }
             catch (Exception ex)
             {
+                Log.LogCritical(ex, "Server error");
                 return BadRequest(ex);
             }
         }
@@ -82,6 +89,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
+                Log.LogCritical(ex, "Server error");
                 return BadRequest(ex);
             }
         }
@@ -94,7 +102,7 @@ namespace TimeKeeper.API.Controllers
                 Unit.Teams.Delete(id);
 
                 int numberOfChanges = Unit.Save();
-
+                Log.LogInformation($"Attempt to delete team with id {id}");
                 if (numberOfChanges == 0)
                 {
                     return NotFound();
@@ -104,6 +112,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
+                Log.LogCritical(ex, "Server error");
                 return BadRequest(ex);
             }
         }

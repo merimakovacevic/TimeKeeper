@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using TimeKeeper.API.Factory;
 using TimeKeeper.DAL;
 
@@ -13,7 +14,7 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class MasterController : BaseController
     {
-        public MasterController(TimeKeeperContext context) : base(context) { }
+        public MasterController(TimeKeeperContext context, ILogger<MasterController> log) : base(context, log) { }
 
         [HttpGet("teams")]
         public IActionResult GetTeams() => Ok(Unit.Teams.Get().Select(x => x.Master()).ToList());
