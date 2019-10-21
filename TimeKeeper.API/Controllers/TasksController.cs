@@ -20,14 +20,37 @@ namespace TimeKeeper.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var result = Unit.Tasks.Get().ToList().Select(x => x.Create()).ToList();
-            return Ok(result);
+            try
+            {
+                var result = Unit.Tasks.Get().ToList().Select(x => x.Create()).ToList();
+                Log.LogInformation($"Try to get all tasks");
+                return Ok(result);
+            }
+            catch(Exception ex)
+            {
+                Log.LogCritical(ex, "Server error");
+                return BadRequest();
+            }
         }
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var result = Unit.Tasks.Get(id);
-            return Ok(result.Create());
+            try
+            {
+                Log.LogInformation($"Try to get task with {id}");
+                var result = Unit.Tasks.Get(id);
+                if (result == null)
+                {
+                    Log.LogError($"Task with id {id} cannot be found");
+                    return NotFound();
+                }
+                return Ok(result.Create());
+            }
+            catch(Exception ex)
+            {
+                Log.LogCritical(ex, "Server error");
+                return BadRequest(ex);
+            }
         }
     }
 }

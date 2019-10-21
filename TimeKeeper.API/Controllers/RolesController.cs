@@ -22,10 +22,12 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
+                Log.LogInformation($"Try to get all roles");
                 return Ok(Unit.Roles.Get().ToList().Select(x => x.Create()).ToList());
             }
             catch(Exception ex)
             {
+                Log.LogCritical(ex, "Server error");
                 return BadRequest(ex);
             }
         }
@@ -34,9 +36,11 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
+                Log.LogInformation($"Try to get roles with {id}");
                 Role role = Unit.Roles.Get(id);
                 if (role == null)
                 {
+                    Log.LogError($"Role with id {id} cannot be found");
                     return NotFound();
                 }
                 else
@@ -46,6 +50,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
+                Log.LogCritical(ex, "Server error");
                 return BadRequest(ex);
             }
         }

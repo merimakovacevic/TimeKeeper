@@ -81,6 +81,14 @@ namespace TimeKeeper.API.Factory
             };
         }
 
+        public static MasterModel Master(this Day day)
+        {
+            return new MasterModel
+            {
+                Id = day.Id,
+                Name = $"{ day.Date.ToString() }"
+            };
+        }
         //MasterModel with polymorphism for all statuses
         public static MasterModel Master(this BaseStatus status)
         {

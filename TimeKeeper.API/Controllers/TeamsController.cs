@@ -36,11 +36,11 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Log.LogInformation($"Try to fetch team with id {id}");
+                Log.LogInformation($"Try to get team with {id}");
                 Team team = Unit.Teams.Get(id);
                 if (team == null)
                 {
-                    Log.LogError($"There is no team with id {id}");
+                    Log.LogError($"There is no team with specified id {id}");
                     return NotFound();
                 }
                 else
@@ -82,9 +82,10 @@ namespace TimeKeeper.API.Controllers
 
                 if (numberOfChanges == 0)
                 {
+                    Log.LogError($"Team with {id} not found");
                     return NotFound();
                 }
-
+                Log.LogInformation($"Changed team with id {id}");
                 return Ok(team.Create());
             }
             catch (Exception ex)
@@ -105,9 +106,10 @@ namespace TimeKeeper.API.Controllers
                 Log.LogInformation($"Attempt to delete team with id {id}");
                 if (numberOfChanges == 0)
                 {
+                    Log.LogInformation($"Attempt to delete team with id {id}");
                     return NotFound();
                 }
-
+                Log.LogInformation($"Deleted team with id {id}");
                 return NoContent();
             }
             catch (Exception ex)
