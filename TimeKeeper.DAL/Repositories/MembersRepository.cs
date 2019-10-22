@@ -14,7 +14,7 @@ namespace TimeKeeper.DAL.Repositories
             Member old = Get(id);
 
             if (old != null)
-            {                
+            {
                 _context.Entry(old).CurrentValues.SetValues(member);
                 old.Employee = member.Employee;
                 old.Team = member.Team;
