@@ -72,7 +72,17 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Ovaj metod azurira podatke za team
+        /// </summary>
+        /// <param name="id">Id tima koji zelima da azuriramo</param>
+        /// <param name="team">Podaci koji dodju sa frontenda</param>
+        /// <returns>Tim sa novom vrijednoscu Id-a</returns>
+        /// <response status="200">Ovo valja</response>
+        /// <response status="400">Ovo ne valja</response>
         [HttpPut("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult Put(int id, [FromBody] Team team)
         {
             try

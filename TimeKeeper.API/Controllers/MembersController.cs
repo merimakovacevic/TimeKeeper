@@ -87,7 +87,7 @@ namespace TimeKeeper.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Member member, int teamId)
+        public IActionResult Put([FromBody] Member member, int id, int teamId)
         {
             try
             {
