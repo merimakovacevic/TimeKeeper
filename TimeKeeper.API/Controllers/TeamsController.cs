@@ -100,11 +100,11 @@ namespace TimeKeeper.API.Controllers
         }
 
         /// <summary>
-        /// Ovaj metod ažurira podatke za tim
+        /// This method updates data for team with specified id
         /// </summary>
-        /// <param name="id"> Id tima kojeg zelimo da azuriramo</param>
-        /// <param name="team">Podaci koji dodju sa frontenda</param>
-        /// <returns>Tim sa novom vrijednoscu id-a</returns>
+        /// <param name="id">Id of team that will be updated</param>
+        /// <param name="customer">Data that comes from frontend</param>
+        /// <returns>Team with new values</returns>
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
@@ -137,10 +137,13 @@ namespace TimeKeeper.API.Controllers
         /// </summary>
         /// <param name="id">Id of team that has to be deleted</param>
         /// <returns>No content</returns>
-        [HttpDelete("{id}")]
         /// <response status="204">No content</response>
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult Delete(int id)
         {
             try

@@ -17,7 +17,15 @@ namespace TimeKeeper.API.Controllers
     {
         public EmployeesController(TimeKeeperContext context, ILogger<EmployeesController> log) : base(context, log) { }
 
+        /// <summary>
+        /// This method returns all employees
+        /// </summary>
+        /// <returns>All employees</returns>
+        /// <response status="200">OK</response>
+        /// <response status="400">Bad request</response>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult Get()
         {
             try
@@ -31,7 +39,17 @@ namespace TimeKeeper.API.Controllers
                 return BadRequest(ex);
             }
         }
+        /// <summary>
+        /// This method returns employee with specified id
+        /// </summary>
+        /// <param name="id">Id of employee</param>
+        /// <returns>employee with specified id</returns>
+        /// <response status="200">OK</response>
+        /// <response status="404">Not found</response>
+        /// <response status="400">Bad request</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult Get(int id)
         {
             try
@@ -55,7 +73,16 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        /// <summary>
+        /// This method inserts a new employee
+        /// </summary>
+        /// <param name="employee">New employee that will be inserted</param>
+        /// <returns>Model of inserted employee</returns>
+        /// <response status="200">OK</response>
+        /// <response status="400">Bad request</response>
         [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult Post([FromBody] Employee employee)
         {
             try
@@ -74,7 +101,17 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        /// <summary>
+        /// This method updates data for employee with specified id
+        /// </summary>
+        /// <param name="id">Id of employee that will be updated</param>
+        /// <param name="employee">Data that comes from frontend</param>
+        /// <returns>employee with new values</returns>
+        /// <response status="200">OK</response>
+        /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult Put(int id, [FromBody] Employee employee)
         {
             try
@@ -101,7 +138,18 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        /// <summary>
+        /// This method deletes employee with specified id
+        /// </summary>
+        /// <param name="id">Id of employee that has to be deleted</param>
+        /// <returns>No content</returns>
+        /// <response status="204">No content</response>
+        /// <response status="404">Not found</response>
+        /// <response status="400">Bad request</response>
         [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult Delete(int id)
         {
             try
