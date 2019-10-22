@@ -15,5 +15,12 @@
     "editor.fontFamily": "'Fira Code', 'Operator Mono', 'iA Writer Duospace', 'Source Code Pro', Menlo, Monaco, monospace",
     "editor.fontLigatures": true,
     "editor.detectIndentation": true,
-    "editor.renderIndentGuides": false
+    "editor.renderIndentGuides": false,
+
+    "emmet.includeLanguages": {
+        "javascript": "javascriptreact"
+    },
+    "files.associations": {
+        "*.js": "javascriptreact"
+    }
 }
