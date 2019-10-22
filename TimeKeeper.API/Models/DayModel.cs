@@ -15,6 +15,6 @@ namespace TimeKeeper.API.Models
         public MasterModel Employee { get; set; }
         public DateTime Date { get; set; }
         public MasterModel DayType { get; set; }
-        public List<MasterModel> JobDetails { get; set; }
+        public List<MasterModel> JobDetails { get; set; }//shouldn't this property be called Tasks?
     }
 }

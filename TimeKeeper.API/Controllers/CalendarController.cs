@@ -50,14 +50,14 @@ namespace TimeKeeper.API.Controllers
                     Log.LogError($"Employee with id {employeeId} cannot be found");
                     return NotFound("Employee not found");
                 }
-                DayModel day = emp.Calendar.FirstOrDefault(x => x.Id == id).Create();
+                Day day = emp.Calendar.FirstOrDefault(x => x.Id == id);
                 Log.LogInformation($"Try to get day with {id}");
                 if (day == null)
                 {
                     Log.LogError($"Day with id {id} cannot be found");
                     return NotFound("Day not found");
                 }
-                return Ok(day);
+                return Ok(day.Create());
             }
             catch (Exception ex)
             {
