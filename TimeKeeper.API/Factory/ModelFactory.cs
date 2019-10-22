@@ -34,7 +34,8 @@ namespace TimeKeeper.API.Factory
                 BeginDate = employee.BeginDate,
                 EndDate = employee.EndDate,
                 Status = employee.Status.Master(),
-                Members = employee.Members.Select(x => x.Master()).ToList()
+                Members = employee.Members.Select(x => x.Master()).ToList(),
+                Calendar=employee.Calendar.Select(x=>x.Master()).ToList()
             };
         }
         public static CustomerModel Create(this Customer customer)

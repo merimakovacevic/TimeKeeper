@@ -12,24 +12,24 @@ using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Controllers
 {
-    [Route("api/tasks/{taskId}/calendar")]
+    [Route("api/employees/{employeeId}/calendar")]
     [ApiController]
     public class CalendarController : BaseController
     {
         public CalendarController(TimeKeeperContext context, ILogger<TeamsController> log) : base(context, log) { }
 
         [HttpGet]
-        public IActionResult Get(int taskId)
+        public IActionResult Get(int employeeId)
         {
             try
             {
-                JobDetailModel task = Unit.Tasks.Get(taskId).Create();
-                if (task == null)
+                EmployeeModel emp = Unit.Employees.Get(employeeId).Create();
+                if (emp == null)
                 {
-                    Log.LogError($"Task with id {taskId} cannot be found");
+                    Log.LogError($"Employee with id {employeeId} cannot be found");
                     return NotFound("Task not found");
                 }
-                return Ok(task.Day);
+                return Ok(emp.Calendar);
             }
             catch (Exception ex)
             {
@@ -39,18 +39,18 @@ namespace TimeKeeper.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int taskId, int id)
+        public IActionResult Get(int employeeId, int id)
         {
             try
             {
-                JobDetail task = Unit.Tasks.Get(taskId);
-                Log.LogInformation($"Try to get task with {taskId}");
-                if (task == null)
+                Employee emp = Unit.Employees.Get(employeeId);
+                Log.LogInformation($"Try to get employee with {employeeId}");
+                if (emp == null)
                 {
-                    Log.LogError($"Task with id {taskId} cannot be found");
-                    return NotFound("Job not found");
+                    Log.LogError($"Employee with id {employeeId} cannot be found");
+                    return NotFound("Employee not found");
                 }
-                DayModel day = task.Day.Create();
+                DayModel day = emp.Calendar.FirstOrDefault(x => x.Id == id).Create();
                 Log.LogInformation($"Try to get day with {id}");
                 if (day == null)
                 {
@@ -67,11 +67,11 @@ namespace TimeKeeper.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Day day, int taskId)
+        public IActionResult Post([FromBody] Day day, int employeeId)
         {
             try
             {
-                day.Employee = Unit.Employees.Get(day.Employee.Id);
+                day.Employee = Unit.Employees.Get(employeeId);
                 day.DayType = Unit.DayTypes.Get(day.DayType.Id);
 
                 Unit.Calendar.Insert(day);
@@ -87,11 +87,11 @@ namespace TimeKeeper.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Day day)
+        public IActionResult Put(int id, [FromBody] Day day, int employeeId)
         {
             try
             {
-                day.Employee = Unit.Employees.Get(day.Employee.Id);
+                day.Employee = Unit.Employees.Get(employeeId);
                 day.DayType = Unit.DayTypes.Get(day.DayType.Id);
 
                 Unit.Calendar.Update(day, id);

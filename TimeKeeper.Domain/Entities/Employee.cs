@@ -10,6 +10,7 @@ namespace TimeKeeper.Domain.Entities
         public Employee()
         {
             Members = new List<Member>();
+            Calendar = new List<Day>();
         }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -22,6 +23,7 @@ namespace TimeKeeper.Domain.Entities
         public DateTime BeginDate { get; set; }
         public DateTime EndDate { get; set; }
         public virtual EmploymentStatus Status { get; set; }
+        public virtual IList<Day> Calendar { get; set; }
         public virtual IList<Member> Members { get; set; }
     }
 }
