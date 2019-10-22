@@ -70,12 +70,12 @@ namespace TimeKeeper.API.Controllers
         public IActionResult Post([FromBody] Day day, int employeeId)
         {
             try
-            {
+            {                
                 day.Employee = Unit.Employees.Get(employeeId);
                 day.DayType = Unit.DayTypes.Get(day.DayType.Id);
 
                 Unit.Calendar.Insert(day);
-                Unit.Save();
+                Unit.Save();//Exception is thrown: duplicate key value violates unique constraint "PK_Calendar"
                 Log.LogInformation($"Day {day.Date} added with id {day.Id}");
                 return Ok(day.Create());
             }
