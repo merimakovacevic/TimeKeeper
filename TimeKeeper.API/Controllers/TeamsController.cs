@@ -17,7 +17,15 @@ namespace TimeKeeper.API.Controllers
     {
         public TeamsController(TimeKeeperContext context, ILogger<TeamsController> log) : base(context, log) { }
 
+        /// <summary>
+        /// This method returns all teams
+        /// </summary>
+        /// <returns>All teams</returns>
+        /// <response status="200">OK</response>
+        /// <response status="400">Bad request</response>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult Get()
         {
             try
@@ -31,7 +39,17 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        /// <summary>
+        /// This method returns team with specified id
+        /// </summary>
+        /// <param name="id">Id of team</param>
+        /// <returns>Team with specified id</returns>
+        /// <response status="200">OK</response>
+        /// <response status="404">Not found</response>
+        /// <response status="400">Bad request</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult Get(int id)
         {
             try
@@ -55,7 +73,16 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        /// <summary>
+        /// This method inserts a new team
+        /// </summary>
+        /// <param name="team">New team that will be inserted</param>
+        /// <returns>Model of inserted team</returns>
+        /// <response status="200">OK</response>
+        /// <response status="400">Bad request</response>
         [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult Post([FromBody] Team team)
         {
             try
@@ -73,13 +100,13 @@ namespace TimeKeeper.API.Controllers
         }
 
         /// <summary>
-        /// Ovaj metod azurira podatke za team
+        /// This method updates data for team with specified id
         /// </summary>
-        /// <param name="id">Id tima koji zelima da azuriramo</param>
-        /// <param name="team">Podaci koji dodju sa frontenda</param>
-        /// <returns>Tim sa novom vrijednoscu Id-a</returns>
-        /// <response status="200">Ovo valja</response>
-        /// <response status="400">Ovo ne valja</response>
+        /// <param name="id">Id of team that will be updated</param>
+        /// <param name="team">Data that comes from frontend</param>
+        /// <returns>Team with new values</returns>
+        /// <response status="200">OK</response>
+        /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -105,7 +132,18 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        /// <summary>
+        /// This method deletes team with specified id
+        /// </summary>
+        /// <param name="id">Id of team that has to be deleted</param>
+        /// <returns>No content</returns>
+        /// <response status="204">No content</response>
+        /// <response status="404">Not found</response>
+        /// <response status="400">Bad request</response>
         [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult Delete(int id)
         {
             try
