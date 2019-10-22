@@ -17,7 +17,15 @@ namespace TimeKeeper.API.Controllers
     {
         public RolesController(TimeKeeperContext context, ILogger<RolesController> log) : base(context, log) { }
 
+        /// <summary>
+        /// This method returns all roles
+        /// </summary>
+        /// <returns>All roles</returns>
+        /// <response status="200">OK</response>
+        /// <response status="400">Bad request</response>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult Get()
         {
             try
@@ -31,7 +39,18 @@ namespace TimeKeeper.API.Controllers
                 return BadRequest(ex);
             }
         }
+        /// <summary>
+        /// This method returns role with specified id
+        /// </summary>
+        /// <param name="id">Id of role</param>
+        /// <returns>Role with specified id</returns>
+        /// <response status="200">OK</response>
+        /// <response status="404">Not found</response>
+        /// <response status="400">Bad request</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult Get(int id)
         {
             try

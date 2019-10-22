@@ -18,7 +18,16 @@ namespace TimeKeeper.API.Controllers
     {
         public MembersController(TimeKeeperContext context, ILogger<TeamsController> log) : base(context, log) { }
 
+        /// <summary>
+        /// This method returns all members
+        /// </summary>
+        /// <param name="teamId">Id of team who owns the member</param>
+        /// <returns>All members</returns>
+        /// <response status="200">OK</response>
+        /// <response status="400">Bad request</response>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult Get(int teamId)
         {
             try
@@ -38,7 +47,18 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        /// <summary>
+        /// This method returns member with specified id
+        /// </summary>
+        /// <param name="id">Id of day</param>
+        /// <param name="teamId">Id of team who owns the member</param>
+        /// <returns>member with specified id</returns>
+        /// <response status="200">OK</response>
+        /// <response status="404">Not found</response>
+        /// <response status="400">Bad request</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult Get(int teamId, int id)
         {
             try
@@ -65,7 +85,17 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        /// <summary>
+        /// This method inserts a new member
+        /// </summary>
+        /// <param name="member">New member that will be inserted</param>
+        /// <param name="teamId">Id of team who owns the member</param>
+        /// <returns>Model of inserted member</returns>
+        /// <response status="200">OK</response>
+        /// <response status="400">Bad request</response>
         [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult Post([FromBody] Member member, int teamId)
         {
             try
@@ -86,7 +116,18 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        /// <summary>
+        /// This method updates data for member with specified id
+        /// </summary>
+        /// <param name="id">Id of member that will be updated</param>
+        /// <param name="member">Data that comes from frontend</param>
+        /// <param name="teamId">Id of team who owns the member</param>
+        /// <returns>member with new values</returns>
+        /// <response status="200">OK</response>
+        /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult Put(int id, [FromBody] Member member, int teamId)
         {
             try
@@ -107,7 +148,18 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        /// <summary>
+        /// This method deletes member with specified id
+        /// </summary>
+        /// <param name="id">Id of member that has to be deleted</param>
+        /// <returns>No content</returns>
+        /// <response status="204">No content</response>
+        /// <response status="404">Not found</response>
+        /// <response status="400">Bad request</response>
         [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult Delete(int id)
         {
             try
