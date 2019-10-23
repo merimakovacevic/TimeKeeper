@@ -5,6 +5,7 @@ using System.Text;
 
 namespace TimeKeeper.Domain.Entities
 {
+    //Members status in a team?
     public class Member: BaseClass
     {
         public  virtual Team Team { get; set; }
