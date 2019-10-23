@@ -21,6 +21,7 @@ namespace TimeKeeper.DAL
         private IRepository<EmploymentStatus> _employmentStatuses;
         private IRepository<JobDetail> _tasks;
         private IRepository<Member> _members;
+        private IRepository<MemberStatus> _memberStatuses;
         private IRepository<ProjectStatus> _projectStatuses;
         private IRepository<Role> _roles;
         private IRepository<Team> _teams;
@@ -48,6 +49,7 @@ namespace TimeKeeper.DAL
         public IRepository<JobDetail> Tasks => _tasks ?? (_tasks = new TasksRepository(_context));
         //public IRepository<Member> Members => _members ?? (_members = new MembersRepository(_context));
         public IRepository<Member> Members => _members ?? (_members = new MembersRepository(_context));
+        public IRepository<MemberStatus> MemberStatuses => _memberStatuses ?? (_memberStatuses = new Repository<MemberStatus>(_context));
         public IRepository<PricingStatus> PricingStatuses => _pricingStatuses ?? (_pricingStatuses = new Repository<PricingStatus>(_context));
         //public IRepository<Project> Projects => _projects ?? (_projects = new ProjectsRepository(_context));
         public IRepository<Project> Projects => _projects ?? (_projects = new ProjectsRepository(_context));

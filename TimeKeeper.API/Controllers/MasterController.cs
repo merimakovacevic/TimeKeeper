@@ -45,5 +45,8 @@ namespace TimeKeeper.API.Controllers
 
         [HttpGet("project-statuses")]
         public IActionResult GetProjectStatuses() => Ok(Unit.ProjectStatuses.Get().Select(x => x.Master()).ToList());
+
+        [HttpGet("member-statuses")]
+        public IActionResult GetMemberStatuses() => Ok(Unit.MemberStatuses.Get().Select(x => x.Master()).ToList());
     }
 }

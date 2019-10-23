@@ -16,7 +16,7 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class CalendarController : BaseController
     {
-        public CalendarController(TimeKeeperContext context, ILogger<TeamsController> log) : base(context, log) { }
+        public CalendarController(TimeKeeperContext context, ILogger<CalendarController> log) : base(context, log) { }
 
         /// <summary>
         /// This method returns all days

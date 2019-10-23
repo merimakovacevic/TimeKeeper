@@ -16,7 +16,7 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class MembersController : BaseController
     {
-        public MembersController(TimeKeeperContext context, ILogger<TeamsController> log) : base(context, log) { }
+        public MembersController(TimeKeeperContext context, ILogger<MembersController> log) : base(context, log) { }
 
         /// <summary>
         /// This method returns all members
@@ -103,6 +103,7 @@ namespace TimeKeeper.API.Controllers
                 member.Team = Unit.Teams.Get(teamId);
                 member.Employee = Unit.Employees.Get(member.Employee.Id);
                 member.Role = Unit.Roles.Get(member.Role.Id);
+                member.Status = Unit.MemberStatuses.Get(member.Status.Id);
 
                 Unit.Members.Insert(member);
                 Unit.Save();
@@ -135,6 +136,7 @@ namespace TimeKeeper.API.Controllers
                 member.Team = Unit.Teams.Get(teamId);
                 member.Employee = Unit.Employees.Get(member.Employee.Id);
                 member.Role = Unit.Roles.Get(member.Role.Id);
+                member.Status = Unit.MemberStatuses.Get(member.Status.Id);
 
                 Unit.Members.Update(member, id);
 

@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.Text;
 using TimeKeeper.DAL;
 
-namespace TimeKeeper.Test.RepositoriesTest
+namespace TimeKeeper.Test
 {
+    [TestFixture]
     public class TestBase
     {
         public TimeKeeperContext context;

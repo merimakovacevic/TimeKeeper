@@ -19,6 +19,7 @@ namespace TimeKeeper.DAL.Repositories
                 old.Employee = member.Employee;
                 old.Team = member.Team;
                 old.Role = member.Role;
+                old.Status = member.Status;
             }
         }
     }
