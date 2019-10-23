@@ -126,13 +126,9 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
-<<<<<<< HEAD
-        public IActionResult Put([FromBody] Member member, int id, int teamId)
-=======
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Put(int id, [FromBody] Member member, int teamId)
->>>>>>> b58ad3c0f3a5e92255935cfb4408696fc0bf0cb9
         {
             try
             {
