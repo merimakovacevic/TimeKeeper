@@ -7,14 +7,13 @@ using TimeKeeper.DAL;
 using TimeKeeper.DAL.Repositories;
 using TimeKeeper.Domain.Entities;
 
-namespace TimeKeeper.Test
+namespace TimeKeeper.Test.RepositoriesTest
 {
     [TestFixture]
     public class TestTeams: TestBase
     {
 
-        [Test, Order(1)]
-        
+        [Test, Order(1)]        
         public void GetAllTeams()
         {
             //Act

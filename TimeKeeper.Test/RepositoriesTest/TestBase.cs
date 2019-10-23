@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using TimeKeeper.DAL;
 
-namespace TimeKeeper.Test
+namespace TimeKeeper.Test.RepositoriesTest
 {
     public class TestBase
     {
