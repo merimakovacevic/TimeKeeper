@@ -29,6 +29,7 @@ namespace TimeKeeper.API
             services.AddMvc();
 
             string connectionString = Configuration["ConnectionString"];
+          
             services.AddDbContext<TimeKeeperContext>(o => { o.UseNpgsql(connectionString); });
 
             services.AddSwaggerDocument(config =>
