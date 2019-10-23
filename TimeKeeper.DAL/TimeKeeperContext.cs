@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,8 +44,7 @@ namespace TimeKeeper.DAL
             base.OnConfiguring(optionBuilder);
         }
         protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
+        {            
             builder.Entity<Customer>().OwnsOne(x => x.HomeAddress);
             builder.Entity<Customer>().HasQueryFilter(x => !x.Deleted);
             builder.Entity<Member>().HasQueryFilter(x => !x.Deleted);
@@ -60,11 +60,12 @@ namespace TimeKeeper.DAL
             builder.Entity<ProjectStatus>().HasQueryFilter(x => !x.Deleted);
             builder.Entity<Role>().HasQueryFilter(x => !x.Deleted);
             builder.Entity<Team>().HasQueryFilter(x => !x.Deleted);
+            base.OnModelCreating(builder);//moved from first line of the method
         }
 
         public override int SaveChanges()
         {
-            foreach (var entry in ChangeTracker.Entries().Where(x => x.State == EntityState.Deleted && x.Entity is BaseClass))//how to imlement generic type?
+            foreach (var entry in ChangeTracker.Entries().Where(x => x.State == EntityState.Deleted && x.Entity is BaseClass))
             {
                 entry.State = EntityState.Modified;
                 entry.CurrentValues["Deleted"] = true;

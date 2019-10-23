@@ -110,7 +110,8 @@ namespace TimeKeeper.API.Factory
                 Id = day.Id,
                 Employee = day.Employee.Master(),
                 Date = day.Date,
-                DayType = day.DayType.Master()
+                DayType = day.DayType.Master(),
+                JobDetails = day.JobDetails.Select(x => x.Master()).ToList()
             };
         }
     }

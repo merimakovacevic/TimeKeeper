@@ -29,6 +29,7 @@ namespace TimeKeeper.API
             services.AddMvc();
 
             string connectionString = Configuration["ConnectionString"];
+            services.AddDbContext<TimeKeeperContext>(o => { o.UseNpgsql(connectionString); });
 
             services.AddDbContext<TimeKeeperContext>(o=> { o.UseNpgsql(connectionString); });
 
@@ -54,7 +55,6 @@ namespace TimeKeeper.API
                 };
             });
         }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
@@ -62,8 +62,15 @@ namespace TimeKeeper.API
             {
                 app.UseDeveloperExceptionPage();
             }
+<<<<<<< HEAD
+
             app.UseOpenApi();
             app.UseSwaggerUi3();
+
+=======
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
+>>>>>>> b58ad3c0f3a5e92255935cfb4408696fc0bf0cb9
             app.UseMvc();
         }
     }

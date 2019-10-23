@@ -137,9 +137,19 @@ namespace TimeKeeper.API.Controllers
                 member.Role = Unit.Roles.Get(member.Role.Id);
 
                 Unit.Members.Update(member, id);
+
+                int numberOfChanges = Unit.Save();
+
+                if(numberOfChanges == 0)
+                {
+                    Log.LogError($"Member with id {id} cannout be found");
+                    return NotFound();
+                }
+
                 Log.LogInformation($"Changed member with id {id}");
 
                 return Ok(member.Create());
+            
             }
             catch (Exception ex)
             {
@@ -165,12 +175,12 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Unit.Members.Delete(id);
-
+                Log.LogInformation($"Attempt to delete team with id {id}");
                 int numberOfChanges = Unit.Save();
 
                 if (numberOfChanges == 0)
                 {
-                    Log.LogInformation($"Attempt to delete team with id {id}");
+                    Log.LogInformation($"Member with id {id} not found");
                     return NotFound();
                 }
                 Log.LogInformation($"Deleted team with id {id}");

@@ -103,7 +103,7 @@ namespace TimeKeeper.API.Controllers
         /// This method updates data for team with specified id
         /// </summary>
         /// <param name="id">Id of team that will be updated</param>
-        /// <param name="customer">Data that comes from frontend</param>
+        /// <param name="team">Data that comes from frontend</param>
         /// <returns>Team with new values</returns>
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>

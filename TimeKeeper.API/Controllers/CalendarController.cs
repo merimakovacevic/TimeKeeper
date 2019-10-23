@@ -70,14 +70,14 @@ namespace TimeKeeper.API.Controllers
                     Log.LogError($"Employee with id {employeeId} cannot be found");
                     return NotFound("Employee not found");
                 }
-                DayModel day = emp.Calendar.FirstOrDefault(x => x.Id == id).Create();
+                Day day = emp.Calendar.FirstOrDefault(x => x.Id == id);
                 Log.LogInformation($"Try to get day with {id}");
                 if (day == null)
                 {
                     Log.LogError($"Day with id {id} cannot be found");
                     return NotFound("Day not found");
                 }
-                return Ok(day);
+                return Ok(day.Create());
             }
             catch (Exception ex)
             {
@@ -100,12 +100,12 @@ namespace TimeKeeper.API.Controllers
         public IActionResult Post([FromBody] Day day, int employeeId)
         {
             try
-            {
+            {                
                 day.Employee = Unit.Employees.Get(employeeId);
                 day.DayType = Unit.DayTypes.Get(day.DayType.Id);
 
                 Unit.Calendar.Insert(day);
-                Unit.Save();
+                Unit.Save();//Exception is thrown: duplicate key value violates unique constraint "PK_Calendar"
                 Log.LogInformation($"Day {day.Date} added with id {day.Id}");
                 return Ok(day.Create());
             }

@@ -18,7 +18,7 @@ namespace TimeKeeper.Domain.Entities
         public virtual Employee Employee{ get; set; }
         public DateTime Date { get; set; }        
         public virtual DayType DayType { get; set; }
-        public virtual IList<JobDetail> JobDetails { get; set; }
+        public virtual IList<JobDetail> JobDetails { get; set; }//Shouldn't this property be called tasks?
 
         [NotMapped]
         public decimal TotalHours { get; }
