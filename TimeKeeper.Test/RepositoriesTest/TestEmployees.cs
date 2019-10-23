@@ -83,6 +83,37 @@ namespace TimeKeeper.Test.RepositoriesTest
         }
 
         [Test, Order(7)]
+        public void ChangeEmployeeStatus()
+        {
+            int id = 58;//Try to change the employee with id
+            Employee employee = new Employee
+            {
+                Id = id
+            };
+            employee.Status = unit.EmploymentStatuses.Get(3);
+            unit.Employees.Update(employee, id);
+            int numberOfChanges = unit.Save();
+            Assert.AreEqual(1, numberOfChanges);
+            Assert.AreEqual(3, employee.Status.Id);
+        }
+
+        [Test, Order(8)]
+        public void ChangeEmployeeEndDate()
+        {
+            int id = 58;//Try to change the employee with id
+            DateTime endDate = new DateTime(2019, 10, 23);
+            Employee employee = new Employee
+            {
+                Id = id,
+                EndDate = endDate
+            };
+            unit.Employees.Update(employee, id);
+            int numberOfChanges = unit.Save();
+            Assert.AreEqual(1, numberOfChanges);
+            Assert.AreEqual(endDate, employee.EndDate);
+        }
+
+        [Test, Order(9)]
         public void DeleteEmployee()
         {
             int id = 101;//Try to delete the employee with id
@@ -92,7 +123,7 @@ namespace TimeKeeper.Test.RepositoriesTest
             Assert.AreEqual(1, numberOfChanges);
         }
 
-        [Test, Order(8)]
+        [Test, Order(10)]
         public void DeleteEmployeeWithWrongId()
         {
             int id = 40;//Try to delete the employee with id (doesn't exist)
