@@ -88,6 +88,8 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 customer.Status = Unit.CustomerStatuses.Get(customer.Status.Id);
+
+                //Is the HomeAddress instantiation here neccessary?
                 customer.HomeAddress = new Address
                 {
                     City = customer.HomeAddress.City,

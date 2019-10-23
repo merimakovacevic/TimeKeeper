@@ -7,6 +7,7 @@ using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.Test.RepositoriesTest
 {
+    [TestFixture]
     public class TestCustomers : TestBase
     {
         [Test, Order(1)]
