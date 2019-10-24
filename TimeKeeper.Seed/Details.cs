@@ -19,7 +19,8 @@ namespace TimeKeeper.Seed
                     Description = rawData.ReadString(row, 1),
                     Hours = rawData.ReadDecimal(row, 2),
                     Day = unit.Calendar.Get(rawData.ReadInteger(row, 4)),//unit.Calendar.Get(Utility.calendarDictionary[rawData.ReadInteger(row, 4)]),
-                    Project = unit.Projects.Get(rawData.ReadInteger(row, 3))//unit.Projects.Get(Utility.projectsDictionary[rawData.ReadInteger(row, 3)])
+                    //Project = unit.Projects.Get(rawData.ReadInteger(row, 3))
+                    Project=unit.Projects.Get(Utility.projectsDictionary[rawData.ReadInteger(row, 3)])
                 };
                 unit.Tasks.Insert(j);
                 if(N % 100 == 0)
