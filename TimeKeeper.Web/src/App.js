@@ -2,7 +2,7 @@ import React from "react";
 
 import Layout from "./hoc/Layout/Layout";
 import AboutPage from "./components/AboutPage/AboutPage";
-// import TeamPage from "./components/TeamPage/TeamPage";
+import TeamPage from "./components/TeamPage/TeamPage";
 
 class App extends React.Component {
     state = {};
@@ -11,6 +11,7 @@ class App extends React.Component {
         return (
             <Layout>
                 <AboutPage passedId={"about"} />
+                <TeamPage passedId={"team"} />
 
                 <div id="services" style={{ height: "100vh", backgroundColor: "green" }} />
 

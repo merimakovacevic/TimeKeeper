@@ -1,7 +1,11 @@
 .TeamCard {
     text-align: center;
+    margin: 0 auto;
     margin-top: 7rem;
+    margin-bottom: 1rem;
     background-color: white;
+    width: 90%;
+
     box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
 }
 
@@ -11,30 +15,42 @@
     border-radius: 100%;
     margin-top: -5rem;
     border: 3px solid rgba(0, 0, 0, 0.2);
+    display: inline-block !important;
 }
 
 .Name {
     margin: 1rem 0 0 0;
 }
 .Role {
-    margin: 0 0 1rem 0;
+    font-style: italic;
 }
 .About {
     width: 80%;
-    margin: auto;
+
+    margin: 1rem auto;
 }
 
 hr {
     width: 80%;
     margin: auto;
-    margin: 1rem auto;
+}
+
+.ScIcons {
+    padding: 1rem 0;
 }
 
 .Icon {
     width: 2rem;
     height: 2rem;
     padding: 0.3rem;
+    display: inline-block !important;
 }
 .Icon:active {
     background-color: aquamarine;
+}
+
+@media (max-width: 768px) {
+    .Icon {
+        margin: 0 0.5rem;
+    }
 }

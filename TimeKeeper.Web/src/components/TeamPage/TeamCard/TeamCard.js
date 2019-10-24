@@ -1,7 +1,7 @@
 import React from "react";
 
 import classes from "./TeamCard.module.css";
-import test from "../../../assets/backgundWithEffect.png";
+import "./TeamCard.module.css";
 
 import LnIcon from "../../../assets/servicesSVGIcons/linkedin.svg";
 import GitIcon from "../../../assets/servicesSVGIcons/github-sign.svg";
@@ -9,7 +9,7 @@ import FbIcon from "../../../assets/servicesSVGIcons/facebook.svg";
 
 const teamCard = props => (
     <div className={classes.TeamCard}>
-        <img src={test} alt="" className={classes.Img} />
+        <img src={props.picture} alt="" className={classes.Img} />
         <h2 className={classes.Name}>Ime i Prezime</h2>
         <p className={classes.Role}>Lorem</p>
 
@@ -20,7 +20,7 @@ const teamCard = props => (
 
         <hr />
 
-        <div>
+        <div className={classes.ScIcons}>
             <a href={props.link}>
                 <img src={LnIcon} alt="" className={classes.Icon} />
             </a>
