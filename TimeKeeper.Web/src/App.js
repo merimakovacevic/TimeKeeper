@@ -2,6 +2,7 @@ import React from "react";
 
 import Layout from "./hoc/Layout/Layout";
 import AboutPage from "./components/AboutPage/AboutPage";
+// import TeamPage from "./components/TeamPage/TeamPage";
 
 class App extends React.Component {
     state = {};
