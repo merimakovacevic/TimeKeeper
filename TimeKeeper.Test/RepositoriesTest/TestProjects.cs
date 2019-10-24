@@ -1,0 +1,175 @@
+﻿using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using TimeKeeper.Domain.Entities;
+
+namespace TimeKeeper.Test.RepositoriesTest
+{
+    [TestFixture]
+    public class TestProjects : TestBase
+    {
+        [Test, Order(1)]
+        public void GetAllProjects()
+        {
+            //Act
+            int projectsCount = unit.Projects.Get().Count();
+
+            //Assert
+            Assert.AreEqual(3, projectsCount); //there are 3 projects in the test database
+        }
+
+        [Test, Order(2)]
+        [TestCase(53, "Titanic Data Set")]
+        [TestCase(55, "Image Net")]
+        public void GetProjectById(int id, string name)
+        {
+            var result = unit.Projects.Get(id);
+            Assert.AreEqual(result.Name, name);
+        }
+
+        [Test, Order(3)]
+        public void GetProjectByWrongId()
+        {
+            int id = 40; //Project with id doesn't exist in the test database
+            var result = unit.Projects.Get(id);
+            Assert.IsNull(result);
+        }
+
+
+        [Test, Order(4)]
+        public void InsertProject()
+        {
+            Project project = new Project
+            {
+                Name = "Test Project"
+            };
+            unit.Projects.Insert(project);
+            int numberOfChanges = unit.Save();
+            Assert.AreEqual(1, numberOfChanges);
+            Assert.AreEqual(1, project.Id);//id of the new project will be 3
+        }
+
+        [Test, Order(5)]
+        public void ChangeProjectsName()
+        {
+            int id = 53;//Try to change the project with id
+            Project project = new Project
+            {
+                Id = id,
+                Name = "Test Project",
+                Team = unit.Teams.Get(1),
+                Status = unit.ProjectStatuses.Get(1),
+                Pricing = unit.PricingStatuses.Get(1),
+                Customer = unit.Customers.Get(1)
+            };
+            unit.Projects.Update(project, id);
+            int numberOfChanges = unit.Save();
+            Assert.AreEqual(1, numberOfChanges);
+            Assert.AreEqual("Test Project", project.Name);
+        }
+               
+
+        [Test, Order(6)]
+        public void ChangeProjectWithWrongId()
+        {
+            int id = 40;//Try to change the project with id (doesn't exist)
+            Project project = new Project
+            {
+                Id = id,
+                Name = "Test Project",
+                Team = unit.Teams.Get(1),
+                Status = unit.ProjectStatuses.Get(1),
+                Pricing = unit.PricingStatuses.Get(1),
+                Customer = unit.Customers.Get(1)
+            };
+            unit.Projects.Update(project, id);
+            int numberOfChanges = unit.Save();
+            Assert.AreEqual(0, numberOfChanges);
+        }
+
+        [Test, Order(7)]
+        public void ChangeProjectStatus()
+        {
+            int id = 53;//Try to change the project with id
+            Project project = new Project
+            {
+                Id = id,
+                Name = "Test Project",
+                Team = unit.Teams.Get(1),
+                Status = unit.ProjectStatuses.Get(1),
+                Pricing = unit.PricingStatuses.Get(1),
+                Customer = unit.Customers.Get(1)
+            };
+            int statusId = 4; //new status Id
+            project.Status = unit.ProjectStatuses.Get(statusId);
+            unit.Projects.Update(project, id);
+            int numberOfChanges = unit.Save();
+            Assert.AreEqual(1, numberOfChanges);
+            Assert.AreEqual(statusId, project.Status.Id);
+        }
+
+        [Test, Order(8)]
+        public void ChangeProjectTeam()
+        {
+            int id = 53;//Try to change the project with id
+            Project project = new Project
+            {
+                Id = id,
+                Name = "Test Project",
+                Team = unit.Teams.Get(1),
+                Status = unit.ProjectStatuses.Get(1),
+                Pricing = unit.PricingStatuses.Get(1),
+                Customer = unit.Customers.Get(1)
+            };
+            int teamId = 1; //new status Id
+            project.Team = unit.Teams.Get(teamId);
+            unit.Projects.Update(project, id);
+            int numberOfChanges = unit.Save();
+            Assert.AreEqual(1, numberOfChanges);
+            Assert.AreEqual(teamId, project.Team.Id);
+        }
+
+        [Test, Order(9)]
+        public void ChangeProjectEndDate()
+        {
+            DateTime endDate = new DateTime(2019, 10, 23);
+            int id = 53;//Try to change the project with id
+            Project project = new Project
+            {
+                Id = id,
+                Name = "Test Project",
+                Team = unit.Teams.Get(1),
+                Status = unit.ProjectStatuses.Get(1),
+                Pricing = unit.PricingStatuses.Get(1),
+                Customer = unit.Customers.Get(1),
+                EndDate = endDate
+            };
+            unit.Projects.Update(project, id);
+            int numberOfChanges = unit.Save();
+            Assert.AreEqual(1, numberOfChanges);
+            Assert.AreEqual(endDate, project.EndDate);
+        }
+
+        [Test, Order(10)]
+        public void DeleteProject()
+        {
+            int id = 53;//Try to delete the project with id
+
+            unit.Projects.Delete(id);
+            int numberOfChanges = unit.Save();
+            Assert.AreEqual(1, numberOfChanges);
+        }
+
+        [Test, Order(11)]
+        public void DeleteProjectWithWrongId()
+        {
+            int id = 40;//Try to delete the project with id (doesn't exist)
+
+            unit.Projects.Delete(id);
+            int numberOfChanges = unit.Save();
+            Assert.AreEqual(0, numberOfChanges);
+        }
+    }
+}
