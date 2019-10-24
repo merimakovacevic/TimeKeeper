@@ -15,7 +15,7 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class RolesController : BaseController
     {
-        public RolesController(TimeKeeperContext context, ILogger<RolesController> log) : base(context, log) { }
+        public RolesController(TimeKeeperContext context) : base(context) { }
 
         /// <summary>
         /// This method returns all roles
@@ -30,12 +30,12 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Log.LogInformation($"Try to get all roles");
+                //Log.LogInformation($"Try to get all roles");
                 return Ok(Unit.Roles.Get().ToList().Select(x => x.Create()).ToList());
             }
             catch(Exception ex)
             {
-                Log.LogCritical(ex, "Server error");
+                //Log.LogCritical(ex, "Server error");
                 return BadRequest(ex);
             }
         }
@@ -55,11 +55,11 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Log.LogInformation($"Try to get roles with {id}");
+                //Log.LogInformation($"Try to get roles with {id}");
                 Role role = Unit.Roles.Get(id);
                 if (role == null)
                 {
-                    Log.LogError($"Role with id {id} cannot be found");
+                    //Log.LogError($"Role with id {id} cannot be found");
                     return NotFound();
                 }
                 else
@@ -69,7 +69,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Log.LogCritical(ex, "Server error");
+                //Log.LogCritical(ex, "Server error");
                 return BadRequest(ex);
             }
         }

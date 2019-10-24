@@ -16,7 +16,7 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class CalendarController : BaseController
     {
-        public CalendarController(TimeKeeperContext context, ILogger<CalendarController> log) : base(context, log) { }
+        public CalendarController(TimeKeeperContext context) : base(context) { }
 
         /// <summary>
         /// This method returns all days
@@ -35,15 +35,15 @@ namespace TimeKeeper.API.Controllers
                 EmployeeModel emp = Unit.Employees.Get(employeeId).Create();
                 if (emp == null)
                 {
-                    Log.LogError($"Employee with id {employeeId} cannot be found");
+                    //Log.LogError($"Employee with id {employeeId} cannot be found");
                     return NotFound("Task not found");
                 }
                 return Ok(emp.Calendar);
             }
             catch (Exception ex)
             {
-                Log.LogCritical(ex, "Server error");
-                return BadRequest();
+                //LogCritical(ex, "Server error");
+                return BadRequest(ex);
             }
         }
 
@@ -64,25 +64,25 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Employee emp = Unit.Employees.Get(employeeId);
-                Log.LogInformation($"Try to get employee with {employeeId}");
+               // Log.LogInformation($"Try to get employee with {employeeId}");
                 if (emp == null)
                 {
-                    Log.LogError($"Employee with id {employeeId} cannot be found");
+                    //Log.LogError($"Employee with id {employeeId} cannot be found");
                     return NotFound("Employee not found");
                 }
                 Day day = emp.Calendar.FirstOrDefault(x => x.Id == id);
-                Log.LogInformation($"Try to get day with {id}");
+                //Log.LogInformation($"Try to get day with {id}");
                 if (day == null)
                 {
-                    Log.LogError($"Day with id {id} cannot be found");
+                    //Log.LogError($"Day with id {id} cannot be found");
                     return NotFound("Day not found");
                 }
                 return Ok(day.Create());
             }
             catch (Exception ex)
             {
-                Log.LogCritical(ex, "Server error");
-                return BadRequest();
+                //Log.LogCritical(ex, "Server error");
+                return BadRequest(ex);
             }
         }
 
@@ -106,12 +106,12 @@ namespace TimeKeeper.API.Controllers
 
                 Unit.Calendar.Insert(day);
                 Unit.Save();//Exception is thrown: duplicate key value violates unique constraint "PK_Calendar"
-                Log.LogInformation($"Day {day.Date} added with id {day.Id}");
+                //Log.LogInformation($"Day {day.Date} added with id {day.Id}");
                 return Ok(day.Create());
             }
             catch (Exception ex)
             {
-                Log.LogCritical(ex, "Server error");
+                //Log.LogCritical(ex, "Server error");
                 return BadRequest(ex);
             }
         }
@@ -136,12 +136,12 @@ namespace TimeKeeper.API.Controllers
                 day.DayType = Unit.DayTypes.Get(day.DayType.Id);
 
                 Unit.Calendar.Update(day, id);
-                Log.LogInformation($"Changed day with id {id}");
+                //Log.LogInformation($"Changed day with id {id}");
                 return Ok(day.Create());
             }
             catch (Exception ex)
             {
-                Log.LogCritical(ex, "Server error");
+                //Log.LogCritical(ex, "Server error");
                 return BadRequest(ex);
             }
         }
@@ -168,15 +168,15 @@ namespace TimeKeeper.API.Controllers
 
                 if (numberOfChanges == 0)
                 {
-                    Log.LogInformation($"Attempt to delete day with id {id}");
+                    //Log.LogInformation($"Attempt to delete day with id {id}");
                     return NotFound();
                 }
-                Log.LogInformation($"Deleted day with id {id}");
+                //Log.LogInformation($"Deleted day with id {id}");
                 return NoContent();
             }
             catch (Exception ex)
             {
-                Log.LogCritical(ex, "Server error");
+                //Log.LogCritical(ex, "Server error");
                 return BadRequest(ex);
             }
         }

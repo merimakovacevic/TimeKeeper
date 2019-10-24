@@ -15,7 +15,7 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class TasksController : BaseController
     {
-        public TasksController(TimeKeeperContext context, ILogger<TasksController> log) : base(context, log) { }
+        public TasksController(TimeKeeperContext context) : base(context) { }
 
         /// <summary>
         /// This method returns all tasks
@@ -31,13 +31,13 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 var result = Unit.Tasks.Get().ToList().Select(x => x.Create()).ToList();
-                Log.LogInformation($"Try to get all tasks");
+                //Log.LogInformation($"Try to get all tasks");
                 return Ok(result);
             }
             catch(Exception ex)
             {
-                Log.LogCritical(ex, "Server error");
-                return BadRequest();
+                //Log.LogCritical(ex, "Server error");
+                return BadRequest(ex);
             }
         }
         /// <summary>
@@ -56,18 +56,18 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Log.LogInformation($"Try to get task with {id}");
+                //Log.LogInformation($"Try to get task with {id}");
                 var result = Unit.Tasks.Get(id);
                 if (result == null)
                 {
-                    Log.LogError($"Task with id {id} cannot be found");
+                    //Log.LogError($"Task with id {id} cannot be found");
                     return NotFound();
                 }
                 return Ok(result.Create());
             }
             catch(Exception ex)
             {
-                Log.LogCritical(ex, "Server error");
+                //Log.LogCritical(ex, "Server error");
                 return BadRequest(ex);
             }
         }

@@ -9,10 +9,10 @@ namespace TimeKeeper.Seed
     public static class Utility
     {
         //the following dictionaries are commented, due to the fact that the won't be needed in the seed - the original Id numbers will be taken from the legacy database
-        //public static Dictionary<int, int> employeesDictionary = new Dictionary<int, int>();
+        public static Dictionary<int, int> employeesDictionary = new Dictionary<int, int>();
         //public static Dictionary<int, int> customersDictionary = new Dictionary<int, int>();
         //public static Dictionary<int, int> calendarDictionary = new Dictionary<int, int>();
-        //public static Dictionary<int, int> projectsDictionary = new Dictionary<int, int>();
+        public static Dictionary<int, int> projectsDictionary = new Dictionary<int, int>();
 
         public static Dictionary<string, int> teamsDictionary = new Dictionary<string, int>();
         public static Dictionary<string, int> rolesDictionary = new Dictionary<string, int>();

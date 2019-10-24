@@ -18,7 +18,8 @@ namespace TimeKeeper.Seed
                 Day d = new Day
                 {
                     Id = rawData.ReadInteger(row, 1),
-                    Employee = unit.Employees.Get(rawData.ReadInteger(row, 2)), //unit.Employees.Get(Utility.employeesDictionary[rawData.ReadInteger(row, 2)]),
+                    //Employee = unit.Employees.Get(rawData.ReadInteger(row, 2)), 
+                    Employee=unit.Employees.Get(Utility.employeesDictionary[rawData.ReadInteger(row, 2)]),
                     Date = rawData.ReadDateValue(row, 4),
                     DayType = unit.DayTypes.Get(rawData.ReadInteger(row, 3))//unit.DayTypes.Get(Utility.dayTypesDictionary[rawData.ReadInteger(row, 3)])
                 };

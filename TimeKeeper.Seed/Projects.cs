@@ -13,10 +13,10 @@ namespace TimeKeeper.Seed
         {
             for (int row = 2; row <= rawData.Dimension.Rows; row++)
             {
-                //int oldId = rawData.ReadInteger(row, 1);
+                int oldId = rawData.ReadInteger(row, 1);
                 Project p = new Project
                 {
-                    Id = rawData.ReadInteger(row, 1),
+                    //Id = rawData.ReadInteger(row, 1),
                     Name = rawData.ReadString(row, 3),
                     Description = rawData.ReadString(row, 4),
                     StartDate = rawData.ReadDate(row, 5),
@@ -28,8 +28,10 @@ namespace TimeKeeper.Seed
                     Pricing = unit.PricingStatuses.Get(rawData.ReadInteger(row, 10) + 1),//.PricingStatuses.Get(Utility.pricingStatusesDictionary[rawData.ReadInteger(row, 10)]),
                     Amount = rawData.ReadDecimal(row, 11)
                 };
-                unit.Projects.Insert(p);                
-                //Utility.projectsDictionary.Add(oldId, p.Id);
+                unit.Projects.Insert(p);
+                unit.Save();
+                Utility.projectsDictionary.Add(oldId, p.Id);
+                Console.WriteLine("PROJECTS: Old id: " + oldId + " new id: " + p.Id);
             }
             unit.Save();
         }
