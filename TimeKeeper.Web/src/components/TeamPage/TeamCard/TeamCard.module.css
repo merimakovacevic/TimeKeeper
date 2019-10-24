@@ -1,0 +1,40 @@
+.TeamCard {
+    text-align: center;
+    margin-top: 7rem;
+    background-color: white;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
+}
+
+.Img {
+    height: 10rem;
+    width: 10rem;
+    border-radius: 100%;
+    margin-top: -5rem;
+    border: 3px solid rgba(0, 0, 0, 0.2);
+}
+
+.Name {
+    margin: 1rem 0 0 0;
+}
+.Role {
+    margin: 0 0 1rem 0;
+}
+.About {
+    width: 80%;
+    margin: auto;
+}
+
+hr {
+    width: 80%;
+    margin: auto;
+    margin: 1rem auto;
+}
+
+.Icon {
+    width: 2rem;
+    height: 2rem;
+    padding: 0.3rem;
+}
+.Icon:active {
+    background-color: aquamarine;
+}

@@ -1,0 +1,57 @@
+[
+    {
+        "image": "",
+        "name": "Tajib Smajlovic",
+        "role": "Developer",
+        "about": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "socialMedia": {
+            "ln": "asd",
+            "git": "",
+            "fb": ""
+        }
+    },
+    {
+        "image": "",
+        "name": "Web Applications",
+        "role": "developer",
+        "about": "",
+        "socialMedia": {
+            "ln": "asd",
+            "git": "",
+            "fb": ""
+        }
+    },
+    {
+        "image": "",
+        "name": "Web Applications",
+        "role": "developer",
+        "about": "",
+        "socialMedia": {
+            "ln": "asd",
+            "git": "",
+            "fb": ""
+        }
+    },
+    {
+        "image": "",
+        "name": "Web Applications",
+        "role": "developer",
+        "about": "",
+        "socialMedia": {
+            "ln": "asd",
+            "git": "",
+            "fb": ""
+        }
+    },
+    {
+        "image": "",
+        "name": "Web Applications",
+        "role": "developer",
+        "about": "",
+        "socialMedia": {
+            "ln": "asd",
+            "git": "",
+            "fb": ""
+        }
+    }
+]
