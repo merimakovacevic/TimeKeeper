@@ -1,8 +1,10 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using TimeKeeper.DAL;
+using TimeKeeper.Seed;
 
 namespace TimeKeeper.Test
 {
@@ -16,10 +18,13 @@ namespace TimeKeeper.Test
         public void SetUp()
         {
             string conStr = "User ID=postgres; Password=postgres; Server=localhost; Port=5432; Database=TKTestera; Integrated Security=true; Pooling=true;";
+            //Paths for test Excel databases
+            FileInfo fileStatuses = new FileInfo(@"C:\Projects\TimeKeeper\TimeKeeperStatusesTest.xlsx");
+            FileInfo file = new FileInfo(@"C:\Projects\TimeKeeper\TimeKeeperTest.xlsx");
 
             context = new TimeKeeperContext(conStr);
             unit = new UnitOfWork(context);
-            unit.Seed();
+            unit.SeedDatabase(file, fileStatuses);
         }
     }
 }
