@@ -13,15 +13,18 @@ namespace TimeKeeper.Seed
         {
             for (int row = 2; row <= rawData.Dimension.Rows; row++)
             {
-                //int oldId = rawData.ReadInteger(row, 1);
+                int oldId = rawData.ReadInteger(row, 1);
+
                 EmploymentStatus employmentStatus = new EmploymentStatus
                 {
-                    Id = rawData.ReadInteger(row, 1) + 1,//Id will start from 1, since the original table has Id ordered, but starting from 0
+                    //Id = rawData.ReadInteger(row, 1) + 1,//Id will start from 1, since the original table has Id ordered, but starting from 0
                     Name = rawData.ReadString(row, 2)
                 };
+
                 unit.EmploymentStatuses.Insert(employmentStatus);
                 unit.Save();
-                //Utility.employmentStatusesDictionary.Add(oldId, employmentStatus.Id);
+
+                Utility.employmentStatusesDictionary.Add(oldId, employmentStatus.Id);
             }
         }
     }

@@ -10,8 +10,8 @@ namespace TimeKeeper.Seed
     {
         //the following dictionaries are commented, due to the fact that the won't be needed in the seed - the original Id numbers will be taken from the legacy database
         public static Dictionary<int, int> employeesDictionary = new Dictionary<int, int>();
-        //public static Dictionary<int, int> customersDictionary = new Dictionary<int, int>();
-        //public static Dictionary<int, int> calendarDictionary = new Dictionary<int, int>();
+        public static Dictionary<int, int> customersDictionary = new Dictionary<int, int>();
+        public static Dictionary<int, int> calendarDictionary = new Dictionary<int, int>();
         public static Dictionary<int, int> projectsDictionary = new Dictionary<int, int>();
 
         public static Dictionary<string, int> teamsDictionary = new Dictionary<string, int>();
@@ -21,11 +21,11 @@ namespace TimeKeeper.Seed
 
         //Status Dictionaries
         public static Dictionary<string, int> employeePositionsDictionary = new Dictionary<string, int>();
-        //public static Dictionary<int, int> employmentStatusesDictionary = new Dictionary<int, int>();
-        //public static Dictionary<int, int> dayTypesDictionary = new Dictionary<int, int>(); //this dictionary is not necessary, because the day types are in orderly fashion in the database, starting from 1
-        //public static Dictionary<int, int> customerStatusesDictionary = new Dictionary<int, int>();
-        //public static Dictionary<int, int> projectStatusesDictionary = new Dictionary<int, int>();//this dictionary is not necessary, because the day types are in orderly fashion in the database, starting from 1
-        //public static Dictionary<int, int> pricingStatusesDictionary = new Dictionary<int, int>();
+        public static Dictionary<int, int> employmentStatusesDictionary = new Dictionary<int, int>();
+        public static Dictionary<int, int> dayTypesDictionary = new Dictionary<int, int>(); //this dictionary is not necessary, because the day types are in orderly fashion in the database, starting from 1
+        public static Dictionary<int, int> customerStatusesDictionary = new Dictionary<int, int>();
+        public static Dictionary<int, int> projectStatusesDictionary = new Dictionary<int, int>();//this dictionary is not necessary, because the day types are in orderly fashion in the database, starting from 1
+        public static Dictionary<int, int> pricingStatusesDictionary = new Dictionary<int, int>();
 
         public static string ReadString(this ExcelWorksheet sht, int row, int col) => sht.Cells[row, col].Value.ToString().Trim();
 

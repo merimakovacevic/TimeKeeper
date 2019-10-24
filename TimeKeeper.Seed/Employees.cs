@@ -14,6 +14,7 @@ namespace TimeKeeper.Seed
             for (int row = 2; row <= rawData.Dimension.Rows; row++)
             {
                 int oldId = rawData.ReadInteger(row, 1);
+
                 Employee e = new Employee
                 {
                     //Id = rawData.ReadInteger(row, 1),
@@ -26,16 +27,19 @@ namespace TimeKeeper.Seed
                     BeginDate = rawData.ReadDate(row, 9),
                     EndDate = rawData.ReadDate(row, 10),
                     //status is + 1, because the Id in the status table has only been incremented for 1 value compared to the legacy database
-                    Status = unit.EmploymentStatuses.Get(rawData.ReadInteger(row, 11) + 1), //unit.EmploymentStatuses.Get(Utility.employmentStatusesDictionary[rawData.ReadInteger(row, 11)]),
+                    Status = unit.EmploymentStatuses.Get(Utility.employmentStatusesDictionary[rawData.ReadInteger(row, 11)]),
+                    //Status = unit.EmploymentStatuses.Get(rawData.ReadInteger(row, 11) + 1), 
                     Position = unit.EmployeePositions.Get(Utility.employeePositionsDictionary[rawData.ReadString(row, 12)]),
                     Salary = rawData.ReadDecimal(row, 13)//additionally added to entity properties
                 };
+
                 unit.Employees.Insert(e);
                 unit.Save();
+
                 Utility.employeesDictionary.Add(oldId, e.Id);
                 Console.WriteLine("EMPLOYEES: Old id: " + oldId + "new id: " + e.Id);
             }
-            unit.Save();
+            //unit.Save();
         }
     }
 }

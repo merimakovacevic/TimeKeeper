@@ -15,12 +15,11 @@ namespace TimeKeeper.Seed
             {
                 MemberStatus memberStatus = new MemberStatus
                 {
-                    Id = rawData.ReadInteger(row, 1),
+                    //Id = rawData.ReadInteger(row, 1),
                     Name = rawData.ReadString(row, 2)
                 };
                 unit.MemberStatuses.Insert(memberStatus);
-                unit.Save();
-                //Utility.customerStatusesDictionary.Add(oldId, customerStatus.Id);
+                unit.Save();                
             }
         }
     }
