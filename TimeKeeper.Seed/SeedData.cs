@@ -9,12 +9,14 @@ namespace TimeKeeper.Seed
 {
     public static class SeedData
     {
-        public static void SeedDatabase(this UnitOfWork unit, FileInfo file, FileInfo fileStatuses)
+        public static void SeedDatabase(this UnitOfWork unit, FileInfo fileCoreData, FileInfo fileStatusesData)
         {
-            using (ExcelPackage packageStatuses = new ExcelPackage(fileStatuses))
+            unit.Context.Database.EnsureDeleted();
+            unit.Context.Database.EnsureCreated();
+            unit.Context.ChangeTracker.AutoDetectChangesEnabled = false;
+
+            using (ExcelPackage packageStatuses = new ExcelPackage(fileStatusesData))
             {
-                unit.Context.Database.EnsureDeleted();
-                unit.Context.Database.EnsureCreated();
                 EmployeePositions.Collect(packageStatuses.Workbook.Worksheets["EmployeePosition"], unit);
                 EmploymentStatuses.Collect(packageStatuses.Workbook.Worksheets["EmploymentStatus"], unit);
                 DayTypes.Collect(packageStatuses.Workbook.Worksheets["DayType"], unit);
@@ -23,7 +25,7 @@ namespace TimeKeeper.Seed
                 PricingStatuses.Collect(packageStatuses.Workbook.Worksheets["PricingStatus"], unit);
                 MemberStatuses.Collect(packageStatuses.Workbook.Worksheets["MemberStatus"], unit);
             }
-            using (ExcelPackage package = new ExcelPackage(file))
+            using (ExcelPackage package = new ExcelPackage(fileCoreData))
             {
                 Teams.Collect(package.Workbook.Worksheets["Teams"], unit);
                 Roles.Collect(package.Workbook.Worksheets["Roles"], unit);
@@ -33,8 +35,9 @@ namespace TimeKeeper.Seed
                 Calendar.Collect(package.Workbook.Worksheets["Calendar"], unit);
                 Members.Collect(package.Workbook.Worksheets["Engagement"], unit);
                 Details.Collect(package.Workbook.Worksheets["Details"], unit);
-            }            
+            }
 
+            Console.WriteLine("Seed complete!");
         }
     }
 }

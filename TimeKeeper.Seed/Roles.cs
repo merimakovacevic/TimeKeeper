@@ -14,14 +14,17 @@ namespace TimeKeeper.Seed
             for (int row = 2; row <= rawData.Dimension.Rows; row++)
             {
                 string oldId = rawData.ReadString(row, 1);
+
                 Role r = new Role
                 {
                     Name = rawData.ReadString(row, 2),
-                    HourlyPrice= rawData.ReadDecimal(row,3),
-                    MonthlyPrice=rawData.ReadDecimal(row, 4)
+                    HourlyPrice = rawData.ReadDecimal(row,3),
+                    MonthlyPrice = rawData.ReadDecimal(row, 4)
                 };
+
                 unit.Roles.Insert(r);
                 unit.Save();
+
                 Utility.rolesDictionary.Add(oldId, r.Id);
             }
         }
