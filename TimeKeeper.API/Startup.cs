@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TimeKeeper.API.Services;
 using TimeKeeper.DAL;
 
 namespace TimeKeeper.API
@@ -26,13 +28,16 @@ namespace TimeKeeper.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddMvc();
 
-            string connectionString = Configuration["ConnectionString"];
-          
+            services.AddAuthentication("BasicAuthentication")
+                    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+
+            string connectionString = Configuration["ConnectionString"];          
             services.AddDbContext<TimeKeeperContext>(o => { o.UseNpgsql(connectionString); });
 
-            services.AddSwaggerDocument(config =>
+            services.AddSwaggerDocument(config => //Is this config neccessary?
             {
                 config.PostProcess = document =>
                 {
@@ -62,9 +67,15 @@ namespace TimeKeeper.API
                 app.UseDeveloperExceptionPage();
             }
 
+            //app.UseStaticFiles();//??? for static files
             app.UseOpenApi();
             app.UseSwaggerUi3();
 
+            app.UseCors(c => c.AllowAnyOrigin()
+                              .AllowAnyMethod()
+                              .AllowAnyHeader()
+                              .AllowCredentials());
+            app.UseAuthentication();
             app.UseMvc();
         }
     }
