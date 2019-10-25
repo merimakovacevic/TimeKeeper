@@ -25,6 +25,7 @@ namespace TimeKeeper.DAL
         private IRepository<ProjectStatus> _projectStatuses;
         private IRepository<Role> _roles;
         private IRepository<Team> _teams;
+        private IRepository<User> _users;
 
         //Will the context injection here be necessary?
         //It is ensured that the context is always instantiated, so a default argument in UnitOfWork contstructor is not neccessary
@@ -56,6 +57,7 @@ namespace TimeKeeper.DAL
         public IRepository<ProjectStatus> ProjectStatuses => _projectStatuses ?? (_projectStatuses = new Repository<ProjectStatus>(_context));
         public IRepository<Role> Roles => _roles ?? (_roles = new Repository<Role>(_context));
         public IRepository<Team> Teams => _teams ?? (_teams = new Repository<Team>(_context));
+        public IRepository<User> Users => _users ?? (_users = new Repository<User>(_context));
 
 
         public int Save() => _context.SaveChanges();
