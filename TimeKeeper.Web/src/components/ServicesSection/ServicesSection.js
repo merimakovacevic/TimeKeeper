@@ -1,11 +1,11 @@
 import React from "react";
 
-import classes from "./ServicesPage.module.css";
+import classes from "./ServicesSection.module.css";
 import serviceIcons from "../../data/serviceIcons";
 import serviceData from "../../data/services";
 import ServiceCard from "./ServiceCard/ServiceCard";
 
-const servicesPage = props => (
+const servicesSection = props => (
   <div id={props.passedId} className={classes.Services}>
     <h1>Services</h1>
     <p className={classes.ServiceParagraph}>
@@ -26,4 +26,4 @@ const servicesPage = props => (
   </div>
 );
 
-export default servicesPage;
+export default servicesSection;

@@ -2,9 +2,9 @@ import React from "react";
 
 import Navigation from "../../components/Navigation/Navigation";
 import SideDrawer from "../../components/Navigation/SideDrawer/SideDrawer";
-import AboutPage from "../../components/AboutPage/AboutPage";
-import ServicesPage from "../../components/ServicesPage/ServicesPage";
-import TeamPage from "../../components/TeamPage/TeamPage";
+import AboutPage from "../../components/AboutSection/AboutSection";
+import ServicesPage from "../../components/ServicesSection/ServicesSection";
+import TeamPage from "../../components/TeamSection/TeamSection";
 
 class StaticPage extends React.Component {
   state = {

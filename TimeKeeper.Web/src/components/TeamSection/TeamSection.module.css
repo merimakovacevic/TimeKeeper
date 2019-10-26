@@ -1,10 +1,10 @@
-.TeamPage {
+.TeamSection {
     padding: 5rem 0;
     flex-direction: column;
     align-items: center;
     background-color: rgba(243, 246, 250);
 }
-.TeamPage h1 {
+.TeamSection h1 {
     font-size: 2rem;
     font-weight: bold;
     text-transform: uppercase;
@@ -12,7 +12,7 @@
     margin: 1rem 0;
     color: rgb(41, 100, 138);
 }
-.TeamPageSlogan {
+.TeamSectionSlogan {
     margin: 1rem auto;
     font-size: 1.2rem;
     width: 80%;
@@ -20,10 +20,10 @@
 }
 
 @media (min-width: 1024px) {
-    .TeamPage {
+    .TeamSection {
         height: 100vh;
     }
-    .TeamPageList {
+    .TeamSectionList {
         width: 80%;
         margin: 3rem auto 2rem auto !important;
     }

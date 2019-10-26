@@ -3,12 +3,12 @@ import Slider from "react-slick";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import classes from "./TeamPage.module.css";
+import classes from "./TeamSection.module.css";
 import pictures from "../../data/profilePictures";
 import teamData from "../../data/teamMembers.json";
 import TeamCard from "./TeamCard/TeamCard";
 
-const teamPage = props => {
+const teamSection = props => {
     let settings = {
         dots: true,
         infinite: true,
@@ -45,15 +45,15 @@ const teamPage = props => {
     };
 
     return (
-        <div id={props.passedId} className={classes.TeamPage}>
-            <h1>Team Page</h1>
-            <p className={classes.TeamPageSlogan}>
+        <div id={props.passedId} className={classes.TeamSection}>
+            <h1>Our Team</h1>
+            <p className={classes.TeamSectionSlogan}>
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Non, quo doloribus
                 delectus dolore expedita, repellendus testtes as
             </p>
             <ul
                 style={{ margin: "0 2rem", listStyleType: "none" }}
-                className={classes.TeamPageList}
+                className={classes.TeamSectionList}
             >
                 <Slider {...settings}>
                     {teamData.map((d, i) => (
@@ -74,4 +74,4 @@ const teamPage = props => {
     );
 };
 
-export default teamPage;
+export default teamSection;
