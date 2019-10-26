@@ -14,20 +14,25 @@
     width: 10rem;
     border-radius: 100%;
     margin-top: -5rem;
-    border: 3px solid rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.3);
     display: inline-block !important;
 }
 
 .Name {
-    margin: 1rem 0 0 0;
+    font-weight: 500;
+    font-size: 1.5rem;
 }
 .Role {
+    font-size: 0.9rem;
     font-style: italic;
+    margin-top: 0.3rem;
+    margin-bottom: 0.4rem;
 }
 .About {
     width: 80%;
-
     margin: 1rem auto;
+
+    text-align: center;
 }
 
 hr {
@@ -37,20 +42,35 @@ hr {
 
 .ScIcons {
     padding: 1rem 0;
+    display: flex;
+    justify-content: center;
 }
 
 .Icon {
     width: 2rem;
     height: 2rem;
     padding: 0.3rem;
+    margin: 0 0.5rem;
     display: inline-block !important;
 }
-.Icon:active {
-    background-color: aquamarine;
+.Link:active {
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
-@media (max-width: 768px) {
+@media (min-width: 767px) {
     .Icon {
         margin: 0 0.5rem;
+    }
+    .TeamCard {
+        width: 80%;
+    }
+}
+
+@media (min-width: 1023px) {
+    .TeamCard {
+        width: 80%;
+    }
+    .Icon:hover {
+        background-color: rgba(0, 0, 0, 0.1);
     }
 }

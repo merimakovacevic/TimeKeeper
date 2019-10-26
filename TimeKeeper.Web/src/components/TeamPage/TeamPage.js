@@ -13,8 +13,35 @@ const teamPage = props => {
         dots: true,
         infinite: true,
         speed: 500,
-        slidesToShow: 1,
-        slidesToScroll: 1
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                    dots: true,
+                    arrows: true
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                    dots: true,
+                    arrows: true
+                }
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            }
+        ]
     };
 
     return (
@@ -24,10 +51,22 @@ const teamPage = props => {
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Non, quo doloribus
                 delectus dolore expedita, repellendus testtes as
             </p>
-            <ul style={{ margin: "0 2rem", listStyleType: "none" }}>
+            <ul
+                style={{ margin: "0 2rem", listStyleType: "none" }}
+                className={classes.TeamPageList}
+            >
                 <Slider {...settings}>
                     {teamData.map((d, i) => (
-                        <TeamCard key={i} picture={pictures[i]} />
+                        <TeamCard
+                            key={i}
+                            picture={pictures[i]}
+                            name={d.name}
+                            role={d.role}
+                            about={d.about}
+                            lnLink={d.socialMedia.ln}
+                            gitLink={d.socialMedia.git}
+                            fbLink={d.socialMedia.fb}
+                        />
                     ))}
                 </Slider>
             </ul>
