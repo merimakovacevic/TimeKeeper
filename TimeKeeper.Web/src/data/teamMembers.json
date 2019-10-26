@@ -1,8 +1,27 @@
 [
     {
-        "image": "",
         "name": "Tajib Smajlovic",
-        "role": "Developer",
+        "role": "Front-end Developer",
+        "about": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "socialMedia": {
+            "ln": "",
+            "git": "",
+            "fb": ""
+        }
+    },
+    {
+        "name": "Ajdin",
+        "role": "Front-end Developer",
+        "about": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "socialMedia": {
+            "ln": "",
+            "git": "",
+            "fb": ""
+        }
+    },
+    {
+        "name": "Merima",
+        "role": "Back-end Developer",
         "about": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
         "socialMedia": {
             "ln": "asd",
@@ -11,10 +30,9 @@
         }
     },
     {
-        "image": "",
-        "name": "Web Applications",
-        "role": "developer",
-        "about": "",
+        "name": "Armin",
+        "role": "Back-end Developer",
+        "about": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
         "socialMedia": {
             "ln": "asd",
             "git": "",
@@ -22,10 +40,9 @@
         }
     },
     {
-        "image": "",
-        "name": "Web Applications",
-        "role": "developer",
-        "about": "",
+        "name": "Amila",
+        "role": "Testeras",
+        "about": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
         "socialMedia": {
             "ln": "asd",
             "git": "",
@@ -33,21 +50,9 @@
         }
     },
     {
-        "image": "",
-        "name": "Web Applications",
-        "role": "developer",
-        "about": "",
-        "socialMedia": {
-            "ln": "asd",
-            "git": "",
-            "fb": ""
-        }
-    },
-    {
-        "image": "",
-        "name": "Web Applications",
-        "role": "developer",
-        "about": "",
+        "name": "Nadja",
+        "role": "PM",
+        "about": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
         "socialMedia": {
             "ln": "asd",
             "git": "",

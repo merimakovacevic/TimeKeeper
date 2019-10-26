@@ -7,7 +7,9 @@
         "@material-ui/icons": "^4.5.1",
         "react": "^16.10.2",
         "react-dom": "^16.10.2",
-        "react-scripts": "3.2.0"
+        "react-scripts": "3.2.0",
+        "react-slick": "^0.25.2",
+        "slick-carousel": "^1.8.1"
     },
     "scripts": {
         "start": "react-scripts start",
@@ -31,6 +33,7 @@
         ]
     },
     "devDependencies": {
+        "gh-pages": "^2.1.1",
         "prettier": "^1.18.2"
     }
 }
