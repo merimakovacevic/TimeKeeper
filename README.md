@@ -1,7 +1,5 @@
 # Charlie
 
-# Charlie
-
 ## Instructions to run the app locally (Front-end part):
 - clone the repository
 - navigate to the TimeKeeper.Web (cd TimeKeeper.Web)
