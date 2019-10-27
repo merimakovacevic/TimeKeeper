@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace TimeKeeper.Domain.Entities
@@ -14,6 +15,9 @@ namespace TimeKeeper.Domain.Entities
         }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        [NotMapped]
+        /// Employee's full name - not mapped - calculated
+        public string FullName { get { return FirstName + " " + LastName; } }
         public string Image { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }

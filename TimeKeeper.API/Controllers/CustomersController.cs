@@ -89,14 +89,6 @@ namespace TimeKeeper.API.Controllers
             {
                 customer.Status = Unit.CustomerStatuses.Get(customer.Status.Id);
 
-                //Is the HomeAddress instantiation here neccessary?
-                customer.HomeAddress = new Address
-                {
-                    City = customer.HomeAddress.City,
-                    Country = customer.HomeAddress.Country,
-                    Zip = customer.HomeAddress.Zip,
-                    Street = customer.HomeAddress.Street
-                };
                 Unit.Customers.Insert(customer);
                 Unit.Save();
                 //Log.LogInformation($"Customer {customer.Name} added with id {customer.Id}");

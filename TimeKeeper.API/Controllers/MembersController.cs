@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace TimeKeeper.API.Controllers
 {
-    [Route("api/teams/{teamId}/members")]
+    [Route("api/[controller]")]
     [ApiController]
     public class MembersController : BaseController
     {
@@ -21,24 +21,25 @@ namespace TimeKeeper.API.Controllers
         /// <summary>
         /// This method returns all members
         /// </summary>
-        /// <param name="teamId">Id of team who owns the member</param>
         /// <returns>All members</returns>
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Get(int teamId)
+        public IActionResult Get()
         {
             try
-            {
+            {  
+                //This is only neccessary if there is a team in the route
+                /*
                 TeamModel team = Unit.Teams.Get(teamId).Create();
                 if (team == null)
                 {
                     //Log.LogError($"Team with id {teamId} cannot be found");
                     return NotFound("Team not found");
-                }
-                return Ok(team.Members);
+                }*/
+                return Ok(Unit.Members.Get().ToList().Select(x => x.Create()).ToList());
             }
             catch(Exception ex)
             {
@@ -51,7 +52,6 @@ namespace TimeKeeper.API.Controllers
         /// This method returns member with specified id
         /// </summary>
         /// <param name="id">Id of day</param>
-        /// <param name="teamId">Id of team who owns the member</param>
         /// <returns>member with specified id</returns>
         /// <response status="200">OK</response>
         /// <response status="404">Not found</response>
@@ -59,24 +59,27 @@ namespace TimeKeeper.API.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Get(int teamId, int id)
+        public IActionResult Get(int id)
         {
             try
             {
+                /*
                 Team team = Unit.Teams.Get(teamId);
                 //Log.LogInformation($"Try to get team with {teamId}");
                 if (team == null)
                 {
                     //Log.LogError($"Team with id {teamId} cannot be found");
                     return NotFound("Team not found");
-                }
-                MemberModel member = team.Members.FirstOrDefault(x => x.Id == id).Create();
+                }*/
+
+                Member member = Unit.Members.Get(id);
+
                 if (member == null)
                 {
                     //Log.LogError($"Member with id {id} cannout be found");
-                    return NotFound("Member not found");
+                    return NotFound();
                 }
-                return Ok(member);
+                return Ok(member.Create());
             }
             catch(Exception ex)
             {
@@ -89,18 +92,17 @@ namespace TimeKeeper.API.Controllers
         /// This method inserts a new member
         /// </summary>
         /// <param name="member">New member that will be inserted</param>
-        /// <param name="teamId">Id of team who owns the member</param>
         /// <returns>Model of inserted member</returns>
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Post([FromBody] Member member, int teamId)
+        public IActionResult Post([FromBody] Member member)
         {
             try
             {
-                member.Team = Unit.Teams.Get(teamId);
+                member.Team = Unit.Teams.Get(member.Team.Id);
                 member.Employee = Unit.Employees.Get(member.Employee.Id);
                 member.Role = Unit.Roles.Get(member.Role.Id);
                 member.Status = Unit.MemberStatuses.Get(member.Status.Id);
@@ -122,18 +124,17 @@ namespace TimeKeeper.API.Controllers
         /// </summary>
         /// <param name="id">Id of member that will be updated</param>
         /// <param name="member">Data that comes from frontend</param>
-        /// <param name="teamId">Id of team who owns the member</param>
         /// <returns>member with new values</returns>
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Put(int id, [FromBody] Member member, int teamId)
+        public IActionResult Put(int id, [FromBody] Member member)
         {
             try
             {
-                member.Team = Unit.Teams.Get(teamId);
+                member.Team = Unit.Teams.Get(member.Team.Id);
                 member.Employee = Unit.Employees.Get(member.Employee.Id);
                 member.Role = Unit.Roles.Get(member.Role.Id);
                 member.Status = Unit.MemberStatuses.Get(member.Status.Id);
