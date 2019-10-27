@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeKeeper.Seed", "TimeKeep
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeKeeper.API", "TimeKeeper.API\TimeKeeper.API.csproj", "{371F7D87-3DBE-46EB-B1BD-807C0733B31C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeKeeper.Test", "TimeKeeper.Test\TimeKeeper.Test.csproj", "{DDC195C4-1B06-4803-9DA8-A72E9DCC6790}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeKeeper.Test", "TimeKeeper.Test\TimeKeeper.Test.csproj", "{DDC195C4-1B06-4803-9DA8-A72E9DCC6790}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
