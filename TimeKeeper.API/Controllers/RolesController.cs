@@ -73,5 +73,99 @@ namespace TimeKeeper.API.Controllers
                 return BadRequest(ex);
             }
         }
+
+        /// <summary>
+        /// This method inserts a new role
+        /// </summary>
+        /// <param name="role">New role that will be inserted</param>
+        /// <returns>Model of inserted role</returns>
+        /// <response status="200">OK</response>
+        /// <response status="400">Bad request</response>
+        [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult Post([FromBody] Role role)
+        {
+            try
+            {
+                Unit.Roles.Insert(role);
+                Unit.Save();
+                //Log.LogInformation($"Role added with id {role.Id}");
+                return Ok(role.Create());
+            }
+            catch (Exception ex)
+            {
+                //Log.LogCritical(ex, "Server error");
+                return BadRequest(ex);
+            }
+        }
+
+        /// <summary>
+        /// This method updates data for role with specified id
+        /// </summary>
+        /// <param name="id">Id of role that will be updated</param>
+        /// <param name="role">Data that comes from frontend</param>
+        /// <returns>Role with new values</returns>
+        /// <response status="200">OK</response>
+        /// <response status="400">Bad request</response>
+        [HttpPut("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult Put(int id, [FromBody] Role role)
+        {
+            try
+            {
+                Unit.Roles.Update(role, id);
+                int numberOfChanges = Unit.Save();
+
+                if (numberOfChanges == 0)
+                {
+                    //Log.LogError($"Role with {id} not found");
+                    return NotFound();
+                }
+                //Log.LogInformation($"Changed role with id {id}");
+                return Ok(role.Create());
+            }
+            catch (Exception ex)
+            {
+                //Log.LogCritical(ex, "Server error");
+                return BadRequest(ex);
+            }
+        }
+
+        /// <summary>
+        /// This method deletes role with specified id
+        /// </summary>
+        /// <param name="id">Id of role that has to be deleted</param>
+        /// <returns>No content</returns>
+        /// <response status="204">No content</response>
+        /// <response status="404">Not found</response>
+        /// <response status="400">Bad request</response>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                Unit.Roles.Delete(id);
+
+                int numberOfChanges = Unit.Save();
+                //Log.LogInformation($"Attempt to delete role with id {id}");
+                if (numberOfChanges == 0)
+                {
+                    //Log.LogInformation($"Attempt to delete role with id {id}");
+                    return NotFound();
+                }
+                //Log.LogInformation($"Deleted role with id {id}");
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                //Log.LogCritical(ex, "Server error");
+                return BadRequest(ex);
+            }
+        }
     }
 }
