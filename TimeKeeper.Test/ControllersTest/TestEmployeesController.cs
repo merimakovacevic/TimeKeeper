@@ -24,7 +24,7 @@ namespace TimeKeeper.Test.ControllersTest
             Assert.AreEqual(6, value.Count); //there are 6 employees in the test database
         }
 
-        [Test, Order(1)]
+        [Test, Order(2)]
         [TestCase(1, "Helen Carter")]
         [TestCase(2, "Dorothy Green")]
         [TestCase(3, "Sharon Phillips")]
@@ -42,7 +42,7 @@ namespace TimeKeeper.Test.ControllersTest
             Assert.AreEqual(id, value.Id);
         }
 
-        [Test, Order(2)]
+        [Test, Order(3)]
         public void GetEmployeeByWrongId()
         {
             int id = 40; //Employee with id 40 doesn't exist in the test database
@@ -53,7 +53,7 @@ namespace TimeKeeper.Test.ControllersTest
             Assert.AreEqual(404, response.StatusCode);
         }
 
-        [Test, Order(3)]
+        [Test, Order(4)]
         public void InsertEmployee()
         {
             var controller = new EmployeesController(unit.Context);
@@ -73,7 +73,7 @@ namespace TimeKeeper.Test.ControllersTest
             Assert.AreEqual(7, value.Id);//Id of the new employee will be 4
         }
 
-        [Test, Order(4)]
+        [Test, Order(5)]
         public void ChangeEmployeeName()
         {
             var controller = new EmployeesController(unit.Context);
@@ -96,7 +96,7 @@ namespace TimeKeeper.Test.ControllersTest
             Assert.AreEqual("Sule", value.LastName);
         }
 
-        [Test, Order(5)]
+        [Test, Order(6)]
         public void ChangeEmployeeWithWrongId()
         {
             var controller = new EmployeesController(unit.Context);
@@ -116,7 +116,54 @@ namespace TimeKeeper.Test.ControllersTest
             Assert.AreEqual(404, response.StatusCode);
         }
 
-        [Test, Order(6)]
+        [Test, Order(7)]
+        public void ChangeEmployeeStatus()
+        {
+            var controller = new EmployeesController(unit.Context);
+            int id = 2;//Try to change the employee with id
+            int statusId = 1;
+
+            Employee employee = new Employee
+            {
+                Id = id,
+                FirstName = "Sule",
+                LastName = "Sule",
+                Position = unit.EmployeePositions.Get(1),
+                Status = unit.EmploymentStatuses.Get(statusId)
+            };
+
+            var response = controller.Put(id, employee) as ObjectResult;
+            var value = response.Value as EmployeeModel;
+
+            Assert.AreEqual(200, response.StatusCode);
+            Assert.AreEqual(statusId, value.Status.Id);
+        }
+
+        [Test, Order(8)]
+        public void ChangeEmployeeEndDate()
+        {
+            var controller = new EmployeesController(unit.Context);
+            int id = 2;//Try to change the employee with id
+            DateTime endDate = DateTime.Now;
+
+            Employee employee = new Employee
+            {
+                Id = id,
+                FirstName = "Sule",
+                LastName = "Sule",
+                Position = unit.EmployeePositions.Get(1),
+                Status = unit.EmploymentStatuses.Get(1),
+                EndDate=endDate
+            };
+
+            var response = controller.Put(id, employee) as ObjectResult;
+            var value = response.Value as EmployeeModel;
+
+            Assert.AreEqual(200, response.StatusCode);
+            Assert.AreEqual(endDate, value.EndDate);
+        }
+
+        [Test, Order(9)]
         public void DeleteEmployee()
         {
             var controller = new EmployeesController(unit.Context);
@@ -128,7 +175,7 @@ namespace TimeKeeper.Test.ControllersTest
 
         }
 
-        [Test, Order(7)]
+        [Test, Order(10)]
         public void DeleteEmployeeWithWrongId()
         {
             var controller = new EmployeesController(unit.Context);

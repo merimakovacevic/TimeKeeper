@@ -116,6 +116,77 @@ namespace TimeKeeper.Test.ControllersTest
         }
 
         [Test, Order(6)]
+        public void ChangeProjectStatus()
+        {
+            var controller = new ProjectsController(unit.Context);
+            int id = 2;//Try to change the project with id
+            int statusId = 1; //new status Id
+
+            Project project = new Project
+            {
+                Id=id,
+                Name = "Web app",
+                Team = unit.Teams.Get(1),
+                Customer = unit.Customers.Get(1),
+                Status = unit.ProjectStatuses.Get(statusId),
+                Pricing = unit.PricingStatuses.Get(1)
+            };
+
+            var response = controller.Put(id, project) as ObjectResult;
+            var value = response.Value as ProjectModel;
+
+            Assert.AreEqual(200, response.StatusCode);
+            Assert.AreEqual(statusId, value.Status.Id);
+        }
+        [Test, Order(7)]
+        public void ChangeProjectsTeam()
+        {
+            var controller = new ProjectsController(unit.Context);
+            int id = 2;//Try to change the project with id
+            int teamId = 2;
+
+            Project project = new Project
+            {
+                Id = id,
+                Name = "Web app",
+                Team = unit.Teams.Get(teamId),
+                Customer = unit.Customers.Get(1),
+                Status = unit.ProjectStatuses.Get(1),
+                Pricing = unit.PricingStatuses.Get(1)
+            };
+
+            var response = controller.Put(id, project) as ObjectResult;
+            var value = response.Value as ProjectModel;
+
+            Assert.AreEqual(200, response.StatusCode);
+            Assert.AreEqual(teamId, value.Team.Id);
+        }
+        [Test, Order(8)]
+        public void ChangeProjectsEndDate()
+        {
+            var controller = new ProjectsController(unit.Context);
+            int id = 2;//Try to change the project with id
+            DateTime endDate = DateTime.Now;
+
+            Project project = new Project
+            {
+                Id = id,
+                Name = "Web app",
+                Team = unit.Teams.Get(1),
+                Customer = unit.Customers.Get(1),
+                Status = unit.ProjectStatuses.Get(1),
+                Pricing = unit.PricingStatuses.Get(1),
+                EndDate=endDate
+            };
+
+            var response = controller.Put(id, project) as ObjectResult;
+            var value = response.Value as ProjectModel;
+
+            Assert.AreEqual(200, response.StatusCode);
+            Assert.AreEqual(endDate, value.EndDate);
+        }
+
+        [Test, Order(9)]
         public void DeleteProject()
         {
             var controller = new ProjectsController(unit.Context);
@@ -127,7 +198,7 @@ namespace TimeKeeper.Test.ControllersTest
 
         }
 
-        [Test, Order(7)]
+        [Test, Order(10)]
         public void DeleteProjectWithWrongId()
         {
             var controller = new ProjectsController(unit.Context);
