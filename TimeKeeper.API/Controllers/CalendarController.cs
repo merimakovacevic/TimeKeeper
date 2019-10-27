@@ -12,7 +12,7 @@ using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Controllers
 {
-    [Route("api/employees/{employeeId}/calendar")]
+    [Route("api/[controller]")]
     [ApiController]
     public class CalendarController : BaseController
     {
@@ -22,23 +22,27 @@ namespace TimeKeeper.API.Controllers
         /// This method returns all days
         /// </summary>
         /// <param name="employeeId">Id of employee who owns the day</param>
+        /// <param name="year">Year from the date</param>
+        /// <param name="month">Month from the date</param>
         /// <returns>All days</returns>
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
-        [HttpGet]
+        [HttpGet("{employeeId}/{year}/{month}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Get(int employeeId)
+        public IActionResult Get(int employeeId, int year, int month)
         {
             try
             {
-                EmployeeModel emp = Unit.Employees.Get(employeeId).Create();
+                Employee emp = Unit.Employees.Get(employeeId);
+
                 if (emp == null)
                 {
                     //Log.LogError($"Employee with id {employeeId} cannot be found");
                     return NotFound("Task not found");
-                }
-                return Ok(emp.Calendar);
+                }                
+
+                return Ok(emp.Calendar.Where(x => x.Date.Year == year && x.Date.Month == month).Select(x => x.Create()));
             }
             catch (Exception ex)
             {
@@ -51,7 +55,6 @@ namespace TimeKeeper.API.Controllers
         /// This method returns day with specified id
         /// </summary>
         /// <param name="id">Id of day</param>
-        /// <param name="employeeId">Id of employee who owns the day</param>
         /// <returns>day with specified id</returns>
         /// <response status="200">OK</response>
         /// <response status="404">Not found</response>
@@ -59,18 +62,22 @@ namespace TimeKeeper.API.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Get(int employeeId, int id)
+        public IActionResult Get(int id)
         {
             try
             {
+                //This is only neccessary if there will be an employee in the route
+                /*
                 Employee emp = Unit.Employees.Get(employeeId);
                // Log.LogInformation($"Try to get employee with {employeeId}");
                 if (emp == null)
                 {
                     //Log.LogError($"Employee with id {employeeId} cannot be found");
                     return NotFound("Employee not found");
-                }
-                Day day = emp.Calendar.FirstOrDefault(x => x.Id == id);
+                }*/
+
+                Day day = Unit.Calendar.Get(id);
+
                 //Log.LogInformation($"Try to get day with {id}");
                 if (day == null)
                 {
@@ -90,22 +97,21 @@ namespace TimeKeeper.API.Controllers
         /// This method inserts a new day
         /// </summary>
         /// <param name="day">New day that will be inserted</param>
-        /// <param name="employeeId">Id of employee who owns the day</param>
         /// <returns>Model of inserted day</returns>
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Post([FromBody] Day day, int employeeId)
+        public IActionResult Post([FromBody] Day day)
         {
             try
             {                
-                day.Employee = Unit.Employees.Get(employeeId);
+                day.Employee = Unit.Employees.Get(day.Employee.Id);
                 day.DayType = Unit.DayTypes.Get(day.DayType.Id);
 
                 Unit.Calendar.Insert(day);
-                Unit.Save();//Exception is thrown: duplicate key value violates unique constraint "PK_Calendar"
+                Unit.Save();
                 //Log.LogInformation($"Day {day.Date} added with id {day.Id}");
                 return Ok(day.Create());
             }
@@ -121,21 +127,29 @@ namespace TimeKeeper.API.Controllers
         /// </summary>
         /// <param name="id">Id of day that will be updated</param>
         /// <param name="day">Data that comes from frontend</param>
-        /// <param name="employeeId">Id of employee who owns the day</param>
         /// <returns>Team with new values</returns>
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Put(int id, [FromBody] Day day, int employeeId)
+        public IActionResult Put(int id, [FromBody] Day day)
         {
             try
             {
-                day.Employee = Unit.Employees.Get(employeeId);
+                day.Employee = Unit.Employees.Get(day.Employee.Id);
                 day.DayType = Unit.DayTypes.Get(day.DayType.Id);
 
                 Unit.Calendar.Update(day, id);
+                int numberOfChanges = Unit.Save();
+                // Log.LogInformation($"Attempt to update day with id {id}");
+
+                if (numberOfChanges == 0)
+                {
+                    //Log.LogError($"Day with id {id} cannot be found");
+                    return NotFound();
+                }
+
                 //Log.LogInformation($"Changed day with id {id}");
                 return Ok(day.Create());
             }
