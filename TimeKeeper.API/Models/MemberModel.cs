@@ -11,6 +11,7 @@ namespace TimeKeeper.API.Models
         public MasterModel Team { get; set; }
         public MasterModel Employee { get; set; }
         public MasterModel Role { get; set; }
+        public MasterModel Status { get; set; }
         public decimal HoursWeekly { get; set; }
     }
 }

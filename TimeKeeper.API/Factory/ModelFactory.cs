@@ -99,6 +99,7 @@ namespace TimeKeeper.API.Factory
                 Team = member.Team.Master(),
                 Employee = member.Employee.Master(),
                 Role = member.Role.Master(),
+                Status=member.Status.Master(),
                 HoursWeekly = member.HoursWeekly
             };
         }
