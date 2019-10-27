@@ -51,7 +51,7 @@ namespace TimeKeeper.Test.RepositoriesTest
             unit.Teams.Insert(team);
             int numberOfChanges = unit.Save();
             Assert.AreEqual(1, numberOfChanges);
-            Assert.AreEqual(4, team.Id);//id of the new book will be 4
+            Assert.AreEqual(4, team.Id);//id of the new team will be 4
         }
 
         [Test, Order(4)]

@@ -21,8 +21,8 @@ namespace TimeKeeper.Test.RepositoriesTest
         }
 
         [Test, Order(2)]
-        [TestCase(1, 58)]
-        [TestCase(2, 67)]
+        [TestCase(1, 1)]
+        [TestCase(2, 2)]
         public void GetMemberById(int id, int employeeId)
         {
             var result = unit.Members.Get(id);

@@ -21,8 +21,8 @@ namespace TimeKeeper.Test.RepositoriesTest
         }
 
         [Test, Order(2)]
-        [TestCase(53, "Titanic Data Set")]
-        [TestCase(55, "Image Net")]
+        [TestCase(1, "Titanic Data Set")]
+        [TestCase(3, "Image Net")]
         public void GetProjectById(int id, string name)
         {
             var result = unit.Projects.Get(id);
@@ -48,13 +48,13 @@ namespace TimeKeeper.Test.RepositoriesTest
             unit.Projects.Insert(project);
             int numberOfChanges = unit.Save();
             Assert.AreEqual(1, numberOfChanges);
-            Assert.AreEqual(1, project.Id);//id of the new project will be 3
+            Assert.AreEqual(4, project.Id);//id of the new project will be 4
         }
 
         [Test, Order(5)]
         public void ChangeProjectsName()
         {
-            int id = 53;//Try to change the project with id
+            int id = 2;//Try to change the project with id
             Project project = new Project
             {
                 Id = id,
@@ -92,18 +92,18 @@ namespace TimeKeeper.Test.RepositoriesTest
         [Test, Order(7)]
         public void ChangeProjectStatus()
         {
-            int id = 53;//Try to change the project with id
+            int id = 2;//Try to change the project with id
+            int statusId = 4; //new status Id
             Project project = new Project
             {
                 Id = id,
                 Name = "Test Project",
                 Team = unit.Teams.Get(1),
-                Status = unit.ProjectStatuses.Get(1),
+                Status = unit.ProjectStatuses.Get(statusId),
                 Pricing = unit.PricingStatuses.Get(1),
                 Customer = unit.Customers.Get(1)
             };
-            int statusId = 4; //new status Id
-            project.Status = unit.ProjectStatuses.Get(statusId);
+
             unit.Projects.Update(project, id);
             int numberOfChanges = unit.Save();
             Assert.AreEqual(1, numberOfChanges);
@@ -113,7 +113,7 @@ namespace TimeKeeper.Test.RepositoriesTest
         [Test, Order(8)]
         public void ChangeProjectTeam()
         {
-            int id = 53;//Try to change the project with id
+            int id = 2;//Try to change the project with id
             Project project = new Project
             {
                 Id = id,
@@ -135,7 +135,7 @@ namespace TimeKeeper.Test.RepositoriesTest
         public void ChangeProjectEndDate()
         {
             DateTime endDate = new DateTime(2019, 10, 23);
-            int id = 53;//Try to change the project with id
+            int id = 2;//Try to change the project with id
             Project project = new Project
             {
                 Id = id,
@@ -155,7 +155,7 @@ namespace TimeKeeper.Test.RepositoriesTest
         [Test, Order(10)]
         public void DeleteProject()
         {
-            int id = 53;//Try to delete the project with id
+            int id = 2;//Try to delete the project with id
 
             unit.Projects.Delete(id);
             int numberOfChanges = unit.Save();

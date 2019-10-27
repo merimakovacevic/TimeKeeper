@@ -21,9 +21,9 @@ namespace TimeKeeper.Test.RepositoriesTest
         }
 
         [Test, Order(2)]
-        [TestCase(58, "Helen")]
-        [TestCase(67, "Dorothy")]
-        [TestCase(101, "Jennifer")]
+        [TestCase(1, "Helen")]
+        [TestCase(2, "Dorothy")]
+        [TestCase(6, "Jennifer")]
         public void GetEmployeeById(int id, string firstName)
         {
             var result = unit.Employees.Get(id);
@@ -49,13 +49,13 @@ namespace TimeKeeper.Test.RepositoriesTest
             unit.Employees.Insert(employee);
             int numberOfChanges = unit.Save();
             Assert.AreEqual(1, numberOfChanges);
-            Assert.AreEqual(1, employee.Id);//id of the new employee will be 1
+            Assert.AreEqual(7, employee.Id);//id of the new employee will be 1
         }
 
         [Test, Order(5)]
         public void ChangeEmployeesName()
         {
-            int id = 58;//Try to change the employee with id
+            int id = 2;//Try to change the employee with id
             Employee employee = new Employee
             {
                 Id = id,
@@ -86,7 +86,7 @@ namespace TimeKeeper.Test.RepositoriesTest
         [Test, Order(7)]
         public void ChangeEmployeeStatus()
         {
-            int id = 58;//Try to change the employee with id
+            int id = 2;//Try to change the employee with id
             Employee employee = new Employee
             {
                 Id = id
@@ -101,7 +101,7 @@ namespace TimeKeeper.Test.RepositoriesTest
         [Test, Order(8)]
         public void ChangeEmployeeEndDate()
         {
-            int id = 58;//Try to change the employee with id
+            int id = 2;//Try to change the employee with id
             DateTime endDate = new DateTime(2019, 10, 23);
             Employee employee = new Employee
             {
@@ -117,7 +117,7 @@ namespace TimeKeeper.Test.RepositoriesTest
         [Test, Order(9)]
         public void DeleteEmployee()
         {
-            int id = 101;//Try to delete the employee with id
+            int id = 2;//Try to delete the employee with id
 
             unit.Employees.Delete(id);
             int numberOfChanges = unit.Save();
