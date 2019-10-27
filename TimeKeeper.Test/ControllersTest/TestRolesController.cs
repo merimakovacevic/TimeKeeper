@@ -54,80 +54,80 @@ namespace TimeKeeper.Test.ControllersTest
             Assert.AreEqual(404, response.StatusCode);
         }
 
-        //[Test, Order(3)]
-        //public void InsertRole()
-        //{
-        //    var controller = new RolesController(unit.Context);
+        [Test, Order(3)]
+        public void InsertRole()
+        {
+            var controller = new RolesController(unit.Context);
 
-        //    Role role = new Role
-        //    {
-        //        Name = "Backend developer"
-        //    };
+            Role role = new Role
+            {
+                Name = "Backend developer"
+            };
 
-        //    var response = controller.Post(role) as ObjectResult;
-        //    var value = response.Value as RoleModel;
+            var response = controller.Post(role) as ObjectResult;
+            var value = response.Value as RoleModel;
 
-        //    Assert.AreEqual(200, response.StatusCode);
-        //    Assert.AreEqual(6, value.Id);//Id of the new Role will be 6
-        //}
+            Assert.AreEqual(200, response.StatusCode);
+            Assert.AreEqual(6, value.Id);//Id of the new Role will be 6
+        }
 
-        //[Test, Order(4)]
-        //public void ChangeRoleName()
-        //{
-        //    var controller = new RolesController(unit.Context);
-        //    int id = 3;//Try to change the Role with id 3
+        [Test, Order(4)]
+        public void ChangeRoleName()
+        {
+            var controller = new RolesController(unit.Context);
+            int id = 3;//Try to change the Role with id 3
 
-        //    Role role = new Role
-        //    {
-        //        Id=id,
-        //        Name = "Backend developer"
-        //    };
+            Role role = new Role
+            {
+                Id = id,
+                Name = "Backend developer"
+            };
 
-        //    var response = controller.Put(id, role) as ObjectResult;
-        //    var value = response.Value as RoleModel;
+            var response = controller.Put(id, role) as ObjectResult;
+            var value = response.Value as RoleModel;
 
-        //    Assert.AreEqual(200, response.StatusCode);
-        //    Assert.AreEqual("Backend developer", value.Name);
-        //}
+            Assert.AreEqual(200, response.StatusCode);
+            Assert.AreEqual("Backend developer", value.Name);
+        }
 
-        //[Test, Order(5)]
-        //public void ChangeRoleWithWrongId()
-        //{
-        //    var controller = new RolesController(unit.Context);
-        //    int id = 40;//Try to change the Role with id (doesn't exist)
+        [Test, Order(5)]
+        public void ChangeRoleWithWrongId()
+        {
+            var controller = new RolesController(unit.Context);
+            int id = 40;//Try to change the Role with id (doesn't exist)
 
-        //    Role role = new Role
-        //    {
-        //        Id = id,
-        //        Name = "Backend developer"
-        //    };
+            Role role = new Role
+            {
+                Id = id,
+                Name = "Backend developer"
+            };
 
-        //    var response = controller.Put(id, role) as StatusCodeResult;
+            var response = controller.Put(id, role) as StatusCodeResult;
 
-        //    Assert.AreEqual(404, response.StatusCode);
-        //}
+            Assert.AreEqual(404, response.StatusCode);
+        }
 
-        //[Test, Order(6)]
-        //public void DeleteRole()
-        //{
-        //    var controller = new RolesController(unit.Context);
-        //    int id = 3;//Try to delete the Role with id 3
+        [Test, Order(6)]
+        public void DeleteRole()
+        {
+            var controller = new RolesController(unit.Context);
+            int id = 3;//Try to delete the Role with id 3
 
-        //    var response = controller.Delete(id) as StatusCodeResult;
+            var response = controller.Delete(id) as StatusCodeResult;
 
-        //    Assert.AreEqual(204, response.StatusCode);
+            Assert.AreEqual(204, response.StatusCode);
 
-        //}
+        }
 
-        //[Test, Order(7)]
-        //public void DeleteRoleWithWrongId()
-        //{
-        //    var controller = new RolesController(unit.Context);
-        //    int id = 40;//Try to delete the Role with id (doesn't exist)
+        [Test, Order(7)]
+        public void DeleteRoleWithWrongId()
+        {
+            var controller = new RolesController(unit.Context);
+            int id = 40;//Try to delete the Role with id (doesn't exist)
 
-        //    var response = controller.Delete(id) as StatusCodeResult;
+            var response = controller.Delete(id) as StatusCodeResult;
 
-        //    Assert.AreEqual(404, response.StatusCode);
-        //}
+            Assert.AreEqual(404, response.StatusCode);
+        }
     }
 }

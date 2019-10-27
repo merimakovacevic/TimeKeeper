@@ -37,56 +37,37 @@ namespace TimeKeeper.Test.RepositoriesTest
             Assert.IsNull(result);
         }
 
-        /*
+        
         [Test, Order(4)]
         public void InsertRole()
         {
-            Address homeAddress = new Address { City = "Sarajevo" };
             Role role = new Role
             {
-                Name = "Test Role",
-                HomeAddress = homeAddress
+                HourlyPrice=20,
+                MonthlyPrice=2000
             };
             unit.Roles.Insert(role);
             int numberOfChanges = unit.Save();
             Assert.AreEqual(1, numberOfChanges);
-            Assert.AreEqual(3, role.Id);//id of the new role will be 3
+            Assert.AreEqual(6, role.Id);//id of the new role will be 6
         }
 
         [Test, Order(5)]
         public void ChangeRolesName()
         {
             int id = 2;//Try to change the role with id
+            string name = "Backend developer";
             Role role = new Role
             {
                 Id = id,
-                Name = "Test Role"
+                Name=name
             };
             unit.Roles.Update(role, id);
             int numberOfChanges = unit.Save();
             Assert.AreEqual(1, numberOfChanges);
-            Assert.AreEqual("Test Role", role.Name);
+            Assert.AreEqual(name, role.Name);
         }
 
-
-        [Test, Order(6)]
-        public void ChangeRolesTown()
-        {
-            int id = 2;//Try to change the role with id
-            Address homeAddress = new Address
-            {
-                City = "Sarajevo"
-            };
-            Role role = new Role
-            {
-                Id = id,
-                HomeAddress = homeAddress
-            };
-            unit.Roles.Update(role, id);
-            int numberOfChanges = unit.Save();
-            Assert.AreEqual(1, numberOfChanges);
-            Assert.AreEqual("Sarajevo", role.HomeAddress.City);
-        }
 
         [Test, Order(7)]
         public void ChangeRoleWithWrongId()
@@ -95,27 +76,11 @@ namespace TimeKeeper.Test.RepositoriesTest
             Role role = new Role
             {
                 Id = id,
-                Name = "Test Role"
+                HourlyPrice=20
             };
             unit.Roles.Update(role, id);
             int numberOfChanges = unit.Save();
             Assert.AreEqual(0, numberOfChanges);
-        }
-
-        [Test, Order(8)]
-        public void ChangeRoleStatus()
-        {
-            int id = 2;//Try to change the role with id
-            Role role = new Role
-            {
-                Id = id
-            };
-            int statusId = 1; //new status Id
-            role.Status = unit.RoleStatuses.Get(statusId);
-            unit.Roles.Update(role, id);
-            int numberOfChanges = unit.Save();
-            Assert.AreEqual(1, numberOfChanges);
-            Assert.AreEqual(statusId, role.Status.Id);
         }
 
         [Test, Order(9)]
@@ -137,6 +102,6 @@ namespace TimeKeeper.Test.RepositoriesTest
             int numberOfChanges = unit.Save();
             Assert.AreEqual(0, numberOfChanges);
         }
-        */
+        
     }
 }
