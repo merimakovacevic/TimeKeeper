@@ -41,6 +41,7 @@ namespace TimeKeeper.DAL
                 optionBuilder.UseNpgsql(_conStr);
             }
             optionBuilder.UseLazyLoadingProxies(true);
+            //Exception is thrown when calling MasterController if this line isn't present:
             optionBuilder.ConfigureWarnings(w => w.Ignore(CoreEventId.DetachedLazyLoadingWarning));
             base.OnConfiguring(optionBuilder);
         }
@@ -62,7 +63,7 @@ namespace TimeKeeper.DAL
             builder.Entity<Role>().HasQueryFilter(x => !x.Deleted);
             builder.Entity<Team>().HasQueryFilter(x => !x.Deleted);
             builder.Entity<User>().HasQueryFilter(x => !x.Deleted);
-            base.OnModelCreating(builder);//moved from first line of the method
+            base.OnModelCreating(builder);//moved from first line of the method, does it mather where this is placed?
         }
 
         public override int SaveChanges()

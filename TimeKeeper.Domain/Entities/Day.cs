@@ -21,13 +21,11 @@ namespace TimeKeeper.Domain.Entities
         public virtual IList<JobDetail> JobDetails { get; set; }//Shouldn't this property be called tasks?
 
         [NotMapped]
-        public decimal TotalHours { get; }
-        
-        //TO DO: implementation of a DayType enum is still needed
-        // {
-        //if (DayType == DayType.WorkDay) return JobDetails.Sum(x => x.Hours);
-        //else return 8;
-        // } set; 
-        
+        public decimal TotalHours { get
+                //This hardcoded logic will need to be refactored
+            {
+                if (DayType.Name == "Workday") { return JobDetails.Sum(x => x.Hours); } else { return 8; };
+            }
+        }    
     }
 }
