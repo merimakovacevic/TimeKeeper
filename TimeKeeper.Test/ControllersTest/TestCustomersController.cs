@@ -61,12 +61,12 @@ namespace TimeKeeper.Test.ControllersTest
             {
                 Name = "Test Customer",
                 HomeAddress = homeAddress,
-                Status = unit.CustomerStatuses.Get(1)                
+                Status = unit.CustomerStatuses.Get(1)
             };
 
             var response = controller.Post(customer) as ObjectResult;
             var value = response.Value as CustomerModel;
- 
+
             Assert.AreEqual(200, response.StatusCode);
             Assert.AreEqual(3, value.Id);//id of the new customer will be 3
         }
