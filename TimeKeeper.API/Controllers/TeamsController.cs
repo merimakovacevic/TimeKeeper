@@ -35,6 +35,7 @@ namespace TimeKeeper.API.Controllers
             catch (Exception ex)
             {
                 //Log.LogCritical(ex, "Server error");
+
                 return BadRequest(ex);
             }
         }

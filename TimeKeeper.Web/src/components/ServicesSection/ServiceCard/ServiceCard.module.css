@@ -1,0 +1,71 @@
+.Card {
+    height: 20rem;
+    margin: 2rem;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.CardImage {
+    width: 40%;
+    margin-top: 1.5rem;
+}
+.Card h2 {
+    margin: 1rem 0;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+.Card p {
+    margin: 0 1rem;
+    color: black;
+    text-align: center;
+}
+
+@media (min-width: 768px) {
+ .Card {
+     height: 19rem;
+     width: 65%;
+     display: inline-block;
+ }
+    .Card p {
+        margin: 0 3rem;
+    }
+    .CardImage {
+        width: 25%;
+        margin-top: 2rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .Card {
+        height: 23rem;
+        transition: transform .3s;
+    }
+    .CardImage {
+        width: 30%;
+        margin-top: 3rem;
+    }
+    .Card p {
+        width: 80%;
+        margin: 0 auto;
+    }
+
+    .Card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 10px rgba(0, 0, 0, 0.3);
+    }
+}
+
+
+
+
+/*
+.Card {
+    width: 20vw;
+    height: 60vh;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    transition-property: transform;
+    transition-duration: 0.2s;
+}
+.Card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
+}*/

@@ -3,7 +3,7 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-*.log
+
 
 # User-specific files
 *.suo
@@ -81,7 +81,7 @@ StyleCopReport.xml
 *.tlh
 *.tmp
 *.tmp_proj
-*.log
+
 *.vspscc
 *.vssscc
 .builds

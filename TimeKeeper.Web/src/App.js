@@ -1,23 +1,17 @@
 import React from "react";
 
-import Layout from "./hoc/Layout/Layout";
-import AboutPage from "./components/AboutPage/AboutPage";
-// import TeamPage from "./components/TeamPage/TeamPage";
+import StaticPage from "./containers/StaticPage/StaticPage";
 
 class App extends React.Component {
-    state = {};
+  state = {};
 
-    render() {
-        return (
-            <Layout>
-                <AboutPage passedId={"about"} />
-
-                <div id="services" style={{ height: "100vh", backgroundColor: "green" }} />
-
-                <div id="team" style={{ height: "100vh", backgroundColor: "blue" }} />
-            </Layout>
-        );
-    }
+  render() {
+    return (
+      <React.Fragment>
+        <StaticPage />
+      </React.Fragment>
+    );
+  }
 }
 
 export default App;

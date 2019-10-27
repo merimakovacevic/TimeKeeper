@@ -1,0 +1,30 @@
+.Services {
+    text-align: center;
+    padding-top: 5rem;
+}
+.Services h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 1rem 0;
+    color: rgb(41, 100, 138);
+}
+
+.ServiceParagraph {
+    margin: 1rem auto;
+    font-size: 1.2rem;
+    width: 90%;
+    text-align: center;
+}
+
+@media (min-width: 1024px) {
+    .Services {
+        height: 100vh;
+    }
+    .ServicesCards {
+        display: flex;
+        margin: 0 5rem;
+        margin-top: 4rem;
+    }
+}

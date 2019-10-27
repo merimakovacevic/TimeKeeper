@@ -1,8 +1,8 @@
 import React from "react";
 
-import classes from "./AboutPage.module.css";
+import classes from "./AboutSection.module.css";
 
-const aboutPage = props => (
+const aboutSection = props => (
     <div id={props.passedId} className={classes.Background}>
         <h1 className={classes.HeadText}>
             Time tracking. <br />
@@ -12,4 +12,4 @@ const aboutPage = props => (
     </div>
 );
 
-export default aboutPage;
+export default aboutSection;
