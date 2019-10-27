@@ -37,7 +37,6 @@ namespace TimeKeeper.Test.RepositoriesTest
             Assert.IsNull(result);
         }
 
-
         [Test, Order(4)]
         public void InsertCustomer()
         {
@@ -106,12 +105,14 @@ namespace TimeKeeper.Test.RepositoriesTest
         public void ChangeCustomerStatus()
         {
             int id = 2;//Try to change the customer with id
+            int statusId = 1; //new status Id
+
             Customer customer = new Customer
             {
-                Id = id
+                Id = id,
+                Status = unit.CustomerStatuses.Get(statusId)
             };
-            int statusId = 1; //new status Id
-            customer.Status = unit.CustomerStatuses.Get(statusId);
+
             unit.Customers.Update(customer, id);
             int numberOfChanges = unit.Save();
             Assert.AreEqual(1, numberOfChanges);
