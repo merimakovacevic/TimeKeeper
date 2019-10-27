@@ -8,10 +8,10 @@ namespace TimeKeeper.Seed
     class Program
     {
         static void Main(string[] args)
-        {    
-            
+        {
+
             FileInfo fileStatuses = new FileInfo(@"C:\Projects\TimeKeeper\TimeKeeper.Seed\LegacyDatabase\TimeKeeperStatuses.xlsx");
-            FileInfo file = new FileInfo(@"C:\Projects\TimeKeeper\TimeKeeper.Seed\LegacyDatabase\TimeKeeper.xlsx");            
+            FileInfo file = new FileInfo(@"C:\Projects\TimeKeeper\TimeKeeper.Seed\LegacyDatabase\TimeKeeper.xlsx");
 
             string conString = "User ID=postgres; Password=postgres; Server=localhost; Port=5432; Database=TimeKeeper; Integrated Security=true; Pooling=true;";
 
@@ -48,7 +48,7 @@ namespace TimeKeeper.Seed
                 
             }
            */
-            
+
         }
     }
 }
