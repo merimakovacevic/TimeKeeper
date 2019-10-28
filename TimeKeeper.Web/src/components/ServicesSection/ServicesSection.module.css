@@ -1,4 +1,6 @@
 .Services {
+    height: auto;
+    min-height: 100vh;
     text-align: center;
     padding-top: 5rem;
 }
@@ -19,9 +21,6 @@
 }
 
 @media (min-width: 1024px) {
-    .Services {
-        height: 100vh;
-    }
     .ServicesCards {
         display: flex;
         margin: 0 5rem;
