@@ -3,12 +3,12 @@
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
-form {
+.Form {
     padding: 1.5rem;
     margin: 2rem 0;
 }
 
-input {
+.Input {
     width: 100%;
     padding: 0.7rem;
     margin: 0.5rem 0;
@@ -16,15 +16,15 @@ input {
     border-radius: 5px;
     background-color: #f7f9fc;
 }
-input:focus {
+.Input:focus {
     outline: none !important;
     border: 1px solid #5089cd;
 }
-input::placeholder {
+.Input::placeholder {
     color: #a8c4e5;
 }
 
-textarea {
+.Textarea {
     width: 100%;
     padding: 0.7rem;
     margin: 0.5rem 0;
@@ -32,11 +32,11 @@ textarea {
     border-radius: 5px;
     background-color: #f7f9fc;
 }
-textarea:focus {
+.Textarea:focus {
     outline: none !important;
     border: 1px solid #5089cd;
 }
-textarea::placeholder {
+.Textarea::placeholder {
     color: #a8c4e5;
 }
 
@@ -49,14 +49,11 @@ textarea::placeholder {
 
 @media only screen and (min-width: 1024px) {
     .Container {
-        width: 80%;
+        width: 70%;
         margin: auto;
     }
-}
 
-/* @media only screen and (min-width: 1024px) {
-    .Container {
-        float: right;
-        width: 80vw;
+    .Form {
+        margin: 0;
     }
-} */
+}
