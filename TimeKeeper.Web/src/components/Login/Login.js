@@ -21,7 +21,7 @@ const login = props =>
                     className={classes.Input}
                 />
                 <Button variant="contained" color="primary" fullWidth className={classes.Button}>
-                    Send
+                    LOGIN
                 </Button>
             </form>
         </div>
