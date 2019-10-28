@@ -31,12 +31,12 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 var result = Unit.Tasks.Get().ToList().Select(x => x.Create()).ToList();
-                //Log.LogInformation($"Try to get all tasks");
+                Logger.Info($"Try to get all tasks");
                 return Ok(result);
             }
             catch(Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }
@@ -56,18 +56,18 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                //Log.LogInformation($"Try to get task with {id}");
+                Logger.Info($"Try to get task with {id}");
                 var result = Unit.Tasks.Get(id);
                 if (result == null)
                 {
-                    //Log.LogError($"Task with id {id} cannot be found");
+                    Logger.Error($"Task with id {id} cannot be found");
                     return NotFound();
                 }
                 return Ok(result.Create());
             }
             catch(Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }

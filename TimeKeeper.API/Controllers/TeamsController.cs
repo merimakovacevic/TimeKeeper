@@ -19,6 +19,7 @@ namespace TimeKeeper.API.Controllers
 
         public TeamsController(TimeKeeperContext context) : base(context) { }
 
+
         /// <summary>
         /// This method returns all teams
         /// </summary>
@@ -55,13 +56,12 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(400)]
         public IActionResult Get(int id)
         {
-            try
-            {
-                //Log.LogInformation($"Try to get team with {id}");
+            try { 
+            Logger.Info($"Try to get team with {id}");
                 Team team = Unit.Teams.Get(id);
                 if (team == null)
                 {
-                    //Log.LogError($"There is no team with specified id {id}");
+                    Logger.Error($"There is no team with specified id {id}");
                     return NotFound();
                 }
                 else
@@ -71,7 +71,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }
@@ -92,12 +92,12 @@ namespace TimeKeeper.API.Controllers
             {
                 Unit.Teams.Insert(team);
                 Unit.Save();
-                //Log.LogInformation($"Team {team.Name} added with id {team.Id}");
+                Logger.Info($"Team {team.Name} added with id {team.Id}");
                 return Ok(team.Create());
             }
             catch (Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }
@@ -122,15 +122,15 @@ namespace TimeKeeper.API.Controllers
 
                 if (numberOfChanges == 0)
                 {
-                    //Log.LogError($"Team with {id} not found");
+                    Logger.Error($"Team with {id} not found");
                     return NotFound();
                 }
-                //Log.LogInformation($"Changed team with id {id}");
+                Logger.Info($"Changed team with id {id}");
                 return Ok(team.Create());
             }
             catch (Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }
@@ -154,18 +154,18 @@ namespace TimeKeeper.API.Controllers
                 Unit.Teams.Delete(id);
 
                 int numberOfChanges = Unit.Save();
-                //Log.LogInformation($"Attempt to delete team with id {id}");
+                Logger.Info($"Attempt to delete team with id {id}");
                 if (numberOfChanges == 0)
                 {
-                    //Log.LogInformation($"Attempt to delete team with id {id}");
+                    Logger.Info($"Attempt to delete team with id {id}");
                     return NotFound();
                 }
-                //Log.LogInformation($"Deleted team with id {id}");
+                Logger.Info($"Deleted team with id {id}");
                 return NoContent();
             }
             catch (Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }

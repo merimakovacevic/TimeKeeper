@@ -30,12 +30,12 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                //Log.LogInformation($"Try to fetch all projects");
+                Logger.Info($"Try to fetch all projects");
                 return Ok(Unit.Projects.Get().ToList().Select(x => x.Create()).ToList());
             }
             catch (Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }
@@ -56,11 +56,11 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Project project = Unit.Projects.Get(id);
-                //Log.LogInformation($"Try to fetch project with id {id}");
+                Logger.Info($"Try to fetch project with id {id}");
 
                 if (project == null)
                 {
-                    //Log.LogError($"Project with id {id} cannot be found");
+                    Logger.Error($"Project with id {id} cannot be found");
                     return NotFound();
                 }
                 else
@@ -70,7 +70,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }
@@ -96,12 +96,12 @@ namespace TimeKeeper.API.Controllers
                 Unit.Projects.Insert(project);
                 Unit.Save();
 
-                //Log.LogInformation($"Project {project.Name} added with id {project.Id}");
+                Logger.Info($"Project {project.Name} added with id {project.Id}");
                 return Ok(project.Create());
             }
             catch (Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }
@@ -129,20 +129,20 @@ namespace TimeKeeper.API.Controllers
                 Unit.Projects.Update(project, id);
 
                 int numberOfChanges = Unit.Save();
-                //Log.LogInformation($"Attempt to update project with id {id}");
+                Logger.Info($"Attempt to update project with id {id}");
 
                 if (numberOfChanges == 0)
                 {
-                    //Log.LogError($"Project with id {id} cannot be found");
+                    Logger.Error($"Project with id {id} cannot be found");
                     return NotFound();
                 }
 
-                //Log.LogInformation($"Project {project.Name} with id {project.Id} updated");
+                Logger.Info($"Project {project.Name} with id {project.Id} updated");
                 return Ok(project.Create());
             }
             catch (Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }
@@ -166,20 +166,20 @@ namespace TimeKeeper.API.Controllers
                 Unit.Projects.Delete(id);
 
                 int numberOfChanges = Unit.Save();
-                //Log.LogInformation($"Attempt to delete project with id {id}");
+                Logger.Info($"Attempt to delete project with id {id}");
 
                 if (numberOfChanges == 0)
                 {
-                    //Log.LogError($"Project with id {id} cannot be found");
+                    Logger.Error($"Project with id {id} cannot be found");
                     return NotFound();
                 }
 
-                //Log.LogInformation($"Project with id {id} deleted");
+                Logger.Info($"Project with id {id} deleted");
                 return NoContent();
             }
             catch (Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }
