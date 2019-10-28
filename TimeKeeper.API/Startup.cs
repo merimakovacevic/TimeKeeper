@@ -31,6 +31,12 @@ namespace TimeKeeper.API
             services.AddCors();
             services.AddMvc();
 
+            //Enables anonymous access to our application (IIS security is not used) o. AutomaticAuthentication = false
+            services.Configure<IISOptions>(o =>
+            {
+                o.AutomaticAuthentication = false;
+            });
+
             services.AddAuthentication("BasicAuthentication")
                     .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
@@ -67,7 +73,7 @@ namespace TimeKeeper.API
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseStaticFiles();//??? for static files
+            app.UseStaticFiles();//??? for static files
             app.UseOpenApi();
             app.UseSwaggerUi3();
 

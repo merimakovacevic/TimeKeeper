@@ -30,12 +30,12 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                //Log.LogInformation($"Try to fetch all employees");
+                Logger.Info($"Try to fetch all employees");
                 return Ok(Unit.Employees.Get().ToList().Select(x => x.Create()).ToList());
             }
             catch (Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }
@@ -54,11 +54,11 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                //Log.LogInformation($"Try to fetch employee with id {id}");
+                Logger.Info($"Try to fetch employee with id {id}");
                 Employee employee = Unit.Employees.Get(id);
                 if (employee == null)
                 {
-                   // Log.LogError($"Employee with id {id} cannot be found");
+                   Logger.Error($"Employee with id {id} cannot be found");
                     return NotFound();
                 }
                 else
@@ -68,7 +68,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }
@@ -91,12 +91,12 @@ namespace TimeKeeper.API.Controllers
                 employee.Position = Unit.EmployeePositions.Get(employee.Position.Id);
                 Unit.Employees.Insert(employee);
                 Unit.Save();
-                //Log.LogInformation($"Employee {employee.FirstName} {employee.LastName} added with id {employee.Id}");
+                Logger.Info($"Employee {employee.FirstName} {employee.LastName} added with id {employee.Id}");
                 return Ok(employee.Create());
             }
             catch (Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }
@@ -121,19 +121,19 @@ namespace TimeKeeper.API.Controllers
                 Unit.Employees.Update(employee, id);
 
                 int numberOfChanges = Unit.Save();
-                //Log.LogInformation($"Attempt to update employee with id {id}");
+                Logger.Info($"Attempt to update employee with id {id}");
 
                 if (numberOfChanges == 0)
                 {
-                   // Log.LogError($"Employee with id {id} cannot be found");
+                   Logger.Error($"Employee with id {id} cannot be found");
                     return NotFound();
                 }
-               // Log.LogInformation($"Employee {employee.FirstName} {employee.LastName} with id {employee.Id} updated");
+                Logger.Info($"Employee {employee.FirstName} {employee.LastName} with id {employee.Id} updated");
                 return Ok(employee.Create());
             }
             catch (Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }
@@ -157,20 +157,20 @@ namespace TimeKeeper.API.Controllers
                 Unit.Employees.Delete(id);
 
                 int numberOfChanges = Unit.Save();
-                //Log.LogInformation($"Attempt to delete employee with id {id}");
+                Logger.Info($"Attempt to delete employee with id {id}");
 
                 if (numberOfChanges == 0)
                 {
-                    //Log.LogError($"Employee with id {id} cannot be found");
+                    Logger.Error($"Employee with id {id} cannot be found");
                     return NotFound();
                 }
 
-                //Log.LogInformation($"Employee with id {id} deleted");
+                Logger.Info($"Employee with id {id} deleted");
                 return NoContent();
             }
             catch (Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }

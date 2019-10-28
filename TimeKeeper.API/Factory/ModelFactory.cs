@@ -34,7 +34,7 @@ namespace TimeKeeper.API.Factory
                 BeginDate = employee.BeginDate,
                 EndDate = employee.EndDate,
                 Status = employee.Status.Master(),
-                Members = employee.Members.Select(x => x.Master("team")).ToList(),
+                Members = employee.Members.Select(x => x.Master("role")).ToList(),
                 Calendar = employee.Calendar.Select(x=>x.Master()).ToList()
             };
         }

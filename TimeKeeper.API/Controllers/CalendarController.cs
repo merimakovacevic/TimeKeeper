@@ -38,7 +38,7 @@ namespace TimeKeeper.API.Controllers
 
                 if (emp == null)
                 {
-                    //Log.LogError($"Employee with id {employeeId} cannot be found");
+                    Logger.Error($"Employee with id {employeeId} cannot be found");
                     return NotFound("Task not found");
                 }                
 
@@ -46,7 +46,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                //LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }
@@ -72,23 +72,23 @@ namespace TimeKeeper.API.Controllers
                // Log.LogInformation($"Try to get employee with {employeeId}");
                 if (emp == null)
                 {
-                    //Log.LogError($"Employee with id {employeeId} cannot be found");
+                    Logger.Error($"Employee with id {employeeId} cannot be found");
                     return NotFound("Employee not found");
                 }*/
 
                 Day day = Unit.Calendar.Get(id);
 
-                //Log.LogInformation($"Try to get day with {id}");
+                Logger.Info($"Try to get day with {id}");
                 if (day == null)
                 {
-                    //Log.LogError($"Day with id {id} cannot be found");
+                    Logger.Error($"Day with id {id} cannot be found");
                     return NotFound("Day not found");
                 }
                 return Ok(day.Create());
             }
             catch (Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }
@@ -112,12 +112,12 @@ namespace TimeKeeper.API.Controllers
 
                 Unit.Calendar.Insert(day);
                 Unit.Save();
-                //Log.LogInformation($"Day {day.Date} added with id {day.Id}");
+                Logger.Info($"Day {day.Date} added with id {day.Id}");
                 return Ok(day.Create());
             }
             catch (Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }
@@ -142,20 +142,20 @@ namespace TimeKeeper.API.Controllers
 
                 Unit.Calendar.Update(day, id);
                 int numberOfChanges = Unit.Save();
-                // Log.LogInformation($"Attempt to update day with id {id}");
+                Logger.Info($"Attempt to update day with id {id}");
 
                 if (numberOfChanges == 0)
                 {
-                    //Log.LogError($"Day with id {id} cannot be found");
+                    Logger.Error($"Day with id {id} cannot be found");
                     return NotFound();
                 }
 
-                //Log.LogInformation($"Changed day with id {id}");
+                Logger.Info($"Changed day with id {id}");
                 return Ok(day.Create());
             }
             catch (Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }
@@ -182,15 +182,15 @@ namespace TimeKeeper.API.Controllers
 
                 if (numberOfChanges == 0)
                 {
-                    //Log.LogInformation($"Attempt to delete day with id {id}");
+                    Logger.Info($"Attempt to delete day with id {id}");
                     return NotFound();
                 }
-                //Log.LogInformation($"Deleted day with id {id}");
+                Logger.Info($"Deleted day with id {id}");
                 return NoContent();
             }
             catch (Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }

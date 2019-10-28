@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <AspNetCoreHostingModelV2>InProcess</AspNetCoreHostingModelV2>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TimeKeeper.DAL\TimeKeeper.DAL.csproj" />
     <ProjectReference Include="..\TimeKeeper.Domain\TimeKeeper.Domain.csproj" />
+    <ProjectReference Include="..\TimeKeeper.LOG\TimeKeeper.LOG.csproj" />
   </ItemGroup>
 
 </Project>

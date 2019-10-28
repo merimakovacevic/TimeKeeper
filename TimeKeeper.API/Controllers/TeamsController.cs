@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using TimeKeeper.API.Factory;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
+using TimeKeeper.LOG;
 
 namespace TimeKeeper.API.Controllers
 {
@@ -15,6 +16,7 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class TeamsController : BaseController
     {
+
         public TeamsController(TimeKeeperContext context) : base(context) { }
 
         /// <summary>
@@ -34,7 +36,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
 
                 return BadRequest(ex);
             }
