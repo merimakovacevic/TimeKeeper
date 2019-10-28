@@ -1,0 +1,20 @@
+.ContactSection {
+    height: auto;
+    min-height: 90vh;
+    padding-top: 4rem;
+}
+
+.ContactInformation h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 1rem 0;
+    color: rgb(41, 100, 138);
+}
+.ContactInformation p {
+    margin: 1rem auto;
+    font-size: 1.1rem;
+    width: 80%;
+    text-align: center;
+}
