@@ -14,19 +14,7 @@ class StaticPage extends React.Component {
     state = {
         showSideDrawer: false,
         modalOpen: false
-        // screenWidth: document.body.offsetWidth
     };
-
-    /* componentDidMount() {
-        this.updateWindowDimensions();
-        window.addEventListener("resize", this.updateWindowDimensions);
-    }
-    componentWillUnmount() {
-        window.removeEventListener("resize", this.updateWindowDimensions);
-    }
-    updateWindowDimensions = () => {
-        this.setState({ screenWidth: window.innerWidth });
-    };*/
 
     sideDrawerClosedHandler = () => this.setState({ showSideDrawer: false });
 
