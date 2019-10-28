@@ -39,3 +39,24 @@ textarea:focus {
 textarea::placeholder {
     color: #a8c4e5;
 }
+
+@media only screen and (min-width: 768px) {
+    .Container {
+        width: 70%;
+        margin: auto;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .Container {
+        width: 80%;
+        margin: auto;
+    }
+}
+
+/* @media only screen and (min-width: 1024px) {
+    .Container {
+        float: right;
+        width: 80vw;
+    }
+} */
