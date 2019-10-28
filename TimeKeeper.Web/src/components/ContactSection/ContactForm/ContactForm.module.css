@@ -1,0 +1,62 @@
+.Container {
+    margin: 1rem;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+form {
+    padding: 1.5rem;
+    margin: 2rem 0;
+}
+
+input {
+    width: 100%;
+    padding: 0.7rem;
+    margin: 0.5rem 0;
+    border: 1px solid #a8c4e5;
+    border-radius: 5px;
+    background-color: #f7f9fc;
+}
+input:focus {
+    outline: none !important;
+    border: 1px solid #5089cd;
+}
+input::placeholder {
+    color: #a8c4e5;
+}
+
+textarea {
+    width: 100%;
+    padding: 0.7rem;
+    margin: 0.5rem 0;
+    border: 1px solid #a8c4e5;
+    border-radius: 5px;
+    background-color: #f7f9fc;
+}
+textarea:focus {
+    outline: none !important;
+    border: 1px solid #5089cd;
+}
+textarea::placeholder {
+    color: #a8c4e5;
+}
+
+@media only screen and (min-width: 768px) {
+    .Container {
+        width: 70%;
+        margin: auto;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .Container {
+        width: 80%;
+        margin: auto;
+    }
+}
+
+/* @media only screen and (min-width: 1024px) {
+    .Container {
+        float: right;
+        width: 80vw;
+    }
+} */

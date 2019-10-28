@@ -1,0 +1,52 @@
+.ContactSection {
+    height: auto;
+    min-height: 90vh;
+    padding-top: 4rem;
+}
+
+.ContactInformation h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 1rem 0;
+    color: rgb(41, 100, 138);
+}
+.ContactInformation p {
+    margin: 1rem auto;
+    font-size: 1.1rem;
+    width: 80%;
+    text-align: center;
+}
+
+@media only screen and (min-width: 1024px) {
+    .ContactSection {
+        display: flex;
+        margin-left: 2rem;
+        margin-right: 2rem;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    .ContactInformation h1 {
+        margin-right: 5.5rem;
+    }
+
+    .ContactInformation p {
+        margin: 0;
+    }
+}
+
+/* 
+@media only screen and (min-width: 768) {
+    .ContactSection {
+        width: 70%;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .ContactSection {
+        display: flex;
+        flex-direction: row;
+    }
+}
+ */
