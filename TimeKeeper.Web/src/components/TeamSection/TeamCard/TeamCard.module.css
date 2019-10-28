@@ -15,6 +15,7 @@
     border-radius: 100%;
     margin-top: -5rem;
     border: 1px solid rgba(0, 0, 0, 0.3);
+    object-fit: cover;
     display: inline-block !important;
 }
 

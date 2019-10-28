@@ -14,7 +14,12 @@ const navigation = props => (
         <nav className={classes.DesktopOnly}>
             <NavigationItems />
         </nav>
-        <Button variant="contained" color="primary" className={classes.Button}>
+        <Button
+            variant="contained"
+            color="primary"
+            className={classes.Button}
+            onClick={props.clicked}
+        >
             LOGIN
         </Button>
     </header>

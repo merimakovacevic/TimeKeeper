@@ -1,6 +1,7 @@
 import React from "react";
 
 import classes from "./ContactSection.module.css";
+//import messageIcon from "../../assets/message.svg";
 import ContactForm from "./ContactForm/ContactForm";
 
 const contactSection = props => (
@@ -11,6 +12,7 @@ const contactSection = props => (
                 If you have any questions about our product feel free to e-mail us via our contact
                 form and we'll get back to you as soon as we can.
             </p>
+            {/* <img src={messageIcon} alt="svgIcon" className={classes.Icon}></img> */}
         </div>
 
         <ContactForm />
