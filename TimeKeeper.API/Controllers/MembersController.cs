@@ -30,7 +30,7 @@ namespace TimeKeeper.API.Controllers
         public IActionResult Get()
         {
             try
-            {  
+            {
                 //This is only neccessary if there is a team in the route
                 /*
                 TeamModel team = Unit.Teams.Get(teamId).Create();
@@ -39,11 +39,12 @@ namespace TimeKeeper.API.Controllers
                     //Log.LogError($"Team with id {teamId} cannot be found");
                     return NotFound("Team not found");
                 }*/
+                Logger.Info("Try to get all members");
                 return Ok(Unit.Members.Get().ToList().Select(x => x.Create()).ToList());
             }
             catch(Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }
@@ -71,19 +72,19 @@ namespace TimeKeeper.API.Controllers
                     //Log.LogError($"Team with id {teamId} cannot be found");
                     return NotFound("Team not found");
                 }*/
-
+                Logger.Info($"Try to get member with {id}");
                 Member member = Unit.Members.Get(id);
 
                 if (member == null)
                 {
-                    //Log.LogError($"Member with id {id} cannout be found");
+                    Logger.Error($"Member with id {id} cannout be found");
                     return NotFound();
                 }
                 return Ok(member.Create());
             }
             catch(Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }
@@ -109,12 +110,12 @@ namespace TimeKeeper.API.Controllers
 
                 Unit.Members.Insert(member);
                 Unit.Save();
-                //Log.LogInformation($"Member {member.Employee.FirstName} added with id {member.Id}");
+                Logger.Info($"Member {member.Employee.FirstName} added with id {member.Id}");
                 return Ok(member.Create());
             }
             catch (Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }
@@ -140,23 +141,22 @@ namespace TimeKeeper.API.Controllers
                 member.Status = Unit.MemberStatuses.Get(member.Status.Id);
 
                 Unit.Members.Update(member, id);
-
                 int numberOfChanges = Unit.Save();
 
                 if(numberOfChanges == 0)
                 {
-                    //Log.LogError($"Member with id {id} cannout be found");
+                    Logger.Error($"Member with id {id} cannout be found");
                     return NotFound();
                 }
 
-                //Log.LogInformation($"Changed member with id {id}");
+                Logger.Info($"Changed member with id {id}");
 
                 return Ok(member.Create());
             
             }
             catch (Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }
@@ -178,20 +178,20 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Unit.Members.Delete(id);
-                //Log.LogInformation($"Attempt to delete team with id {id}");
+                Logger.Info($"Attempt to delete team with id {id}");
                 int numberOfChanges = Unit.Save();
 
                 if (numberOfChanges == 0)
                 {
-                    //Log.LogInformation($"Member with id {id} not found");
+                    Logger.Info($"Member with id {id} not found");
                     return NotFound();
                 }
-                //Log.LogInformation($"Deleted team with id {id}");
+                Logger.Info($"Deleted team with id {id}");
                 return NoContent();
             }
             catch (Exception ex)
             {
-                //Log.LogCritical(ex, "Server error");
+                Logger.Fatal(ex.Message);
                 return BadRequest(ex);
             }
         }

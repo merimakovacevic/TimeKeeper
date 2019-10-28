@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TimeKeeper.DAL;
+using TimeKeeper.LOG;
 
 namespace TimeKeeper.API.Controllers
 {
@@ -14,6 +15,7 @@ namespace TimeKeeper.API.Controllers
     {
         protected UnitOfWork Unit;
         //protected static ILogger<BaseController> Log;
+        public LoggerService Logger = new LoggerService();
         public BaseController(TimeKeeperContext context)
         {
             Unit = new UnitOfWork(context);

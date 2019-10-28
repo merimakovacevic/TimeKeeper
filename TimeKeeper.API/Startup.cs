@@ -34,6 +34,11 @@ namespace TimeKeeper.API
             services.AddAuthentication("BasicAuthentication")
                     .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
+            services.Configure<IISOptions>(o =>
+            {
+                o.AutomaticAuthentication = false;
+            });
+
             string connectionString = Configuration["ConnectionString"];          
             services.AddDbContext<TimeKeeperContext>(o => { o.UseNpgsql(connectionString); });
 
