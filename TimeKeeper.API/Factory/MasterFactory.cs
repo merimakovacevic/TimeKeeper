@@ -68,7 +68,7 @@ namespace TimeKeeper.API.Factory
             return new MasterModel
             {
                 Id = e.Id,
-                Name = $"{e.FirstName} {e.LastName}, {e.Position}"
+                Name = $"{e.FirstName} {e.LastName}, {e.Position.Name}"
             };
         }
 
