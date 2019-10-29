@@ -40,6 +40,11 @@
     color: #a8c4e5;
 }
 
+.ErrorMessage {
+    font-size: 0.8rem;
+    color: red;
+}
+
 @media only screen and (min-width: 768px) {
     .Container {
         width: 70%;

@@ -1,4 +1,5 @@
 import React from "react";
+// import axios from "axios";
 
 import Backdrop from "../../components/UI/Backdrop/Backdrop";
 import Navigation from "../../components/Navigation/Navigation";
@@ -15,6 +16,10 @@ class StaticPage extends React.Component {
         showSideDrawer: false,
         modalOpen: false
     };
+
+    // componentDidMount() {
+    //     axios("http://192.168.60.73/TimeKeeper/api/members").then(res => console.log(res));
+    // }
 
     sideDrawerClosedHandler = () => this.setState({ showSideDrawer: false });
 
