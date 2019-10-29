@@ -41,8 +41,10 @@ namespace TimeKeeper.DAL
                 optionBuilder.UseNpgsql(_conStr);
             }
             optionBuilder.UseLazyLoadingProxies(true);
-            //Exception is thrown when calling MasterController if this line isn't present:
-            optionBuilder.ConfigureWarnings(w => w.Ignore(CoreEventId.DetachedLazyLoadingWarning));
+            /*This option was used to supress the Detached Object warning when calling MasterController 
+             * for Employees (EmployeePosition is used in Master method for Employee, causing the warning)
+             * It was solved by adding an addition ToList() method call before the Select method in the controller             .*/
+            //optionBuilder.ConfigureWarnings(w => w.Ignore(CoreEventId.DetachedLazyLoadingWarning));
             base.OnConfiguring(optionBuilder);
         }
         protected override void OnModelCreating(ModelBuilder builder)

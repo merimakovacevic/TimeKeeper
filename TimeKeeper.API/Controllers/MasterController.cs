@@ -29,7 +29,7 @@ namespace TimeKeeper.API.Controllers
         public IActionResult GetProjects() => Ok(Unit.Projects.Get().Select(x => x.Master()).ToList());
 
         [HttpGet("employees")]
-        public IActionResult GetEmployees() => Ok(Unit.Employees.Get().Select(x => x.Master()).ToList());
+        public IActionResult GetEmployees() => Ok(Unit.Employees.Get().ToList().Select(x => x.Master()).ToList()); //Added aditional ToList()
 
         [HttpGet("employee-positions")]
         public IActionResult GetEmployeePositions() => Ok(Unit.EmployeePositions.Get().Select(x => x.Master()).ToList());
