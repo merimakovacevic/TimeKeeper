@@ -1,28 +1,20 @@
 import React from "react";
 
+import Backdrop from "../../components/UI/Backdrop/Backdrop";
 import Navigation from "../../components/Navigation/Navigation";
 import SideDrawer from "../../components/Navigation/SideDrawer/SideDrawer";
-import AboutPage from "../../components/AboutSection/AboutSection";
-import ServicesPage from "../../components/ServicesSection/ServicesSection";
-import TeamPage from "../../components/TeamSection/TeamSection";
+import AboutSection from "../../components/AboutSection/AboutSection";
+import ServicesSection from "../../components/ServicesSection/ServicesSection";
+import TeamSection from "../../components/TeamSection/TeamSection";
+import ContactSection from "../../components/ContactSection/ContactSection";
 import Footer from "../../components/Footer/Footer.js";
+import Login from "../../components/Login/Login";
 
 class StaticPage extends React.Component {
     state = {
-        showSideDrawer: false
-        // screenWidth: document.body.offsetWidth
+        showSideDrawer: false,
+        modalOpen: false
     };
-
-    /* componentDidMount() {
-        this.updateWindowDimensions();
-        window.addEventListener("resize", this.updateWindowDimensions);
-    }
-    componentWillUnmount() {
-        window.removeEventListener("resize", this.updateWindowDimensions);
-    }
-    updateWindowDimensions = () => {
-        this.setState({ screenWidth: window.innerWidth });
-    };*/
 
     sideDrawerClosedHandler = () => this.setState({ showSideDrawer: false });
 
@@ -31,19 +23,31 @@ class StaticPage extends React.Component {
             return { showSideDrawer: !prevState.showSideDrawer };
         });
 
+    toggleBackdrop = () => {
+        this.setState(prevState => {
+            return { modalOpen: !prevState.modalOpen, showSideDrawer: false };
+        });
+    };
+
     render() {
+        const { showSideDrawer, modalOpen } = this.state;
+        const { sideDrawerClosedHandler, drawerToggleClicked, toggleBackdrop } = this;
+
         return (
             <React.Fragment>
-                <Navigation ToggleButtonClicked={this.drawerToggleClicked} />
+                <Backdrop show={modalOpen} clicked={toggleBackdrop}></Backdrop>
+                <Login show={modalOpen} />
+                <Navigation ToggleButtonClicked={drawerToggleClicked} clicked={toggleBackdrop} />
                 <SideDrawer
-                    open={this.state.showSideDrawer}
-                    closed={this.sideDrawerClosedHandler}
+                    open={showSideDrawer}
+                    closed={sideDrawerClosedHandler}
+                    clicked={toggleBackdrop}
                 />
                 <main>
-                    <AboutPage passedId={"about"} />
-                    <ServicesPage passedId={"services"} />
-                    <TeamPage passedId={"team"} />
-                    <div id="contact" style={{ height: "91vh", backgroundColor: "blue" }} />
+                    <AboutSection passedId="about" />
+                    <ServicesSection passedId="services" />
+                    <TeamSection passedId="team" />
+                    <ContactSection passedId="contact" />
                 </main>
                 <footer>
                     <Footer />
