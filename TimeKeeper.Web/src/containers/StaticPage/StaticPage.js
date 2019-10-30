@@ -14,12 +14,19 @@ import Login from "../../components/Login/Login";
 class StaticPage extends React.Component {
     state = {
         showSideDrawer: false,
-        modalOpen: false
+        modalOpen: false,
+        isLoggedIn: false
     };
 
     // componentDidMount() {
     //     axios("http://192.168.60.73/TimeKeeper/api/members").then(res => console.log(res));
     // }
+
+    successfulLogin = value => {
+        this.setState({ isLoggedIn: value });
+
+        // console.log(value);
+    };
 
     sideDrawerClosedHandler = () => this.setState({ showSideDrawer: false });
 
@@ -35,13 +42,18 @@ class StaticPage extends React.Component {
     };
 
     render() {
-        const { showSideDrawer, modalOpen } = this.state;
-        const { sideDrawerClosedHandler, drawerToggleClicked, toggleBackdrop } = this;
+        const { showSideDrawer, modalOpen, isLoggedIn } = this.state;
+        const {
+            sideDrawerClosedHandler,
+            drawerToggleClicked,
+            toggleBackdrop,
+            successfulLogin
+        } = this;
 
         return (
             <React.Fragment>
                 <Backdrop show={modalOpen} clicked={toggleBackdrop}></Backdrop>
-                <Login show={modalOpen} />
+                <Login isLoggedIn={isLoggedIn} successfulLogin={successfulLogin} show={modalOpen} />
                 <Navigation ToggleButtonClicked={drawerToggleClicked} clicked={toggleBackdrop} />
                 <SideDrawer
                     open={showSideDrawer}
