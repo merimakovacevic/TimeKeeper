@@ -15,17 +15,26 @@ class StaticPage extends React.Component {
     state = {
         showSideDrawer: false,
         modalOpen: false,
-        isLoggedIn: false
+        isLoggedIn: false,
+        sending: false,
+        sendSuccess: null,
+        sendFail: null
     };
 
     // componentDidMount() {
     //     axios("http://192.168.60.73/TimeKeeper/api/members").then(res => console.log(res));
     // }
 
-    successfulLogin = value => {
+    successfullLogin = value => {
         this.setState({ isLoggedIn: value });
 
         // console.log(value);
+    };
+
+    successfullSend = () => this.setState({ sendSuccess: true, sending: false });
+    failedSend = () => this.setState({ sendFail: true, sending: false });
+    sendStart = () => {
+        this.setState({ sending: true });
     };
 
     sideDrawerClosedHandler = () => this.setState({ showSideDrawer: false });
@@ -42,18 +51,25 @@ class StaticPage extends React.Component {
     };
 
     render() {
-        const { showSideDrawer, modalOpen, isLoggedIn } = this.state;
+        const { showSideDrawer, modalOpen, isLoggedIn, sendSuccess, sending } = this.state;
         const {
             sideDrawerClosedHandler,
             drawerToggleClicked,
             toggleBackdrop,
-            successfulLogin
+            successfullLogin,
+            sendStart,
+            failedSend,
+            successfullSend
         } = this;
 
         return (
             <React.Fragment>
                 <Backdrop show={modalOpen} clicked={toggleBackdrop}></Backdrop>
-                <Login isLoggedIn={isLoggedIn} successfulLogin={successfulLogin} show={modalOpen} />
+                <Login
+                    isLoggedIn={isLoggedIn}
+                    successfulLogin={successfullLogin}
+                    show={modalOpen}
+                />
                 <Navigation ToggleButtonClicked={drawerToggleClicked} clicked={toggleBackdrop} />
                 <SideDrawer
                     open={showSideDrawer}
@@ -64,7 +80,14 @@ class StaticPage extends React.Component {
                     <AboutSection passedId="about" />
                     <ServicesSection passedId="services" />
                     <TeamSection passedId="team" />
-                    <ContactSection passedId="contact" />
+                    <ContactSection
+                        passedId="contact"
+                        sending={sending}
+                        sendSuccess={sendSuccess}
+                        sendStart={sendStart}
+                        failedSend={failedSend}
+                        successfullSend={successfullSend}
+                    />
                 </main>
                 <footer>
                     <Footer />

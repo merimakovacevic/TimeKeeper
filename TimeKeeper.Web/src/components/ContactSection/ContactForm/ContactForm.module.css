@@ -1,4 +1,6 @@
 .Container {
+    min-height: 465px;
+    height: auto;
     margin: 1rem;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
@@ -41,14 +43,18 @@
 }
 
 .ErrorMessage {
-    font-size: 0.8rem;
-    color: red;
+    font-size: 0.85rem;
+    color: orangered;
 }
 
 @media only screen and (min-width: 768px) {
     .Container {
         width: 70%;
         margin: auto;
+    }
+
+    .Form {
+        padding: 1.5rem 2.5rem;
     }
 }
 
