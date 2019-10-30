@@ -1,7 +1,8 @@
 .Card {
     height: 20rem;
     margin: 2rem;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
 }
 
 .CardImage {
@@ -20,11 +21,11 @@
 }
 
 @media (min-width: 768px) {
- .Card {
-     height: 19rem;
-     width: 65%;
-     display: inline-block;
- }
+    .Card {
+        height: 19rem;
+        width: 65%;
+        display: inline-block;
+    }
     .Card p {
         margin: 0 3rem;
     }
@@ -37,7 +38,7 @@
 @media (min-width: 1024px) {
     .Card {
         height: 23rem;
-        transition: transform .3s;
+        transition: transform 0.3s;
     }
     .CardImage {
         width: 30%;
@@ -49,13 +50,10 @@
     }
 
     .Card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 10px 10px rgba(0, 0, 0, 0.3);
+        /* transform: translateY(-10px); */
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
     }
 }
-
-
-
 
 /*
 .Card {

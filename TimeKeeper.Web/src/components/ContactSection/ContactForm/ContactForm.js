@@ -9,14 +9,14 @@ import classes from "./ContactForm.module.css";
 const ContactSchema = Yup.object().shape({
     email: Yup.string()
         .email("Invalid email")
-        .required("Required"),
+        .required("E-mail is Required"),
     name: Yup.string()
         .min(2, "Too Short!")
         .max(50, "Too Long!")
-        .required("Required"),
+        .required("Name isRequired"),
     message: Yup.string()
         .max(250, "Invalid email")
-        .required("Required")
+        .required("Message is Required")
 });
 
 const contactForm = () => (
@@ -29,30 +29,28 @@ const contactForm = () => (
         validationSchema={ContactSchema}
         onSubmit={values => {
             axios
-                .post("http://192.168.20.221/timekeeper/api/contact", values, {
-                    headers: {
-                        "Access-Control-Allow-Origin": "*",
-                        "Content-Type": "application/json"
-                    }
-                })
+                .post("http://192.168.60.73/timekeeper/api/contact", values)
                 .then(res => console.log(res));
         }}
     >
         {({ errors, touched }) => (
             <div className={classes.Container}>
                 <Form className={classes.Form}>
+                    {errors.email && touched.email ? (
+                        <div className={classes.ErrorMessage}>{errors.email}!</div>
+                    ) : null}
                     <Field
                         name="email"
                         type="email"
                         placeholder="Your e-mail"
                         className={classes.Input}
                     />
-                    {errors.email && touched.email ? (
-                        <div className={classes.ErrorMessage}>{errors.email}!</div>
-                    ) : null}
-                    <Field name="name" placeholder="Your name" className={classes.Input} />
                     {errors.name && touched.name ? (
                         <div className={classes.ErrorMessage}>{errors.name}!</div>
+                    ) : null}
+                    <Field name="name" placeholder="Your name" className={classes.Input} />
+                    {errors.message && touched.message ? (
+                        <div className={classes.ErrorMessage}>{errors.message}!</div>
                     ) : null}
                     <Field
                         placeholder="Your message"
@@ -62,9 +60,6 @@ const contactForm = () => (
                         rows="10"
                         className={classes.Textarea}
                     />
-                    {errors.message && touched.message ? (
-                        <div className={classes.ErrorMessage}>{errors.message}!</div>
-                    ) : null}
                     <Button variant="contained" color="primary" fullWidth type="submit">
                         Send
                     </Button>
