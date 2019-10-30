@@ -1,3 +1,5 @@
+import arrowDown from "../../assets/down-arrow.svg";
+
 import React from "react";
 
 import classes from "./AboutSection.module.css";
@@ -9,6 +11,10 @@ const aboutSection = props => (
             Reports. <br />
             Made easy.
         </h1>
+        <div className={classes.DownArrow}>
+            {" "}
+            <img src={arrowDown} />{" "}
+        </div>
     </div>
 );
 
