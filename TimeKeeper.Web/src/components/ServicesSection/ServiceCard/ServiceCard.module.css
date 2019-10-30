@@ -1,18 +1,20 @@
 .Card {
-    height: 20rem;
+    height: 18rem;
     margin: 2rem;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
+    background-color: rgba(243, 246, 250, 0.1);
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
 }
 
 .CardImage {
-    width: 40%;
+    width: 30%;
     margin-top: 1.5rem;
 }
 .Card h2 {
     margin: 1rem 0;
-    font-weight: bold;
+    font-weight: 500;
     font-size: 1.5rem;
+    color: #5089cd;
 }
 .Card p {
     margin: 0 1rem;
@@ -22,12 +24,14 @@
 
 @media (min-width: 768px) {
     .Card {
-        height: 19rem;
-        width: 65%;
+        height: 19.5rem;
+        width: 50%;
         display: inline-block;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     }
     .Card p {
-        margin: 0 3rem;
+        width: 70%;
+        margin: 0 auto;
     }
     .CardImage {
         width: 25%;
@@ -37,33 +41,20 @@
 
 @media (min-width: 1024px) {
     .Card {
-        height: 23rem;
-        transition: transform 0.3s;
+        height: 21.5rem;
+        transition: all 0.2s;
     }
     .CardImage {
-        width: 30%;
-        margin-top: 3rem;
+        width: 25%;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
     }
     .Card p {
-        width: 80%;
+        width: 65%;
         margin: 0 auto;
     }
 
     .Card:hover {
-        /* transform: translateY(-10px); */
-        box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
     }
 }
-
-/*
-.Card {
-    width: 20vw;
-    height: 60vh;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    transition-property: transform;
-    transition-duration: 0.2s;
-}
-.Card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
-}*/

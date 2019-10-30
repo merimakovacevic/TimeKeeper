@@ -7,7 +7,6 @@
     width: 90%;
 
     border-radius: 10px;
-
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
@@ -74,6 +73,7 @@ hr {
         width: 80%;
     }
     .Icon:hover {
+    
         background-color: rgba(0, 0, 0, 0.1);
     }
 }
