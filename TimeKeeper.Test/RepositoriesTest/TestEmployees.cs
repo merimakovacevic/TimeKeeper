@@ -48,6 +48,7 @@ namespace TimeKeeper.Test.RepositoriesTest
             };
             unit.Employees.Insert(employee);
             int numberOfChanges = unit.Save();
+
             Assert.AreEqual(1, numberOfChanges);
             Assert.AreEqual(7, employee.Id);//id of the new employee will be 1
         }

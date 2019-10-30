@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TimeKeeper.DAL\TimeKeeper.DAL.csproj" />
+    <ProjectReference Include="..\TimeKeeper.Utility\TimeKeeper.Utility.csproj" />
   </ItemGroup>
 
 </Project>

@@ -100,6 +100,6 @@ namespace TimeKeeper.API.Controllers
         /// <returns>All member statuses (master model)</returns>
         [HttpGet("member-statuses")]
         [ProducesResponseType(200)]
-        public IActionResult GetMemberStatuses() => Ok(Unit.MemberStatuses.Get().Select(x => x.Master()).ToList());
+        public IActionResult GetMemberStatuses() => Ok(Unit.MemberStatuses.Get().Select(x => x.Master()).ToList());     
     }
 }
