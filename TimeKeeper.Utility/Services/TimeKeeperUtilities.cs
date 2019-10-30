@@ -3,11 +3,25 @@ using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.Utility.Services
 {
-    public static class TimeKeeperUtilities
+    public static class Utilities
     {
-        public static string MakeUsername(this Employee e)
+        public static string MakeUsername(this Employee employee)
         {
-            return (e.FirstName + e.LastName.Substring(0, 2)).ToLower();
+            return (employee.FirstName + employee.LastName.Substring(0, 2)).ToLower();
+        }
+
+        public static User CreateUser(this Employee employee)
+        {
+            User user = new User
+            {
+                Id = employee.Id,
+                Name = employee.FullName,
+                Username = employee.MakeUsername(),
+                Password = "$ch00l",
+                Role = "user"
+            };
+
+            return user;
         }
     }
 }

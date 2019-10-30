@@ -46,7 +46,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex.Message);
+                Logger.Fatal(ex);
                 return BadRequest(ex);
             }
         }
@@ -88,7 +88,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex.Message);
+                Logger.Fatal(ex);
                 return BadRequest(ex);
             }
         }
@@ -117,7 +117,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex.Message);
+                Logger.Fatal(ex);
                 return BadRequest(ex);
             }
         }
@@ -155,7 +155,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex.Message);
+                Logger.Fatal(ex);
                 return BadRequest(ex);
             }
         }
@@ -182,7 +182,7 @@ namespace TimeKeeper.API.Controllers
 
                 if (numberOfChanges == 0)
                 {
-                    Logger.Info($"Attempt to delete day with id {id}");
+                    Logger.Error($"Attempt to delete day with id {id}");
                     return NotFound();
                 }
                 Logger.Info($"Deleted day with id {id}");
@@ -190,7 +190,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex.Message);
+                Logger.Fatal(ex);
                 return BadRequest(ex);
             }
         }

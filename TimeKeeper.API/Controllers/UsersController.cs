@@ -22,33 +22,50 @@ namespace TimeKeeper.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var currentUser = HttpContext.User as ClaimsPrincipal;
-            List<string> claims = new List<string>();
-
-            foreach(Claim claim in currentUser.Claims)
+            try
             {
-                claims.Add(claim.Value);
-            }
+                var currentUser = HttpContext.User as ClaimsPrincipal;
+                List<string> claims = new List<string>();
 
-            var users = Unit.Users.Get().ToList();
-            return Ok(new { claims, users });
+                foreach (Claim claim in currentUser.Claims)
+                {
+                    claims.Add(claim.Value);
+                }
+
+                var users = Unit.Users.Get().ToList();
+                return Ok(new { claims, users });
+            }
+            catch (Exception ex)
+            {
+                Logger.Fatal(ex);
+                return BadRequest(ex);
+            }  
         }
 
         [AllowAnonymous]
         [HttpPost]
         public IActionResult Login([FromBody] User user)
         {
-            User control = Unit.Users.Get(x => x.Username == user.Username && x.Password == user.Password).FirstOrDefault();
+            try
+            {
+                User control = Unit.Users.Get(x => x.Username == user.Username && x.Password == user.Password).FirstOrDefault();
 
-            if (control == null) return NotFound();
-            byte[] bytes = Encoding.ASCII.GetBytes($"{control.Username}:{control.Password}");
-            string base64 = Convert.ToBase64String(bytes);
-            return Ok( new {
-                control.Id,
-                control.Name,
-                control.Role,
-                base64
-            });
+                if (control == null) return NotFound();
+                byte[] bytes = Encoding.ASCII.GetBytes($"{control.Username}:{control.Password}");
+                string base64 = Convert.ToBase64String(bytes);
+                return Ok(new
+                {
+                    control.Id,
+                    control.Name,
+                    control.Role,
+                    base64
+                });
+            }
+            catch (Exception ex)
+            {
+                Logger.Fatal(ex);
+                return BadRequest(ex);
+            }
         }
     }
 }

@@ -36,7 +36,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex.Message);
+                Logger.Fatal(ex);
                 return BadRequest(ex);
             }
         }
@@ -59,7 +59,7 @@ namespace TimeKeeper.API.Controllers
                 Employee employee = Unit.Employees.Get(id);
                 if (employee == null)
                 {
-                   Logger.Error($"Employee with id {id} cannot be found");
+                    Logger.Error($"Employee with id {id} cannot be found");
                     return NotFound();
                 }
                 else
@@ -69,7 +69,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex.Message);
+                Logger.Fatal(ex);
                 return BadRequest(ex);
             }
         }
@@ -94,14 +94,7 @@ namespace TimeKeeper.API.Controllers
                 Unit.Save();
 
                 //User insertion is coupled to employee insertion
-                User user = new User
-                {
-                    Id = employee.Id,
-                    Name = employee.FullName,
-                    Username = employee.MakeUsername(),
-                    Password = "$ch00l",
-                    Role = "user"
-                };
+                User user = employee.CreateUser();
 
                 Unit.Users.Insert(user);
                 Unit.Save();
@@ -111,7 +104,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex.Message);
+                Logger.Fatal(ex);
                 return BadRequest(ex);
             }
         }
@@ -148,7 +141,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex.Message);
+                Logger.Fatal(ex);
                 return BadRequest(ex);
             }
         }
@@ -185,7 +178,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex.Message);
+                Logger.Fatal(ex);
                 return BadRequest(ex);
             }
         }
