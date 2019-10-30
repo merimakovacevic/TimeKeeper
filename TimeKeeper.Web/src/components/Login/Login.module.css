@@ -8,8 +8,8 @@
 }
 
 .ErrorMessage {
-    color: wheat;
-    font-size: 0.75rem;
+    color: orangered;
+    font-size: 0.85rem;
 }
 
 .Form {
@@ -30,11 +30,14 @@
 .Input {
     width: 100%;
     padding: 0.7rem;
+    padding-top: 0;
     margin: 0.5rem 0;
+    font-size: 1.1rem;
     color: white;
     outline: 0;
     border-width: 0 0 1px;
     background-color: #1c293a;
+
     border-color: white;
 }
 
@@ -43,7 +46,7 @@
 }
 
 .Button {
-    margin-top: 2rem !important;
+    margin-top: 1rem !important;
 }
 
 @media (min-width: 768px) {

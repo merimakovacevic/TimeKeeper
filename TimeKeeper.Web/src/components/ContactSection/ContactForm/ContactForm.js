@@ -1,8 +1,9 @@
 import React from "react";
 import axios from "axios";
-import * as Yup from "yup";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { Button } from "@material-ui/core";
 import { Formik, Form, Field } from "formik";
+import * as Yup from "yup";
 
 import classes from "./ContactForm.module.css";
 
@@ -19,7 +20,7 @@ const ContactSchema = Yup.object().shape({
         .required("Message is Required")
 });
 
-const contactForm = () => (
+const contactForm = props => (
     <Formik
         initialValues={{
             email: "",
@@ -28,42 +29,70 @@ const contactForm = () => (
         }}
         validationSchema={ContactSchema}
         onSubmit={values => {
+            props.sendStart();
             axios
-                .post("http://192.168.60.73/timekeeper/api/contact", values)
-                .then(res => console.log(res));
+                .post("http://192.168.60.74/timekeeper/api/contact", values)
+                .then(res => {
+                    alert(res);
+                    props.successfullSend();
+                })
+                .catch(err => {
+                    console.log(err);
+                    props.failedSend();
+                });
         }}
     >
         {({ errors, touched }) => (
             <div className={classes.Container}>
-                <Form className={classes.Form}>
-                    {errors.email && touched.email ? (
-                        <div className={classes.ErrorMessage}>{errors.email}!</div>
-                    ) : null}
-                    <Field
-                        name="email"
-                        type="email"
-                        placeholder="Your e-mail"
-                        className={classes.Input}
-                    />
-                    {errors.name && touched.name ? (
-                        <div className={classes.ErrorMessage}>{errors.name}!</div>
-                    ) : null}
-                    <Field name="name" placeholder="Your name" className={classes.Input} />
-                    {errors.message && touched.message ? (
-                        <div className={classes.ErrorMessage}>{errors.message}!</div>
-                    ) : null}
-                    <Field
-                        placeholder="Your message"
-                        name="message"
-                        as="textarea"
-                        cols="30"
-                        rows="10"
-                        className={classes.Textarea}
-                    />
-                    <Button variant="contained" color="primary" fullWidth type="submit">
-                        Send
-                    </Button>
-                </Form>
+                {props.sendSuccess ? (
+                    <div>Thank you for your feedback!</div>
+                ) : (
+                    <Form className={classes.Form}>
+                        {errors.email && touched.email ? (
+                            <div className={classes.ErrorMessage}>{errors.email}!</div>
+                        ) : (
+                            <div className={classes.ErrorMessage}>&nbsp;</div>
+                        )}
+                        <Field
+                            name="email"
+                            type="email"
+                            placeholder="Your e-mail"
+                            className={classes.Input}
+                        />
+                        {errors.name && touched.name ? (
+                            <div className={classes.ErrorMessage}>{errors.name}!</div>
+                        ) : (
+                            <div className={classes.ErrorMessage}>&nbsp;</div>
+                        )}
+                        <Field name="name" placeholder="Your name" className={classes.Input} />
+                        {errors.message && touched.message ? (
+                            <div className={classes.ErrorMessage}>{errors.message}!</div>
+                        ) : (
+                            <div className={classes.ErrorMessage}>&nbsp;</div>
+                        )}
+                        <Field
+                            placeholder="Your message"
+                            name="message"
+                            as="textarea"
+                            cols="30"
+                            rows="10"
+                            className={classes.Textarea}
+                        />
+                        <Button variant="contained" color="primary" fullWidth type="submit">
+                            {props.sending ? (
+                                <CircularProgress
+                                    color="secondary"
+                                    size={24}
+                                    thickness={4}
+                                    style={{ color: "white" }}
+                                />
+                            ) : (
+                                "Send"
+                            )}
+                        </Button>
+                        <div className={classes.ErrorMessage}>&nbsp;</div>
+                    </Form>
+                )}
             </div>
         )}
     </Formik>

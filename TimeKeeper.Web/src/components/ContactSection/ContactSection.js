@@ -15,7 +15,13 @@ const contactSection = props => (
             {/* <img src={messageIcon} alt="svgIcon" className={classes.Icon}></img> */}
         </div>
 
-        <ContactForm />
+        <ContactForm
+            sending={props.sending}
+            sendSuccess={props.sendSuccess}
+            sendStart={props.sendStart}
+            failedSend={props.failedSend}
+            successfullSend={props.successfullSend}
+        />
     </section>
 );
 
