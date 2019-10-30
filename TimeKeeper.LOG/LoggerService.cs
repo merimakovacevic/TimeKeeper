@@ -1,5 +1,6 @@
 ﻿using NLog;
 using System;
+using TimeKeeper.Mail.Services;
 
 namespace TimeKeeper.LOG
 {
@@ -20,11 +21,38 @@ namespace TimeKeeper.LOG
         public void Error(string message)
         {
             _logger.Error(message);
-        }
+            string mailTo = "no-reply@gmail.com";
+            string subject = "Error occured";
+            string body = $"{message}";
+            MailService.Send(mailTo, subject, body);
+    }
 
         public void Fatal(string message)
         {
             _logger.Fatal(message);
+            string mailTo = "no-repy@gmail.com";
+            string subject = "Fatal occured";
+            string body = $"{message}";
+            MailService.Send(mailTo, subject, body);
         }
+        /*
+        public void Error(Exception ex)
+        {
+            _logger.Error(ex.Message);
+            string mailTo = "";
+            string subject = "Error occured";
+            string body = $"{ex.ToString()}";
+            MailService.Send(mailTo, subject, body);
+        }
+
+        public void Fatal(Exception ex)
+        {
+            _logger.Fatal(ex.Message);
+            string mailTo = "";
+            string subject = "Fatal occured";
+            string body = $"{ex.ToString()}";
+            MailService.Send(mailTo, subject, body);
+        }
+        */
     }
 }
