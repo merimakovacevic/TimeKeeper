@@ -3,6 +3,7 @@ import Slider from "react-slick";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import "./arrowStyle.css";
 import classes from "./TeamSection.module.css";
 import pictures from "../../data/profilePictures";
 import teamData from "../../data/teamMembers.json";
