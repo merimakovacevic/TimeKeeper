@@ -7,6 +7,11 @@
     z-index: 10;
 }
 
+.ErrorMessage {
+    color: wheat;
+    font-size: 0.75rem;
+}
+
 .Form {
     width: 100%;
     padding: 0 2rem;
