@@ -13,6 +13,7 @@ using TimeKeeper.LOG;
 
 namespace TimeKeeper.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TeamsController : BaseController

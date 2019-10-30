@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using TimeKeeper.API.Factory;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
+using TimeKeeper.Utility.Services;
 
 namespace TimeKeeper.API.Controllers
 {
@@ -31,7 +32,7 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info($"Try to fetch all employees");
-                return Ok(Unit.Employees.Get().ToList().Select(x => x.Create()).ToList());
+                return Ok(Unit.Employees.Get().ToList().Select(x => x.Create()).ToList());                
             }
             catch (Exception ex)
             {
@@ -91,6 +92,20 @@ namespace TimeKeeper.API.Controllers
                 employee.Position = Unit.EmployeePositions.Get(employee.Position.Id);
                 Unit.Employees.Insert(employee);
                 Unit.Save();
+
+                //User insertion is coupled to employee insertion
+                User user = new User
+                {
+                    Id = employee.Id,
+                    Name = employee.FullName,
+                    Username = employee.MakeUsername(),
+                    Password = "$ch00l",
+                    Role = "user"
+                };
+
+                Unit.Users.Insert(user);
+                Unit.Save();
+
                 Logger.Info($"Employee {employee.FirstName} {employee.LastName} added with id {employee.Id}");
                 return Ok(employee.Create());
             }

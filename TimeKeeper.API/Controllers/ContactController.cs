@@ -8,11 +8,13 @@ using TimeKeeper.API.Models;
 using TimeKeeper.API.Services;
 using TimeKeeper.Mail.Services;
 
+
 namespace TimeKeeper.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ContactController : ControllerBase
+    public class ContactController : ControllerBase //will not inherit from BaseController, the mails won't be saved in the database
+
     {
         [HttpPost]
         public IActionResult PostEmail([FromBody] MailModel mail)

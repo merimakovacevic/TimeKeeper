@@ -42,9 +42,8 @@ namespace TimeKeeper.API.Controllers
 
             if (control == null) return NotFound();
             byte[] bytes = Encoding.ASCII.GetBytes($"{control.Username}:{control.Password}");
-            string base64=$"{Convert.ToBase64String(bytes)}";
-            return Ok(new
-            {
+            string base64 = Convert.ToBase64String(bytes);
+            return Ok( new {
                 control.Id,
                 control.Name,
                 control.Role,
