@@ -1,8 +1,8 @@
 [
     {
-        "name": "Tajib Smajlovic",
+        "name": "Tajib",
         "role": "Front-end Developer",
-        "about": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "about": "HTML, CSS, JavaScript, React.js",
         "socialMedia": {
             "ln": "",
             "git": "",
@@ -12,7 +12,7 @@
     {
         "name": "Ajdin",
         "role": "Front-end Developer",
-        "about": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "about": "HTML, CSS, JavaScript, React.js",
         "socialMedia": {
             "ln": "",
             "git": "",
@@ -22,7 +22,7 @@
     {
         "name": "Merima",
         "role": "Back-end Developer",
-        "about": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "about": "C#, .NetCore, PostgreSQL. Entity Framework.",
         "socialMedia": {
             "ln": "asd",
             "git": "",
@@ -32,7 +32,7 @@
     {
         "name": "Armin",
         "role": "Back-end Developer",
-        "about": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "about": "C#, .NetCore, PostgreSQL. Entity Framework.",
         "socialMedia": {
             "ln": "asd",
             "git": "",
@@ -41,8 +41,8 @@
     },
     {
         "name": "Amila",
-        "role": "Testeras",
-        "about": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "role": "QA Engineer",
+        "about": "Test planning. Unit testing. Integration testing.",
         "socialMedia": {
             "ln": "asd",
             "git": "",
@@ -51,8 +51,8 @@
     },
     {
         "name": "Nadja",
-        "role": "PM",
-        "about": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "role": "Project manager",
+        "about": "Agile methodology. SCRUM principles.",
         "socialMedia": {
             "ln": "asd",
             "git": "",

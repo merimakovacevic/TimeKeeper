@@ -50,8 +50,8 @@ const teamSection = props => {
         <div id={props.passedId} className={classes.TeamSection}>
             <h1>Our Team</h1>
             <p className={classes.TeamSectionSlogan}>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Non, quo doloribus
-                delectus dolore expedita, repellendus testtes as
+                Meet the squad: young, professional, focused and motivated to solve any and all
+                problems you might have.
             </p>
             <ul
                 style={{ margin: "0 2rem", listStyleType: "none" }}
