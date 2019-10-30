@@ -12,9 +12,11 @@ const teamSection = props => {
     let settings = {
         dots: true,
         infinite: true,
-        speed: 500,
+        speed: 2000,
         slidesToShow: 3,
         slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 3500,
         responsive: [
             {
                 breakpoint: 1024,
