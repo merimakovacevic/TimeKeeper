@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.Seed
 {
@@ -60,5 +61,7 @@ namespace TimeKeeper.Seed
             string[] words = addr.Split(", ");
             return words[1];
         }
+
+
     }
 }

@@ -24,6 +24,7 @@
     <ProjectReference Include="..\TimeKeeper.DAL\TimeKeeper.DAL.csproj" />
     <ProjectReference Include="..\TimeKeeper.Domain\TimeKeeper.Domain.csproj" />
     <ProjectReference Include="..\TimeKeeper.LOG\TimeKeeper.LOG.csproj" />
+    <ProjectReference Include="..\TimeKeeper.Mail\TimeKeeper.Mail.csproj" />
   </ItemGroup>
 
 </Project>

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
+using TimeKeeper.Utility.Services;
 
 namespace TimeKeeper.Seed
 {
@@ -34,6 +35,19 @@ namespace TimeKeeper.Seed
                 };
 
                 unit.Employees.Insert(e);
+                unit.Save();
+                
+                //User insertion is binded to employee insertion
+                User user = new User
+                {
+                    Id = e.Id,
+                    Name = e.FullName,
+                    Username = e.MakeUsername(),
+                    Password = "$ch00l",
+                    Role = "user"
+                };
+
+                unit.Users.Insert(user);
                 unit.Save();
 
                 Utility.employeesDictionary.Add(oldId, e.Id);

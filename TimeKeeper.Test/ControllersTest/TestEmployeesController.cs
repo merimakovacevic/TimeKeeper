@@ -60,17 +60,22 @@ namespace TimeKeeper.Test.ControllersTest
 
             Employee employee = new Employee
             {
-                FirstName="Sule",
-                LastName="Sule",
-                Position=unit.EmployeePositions.Get(1),
-                Status=unit.EmploymentStatuses.Get(1)
+                FirstName = "Sule",
+                LastName = "Sule",
+                Position = unit.EmployeePositions.Get(1),
+                Status = unit.EmploymentStatuses.Get(1)
             };
 
             var response = controller.Post(employee) as ObjectResult;
             var value = response.Value as EmployeeModel;
 
+            //Check if the user was added as well
+            User user = unit.Users.Get(employee.Id);
+
             Assert.AreEqual(200, response.StatusCode);
-            Assert.AreEqual(7, value.Id);//Id of the new employee will be 4
+            Assert.AreEqual(7, value.Id);//Id of the new employee will be 7
+            Assert.AreEqual(7, user.Id);//Id of the new user will be 7
+            Assert.AreEqual("sulesu", user.Username);
         }
 
         [Test, Order(5)]
