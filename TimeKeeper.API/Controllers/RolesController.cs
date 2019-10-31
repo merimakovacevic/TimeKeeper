@@ -35,7 +35,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch(Exception ex)
             {
-                Logger.Fatal(ex.Message);
+                Logger.Fatal(ex);
                 return BadRequest(ex);
             }
         }
@@ -69,7 +69,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex.Message);
+                Logger.Fatal(ex);
                 return BadRequest(ex);
             }
         }
@@ -95,7 +95,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex.Message);
+                Logger.Fatal(ex);
                 return BadRequest(ex);
             }
         }
@@ -128,7 +128,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex.Message);
+                Logger.Fatal(ex);
                 return BadRequest(ex);
             }
         }
@@ -155,7 +155,7 @@ namespace TimeKeeper.API.Controllers
                 Logger.Info($"Attempt to delete role with id {id}");
                 if (numberOfChanges == 0)
                 {
-                    Logger.Info($"Attempt to delete role with id {id}");
+                    Logger.Error($"Attempt to delete role with id {id}");
                     return NotFound();
                 }
                 Logger.Info($"Deleted role with id {id}");
@@ -163,7 +163,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex.Message);
+                Logger.Fatal(ex);
                 return BadRequest(ex);
             }
         }

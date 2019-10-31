@@ -16,7 +16,7 @@ namespace TimeKeeper.Seed
             {
                 int oldId = rawData.ReadInteger(row, 1);
 
-                Employee e = new Employee
+                Employee employee = new Employee
                 {
                     //Id = rawData.ReadInteger(row, 1),
                     FirstName = rawData.ReadString(row, 2),
@@ -34,24 +34,17 @@ namespace TimeKeeper.Seed
                     Salary = rawData.ReadDecimal(row, 13)//additionally added to entity properties
                 };
 
-                unit.Employees.Insert(e);
+                unit.Employees.Insert(employee);
                 unit.Save();
-                
+
                 //User insertion is binded to employee insertion
-                User user = new User
-                {
-                    Id = e.Id,
-                    Name = e.FullName,
-                    Username = e.MakeUsername(),
-                    Password = "$ch00l",
-                    Role = "user"
-                };
+                User user = employee.CreateUser();
 
                 unit.Users.Insert(user);
                 unit.Save();
 
-                Utility.employeesDictionary.Add(oldId, e.Id);
-                Console.WriteLine("EMPLOYEES: Old id: " + oldId + "new id: " + e.Id);
+                Utility.employeesDictionary.Add(oldId, employee.Id);
+                Console.WriteLine("EMPLOYEES: Old id: " + oldId + "new id: " + employee.Id);
             }
             //unit.Save();
         }

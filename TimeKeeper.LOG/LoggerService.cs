@@ -43,16 +43,18 @@ namespace TimeKeeper.LOG
             string subject = "Error occured";
             string body = $"{ex.ToString()}";
             MailService.Send(mailTo, subject, body);
-        }
+        }*/
 
         public void Fatal(Exception ex)
         {
-            _logger.Fatal(ex.Message);
-            string mailTo = "";
-            string subject = "Fatal occured";
-            string body = $"{ex.ToString()}";
-            MailService.Send(mailTo, subject, body);
+            string message = 
+                $"<b>Time</b>: <br/>{DateTime.Now} <br/><br/>" +
+                $"<b>Message</b>: <br/>{ex.Message} <br/><br/>" +
+                $"<b>Source</b>: <br/>{ex.Source} <br/><br/>" +
+                $"<b>StackTrace</b>: <br/>{ex.StackTrace}";
+
+            Fatal(message);            
         }
-        */
+        
     }
 }

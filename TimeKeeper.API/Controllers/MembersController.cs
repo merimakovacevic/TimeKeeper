@@ -44,7 +44,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch(Exception ex)
             {
-                Logger.Fatal(ex.Message);
+                Logger.Fatal(ex);
                 return BadRequest(ex);
             }
         }
@@ -77,14 +77,14 @@ namespace TimeKeeper.API.Controllers
 
                 if (member == null)
                 {
-                    Logger.Error($"Member with id {id} cannout be found");
+                    Logger.Error($"Member with id {id} cannot be found");
                     return NotFound();
                 }
                 return Ok(member.Create());
             }
             catch(Exception ex)
             {
-                Logger.Fatal(ex.Message);
+                Logger.Fatal(ex);
                 return BadRequest(ex);
             }
         }
@@ -115,7 +115,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex.Message);
+                Logger.Fatal(ex);
                 return BadRequest(ex);
             }
         }
@@ -156,7 +156,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex.Message);
+                Logger.Fatal(ex);
                 return BadRequest(ex);
             }
         }
@@ -183,7 +183,7 @@ namespace TimeKeeper.API.Controllers
 
                 if (numberOfChanges == 0)
                 {
-                    Logger.Info($"Member with id {id} not found");
+                    Logger.Error($"Member with id {id} not found");
                     return NotFound();
                 }
                 Logger.Info($"Deleted team with id {id}");
@@ -191,7 +191,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex.Message);
+                Logger.Fatal(ex);
                 return BadRequest(ex);
             }
         }
