@@ -40,7 +40,6 @@
 .CardImage {
     width: 30%;
 }
-
 .Card h2 {
     margin: 1rem 0;
     font-weight: 500;
@@ -77,15 +76,13 @@
         transform: scale(0.97);
         transition: all 0.2s;
     }
-
-    .CardImage {
-        width: 25%;
-    }
     .Card p {
         width: 65%;
         margin: 0 auto;
     }
-
+    .CardImage {
+        width: 25%;
+    }
     .Card:hover {
         transform: scale(1);
         box-shadow: 0 0 30px rgba(50, 174, 220, 0.9);

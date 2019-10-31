@@ -44,9 +44,11 @@
         justify-content: space-around;
         align-items: center;
     }
+    
     .ContactSection {
         position: relative;
     }
+
     .ClipPath {
         position: absolute;
         top: 0;

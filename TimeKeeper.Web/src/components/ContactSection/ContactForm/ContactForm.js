@@ -38,14 +38,8 @@ const contactForm = props => (
             props.sendStart();
             axios
                 .post("http://192.168.60.73/TimeKeeper/api/contact", values)
-                .then(res => {
-                    // console.log(res);
-                    props.successfullSend();
-                })
-                .catch(err => {
-                    // console.log(err);
-                    props.failedSend();
-                });
+                .then(res => props.successfullSend())
+                .catch(err => props.failedSend());
         }}
     >
         {({ errors, touched }) => (

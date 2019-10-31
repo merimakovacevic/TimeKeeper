@@ -1,7 +1,7 @@
 import React from "react";
 
-import classes from "./TeamCard.module.css";
 import "./TeamCard.module.css";
+import classes from "./TeamCard.module.css";
 
 import LnIcon from "../../../assets/socialMediaISvgIcons/linkedin.svg";
 import GitIcon from "../../../assets/socialMediaISvgIcons/github-sign.svg";

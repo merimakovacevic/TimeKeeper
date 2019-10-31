@@ -36,12 +36,10 @@ class StaticPage extends React.Component {
     };
 
     sideDrawerClosedHandler = () => this.setState({ showSideDrawer: false });
-
     drawerToggleClicked = () =>
         this.setState(prevState => {
             return { showSideDrawer: !prevState.showSideDrawer };
         });
-
     toggleBackdrop = () => {
         this.setState(prevState => {
             return { modalOpen: !prevState.modalOpen, showSideDrawer: false };
