@@ -16,6 +16,14 @@
     justify-content: space-between;
 }
 
+.Open {
+    transform: translateX(0);
+}
+
+.Close {
+    transform: translateX(100%);
+}
+
 @media (min-width: 769px) {
     .SideDrawer {
         display: none;
@@ -23,12 +31,4 @@
     .Button {
         display: none !important;
     }
-}
-
-.Open {
-    transform: translateX(0);
-}
-
-.Close {
-    transform: translateX(100%);
 }

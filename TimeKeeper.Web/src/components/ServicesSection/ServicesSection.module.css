@@ -20,6 +20,7 @@
     width: 80%;
     text-align: center;
     font-weight: 500;
+    color: #32aedc;
 }
 
 @media (min-width: 1024px) {
@@ -27,5 +28,10 @@
         display: flex;
         margin: 0 5rem;
         margin-top: 4rem;
+    }
+    
+    .ServiceParagraph {
+        width: 60%;
+        font-size: 1.3rem;
     }
 }

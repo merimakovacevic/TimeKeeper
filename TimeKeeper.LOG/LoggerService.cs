@@ -20,12 +20,15 @@ namespace TimeKeeper.LOG
 
         public void Error(string message)
         {
+            string errorMessage =
+                $"<b>Time</b>: <br/>{DateTime.Now} <br/><br/>" +
+                $"<b>Message</b>: <br/>{message} <br/><br/>";
             _logger.Error(message);
             string mailTo = "no-reply@gmail.com";
             string subject = "Error occured";
-            string body = $"{message}";
+            string body = $"{errorMessage}";
             MailService.Send(mailTo, subject, body);
-    }
+        }
 
         public void Fatal(string message)
         {
@@ -50,6 +53,6 @@ namespace TimeKeeper.LOG
             string body = $"{message}";
             MailService.Send(mailTo, subject, body);
         }
-        
+
     }
 }
