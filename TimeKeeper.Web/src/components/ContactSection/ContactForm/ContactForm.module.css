@@ -1,0 +1,99 @@
+.Container {
+    position: relative;
+    min-height: 465px;
+    height: auto;
+    margin: 1rem;
+    /* box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); */
+}
+
+.Form {
+    padding: 1.5rem;
+    margin: 2rem 0;
+}
+
+.Input {
+    width: 100%;
+    padding: 0.9rem;
+    margin: 0.5rem 0;
+    border: 1px solid transparent;
+    border-radius: 40px;
+    background-color: white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+.Input:focus {
+    outline: none !important;
+    border: 1px solid #5089cd;
+}
+.Input::placeholder {
+    color: #a8c4e5;
+}
+
+.Textarea {
+    width: 100%;
+    padding: 0.9rem;
+    margin: 0.5rem 0;
+    border: 1px solid transparent;
+    border-radius: 25px;
+    background-color: white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+.Textarea:focus {
+    outline: none !important;
+    border: 1px solid #5089cd;
+}
+.Textarea::placeholder {
+    color: #a8c4e5;
+}
+
+.ErrorMessage {
+    font-size: 0.85rem;
+    color: orangered;
+}
+
+.ResponseContainer {
+    width: 90%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    text-align: center;
+}
+.ResponseContainer h2 {
+    color: #5089cd;
+    margin-top: 2rem;
+}
+
+.ResponseImg {
+    width: 60%;
+}
+
+.MyButton {
+    height: 3rem;
+    margin-top: 1rem !important;
+    border-radius: 40px !important;
+    background-image: radial-gradient(circle, #32aedc, #00bad1, #00c3b0, #2dc780, #83c549);
+}
+
+@media only screen and (min-width: 768px) {
+    .Container {
+        width: 70%;
+        margin: auto;
+        background-color: transparent;
+    }
+
+    .Form {
+        padding: 1.5rem 2.5rem;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .Container {
+        width: 40%;
+        margin: 0;
+    }
+
+    .Form {
+        margin: 0;
+    }
+}

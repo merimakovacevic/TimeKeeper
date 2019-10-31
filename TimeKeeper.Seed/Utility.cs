@@ -3,15 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.Seed
 {
     public static class Utility
     {
+        //the following dictionaries are commented, due to the fact that the won't be needed in the seed - the original Id numbers will be taken from the legacy database
         public static Dictionary<int, int> employeesDictionary = new Dictionary<int, int>();
         public static Dictionary<int, int> customersDictionary = new Dictionary<int, int>();
         public static Dictionary<int, int> calendarDictionary = new Dictionary<int, int>();
         public static Dictionary<int, int> projectsDictionary = new Dictionary<int, int>();
+
         public static Dictionary<string, int> teamsDictionary = new Dictionary<string, int>();
         public static Dictionary<string, int> rolesDictionary = new Dictionary<string, int>();
         //public static Dictionary<int, int> membersDictionary = new Dictionary<int, int>(); //original table doesn't have an Id number
@@ -35,7 +38,7 @@ namespace TimeKeeper.Seed
             if (data == null) return DateTime.MinValue;
             return DateTime.Parse(data.ToString());
         }
-        public static DateTime ReadDate1(this ExcelWorksheet sht, int row, int col)
+        public static DateTime ReadDateValue(this ExcelWorksheet sht, int row, int col)
         {
             var data = sht.Cells[row, col].Value;
             if (data == null) return DateTime.MinValue;
@@ -58,5 +61,7 @@ namespace TimeKeeper.Seed
             string[] words = addr.Split(", ");
             return words[1];
         }
+
+
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,8 @@ namespace TimeKeeper.DAL
     public class TimeKeeperContext : DbContext
     {
         private string _conStr;
-        public TimeKeeperContext() : base() { }
+        //The default connection string in the constructor below would be for context calls outside of API
+        public TimeKeeperContext() : base() { _conStr = "User ID=postgres; Password=postgres; Server=localhost; Port=5432; Database=TimeKeeper; Integrated Security=true; Pooling=true;"; }
         public TimeKeeperContext(DbContextOptions<TimeKeeperContext> options) : base(options) { }
         public TimeKeeperContext(string conStr)
         {
@@ -30,6 +33,7 @@ namespace TimeKeeper.DAL
         public DbSet<ProjectStatus> ProjectStatuses { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Team> Teams { get; set; }
+        public DbSet<User> Users { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
         {
             if(_conStr != null)
@@ -37,11 +41,14 @@ namespace TimeKeeper.DAL
                 optionBuilder.UseNpgsql(_conStr);
             }
             optionBuilder.UseLazyLoadingProxies(true);
+            /*This option was used to supress the Detached Object warning when calling MasterController 
+             * for Employees (EmployeePosition is used in Master method for Employee, causing the warning)
+             * It was solved by adding an addition ToList() method call before the Select method in the controller             .*/
+            //optionBuilder.ConfigureWarnings(w => w.Ignore(CoreEventId.DetachedLazyLoadingWarning));
             base.OnConfiguring(optionBuilder);
         }
         protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
+        {            
             builder.Entity<Customer>().OwnsOne(x => x.HomeAddress);
             builder.Entity<Customer>().HasQueryFilter(x => !x.Deleted);
             builder.Entity<Member>().HasQueryFilter(x => !x.Deleted);
@@ -57,11 +64,13 @@ namespace TimeKeeper.DAL
             builder.Entity<ProjectStatus>().HasQueryFilter(x => !x.Deleted);
             builder.Entity<Role>().HasQueryFilter(x => !x.Deleted);
             builder.Entity<Team>().HasQueryFilter(x => !x.Deleted);
+            builder.Entity<User>().HasQueryFilter(x => !x.Deleted);
+            base.OnModelCreating(builder);//moved from first line of the method, does it mather where this is placed?
         }
 
         public override int SaveChanges()
         {
-            foreach (var entry in ChangeTracker.Entries().Where(x => x.State == EntityState.Deleted && x.Entity is BaseClass))//how to imlement generic type?
+            foreach (var entry in ChangeTracker.Entries().Where(x => x.State == EntityState.Deleted && x.Entity is BaseClass))
             {
                 entry.State = EntityState.Modified;
                 entry.CurrentValues["Deleted"] = true;

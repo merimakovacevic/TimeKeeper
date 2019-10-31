@@ -1,0 +1,102 @@
+.TeamCard {
+    position: relative;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 7rem;
+    margin-bottom: 1rem;
+    background-color: white;
+    width: 90%;
+
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    z-index: 0;
+}
+
+.Img {
+    height: 10rem;
+    width: 10rem;
+    border-radius: 100%;
+    margin-top: -5rem;
+    z-index: 2;
+
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    object-fit: cover;
+    display: inline-block !important;
+}
+
+.Name {
+    font-weight: 500;
+    font-size: 1.5rem;
+}
+.Role {
+    font-size: 0.9rem;
+    font-style: italic;
+    margin-top: 0.3rem;
+    margin-bottom: 0.4rem;
+}
+.About {
+    width: 80%;
+    margin: 1rem auto;
+    text-align: center;
+}
+
+hr {
+    width: 80%;
+    margin: auto;
+}
+
+.ScIcons {
+    padding: 1rem 0;
+    display: flex;
+    justify-content: center;
+}
+
+.Icon {
+    width: 2rem;
+    height: 2rem;
+    padding: 0.3rem;
+    margin: 0 0.5rem;
+    display: inline-block !important;
+}
+
+.Link:active {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.Label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 5rem;
+    width: 100%;
+    /* clip-path: polygon(0% 0%, 100% 1%, 100% 65%, 50% 100%, 1% 65%); */
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    color: white;
+    z-index: -1;
+    font-weight: bold;
+}
+
+@media (min-width: 767px) {
+    .Icon {
+        margin: 0 0.5rem;
+    }
+
+    .TeamCard {
+        width: 80%;
+    }
+}
+
+@media (min-width: 1023px) {
+    .TeamCard {
+        width: 80%;
+    }
+
+    .Icon:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .Name {
+        margin-top: 1rem;
+    }
+}

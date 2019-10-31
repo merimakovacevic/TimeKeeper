@@ -5,15 +5,13 @@ using System.Text;
 
 namespace TimeKeeper.Domain.Entities
 {
+    //Members status in a team?
     public class Member: BaseClass
     {
-        [Required]
         public  virtual Team Team { get; set; }
-        [Required]
-        public virtual Employee Employee { get; set; }
-        [Required]
+        public virtual Employee Employee { get; set; }        
         public virtual Role Role { get; set; }
-        [Required]
+        public virtual MemberStatus Status { get; set; }
         public decimal HoursWeekly { get; set; }
     }
 }

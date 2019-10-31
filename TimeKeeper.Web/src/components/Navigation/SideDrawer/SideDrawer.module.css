@@ -5,7 +5,7 @@
     height: 100%;
     top: 4rem;
     right: 0;
-    z-index: 9;
+    z-index: 11;
     background-color: rgba(0, 0, 0, 0.9);
     padding: 5rem 1rem;
     box-sizing: border-box;
@@ -16,6 +16,14 @@
     justify-content: space-between;
 }
 
+.Open {
+    transform: translateX(0);
+}
+
+.Close {
+    transform: translateX(100%);
+}
+
 @media (min-width: 769px) {
     .SideDrawer {
         display: none;
@@ -23,12 +31,4 @@
     .Button {
         display: none !important;
     }
-}
-
-.Open {
-    transform: translateX(0);
-}
-
-.Close {
-    transform: translateX(100%);
 }

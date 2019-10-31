@@ -1,0 +1,13 @@
+.Footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-image: radial-gradient(circle, #32aedc, #00bad1, #00c3b0);
+    font-size: 1rem;
+    color: white;
+}
+.Footer p {
+    text-align: center;
+    padding: 1.3rem;
+}

@@ -36,12 +36,12 @@ namespace TimeKeeper.API.Factory
             };
         }
 
-        public static MasterModel Master(this Member m)
+        public static MasterModel Master(this Member m, string what)
         {
             return new MasterModel
             {
                 Id = m.Id,
-                Name = m.Employee.FirstName+ m.Employee.LastName + ", " + m.Role.Name.Monogram()
+                Name = (what == "team") ? $"{m.Employee.FullName}, {m.Role.Name.Monogram()}" : $"{m.Employee.FullName}, {m.Team.Name}"
             };
         }
 
@@ -63,12 +63,12 @@ namespace TimeKeeper.API.Factory
             };
         }
 
-        public static MasterModel Master(Employee e)//this Employee?
+        public static MasterModel Master(this Employee e)
         {
             return new MasterModel
             {
                 Id = e.Id,
-                Name = $"{e.FirstName} {e.LastName}, {e.Position}"
+                Name = $"{e.FirstName} {e.LastName}, {e.Position.Name}"
             };
         }
 
@@ -78,6 +78,25 @@ namespace TimeKeeper.API.Factory
             {
                 Id = jd.Id,
                 Name = $"{jd.Description}"
+            };
+        }
+
+
+        public static MasterModel Master(this Day day)
+        {
+            return new MasterModel
+            {
+                Id = day.Id,
+                Name = $"{ day.Date.ToString() }"
+            };
+        }
+        //MasterModel with polymorphism for all statuses
+        public static MasterModel Master(this BaseStatus status)
+        {
+            return new MasterModel
+            {
+                Id = status.Id,
+                Name = status.Name
             };
         }
     }

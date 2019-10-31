@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TimeKeeper.Domain\TimeKeeper.Domain.csproj" />
+    <ProjectReference Include="..\TimeKeeper.Utility\TimeKeeper.Utility.csproj" />
   </ItemGroup>
 
 </Project>

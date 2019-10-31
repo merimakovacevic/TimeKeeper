@@ -14,12 +14,15 @@ namespace TimeKeeper.Seed
             for (int row = 2; row <= rawData.Dimension.Rows; row++)
             {
                 string oldId = rawData.ReadString(row, 1);
+
                 EmployeePosition employeePosition = new EmployeePosition
                 {
                     Name = rawData.ReadString(row, 2)
                 };
+
                 unit.EmployeePositions.Insert(employeePosition);
                 unit.Save();
+
                 Utility.employeePositionsDictionary.Add(oldId, employeePosition.Id);
             }
         }

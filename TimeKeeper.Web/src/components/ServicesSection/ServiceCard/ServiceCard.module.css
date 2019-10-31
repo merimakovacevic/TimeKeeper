@@ -1,0 +1,90 @@
+.Card {
+    position: relative;
+    height: 24rem;
+    margin: 2rem;
+    border-radius: 10px;
+    background-color: rgba(243, 246, 250, 0.5);
+}
+
+.Wrapper {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.ClipPath {
+    height: 3rem;
+    width: 100%;
+}
+.Card:nth-child(1n) .ClipPath {
+    clip-path: polygon(0 0, 100% 0, 100% 30%, 0% 100%);
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    background-image: linear-gradient(to right, #32aedc, #00bad1, #00c3b0, #2dc780, #83c549);
+}
+.Card:nth-child(2n) .ClipPath {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+    height: 1rem;
+    margin-bottom: 2rem;
+    background-image: radial-gradient(circle, #32aedc, #00bad1, #00c3b0, #2dc780, #83c549);
+}
+.Card:nth-child(3n) .ClipPath {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 30%);
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    background-image: radial-gradient(circle, #32aedc, #00bad1, #00c3b0, #2dc780, #83c549);
+}
+
+.CardImage {
+    width: 30%;
+}
+.Card h2 {
+    margin: 1rem 0;
+    font-weight: 500;
+    font-size: 1.5rem;
+    color: #32aedc;
+}
+.Card p {
+    margin: 0 1rem;
+    color: #00c9b7;
+    text-align: center;
+}
+
+@media (min-width: 768px) {
+    .Card {
+        height: 19.5rem;
+
+        width: 50%;
+        display: inline-block;
+        box-shadow: 0 0 10px rgba(50, 174, 220, 0.5);
+        background-color: white;
+    }
+    .Card p {
+        width: 70%;
+        margin: 0 auto;
+    }
+    .CardImage {
+        width: 25%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .Card {
+        height: 21.5rem;
+        transform: scale(0.97);
+        transition: all 0.2s;
+    }
+    .Card p {
+        width: 65%;
+        margin: 0 auto;
+    }
+    .CardImage {
+        width: 25%;
+    }
+    .Card:hover {
+        transform: scale(1);
+        box-shadow: 0 0 30px rgba(50, 174, 220, 0.9);
+    }
+}

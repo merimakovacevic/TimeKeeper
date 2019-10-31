@@ -1,0 +1,36 @@
+.TeamSection {
+    height: auto;
+    min-height: 100vh;
+    padding: 5rem 0;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(243, 246, 250, 0.7);
+}
+.TeamSection h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 1rem 0;
+    color: rgb(41, 100, 138);
+}
+.TeamSectionSlogan {
+    margin: 1rem auto;
+    font-size: 1.2rem;
+    width: 80%;
+    text-align: center;
+}
+
+@media (min-width: 1024px) {
+    .TeamSectionList {
+        width: 80%;
+        margin: 3rem auto 2rem auto !important;
+    }
+
+    .TeamSectionSlogan {
+        color: #32aedc;
+        font-weight: 500;
+        font-size: 1.3rem;
+        width: 60%;
+    }
+}
