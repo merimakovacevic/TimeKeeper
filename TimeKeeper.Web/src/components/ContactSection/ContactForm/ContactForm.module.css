@@ -1,8 +1,10 @@
 .Container {
+    position: relative;
     min-height: 465px;
     height: auto;
     margin: 1rem;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    background-color: #dfeeff;
+    /* box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); */
 }
 
 .Form {
@@ -12,11 +14,11 @@
 
 .Input {
     width: 100%;
-    padding: 0.7rem;
+    padding: 0.9rem;
     margin: 0.5rem 0;
-    border: 1px solid #a8c4e5;
-    border-radius: 5px;
-    background-color: #f7f9fc;
+    border: 1px solid transparent;
+    border-radius: 40px;
+    background-color: white;
 }
 .Input:focus {
     outline: none !important;
@@ -28,11 +30,11 @@
 
 .Textarea {
     width: 100%;
-    padding: 0.7rem;
+    padding: 0.9rem;
     margin: 0.5rem 0;
-    border: 1px solid #a8c4e5;
-    border-radius: 5px;
-    background-color: #f7f9fc;
+    border: 1px solid transparent;
+    border-radius: 25px;
+    background-color: white;
 }
 .Textarea:focus {
     outline: none !important;
@@ -47,10 +49,29 @@
     color: orangered;
 }
 
+.ResponseContainer {
+    width: 90%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    text-align: center;
+}
+.ResponseContainer h2 {
+    color: #5089cd;
+    margin-top: 2rem;
+}
+
+.ResponseImg {
+    width: 60%;
+}
+
 @media only screen and (min-width: 768px) {
     .Container {
         width: 70%;
         margin: auto;
+        background-color: transparent;
     }
 
     .Form {
@@ -60,8 +81,8 @@
 
 @media only screen and (min-width: 1024px) {
     .Container {
-        width: 70%;
-        margin: auto;
+        width: 40%;
+        margin: 0;
     }
 
     .Form {

@@ -62,6 +62,7 @@ const teamSection = props => {
                     {teamData.map((d, i) => (
                         <TeamCard
                             key={i}
+                            r={d.r}
                             picture={pictures[i]}
                             name={d.name}
                             role={d.role}
