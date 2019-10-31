@@ -69,6 +69,11 @@ class StaticPage extends React.Component {
                     isLoggedIn={isLoggedIn}
                     successfulLogin={successfullLogin}
                     show={modalOpen}
+                    sending={this.sending}
+                    sendSuccess={this.sendSuccess}
+                    sendStart={this.sendStart}
+                    failedSend={this.failedSend}
+                    successfullSend={this.successfullSend}
                 />
                 <Navigation ToggleButtonClicked={drawerToggleClicked} clicked={toggleBackdrop} />
                 <SideDrawer
