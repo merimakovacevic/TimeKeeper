@@ -6,6 +6,7 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 
 import classes from "./ContactForm.module.css";
+import Smiley from "../../../assets/svgIcons/emoji.svg";
 
 const ContactSchema = Yup.object().shape({
     email: Yup.string()
@@ -31,9 +32,10 @@ const contactForm = props => (
         onSubmit={values => {
             props.sendStart();
             axios
-                .post("http://192.168.60.74/timekeeper/api/contact", values)
+                .post("http://192.168.60.73/TimeKeeper/api/contact", values)
                 .then(res => {
                     alert(res);
+                    console.log(res);
                     props.successfullSend();
                 })
                 .catch(err => {
@@ -45,7 +47,10 @@ const contactForm = props => (
         {({ errors, touched }) => (
             <div className={classes.Container}>
                 {props.sendSuccess ? (
-                    <div>Thank you for your feedback!</div>
+                    <div className={classes.ResponseContainer}>
+                        <img src={Smiley} alt="smiley" className={classes.ResponseImg} />
+                        <h2>Thank you for your feedback!</h2>
+                    </div>
                 ) : (
                     <Form className={classes.Form}>
                         {errors.email && touched.email ? (

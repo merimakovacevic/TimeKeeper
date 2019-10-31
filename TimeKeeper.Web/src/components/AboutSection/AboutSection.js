@@ -2,7 +2,7 @@ import React from "react";
 
 import classes from "./AboutSection.module.css";
 
-import arrowDown from "../../assets/down-arrow.svg";
+import arrowDown from "../../assets/svgIcons/down-arrow.svg";
 
 const aboutSection = props => (
     <div id={props.passedId} className={classes.Background}>

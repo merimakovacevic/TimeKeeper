@@ -20,14 +20,16 @@
 }
 
 .Icon {
-    height: 50%;
+    display: none;
 }
 
 @media only screen and (min-width: 1024px) {
     .ContactSection {
         display: flex;
+        flex-direction: column;
+        justify-content: center;
         align-items: center;
-        margin: 0 8rem;
+        padding: 0 8rem;
     }
 
     .ContactInformation h1 {
@@ -35,6 +37,30 @@
     }
 
     .ContactInformation p {
-        margin: 0;
+    }
+
+    .Wrapper {
+        display: flex;
+        width: 80vw;
+        justify-content: space-around;
+        align-items: center;
+    }
+    .ContactSection {
+        position: relative;
+    }
+    .ClipPath {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        clip-path: polygon(50% 0, 100% 0%, 100% 100%, 50% 100%);
+        background-image: radial-gradient(circle, #faf8fc, #fbfafd, #fcfcfe, #fefdfe, #ffffff);
+        z-index: -1;
+    }
+
+    .Icon {
+        display: block;
+        height: 25rem;
     }
 }
