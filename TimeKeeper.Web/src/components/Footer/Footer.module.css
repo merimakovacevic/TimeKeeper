@@ -3,7 +3,7 @@
     justify-content: center;
     align-items: center;
 
-    background-color: #5089cd;
+    background-image: radial-gradient(circle, #32aedc, #00bad1, #00c3b0);
     font-size: 1rem;
     color: white;
 }

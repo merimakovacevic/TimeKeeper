@@ -6,7 +6,8 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 
 import classes from "./ContactForm.module.css";
-import Smiley from "../../../assets/svgIcons/emoji.svg";
+import Smiley from "../../../assets/svgIcons/thumbs-up.svg";
+import SadSmiley from "../../../assets/svgIcons/sad.svg";
 
 const ContactSchema = Yup.object().shape({
     email: Yup.string()
@@ -16,6 +17,9 @@ const ContactSchema = Yup.object().shape({
         .min(2, "Too Short!")
         .max(50, "Too Long!")
         .required("Name isRequired"),
+    phone: Yup.string()
+        .min(6, "Too Short!")
+        .max(50, "Too Long!"),
     message: Yup.string()
         .max(250, "Invalid email")
         .required("Message is Required")
@@ -26,6 +30,7 @@ const contactForm = props => (
         initialValues={{
             email: "",
             name: "",
+            phone: "",
             message: ""
         }}
         validationSchema={ContactSchema}
@@ -34,12 +39,11 @@ const contactForm = props => (
             axios
                 .post("http://192.168.60.73/TimeKeeper/api/contact", values)
                 .then(res => {
-                    alert(res);
-                    console.log(res);
+                    // console.log(res);
                     props.successfullSend();
                 })
                 .catch(err => {
-                    console.log(err);
+                    // console.log(err);
                     props.failedSend();
                 });
         }}
@@ -50,6 +54,11 @@ const contactForm = props => (
                     <div className={classes.ResponseContainer}>
                         <img src={Smiley} alt="smiley" className={classes.ResponseImg} />
                         <h2>Thank you for your feedback!</h2>
+                    </div>
+                ) : props.sendFail ? (
+                    <div className={classes.ResponseContainer}>
+                        <img src={SadSmiley} alt="error" className={classes.ResponseImg} />
+                        <h2>Unable to perform your request!</h2>
                     </div>
                 ) : (
                     <Form className={classes.Form}>
@@ -70,6 +79,14 @@ const contactForm = props => (
                             <div className={classes.ErrorMessage}>&nbsp;</div>
                         )}
                         <Field name="name" placeholder="Your name" className={classes.Input} />
+
+                        {errors.phone && touched.phone ? (
+                            <div className={classes.ErrorMessage}>{errors.phone}!</div>
+                        ) : (
+                            <div className={classes.ErrorMessage}>&nbsp;</div>
+                        )}
+                        <Field name="phone" placeholder="Your phone" className={classes.Input} />
+
                         {errors.message && touched.message ? (
                             <div className={classes.ErrorMessage}>{errors.message}!</div>
                         ) : (
@@ -83,7 +100,13 @@ const contactForm = props => (
                             rows="10"
                             className={classes.Textarea}
                         />
-                        <Button variant="contained" color="primary" fullWidth type="submit">
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            fullWidth
+                            type="submit"
+                            className={classes.MyButton}
+                        >
                             {props.sending ? (
                                 <CircularProgress
                                     color="secondary"
@@ -95,7 +118,6 @@ const contactForm = props => (
                                 "Send"
                             )}
                         </Button>
-                        <div className={classes.ErrorMessage}>&nbsp;</div>
                     </Form>
                 )}
             </div>
