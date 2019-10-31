@@ -27,8 +27,6 @@ class StaticPage extends React.Component {
 
     successfullLogin = value => {
         this.setState({ isLoggedIn: value });
-
-        // console.log(value);
     };
 
     successfullSend = () => this.setState({ sendSuccess: true, sending: false });
@@ -51,7 +49,14 @@ class StaticPage extends React.Component {
     };
 
     render() {
-        const { showSideDrawer, modalOpen, isLoggedIn, sendSuccess, sending } = this.state;
+        const {
+            showSideDrawer,
+            modalOpen,
+            isLoggedIn,
+            sendSuccess,
+            sending,
+            sendFail
+        } = this.state;
         const {
             sideDrawerClosedHandler,
             drawerToggleClicked,
@@ -84,6 +89,7 @@ class StaticPage extends React.Component {
                         passedId="contact"
                         sending={sending}
                         sendSuccess={sendSuccess}
+                        sendFail={sendFail}
                         sendStart={sendStart}
                         failedSend={failedSend}
                         successfullSend={successfullSend}

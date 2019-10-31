@@ -24,6 +24,7 @@ const contactSection = props => (
                 sendStart={props.sendStart}
                 failedSend={props.failedSend}
                 successfullSend={props.successfullSend}
+                sendFail={props.sendFail}
             />
         </div>
     </section>
