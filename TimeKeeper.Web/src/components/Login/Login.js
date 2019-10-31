@@ -1,5 +1,5 @@
 import React from "react";
-import axios from 'axios'
+import axios from "axios";
 import { Formik, Form, Field } from "formik";
 import { Button } from "@material-ui/core";
 
@@ -14,16 +14,16 @@ const LoginSchema = Yup.object().shape({
         .max(22, "Username too long")
         .required("Username can't be empty!"),
     password: Yup.string()
-        .min(8, "Password too short!")
+        .min(2, "Password too short!")
         .max(32, "Password too long!")
         .required("Password can't be empty!")
 });
 const login = props => {
-    const { isLoggedIn } = props;
+    // const { isLoggedIn } = props;
 
-    let onSubmit = function() {
-        props.successfulLogin(true);
-    };
+    // let onSubmit = function() {
+    //     props.successfulLogin(true);
+    // };
 
     return (
         <Formik
@@ -32,7 +32,20 @@ const login = props => {
                 password: ""
             }}
             validationSchema={LoginSchema}
-            onSubmit={values => onSubmit()}
+            onSubmit={values => {
+                props.sendStart();
+                axios
+                    .post("http://192.168.60.73/TimeKeeper/api/users", values)
+                    .then(res => {
+                        alert(JSON.stringify(res.data));
+
+                        props.successfullSend();
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        props.failedSend();
+                    });
+            }}
         >
             {({ errors, touched }) =>
                 props.show ? (
