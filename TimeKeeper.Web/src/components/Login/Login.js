@@ -6,9 +6,6 @@ import { Button } from "@material-ui/core";
 
 import * as Yup from "yup";
 
-import { ButtonGroup } from "@material-ui/core";
-import SaveIcon from "@material-ui/icons/Save";
-
 import classes from "./Login.module.css";
 
 const LoginSchema = Yup.object().shape({
@@ -23,12 +20,11 @@ const LoginSchema = Yup.object().shape({
         .required("Password can't be empty!")
 });
 const login = props => {
-    const { isLoggedIn } = props;
+    // const { isLoggedIn } = props;
 
-    let onSubmit = function() {
-        props.successfulLogin(true);
-    };
-    console.log(isLoggedIn);
+    // let onSubmit = function() {
+    //     props.successfulLogin(true);
+    // };
 
     return (
         <Formik
@@ -37,14 +33,13 @@ const login = props => {
                 password: ""
             }}
             validationSchema={LoginSchema}
-            //  onSubmit={values => onSubmit()}
             onSubmit={values => {
                 props.sendStart();
                 axios
                     .post("http://192.168.60.73/TimeKeeper/api/users", values)
                     .then(res => {
-                        alert(res);
-                        console.log(res);
+                        alert(JSON.stringify(res.data));
+
                         props.successfullSend();
                     })
                     .catch(err => {
