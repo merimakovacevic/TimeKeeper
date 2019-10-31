@@ -28,7 +28,7 @@ namespace TimeKeeper.LOG
             string subject = "Error occured";
             string body = $"{errorMessage}";
             MailService.Send(mailTo, subject, body);
-    }
+        }
 
         public void Fatal(string message)
         {
@@ -38,6 +38,7 @@ namespace TimeKeeper.LOG
             string body = $"{message}";
             MailService.Send(mailTo, subject, body);
         }
+
         public void Fatal(Exception ex)
         {
             string message = 
@@ -46,7 +47,11 @@ namespace TimeKeeper.LOG
                 $"<b>Source</b>: <br/>{ex.Source} <br/><br/>" +
                 $"<b>StackTrace</b>: <br/>{ex.StackTrace}";
 
-            Fatal(message);            
+            _logger.Fatal(ex.Message);
+            string mailTo = "no-repy@gmail.com";
+            string subject = "Fatal occured";
+            string body = $"{message}";
+            MailService.Send(mailTo, subject, body);
         }
 
     }
