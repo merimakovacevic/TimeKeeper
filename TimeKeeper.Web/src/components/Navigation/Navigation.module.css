@@ -9,11 +9,15 @@
     justify-content: space-between;
     align-items: center;
     box-sizing: border-box;
+    border-bottom: 5px solid #32aedc;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
     z-index: 10;
 }
 
 .Button {
     margin-right: 2rem !important;
+    background-color: #32aedc !important;
 }
 
 .Navigation nav {

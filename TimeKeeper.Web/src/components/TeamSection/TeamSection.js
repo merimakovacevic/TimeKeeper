@@ -13,11 +13,9 @@ const teamSection = props => {
     let settings = {
         dots: true,
         infinite: true,
-        speed: 2000,
+        speed: 1000,
         slidesToShow: 3,
         slidesToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 3500,
         responsive: [
             {
                 breakpoint: 1024,
@@ -47,6 +45,20 @@ const teamSection = props => {
         ]
     };
 
+    const teamMembers = teamData.map((d, i) => (
+        <TeamCard
+            key={i}
+            r={d.r}
+            picture={pictures[i]}
+            name={d.name}
+            role={d.role}
+            about={d.about}
+            lnLink={d.socialMedia.ln}
+            gitLink={d.socialMedia.git}
+            fbLink={d.socialMedia.fb}
+        />
+    ))
+
     return (
         <div id={props.passedId} className={classes.TeamSection}>
             <h1>Our Team</h1>
@@ -59,19 +71,7 @@ const teamSection = props => {
                 className={classes.TeamSectionList}
             >
                 <Slider {...settings}>
-                    {teamData.map((d, i) => (
-                        <TeamCard
-                            key={i}
-                            r={d.r}
-                            picture={pictures[i]}
-                            name={d.name}
-                            role={d.role}
-                            about={d.about}
-                            lnLink={d.socialMedia.ln}
-                            gitLink={d.socialMedia.git}
-                            fbLink={d.socialMedia.fb}
-                        />
-                    ))}
+                    {teamMembers}
                 </Slider>
             </ul>
         </div>

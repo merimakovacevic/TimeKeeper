@@ -33,17 +33,13 @@ const login = props => {
             }}
             validationSchema={LoginSchema}
             onSubmit={values => {
-                props.sendStart();
                 axios
                     .post("http://192.168.60.73/TimeKeeper/api/users", values)
                     .then(res => {
-                        //  alert(JSON.stringify(res.data));
-                        alert("You have logged in," + " " + JSON.stringify(res.data.name));
-                        props.successfullSend();
+                        alert(`You have logged in ${JSON.stringify(res.data.name)}`);
                     })
                     .catch(err => {
                         console.log(err);
-                        props.failedSend();
                     });
             }}
         >

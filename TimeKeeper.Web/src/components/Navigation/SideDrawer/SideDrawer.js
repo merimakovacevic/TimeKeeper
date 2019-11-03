@@ -19,7 +19,7 @@ const sideDrawer = props => {
                 </nav>
                 <Button
                     variant="contained"
-                    color="primary"
+
                     className={classes.Button}
                     onClick={props.clicked}
                 >
