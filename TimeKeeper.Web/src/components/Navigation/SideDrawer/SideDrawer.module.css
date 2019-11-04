@@ -5,15 +5,21 @@
     height: 100%;
     top: 4rem;
     right: 0;
-    z-index: 11;
+    z-index: 9;
     background-color: rgba(0, 0, 0, 0.9);
     padding: 5rem 1rem;
+    margin-top: -.3rem;
     box-sizing: border-box;
     transition: transform 0.3s ease-out;
 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+}
+
+.Button {
+    background-color: #32aedc !important;
+    color: white !important;
 }
 
 .Open {

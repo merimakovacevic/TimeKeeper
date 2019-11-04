@@ -6,7 +6,7 @@ import ContactForm from "./ContactForm/ContactForm";
 
 const contactSection = props => (
     <section id={props.passedId} className={classes.ContactSection}>
-        <span className={classes.ClipPath}></span>
+        <span className={classes.ClipPath} />
         <div className={classes.ContactInformation}>
             <h1>Contact Us</h1>
             <p>
