@@ -36,7 +36,7 @@ namespace TimeKeeper.API.Controllers
             catch(Exception ex)
             {
                 Logger.Fatal(ex);
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
         /// <summary>
@@ -69,12 +69,12 @@ namespace TimeKeeper.API.Controllers
             catch(Exception ex)
             {
                 Logger.Fatal(ex);
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
         /// <summary>
-        /// This method inserts a new team
+        /// This method inserts a new customer
         /// </summary>
         /// <param name="customer">New customer that will be inserted</param>
         /// <returns>Model of inserted customer</returns>
@@ -97,7 +97,7 @@ namespace TimeKeeper.API.Controllers
             catch (Exception ex)
             {
                 Logger.Fatal(ex);
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -133,7 +133,7 @@ namespace TimeKeeper.API.Controllers
             catch (Exception ex)
             {
                 Logger.Fatal(ex);
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -168,7 +168,7 @@ namespace TimeKeeper.API.Controllers
             catch (Exception ex)
             {
                 Logger.Fatal(ex);
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
     }

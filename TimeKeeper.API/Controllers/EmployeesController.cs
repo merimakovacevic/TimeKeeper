@@ -37,7 +37,7 @@ namespace TimeKeeper.API.Controllers
             catch (Exception ex)
             {
                 Logger.Fatal(ex);
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
         /// <summary>
@@ -56,12 +56,16 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info($"Try to fetch employee with id {id}");
+
                 Employee employee = Unit.Employees.Get(id);
+
+                
                 if (employee == null)
                 {
                     Logger.Error($"Employee with id {id} cannot be found");
                     return NotFound();
                 }
+
                 else
                 {
                     return Ok(employee.Create());
@@ -70,7 +74,7 @@ namespace TimeKeeper.API.Controllers
             catch (Exception ex)
             {
                 Logger.Fatal(ex);
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -105,7 +109,7 @@ namespace TimeKeeper.API.Controllers
             catch (Exception ex)
             {
                 Logger.Fatal(ex);
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -142,7 +146,7 @@ namespace TimeKeeper.API.Controllers
             catch (Exception ex)
             {
                 Logger.Fatal(ex);
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -179,7 +183,7 @@ namespace TimeKeeper.API.Controllers
             catch (Exception ex)
             {
                 Logger.Fatal(ex);
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
     }

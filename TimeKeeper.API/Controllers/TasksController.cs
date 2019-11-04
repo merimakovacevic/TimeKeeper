@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TimeKeeper.API.Factory;
 using TimeKeeper.DAL;
+using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Controllers
 {
@@ -37,11 +38,11 @@ namespace TimeKeeper.API.Controllers
             catch(Exception ex)
             {
                 Logger.Fatal(ex);
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
         /// <summary>
-        /// This method returns role with specified id
+        /// This method returns a task with specified id
         /// </summary>
         /// <param name="id">Id of role</param>
         /// <returns>Role with specified id</returns>
@@ -68,7 +69,110 @@ namespace TimeKeeper.API.Controllers
             catch(Exception ex)
             {
                 Logger.Fatal(ex);
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// This method inserts a new task
+        /// </summary>
+        /// <param name="jobDetail"></param>
+        /// <returns>Model of inserted task</returns>
+        /// <response status="200">OK</response>
+        /// <response status="400">Bad request</response>
+        [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult Post([FromBody] JobDetail jobDetail)
+        {
+            try
+            {
+                jobDetail.Day = Unit.Calendar.Get(jobDetail.Day.Id);
+                jobDetail.Project = Unit.Projects.Get(jobDetail.Project.Id);
+
+                Unit.Tasks.Insert(jobDetail);
+                Unit.Save();
+
+                Logger.Info($"Task for employee {jobDetail.Day.Employee.FullName}, day {jobDetail.Day.Date} added with id {jobDetail.Id}");
+                return Ok(jobDetail.Create());
+            }
+            catch (Exception ex)
+            {
+                Logger.Fatal(ex);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// This method updates data for a task with the specified id
+        /// </summary>
+        /// <param name="id">Id of task that will be updated</param>
+        /// <param name="jobDetail">Data that comes from frontend</param>
+        /// <returns>Task model with new values</returns>
+        /// <response status="200">OK</response>
+        /// <response status="404">Not found</response>
+        /// <response status="400">Bad request</response>
+        [HttpPut("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public IActionResult Put(int id, [FromBody] JobDetail jobDetail)
+        {
+            try
+            {
+                jobDetail.Day = Unit.Calendar.Get(jobDetail.Day.Id);
+                jobDetail.Project = Unit.Projects.Get(jobDetail.Project.Id);
+
+                Unit.Tasks.Update(jobDetail, id);
+                int numberOfChanges = Unit.Save();
+
+                if (numberOfChanges == 0)
+                {
+                    Logger.Error($"Task with {id} not found");
+                    return NotFound();
+                }
+                Logger.Info($"Changed task with id {id}");
+                return Ok(jobDetail.Create());
+            }
+            catch (Exception ex)
+            {
+                Logger.Fatal(ex);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// This method deletes a task with the specified id
+        /// </summary>
+        /// <param name="id">Id of task that has to be deleted</param>
+        /// <returns>No content</returns>
+        /// <response status="204">No content</response>
+        /// <response status="404">Not found</response>
+        /// <response status="400">Bad request</response>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                Unit.Tasks.Delete(id);
+                Logger.Info($"Attempt to delete task with id {id}");
+                int numberOfChanges = Unit.Save();
+
+                if (numberOfChanges == 0)
+                {
+                    Logger.Error($"Task with id {id} not found");
+                    return NotFound();
+                }
+                Logger.Info($"Deleted task with id {id}");
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                Logger.Fatal(ex);
+                return BadRequest(ex.Message);
             }
         }
     }
