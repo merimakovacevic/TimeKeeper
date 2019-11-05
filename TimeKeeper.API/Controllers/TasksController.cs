@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -10,6 +11,7 @@ using TimeKeeper.DAL;
 
 namespace TimeKeeper.API.Controllers
 {
+    [Authorize]
     //Will the route for this Controller require refactoring? Employees/{id}/Calendar/{id}/Tasks?
     [Route("api/[controller]")]
     [ApiController]
