@@ -29,10 +29,10 @@ namespace TimeKeeper.IDP
                 },
                 new TestUser
                 {
-                    SubjectId="jane",
-                    Username="janedoe",
-                    Password="$ch00l",
-                    Claims=new List<Claim>
+                    SubjectId = "jane",
+                    Username = "janedoe",
+                    Password = "$ch00l",
+                    Claims = new List<Claim>
                     {
                         new Claim("given_name", "Jane"),
                         new Claim("family_name", "Doe"),

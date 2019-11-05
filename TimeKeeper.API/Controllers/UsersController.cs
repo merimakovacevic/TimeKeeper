@@ -38,7 +38,7 @@ namespace TimeKeeper.API.Controllers
             catch (Exception ex)
             {
                 Logger.Fatal(ex);
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }  
         }
 
@@ -64,7 +64,7 @@ namespace TimeKeeper.API.Controllers
             catch (Exception ex)
             {
                 Logger.Fatal(ex);
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
     }
