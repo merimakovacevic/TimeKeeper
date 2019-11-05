@@ -37,13 +37,23 @@ namespace TimeKeeper.API
                 o.AutomaticAuthentication = false;
             });
 
-            services.AddAuthentication("BasicAuthentication")
-                    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
-
-            services.Configure<IISOptions>(o =>
+            services.AddAuthentication(o =>
             {
-                o.AutomaticAuthentication = false;
-            });
+                o.DefaultScheme = "Cookies";
+                o.DefaultChallengeScheme = "oidc";
+            }).AddCookie("Cookies")
+              .AddOpenIdConnect("oidc", o=>
+              {
+                  o.SignInScheme = "Cookies";
+                  o.Authority = "https://localhost:44300";
+                  o.ClientId = "tk2019";
+                  o.ClientSecret = "mistral_talents";
+                  o.ResponseType = "code id_token";
+                  o.Scope.Add("openid");
+                  o.Scope.Add("profile");
+                  o.SaveTokens = true;
+              });
+
 
             string connectionString = Configuration["ConnectionString"];          
             services.AddDbContext<TimeKeeperContext>(o => { o.UseNpgsql(connectionString); });
