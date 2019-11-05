@@ -1,4 +1,5 @@
-﻿using IdentityServer4.Models;
+﻿using IdentityServer4;
+using IdentityServer4.Models;
 using IdentityServer4.Test;
 using System;
 using System.Collections.Generic;
@@ -52,7 +53,21 @@ namespace TimeKeeper.IDP
 
         public static IEnumerable<Client> GetClients()
         {
-            return new List<Client>();
+            return new List<Client> {
+                new Client
+                {
+                    ClientName = "TimeKeeper",
+                    ClientId = "tk2019",
+                    AllowedGrantTypes = GrantTypes.Hybrid,
+                    RedirectUris = { "https://locahost:44350/signin-oidc" },
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile
+                    },                    
+                    ClientSecrets = {new Secret("mistral_talents".Sha256())}
+                }
+            };
         }
     }
 }

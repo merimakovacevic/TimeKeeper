@@ -37,18 +37,15 @@ namespace TimeKeeper.API
                 o.AutomaticAuthentication = false;
             });
 
-            services.AddAuthentication("BasicAuthentication")
-                    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+            /*services.AddAuthentication("BasicAuthentication")
+                    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);*/
 
-            services.Configure<IISOptions>(o =>
-            {
-                o.AutomaticAuthentication = false;
-            });
-
+                 
             string connectionString = Configuration["ConnectionString"];          
             services.AddDbContext<TimeKeeperContext>(o => { o.UseNpgsql(connectionString); });
 
-            services.AddSwaggerDocument(config => //Is this config neccessary?
+            //Is this config neccessary?
+            services.AddSwaggerDocument(config => 
             {
                 config.PostProcess = document =>
                 {
@@ -69,6 +66,22 @@ namespace TimeKeeper.API
                     };
                 };
             });
+            
+            services.AddAuthentication(o =>
+            {
+                o.DefaultScheme = "Cookies";
+                o.DefaultChallengeScheme = "oidc";
+            }).AddCookie("Cookies")
+              .AddOpenIdConnect("oidc", o => {
+                  o.SignInScheme = "Cookies";
+                  o.Authority = "https://localhost:44300";
+                  o.ClientId = "tk2019";
+                  o.ClientSecret = "mistral_talents";
+                  o.ResponseType = "code id_token";
+                  o.Scope.Add("openid"); //request users identity
+                  o.Scope.Add("profile"); //request users profile
+                  o.SaveTokens = true; //tokens will be saved in cookies in browser
+              });
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -78,7 +91,7 @@ namespace TimeKeeper.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseStaticFiles();//??? for static files
+            app.UseStaticFiles();
             app.UseOpenApi();
             app.UseSwaggerUi3();
 
