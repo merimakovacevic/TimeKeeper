@@ -16,7 +16,6 @@ namespace TimeKeeper.IDP
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-
             services.AddIdentityServer()
                     .AddDeveloperSigningCredential()
                     .AddTestUsers(Config.GetUsers())
@@ -31,7 +30,6 @@ namespace TimeKeeper.IDP
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseIdentityServer();
             app.UseStaticFiles();
             app.UseMvcWithDefaultRoute();

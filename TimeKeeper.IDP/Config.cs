@@ -17,14 +17,14 @@ namespace TimeKeeper.IDP
             {
                 new TestUser
                 {
-                    SubjectId = "john",
-                    Username = "johndoe",
-                    Password = "$ch00l",
-                    Claims = new List<Claim>
+                    SubjectId="john",
+                    Username="johndoe",
+                    Password="$ch00l",
+                    Claims=new List<Claim>
                     {
                         new Claim("given_name", "John"),
                         new Claim("family_name", "Doe"),
-                        new Claim("role", "admina")
+                        new Claim("role", "user")
                     }
                 },
                 new TestUser
@@ -56,16 +56,17 @@ namespace TimeKeeper.IDP
             return new List<Client> {
                 new Client
                 {
-                    ClientName = "TimeKeeper",
-                    ClientId = "tk2019",
-                    AllowedGrantTypes = GrantTypes.Hybrid,
-                    RedirectUris = { "https://locahost:44350/signin-oidc" },
+                    ClientName="TimeKeeper",
+                    ClientId="tk2019",
+                    AllowedGrantTypes=GrantTypes.Hybrid,
+                    RedirectUris={ "https://localhost:44350/signin-oidc" },
+
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile
-                    },                    
-                    ClientSecrets = {new Secret("mistral_talents".Sha256())}
+                    },
+                    ClientSecrets={new Secret("mistral_talents".Sha256())}
                 }
             };
         }
