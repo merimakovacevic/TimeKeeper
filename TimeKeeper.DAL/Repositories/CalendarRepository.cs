@@ -8,6 +8,7 @@ namespace TimeKeeper.DAL.Repositories
     public class CalendarRepository: Repository<Day>
     {
         public CalendarRepository(TimeKeeperContext context) : base(context) { }
+
         private void Build(Day day)
         {
             day.Employee = _context.Employees.Find(day.Employee.Id);
@@ -30,6 +31,16 @@ namespace TimeKeeper.DAL.Repositories
                 old.Employee = day.Employee;
                 old.DayType = day.DayType;
             }
+        }
+
+        public override void Delete(int id)
+        {
+            Day old = Get(id);
+
+            if (old.JobDetails.Count != 0)
+                throw new Exception("Object cannot be deleted because child objects are present");
+
+            Delete(old);
         }
     }
 }

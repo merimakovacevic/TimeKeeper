@@ -35,6 +35,15 @@ namespace TimeKeeper.DAL.Repositories
             }
             else throw new ArgumentNullException();
         }
+        public override void Delete(int id)
+        {
+            Employee old = Get(id);
+
+            if (old.Calendar.Count != 0 || old.Members.Count != 0)
+                throw new Exception("Object cannot be deleted because child objects are present");
+
+            Delete(old);
+        }
     }
 
 

@@ -33,7 +33,7 @@ namespace TimeKeeper.DAL.Repositories
         {
             Entity entity = _dbSet.Find(id);
             if (entity == null)
-                throw new ArgumentException($"There is no object with id: {id} in database");
+                throw new ArgumentException($"There is no object with id: {id} in the database");
             return entity;
         }
 
