@@ -48,7 +48,7 @@ namespace TimeKeeper.DAL.Repositories
 
         public void Delete(Entity entity) => _dbSet.Remove(entity);
 
-        public void Delete(int id)
+        public virtual void Delete(int id)
         {
             Entity old = Get(id);
             Delete(old);
