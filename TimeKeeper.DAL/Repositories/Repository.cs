@@ -21,7 +21,7 @@ namespace TimeKeeper.DAL.Repositories
         public void ValidateUpdate(Entity newEntity, int id)
         {
             if (id != (newEntity as BaseClass).Id)
-                throw new ArgumentException($"Error! Id of the sent object: {(newEntity as BaseClass).Id} and id in url: {id} are not the same");
+                throw new ArgumentException($"Error! Id of the sent object: {(newEntity as BaseClass).Id} and id in url: {id} do not match");
         }
 
         public virtual IQueryable<Entity> Get() => _dbSet;//adjust to Sulejman's code?
