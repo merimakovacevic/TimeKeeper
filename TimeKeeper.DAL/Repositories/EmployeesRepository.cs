@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TimeKeeper.DAL.Utilities;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.Utility.Services;
 
@@ -40,7 +41,9 @@ namespace TimeKeeper.DAL.Repositories
             Employee old = Get(id);
 
             if (old.Calendar.Count != 0 || old.Members.Count != 0)
-                throw new Exception("Object cannot be deleted because child objects are present");
+            {
+                Services.ThrowChildrenPresentException();
+            }
 
             Delete(old);
         }

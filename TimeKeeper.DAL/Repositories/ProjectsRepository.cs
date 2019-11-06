@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TimeKeeper.DAL.Utilities;
 using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.DAL.Repositories
@@ -43,7 +44,9 @@ namespace TimeKeeper.DAL.Repositories
             Project old = Get(id);
 
             if(old.Tasks.Count != 0)
-                throw new Exception("Object cannot be deleted because child objects are present");
+            {
+                Services.ThrowChildrenPresentException();
+            }
 
             Delete(old);
         }
