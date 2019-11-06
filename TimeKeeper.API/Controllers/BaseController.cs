@@ -19,6 +19,7 @@ namespace TimeKeeper.API.Controllers
             Unit = new UnitOfWork(context);
         }
 
+        [NonAction]
         public IActionResult HandleException(Exception exception)
         {
             
