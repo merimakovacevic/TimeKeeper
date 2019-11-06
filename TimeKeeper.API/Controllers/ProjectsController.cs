@@ -175,7 +175,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Lreturn HandleException(ex);
+                return HandleException(ex);
             }
         }
     }
