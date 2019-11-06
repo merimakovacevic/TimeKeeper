@@ -33,7 +33,7 @@ namespace TimeKeeper.DAL.Repositories
         {
             Entity entity = _dbSet.Find(id);
             if (entity == null)
-                throw new ArgumentException($"There is no object with id: {id} in database");
+                throw new ArgumentException($"There is no object with id: {id} in the database");
             return entity;
         }
 
@@ -48,7 +48,7 @@ namespace TimeKeeper.DAL.Repositories
 
         public void Delete(Entity entity) => _dbSet.Remove(entity);
 
-        public void Delete(int id)
+        public virtual void Delete(int id)
         {
             Entity old = Get(id);
             Delete(old);

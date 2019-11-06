@@ -37,5 +37,15 @@ namespace TimeKeeper.DAL.Repositories
                 old.Pricing = project.Pricing;
             }
         }
+
+        public override void Delete(int id)
+        {
+            Project old = Get(id);
+
+            if(old.Tasks.Count != 0)
+                throw new Exception("Object cannot be deleted because child objects are present");
+
+            Delete(old);
+        }
     }
 }

@@ -20,7 +20,6 @@ namespace TimeKeeper.DAL.Repositories
             base.Insert(customer);
         }
 
-
         public override void Update(Customer customer, int id)
         {
             Customer old = Get(id);
@@ -32,6 +31,16 @@ namespace TimeKeeper.DAL.Repositories
                 old.Status = customer.Status;
                 old.HomeAddress = customer.HomeAddress;
             }
+        }
+
+        public override void Delete(int id)
+        {
+            Customer old = Get(id);
+
+            if (old.Projects.Count != 0)
+                throw new Exception("Object cannot be deleted because child objects are present");
+
+            Delete(old);
         }
     }
 }

@@ -46,8 +46,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex.Message);
+                return HandleException(ex);
             }
         }
 
@@ -66,16 +65,6 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                //This is only neccessary if there will be an employee in the route
-                /*
-                Employee emp = Unit.Employees.Get(employeeId);
-               // Log.LogInformation($"Try to get employee with {employeeId}");
-                if (emp == null)
-                {
-                    Logger.Error($"Employee with id {employeeId} cannot be found");
-                    return NotFound("Employee not found");
-                }*/
-
                 Day day = Unit.Calendar.Get(id);
 
                 Logger.Info($"Try to get day with {id}");
@@ -88,8 +77,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex.Message);
+                return HandleException(ex);
             }
         }
 
@@ -107,9 +95,6 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {                
-                day.Employee = Unit.Employees.Get(day.Employee.Id);
-                day.DayType = Unit.DayTypes.Get(day.DayType.Id);
-
                 Unit.Calendar.Insert(day);
                 Unit.Save();
                 Logger.Info($"Day {day.Date} added with id {day.Id}");
@@ -117,8 +102,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex.Message);
+                return HandleException(ex);
             }
         }
 
@@ -155,8 +139,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex.Message);
+                return HandleException(ex);
             }
         }
 
@@ -190,8 +173,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex.Message);
+                return HandleException(ex);
             }
         }
     }
