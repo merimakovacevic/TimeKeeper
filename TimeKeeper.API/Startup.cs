@@ -79,22 +79,6 @@ namespace TimeKeeper.API
                     };
                 };
             });
-            
-            services.AddAuthentication(o =>
-            {
-                o.DefaultScheme = "Cookies";
-                o.DefaultChallengeScheme = "oidc";
-            }).AddCookie("Cookies")
-              .AddOpenIdConnect("oidc", o => {
-                  o.SignInScheme = "Cookies";
-                  o.Authority = "https://localhost:44300";
-                  o.ClientId = "tk2019";
-                  o.ClientSecret = "mistral_talents";
-                  o.ResponseType = "code id_token";
-                  o.Scope.Add("openid"); //request users identity
-                  o.Scope.Add("profile"); //request users profile
-                  o.SaveTokens = true; //tokens will be saved in cookies in browser
-              });
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

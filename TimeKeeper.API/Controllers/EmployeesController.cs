@@ -92,8 +92,8 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                employee.Status = Unit.EmploymentStatuses.Get(employee.Status.Id);
-                employee.Position = Unit.EmployeePositions.Get(employee.Position.Id);
+                //employee.Status = Unit.EmploymentStatuses.Get(employee.Status.Id);
+                //employee.Position = Unit.EmployeePositions.Get(employee.Position.Id);
                 Unit.Employees.Insert(employee);
                 Unit.Save();
 
@@ -128,8 +128,8 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                employee.Status = Unit.EmploymentStatuses.Get(employee.Status.Id);
-                employee.Position = Unit.EmployeePositions.Get(employee.Position.Id);
+                //employee.Status = Unit.EmploymentStatuses.Get(employee.Status.Id);
+                //employee.Position = Unit.EmployeePositions.Get(employee.Position.Id);
                 Unit.Employees.Update(employee, id);
 
                 int numberOfChanges = Unit.Save();

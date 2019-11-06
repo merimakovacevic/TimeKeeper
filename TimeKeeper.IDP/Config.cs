@@ -58,7 +58,7 @@ namespace TimeKeeper.IDP
                 {
                     ClientName="TimeKeeper",
                     ClientId="tk2019",
-                    AllowedGrantTypes=GrantTypes.Hybrid,
+                    AllowedGrantTypes = GrantTypes.Hybrid,
                     RedirectUris={ "https://localhost:44350/signin-oidc" },
 
                     AllowedScopes =

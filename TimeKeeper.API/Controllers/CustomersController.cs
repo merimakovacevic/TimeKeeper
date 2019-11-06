@@ -56,20 +56,12 @@ namespace TimeKeeper.API.Controllers
             {
                 Logger.Info($"Try to fetch customer with id {id}");
                 Customer customer = Unit.Customers.Get(id);
-                if(customer == null)
-                {
-                    Logger.Error($"Customer with id {id} cannot be found");
-                    return NotFound();
-                }
-                else
-                {
-                    return Ok(customer.Create());
-                }
+
+                return Ok(customer.Create());                
             }
             catch(Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex.Message);
+                return HandleException(ex);
             }
         }
 
@@ -87,7 +79,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                customer.Status = Unit.CustomerStatuses.Get(customer.Status.Id);
+                //customer.Status = Unit.CustomerStatuses.Get(customer.Status.Id);
 
                 Unit.Customers.Insert(customer);
                 Unit.Save();
@@ -116,7 +108,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                customer.Status = Unit.CustomerStatuses.Get(customer.Status.Id);
+                //customer.Status = Unit.CustomerStatuses.Get(customer.Status.Id);
                 Unit.Customers.Update(customer, id);
                 int numberOfChanges = Unit.Save();
                Logger.Info($"Attempt to update customer with id {id}");

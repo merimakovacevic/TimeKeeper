@@ -9,12 +9,25 @@ namespace TimeKeeper.DAL.Repositories
     {
         public CustomersRepository(TimeKeeperContext context) : base(context) { }
 
+        private void Build(Customer customer)
+        {
+            customer.Status = _context.CustomerStatuses.Find(customer.Status.Id);
+        }
+
+        public override void Insert(Customer customer)
+        {
+            Build(customer);
+            base.Insert(customer);
+        }
+
+
         public override void Update(Customer customer, int id)
         {
             Customer old = Get(id);
 
             if (old != null)
             {
+                Build(customer);
                 _context.Entry(old).CurrentValues.SetValues(customer);
                 old.Status = customer.Status;
                 old.HomeAddress = customer.HomeAddress;

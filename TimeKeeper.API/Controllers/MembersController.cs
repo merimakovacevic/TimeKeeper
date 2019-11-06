@@ -103,10 +103,10 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                member.Team = Unit.Teams.Get(member.Team.Id);
+/*                member.Team = Unit.Teams.Get(member.Team.Id);
                 member.Employee = Unit.Employees.Get(member.Employee.Id);
                 member.Role = Unit.Roles.Get(member.Role.Id);
-                member.Status = Unit.MemberStatuses.Get(member.Status.Id);
+                member.Status = Unit.MemberStatuses.Get(member.Status.Id);*/
 
                 Unit.Members.Insert(member);
                 Unit.Save();
@@ -135,10 +135,10 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                member.Team = Unit.Teams.Get(member.Team.Id);
+/*                member.Team = Unit.Teams.Get(member.Team.Id);
                 member.Employee = Unit.Employees.Get(member.Employee.Id);
                 member.Role = Unit.Roles.Get(member.Role.Id);
-                member.Status = Unit.MemberStatuses.Get(member.Status.Id);
+                member.Status = Unit.MemberStatuses.Get(member.Status.Id);*/
 
                 Unit.Members.Update(member, id);
                 int numberOfChanges = Unit.Save();

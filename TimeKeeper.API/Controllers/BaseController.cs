@@ -18,5 +18,20 @@ namespace TimeKeeper.API.Controllers
         {
             Unit = new UnitOfWork(context);
         }
+
+        public IActionResult HandleException(Exception exception)
+        {
+            
+            if (exception is ArgumentException)
+            {
+                Logger.Error(exception.Message);
+                return NotFound(exception.Message);
+            }                
+            else
+            {
+                Logger.Fatal(exception);
+                return BadRequest(exception);
+            }            
+        }
     }
 }
