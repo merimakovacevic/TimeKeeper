@@ -121,8 +121,8 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                day.Employee = Unit.Employees.Get(day.Employee.Id);
-                day.DayType = Unit.DayTypes.Get(day.DayType.Id);
+                //day.Employee = Unit.Employees.Get(day.Employee.Id);
+                //day.DayType = Unit.DayTypes.Get(day.DayType.Id);
 
                 Unit.Calendar.Update(day, id);
                 int numberOfChanges = Unit.Save();

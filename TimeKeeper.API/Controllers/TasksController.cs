@@ -37,8 +37,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch(Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex.Message);
+                return HandleException(ex);
             }
         }
         /// <summary>
@@ -68,8 +67,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch(Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex.Message);
+                return HandleException(ex);
             }
         }
 
@@ -87,8 +85,8 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                jobDetail.Day = Unit.Calendar.Get(jobDetail.Day.Id);
-                jobDetail.Project = Unit.Projects.Get(jobDetail.Project.Id);
+                //jobDetail.Day = Unit.Calendar.Get(jobDetail.Day.Id);
+                //jobDetail.Project = Unit.Projects.Get(jobDetail.Project.Id);
 
                 Unit.Tasks.Insert(jobDetail);
                 Unit.Save();
@@ -98,8 +96,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex.Message);
+                return HandleException(ex);
             }
         }
 
@@ -120,8 +117,8 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                jobDetail.Day = Unit.Calendar.Get(jobDetail.Day.Id);
-                jobDetail.Project = Unit.Projects.Get(jobDetail.Project.Id);
+                //jobDetail.Day = Unit.Calendar.Get(jobDetail.Day.Id);
+                //jobDetail.Project = Unit.Projects.Get(jobDetail.Project.Id);
 
                 Unit.Tasks.Update(jobDetail, id);
                 int numberOfChanges = Unit.Save();
@@ -136,8 +133,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex.Message);
+                return HandleException(ex);
             }
         }
 
@@ -171,8 +167,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex.Message);
+                return HandleException(ex);
             }
         }
     }
