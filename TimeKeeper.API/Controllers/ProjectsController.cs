@@ -88,10 +88,10 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                project.Team = Unit.Teams.Get(project.Team.Id);
+                /*project.Team = Unit.Teams.Get(project.Team.Id);
                 project.Customer = Unit.Customers.Get(project.Customer.Id);
                 project.Status = Unit.ProjectStatuses.Get(project.Status.Id);
-                project.Pricing = Unit.PricingStatuses.Get(project.Pricing.Id);
+                project.Pricing = Unit.PricingStatuses.Get(project.Pricing.Id);*/
 
                 Unit.Projects.Insert(project);
                 Unit.Save();
@@ -121,10 +121,10 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                project.Team = Unit.Teams.Get(project.Team.Id);
+/*                project.Team = Unit.Teams.Get(project.Team.Id);
                 project.Customer = Unit.Customers.Get(project.Customer.Id);
                 project.Status = Unit.ProjectStatuses.Get(project.Status.Id);
-                project.Pricing = Unit.PricingStatuses.Get(project.Pricing.Id);
+                project.Pricing = Unit.PricingStatuses.Get(project.Pricing.Id);*/
 
                 Unit.Projects.Update(project, id);
 

@@ -53,12 +53,12 @@ namespace TimeKeeper.API
                   o.Scope.Add("profile");
                   o.SaveTokens = true;
               });
-
-
+                 
             string connectionString = Configuration["ConnectionString"];          
             services.AddDbContext<TimeKeeperContext>(o => { o.UseNpgsql(connectionString); });
 
-            services.AddSwaggerDocument(config => //Is this config neccessary?
+            //Is this config neccessary?
+            services.AddSwaggerDocument(config => 
             {
                 config.PostProcess = document =>
                 {
@@ -88,7 +88,7 @@ namespace TimeKeeper.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseStaticFiles();//??? for static files
+            app.UseStaticFiles();
             app.UseOpenApi();
             app.UseSwaggerUi3();
 
