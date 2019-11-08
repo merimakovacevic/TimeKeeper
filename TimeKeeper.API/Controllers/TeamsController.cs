@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using TimeKeeper.API.Factory;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
@@ -13,8 +15,8 @@ using TimeKeeper.LOG;
 
 namespace TimeKeeper.API.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
+    [Authorize(Roles = "admin")]
     [ApiController]
     public class TeamsController : BaseController
     {
@@ -35,11 +37,24 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
+                LogIdentity();
+
                 return Ok(Unit.Teams.Get().ToList().Select(x => x.Create()).ToList());//without the first ToList(), we will have a lazy loading exception?
             }
             catch (Exception ex)
             {
                 return HandleException(ex);
+            }
+        }
+
+        [NonAction]
+        private void LogIdentity()
+        {
+            var identityToken = HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
+            Logger.Info($"Identity token: {identityToken.Result}");
+            foreach (var claim in User.Claims)
+            {
+                Logger.Info($"Claim type: {claim.Type} - value: {claim.Value}");
             }
         }
 
@@ -56,8 +71,11 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(400)]
         public IActionResult Get(int id)
         {
-            try { 
-            Logger.Info($"Try to get team with {id}");
+            try {
+                LogIdentity();
+
+                Logger.Info($"Try to get team with {id}");
+
                 Team team = Unit.Teams.Get(id);
                 if (team == null)
                 {

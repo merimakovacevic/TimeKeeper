@@ -10,6 +10,19 @@ namespace TimeKeeper.Test.RepositoriesTest
     [TestFixture]
     public class TestCustomers : TestBase
     {
+        /*
+        [Test, Order(10)]
+        public void DeleteWithCustomerWrongId()
+        {
+            var id = 68;
+            var ex = Assert.Throws<ArgumentException>(() => unit.Customers.Delete(id));
+            Assert.AreEqual($"Error! There is no object with id: {id} in database", ex.Message);
+            //unit.Customers.Delete(45);
+            //int numberOfChanges = unit.Save();
+            //Assert.AreEqual(0, numberOfChanges);
+        }*/
+
+        
         [Test, Order(1)]
         public void GetAllCustomers()
         {
@@ -18,7 +31,8 @@ namespace TimeKeeper.Test.RepositoriesTest
 
             //Assert
             Assert.AreEqual(2, customersCount); //there are 2 customers in the test database
-        }
+        }       
+
 
         [Test, Order(2)]
         [TestCase(1, "ImageNet Consulting")]
@@ -29,12 +43,21 @@ namespace TimeKeeper.Test.RepositoriesTest
             Assert.AreEqual(result.Name, name);
         }
 
+        /*
         [Test, Order(3)]
         public void GetCustomerByWrongId()
         {
             int id = 40; //Customer with id doesn't exist in the test database
+            var ex = Assert.Throws<ArgumentException>(() => unit.Customers.Get(id));
             var result = unit.Customers.Get(id);
             Assert.IsNull(result);
+        }*/
+
+        [Test, Order(3)]
+        public void GetCustomerByWrongId()
+        {
+            int id = 40; //Customer with id doesn't exist in the test database
+            var ex = Assert.Throws<ArgumentException>(() => unit.Customers.Get(id));
         }
 
         [Test, Order(4)]
@@ -44,7 +67,8 @@ namespace TimeKeeper.Test.RepositoriesTest
             Customer customer = new Customer
             {
                 Name = "Test Customer",
-                HomeAddress = homeAddress
+                HomeAddress = homeAddress,
+                Status = unit.CustomerStatuses.Get(1)
             };
             unit.Customers.Insert(customer);
             int numberOfChanges = unit.Save();
@@ -59,7 +83,8 @@ namespace TimeKeeper.Test.RepositoriesTest
             Customer customer = new Customer
             {
                 Id = id,
-                Name = "Test Customer"
+                Name = "Test Customer",
+                Status = unit.CustomerStatuses.Get(1)
             };
             unit.Customers.Update(customer, id);
             int numberOfChanges = unit.Save();
@@ -79,7 +104,8 @@ namespace TimeKeeper.Test.RepositoriesTest
             Customer customer = new Customer
             {
                 Id = id,
-                HomeAddress = homeAddress
+                HomeAddress = homeAddress,
+                Status = unit.CustomerStatuses.Get(1)
             };
             unit.Customers.Update(customer, id);
             int numberOfChanges = unit.Save();
@@ -96,7 +122,8 @@ namespace TimeKeeper.Test.RepositoriesTest
                 Id = id,
                 Name = "Test Customer"
             };
-            unit.Customers.Update(customer, id);
+            var ex = Assert.Throws<ArgumentException>(() => unit.Customers.Update(customer, id));
+
             int numberOfChanges = unit.Save();
             Assert.AreEqual(0, numberOfChanges);
         }
@@ -134,7 +161,7 @@ namespace TimeKeeper.Test.RepositoriesTest
         {
             int id = 40;//Try to delete the customer with id (doesn't exist)
 
-            unit.Customers.Delete(id);
+            var ex = Assert.Throws<ArgumentException>(() => unit.Customers.Delete(id));
             int numberOfChanges = unit.Save();
             Assert.AreEqual(0, numberOfChanges);
         }

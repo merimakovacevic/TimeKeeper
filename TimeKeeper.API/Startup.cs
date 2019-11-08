@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -24,6 +25,7 @@ namespace TimeKeeper.API
                                                     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
             Configuration = builder.Build();
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -42,16 +44,21 @@ namespace TimeKeeper.API
                 o.DefaultScheme = "Cookies";
                 o.DefaultChallengeScheme = "oidc";
             }).AddCookie("Cookies")
-              .AddOpenIdConnect("oidc", o=>
+              .AddOpenIdConnect("oidc", o => //will be called in case the client is not authenticated
               {
                   o.SignInScheme = "Cookies";
-                  o.Authority = "https://localhost:44300";
-                  o.ClientId = "tk2019";
-                  o.ClientSecret = "mistral_talents";
+                  o.Authority = "https://localhost:44300"; //identity guarantor
+                  o.ClientId = "tk2019"; //client application in Config in IDP
+                  o.ClientSecret = "mistral_talents"; //key used to sign tokens, usually given by the identity provider
                   o.ResponseType = "code id_token";
-                  o.Scope.Add("openid");
-                  o.Scope.Add("profile");
-                  o.SaveTokens = true;
+                  o.Scope.Add("openid"); //identity of the user that signed in
+                  o.Scope.Add("profile"); //profile of the user (given name, last name)
+                  o.Scope.Add("address"); //address of the user
+                  o.Scope.Add("roles");
+                  o.SaveTokens = true; //save the tokens in cookies
+                  o.GetClaimsFromUserInfoEndpoint = true; //get all claims defined for users, by default it's false
+                  o.ClaimActions.MapUniqueJsonKey("address", "address"); //address isn't mapped by default, unlike profile and id
+                  o.ClaimActions.MapUniqueJsonKey("role", "role");
               });
                  
             string connectionString = Configuration["ConnectionString"];          
