@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using TimeKeeper.API.Services;
 using TimeKeeper.DAL;
 
@@ -59,6 +61,11 @@ namespace TimeKeeper.API
                   o.GetClaimsFromUserInfoEndpoint = true; //get all claims defined for users, by default it's false
                   o.ClaimActions.MapUniqueJsonKey("address", "address"); //address isn't mapped by default, unlike profile and id
                   o.ClaimActions.MapUniqueJsonKey("role", "role");
+                  o.TokenValidationParameters = new TokenValidationParameters
+                  {
+                      NameClaimType = JwtClaimTypes.GivenName,
+                      RoleClaimType = JwtClaimTypes.Role
+                  };
               });
                  
             string connectionString = Configuration["ConnectionString"];          

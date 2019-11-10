@@ -214,7 +214,7 @@ namespace TimeKeeper.Test.RepositoriesTest
             List<JobDetail> projectTasks = project.Tasks.ToList();
             foreach(JobDetail task in projectTasks)
             {
-                project.Tasks.Remove(task);
+                //project.Tasks.Remove(task);
                 unit.Tasks.Delete(task);
             }
 

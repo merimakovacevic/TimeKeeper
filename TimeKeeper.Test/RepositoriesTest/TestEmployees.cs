@@ -186,7 +186,7 @@ namespace TimeKeeper.Test.RepositoriesTest
 
             foreach(Day day in employeeCalendar)
             {
-                employee.Calendar.Remove(day);
+                //employee.Calendar.Remove(day);
                 unit.Calendar.Delete(day);
             }
 

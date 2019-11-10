@@ -141,7 +141,7 @@ namespace TimeKeeper.Test.RepositoriesTest
 
             foreach(Member member in roleMembers)
             {
-                role.Members.Remove(member);
+                //role.Members.Remove(member);
                 unit.Members.Delete(member);                
             }
 
