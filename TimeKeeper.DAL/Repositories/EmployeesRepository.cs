@@ -26,6 +26,7 @@ namespace TimeKeeper.DAL.Repositories
         public override void Update(Employee employee, int id)
         {
             Employee old = Get(id);
+            ValidateUpdate(employee, id);
 
             if (old != null)
             {

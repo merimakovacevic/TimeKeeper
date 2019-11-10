@@ -27,6 +27,7 @@ namespace TimeKeeper.DAL.Repositories
         public override void Update(Project project, int id)
         {
             Project old = Get(id);
+            ValidateUpdate(project, id);
 
             if (old != null)
             {
