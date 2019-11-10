@@ -30,11 +30,12 @@ namespace TimeKeeper.Test.RepositoriesTest
         }
 
         [Test, Order(3)]
-        public void GetUserByWrongId()
+        public void GetNonExistingUser()
         {
-            int id = 40; //User with id 40 doesn't exist in the test database
-            var result = unit.Users.Get(id);
-            Assert.IsNull(result);
+            //User with id 40 doesn't exist in the test database
+            int id = 40;
+            var ex = Assert.Throws<ArgumentException>(() => unit.Users.Get(id));
+            Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");
         }
 
         [Test, Order(4)]
@@ -44,7 +45,9 @@ namespace TimeKeeper.Test.RepositoriesTest
             Employee employee = new Employee
             {
                 FirstName = "John",
-                LastName = "Doe"
+                LastName = "Doe",
+                Position = unit.EmployeePositions.Get(1),
+                Status = unit.EmploymentStatuses.Get(1)
             };
             unit.Employees.Insert(employee);
             unit.Save();
