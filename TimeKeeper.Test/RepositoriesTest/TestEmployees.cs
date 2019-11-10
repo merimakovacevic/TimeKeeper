@@ -33,9 +33,10 @@ namespace TimeKeeper.Test.RepositoriesTest
         [Test, Order(3)]
         public void GetEmployeeByWrongId()
         {
-            int id = 40; //Employee with id 4 0doesn't exist in the test database
-            var result = unit.Employees.Get(id);
-            Assert.IsNull(result);
+            int id = 40; //Employee with id 40 doesn't exist in the test database
+
+            var ex = Assert.Throws<ArgumentException>(() => unit.Employees.Get(id));
+            Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");            
         }
 
         [Test, Order(4)]
@@ -44,7 +45,9 @@ namespace TimeKeeper.Test.RepositoriesTest
             Employee employee = new Employee
             {
                 FirstName = "John",
-                LastName = "Doe"
+                LastName = "Doe",
+                Position = unit.EmployeePositions.Get(1),
+                Status = unit.EmploymentStatuses.Get(1)
             };
             unit.Employees.Insert(employee);
             int numberOfChanges = unit.Save();
@@ -61,7 +64,9 @@ namespace TimeKeeper.Test.RepositoriesTest
             {
                 Id = id,
                 FirstName = "Jane",
-                LastName = "Doe"
+                LastName = "Doe",
+                Position = unit.EmployeePositions.Get(1),
+                Status = unit.EmploymentStatuses.Get(1)
             };
             unit.Employees.Update(employee, id);
             int numberOfChanges = unit.Save();
@@ -77,10 +82,14 @@ namespace TimeKeeper.Test.RepositoriesTest
             Employee employee = new Employee
             {
                 Id = id,
-                FirstName = "John"
+                FirstName = "John",
+                Position = unit.EmployeePositions.Get(1),
+                Status = unit.EmploymentStatuses.Get(1)
             };
-            unit.Employees.Update(employee, id);
             int numberOfChanges = unit.Save();
+
+            var ex = Assert.Throws<ArgumentException>(() => unit.Employees.Update(employee, id));
+            Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");            
             Assert.AreEqual(0, numberOfChanges);
         }
 
@@ -90,7 +99,9 @@ namespace TimeKeeper.Test.RepositoriesTest
             int id = 2;//Try to change the employee with id
             Employee employee = new Employee
             {
-                Id = id
+                Id = id,
+                Position = unit.EmployeePositions.Get(1),
+                Status = unit.EmploymentStatuses.Get(1)
             };
             employee.Status = unit.EmploymentStatuses.Get(3);
             unit.Employees.Update(employee, id);
@@ -107,7 +118,9 @@ namespace TimeKeeper.Test.RepositoriesTest
             Employee employee = new Employee
             {
                 Id = id,
-                EndDate = endDate
+                EndDate = endDate,
+                Position = unit.EmployeePositions.Get(1),
+                Status = unit.EmploymentStatuses.Get(1)
             };
             unit.Employees.Update(employee, id);
             int numberOfChanges = unit.Save();
@@ -116,23 +129,45 @@ namespace TimeKeeper.Test.RepositoriesTest
         }
 
         [Test, Order(9)]
-        public void DeleteEmployee()
+        public void DeleteEmployeeWithChildren()
         {
             int id = 2;//Try to delete the employee with id
-
-            unit.Employees.Delete(id);
             int numberOfChanges = unit.Save();
-            Assert.AreEqual(1, numberOfChanges);
+
+            var ex = Assert.Throws<Exception>(() => unit.Employees.Delete(id));
+            Assert.AreEqual(ex.Message, "Object cannot be deleted because child objects are present");
+            Assert.AreEqual(0, numberOfChanges);
         }
 
         [Test, Order(10)]
         public void DeleteEmployeeWithWrongId()
         {
             int id = 40;//Try to delete the employee with id (doesn't exist)
-
-            unit.Employees.Delete(id);
             int numberOfChanges = unit.Save();
+
+            var ex = Assert.Throws<ArgumentException>(() => unit.Employees.Delete(id));
+            Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");            
             Assert.AreEqual(0, numberOfChanges);
+        }
+
+        [Test, Order(9)]
+        public void DeleteEmployee()
+        {
+            int id = 2;//Try to delete the employee with id
+
+            Employee employee = unit.Employees.Get(id);
+            List<Day> employeeCalendar = employee.Calendar.ToList();
+
+            foreach(Day day in employeeCalendar)
+            {
+                employee.Calendar.Remove(day);
+                unit.Calendar.Delete(day);
+            }
+
+            int numberOfChanges = unit.Save();
+
+            //Two child entities and one parent entity will be deleted
+            Assert.AreEqual(3, numberOfChanges);
         }
     }
 }
