@@ -37,7 +37,6 @@ namespace TimeKeeper.Test.RepositoriesTest
             Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");
         }
 
-
         [Test, Order(4)]
         public void InsertMember()
         {
@@ -93,9 +92,10 @@ namespace TimeKeeper.Test.RepositoriesTest
         }
 
         [Test, Order(7)]
-        public void ChangeMemberWithWrongId()
+        public void ChangeNonExistingMember()
         {
-            int id = 40;//Try to change the member with id (doesn't exist)
+            //Try to change the member with id (doesn't exist)
+            int id = 40;
             Member member = new Member
             {
                 Id = id,
@@ -109,8 +109,28 @@ namespace TimeKeeper.Test.RepositoriesTest
             int numberOfChanges = unit.Save();
             Assert.AreEqual(0, numberOfChanges);
         }
-
         [Test, Order(8)]
+        public void ChangeMemberWithWrongId()
+        {
+            //Try to change the member with a wrong id argument in update method
+            int id = 1;
+            int wrongId = 2;
+            Member member = new Member
+            {
+                Id = id,
+                Team = unit.Teams.Get(1),
+                Employee = unit.Employees.Get(1),
+                Role = unit.Roles.Get(1),
+                Status = unit.MemberStatuses.Get(1)
+            };
+
+            var ex = Assert.Throws<ArgumentException>(() => unit.Members.Update(member, wrongId));
+            Assert.AreEqual(ex.Message, $"Error! Id of the sent object: {member.Id} and id in url: {wrongId} do not match");
+            int numberOfChanges = unit.Save();
+            Assert.AreEqual(0, numberOfChanges);
+        }
+
+        [Test, Order(9)]
         public void DeleteMember()
         {
             int id = 2;//Try to delete the member with id
@@ -120,7 +140,7 @@ namespace TimeKeeper.Test.RepositoriesTest
             Assert.AreEqual(1, numberOfChanges);
         }
 
-        [Test, Order(9)]
+        [Test, Order(10)]
         public void DeleteMemberWithWrongId()
         {
             int id = 40;//Try to delete the member with id (doesn't exist)

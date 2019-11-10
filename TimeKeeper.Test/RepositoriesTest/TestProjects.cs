@@ -32,7 +32,8 @@ namespace TimeKeeper.Test.RepositoriesTest
         [Test, Order(3)]
         public void GetProjectByWrongId()
         {
-            int id = 40; //Project with id doesn't exist in the test database
+            //Project with id doesn't exist in the test database
+            int id = 40; 
             var ex = Assert.Throws<ArgumentException>(() => unit.Projects.Get(id));
             Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");
         }
