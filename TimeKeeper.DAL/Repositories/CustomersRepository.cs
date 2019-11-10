@@ -24,10 +24,11 @@ namespace TimeKeeper.DAL.Repositories
         public override void Update(Customer customer, int id)
         {
             Customer old = Get(id);
+            ValidateUpdate(customer, id);
 
             if (old != null)
             {
-                Build(customer);
+                Build(customer);                
                 _context.Entry(old).CurrentValues.SetValues(customer);
                 old.Status = customer.Status;
                 old.HomeAddress = customer.HomeAddress;

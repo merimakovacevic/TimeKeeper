@@ -93,11 +93,13 @@ namespace TimeKeeper.Test.RepositoriesTest
         [Test, Order(7)]
         public void ChangeNonExistingCustomer()
         {
-            int id = 40;//Try to change the customer with id (doesn't exist)
+            //Try to change the customer with id (doesn't exist)
+            int id = 40;
             Customer customer = new Customer
             {
                 Id = id,
-                Name = "Test Customer"
+                Name = "Test Customer",
+                Status = unit.CustomerStatuses.Get(1)
             };            
 
             var ex = Assert.Throws<ArgumentException>(() => unit.Customers.Update(customer, id));
@@ -107,6 +109,25 @@ namespace TimeKeeper.Test.RepositoriesTest
         }
 
         [Test, Order(8)]
+        public void ChangeCustomerWithWrongId()
+        {
+            //Try to change the customer with a wrong id argument in update method
+            int id = 1;
+            int wrongId = 2;
+            Customer customer = new Customer
+            {
+                Id = id,
+                Name = "Test Customer",
+                Status = unit.CustomerStatuses.Get(1)
+            };
+
+            var ex = Assert.Throws<ArgumentException>(() => unit.Customers.Update(customer, wrongId));
+            Assert.AreEqual(ex.Message, $"Error! Id of the sent object: {customer.Id} and id in url: {wrongId} do not match");
+            int numberOfChanges = unit.Save();
+            Assert.AreEqual(0, numberOfChanges);
+        }
+
+        [Test, Order(9)]
         public void ChangeCustomerStatus()
         {
             int id = 2;//Try to change the customer with id
@@ -124,7 +145,7 @@ namespace TimeKeeper.Test.RepositoriesTest
             Assert.AreEqual(statusId, customer.Status.Id);
         }
 
-        [Test, Order(9)]
+        [Test, Order(10)]
         public void DeleteCustomerWithChildren()
         {
             int id = 2;//Try to delete the customer with id, exception will be thrown
@@ -136,7 +157,7 @@ namespace TimeKeeper.Test.RepositoriesTest
             Assert.AreEqual(0, numberOfChanges);
         }
 
-        [Test, Order(10)]
+        [Test, Order(11)]
         public void DeleteCustomerWithWrongId()
         {
             int id = 40;//Try to delete the customer with id (doesn't exist)
@@ -146,7 +167,7 @@ namespace TimeKeeper.Test.RepositoriesTest
             Assert.AreEqual(0, numberOfChanges);
         }
 
-        [Test, Order(11)]
+        [Test, Order(12)]
         public void DeleteCustomer()
         {
             int id = 2;//Try to delete the customer with id

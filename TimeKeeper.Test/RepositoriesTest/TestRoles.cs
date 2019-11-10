@@ -55,7 +55,8 @@ namespace TimeKeeper.Test.RepositoriesTest
         [Test, Order(5)]
         public void ChangeRolesName()
         {
-            int id = 2;//Try to change the role with id
+            //Try to change the role with id
+            int id = 2;
             string name = "Backend developer";
             Role role = new Role
             {
