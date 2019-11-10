@@ -77,9 +77,10 @@ namespace TimeKeeper.Test.RepositoriesTest
                
 
         [Test, Order(6)]
-        public void ChangeProjectWithWrongId()
+        public void ChangeNonExistingProject()
         {
-            int id = 40;//Try to change the project with id (doesn't exist)
+            //Try to change the project with id (doesn't exist)
+            int id = 40;
             Project project = new Project
             {
                 Id = id,
@@ -96,6 +97,28 @@ namespace TimeKeeper.Test.RepositoriesTest
         }
 
         [Test, Order(7)]
+        public void ChangeProjectWithWrongId()
+        {
+            //Try to change the employee with a wrong id argument in update method
+            int id = 1;
+            int wrongId = 2;
+
+            Project project = new Project
+            {
+                Id = id,
+                Name = "Test Project",
+                Team = unit.Teams.Get(1),
+                Status = unit.ProjectStatuses.Get(1),
+                Pricing = unit.PricingStatuses.Get(1),
+                Customer = unit.Customers.Get(1)
+            };
+            var ex = Assert.Throws<ArgumentException>(() => unit.Projects.Update(project, wrongId));
+            Assert.AreEqual(ex.Message, $"Error! Id of the sent object: {project.Id} and id in url: {wrongId} do not match");
+            int numberOfChanges = unit.Save();
+            Assert.AreEqual(0, numberOfChanges);
+        }
+
+        [Test, Order(8)]
         public void ChangeProjectStatus()
         {
             int id = 2;//Try to change the project with id
@@ -116,7 +139,7 @@ namespace TimeKeeper.Test.RepositoriesTest
             Assert.AreEqual(statusId, project.Status.Id);
         }
 
-        [Test, Order(8)]
+        [Test, Order(9)]
         public void ChangeProjectTeam()
         {
             int id = 2;//Try to change the project with id
@@ -137,7 +160,7 @@ namespace TimeKeeper.Test.RepositoriesTest
             Assert.AreEqual(teamId, project.Team.Id);
         }
 
-        [Test, Order(9)]
+        [Test, Order(10)]
         public void ChangeProjectEndDate()
         {
             DateTime endDate = new DateTime(2019, 10, 23);
@@ -158,7 +181,7 @@ namespace TimeKeeper.Test.RepositoriesTest
             Assert.AreEqual(endDate, project.EndDate);
         }
 
-        [Test, Order(10)]
+        [Test, Order(11)]
         public void DeleteProjectWithChildren()
         {
             int id = 2;//Try to delete the project with id
@@ -169,7 +192,7 @@ namespace TimeKeeper.Test.RepositoriesTest
             Assert.AreEqual(0, numberOfChanges);
         }
 
-        [Test, Order(11)]
+        [Test, Order(12)]
         public void DeleteProjectWithWrongId()
         {
             int id = 40;//Try to delete the project with id (doesn't exist)
@@ -180,7 +203,7 @@ namespace TimeKeeper.Test.RepositoriesTest
             Assert.AreEqual(0, numberOfChanges);
         }
 
-        [Test, Order(10)]
+        [Test, Order(13)]
         public void DeleteProject()
         {
             int id = 2;//Try to delete the project with id

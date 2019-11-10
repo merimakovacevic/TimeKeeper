@@ -149,7 +149,6 @@ namespace TimeKeeper.Test.RepositoriesTest
         public void DeleteCustomerWithChildren()
         {
             int id = 2;//Try to delete the customer with id, exception will be thrown
-            Customer customer = unit.Customers.Get(id);
 
             var ex = Assert.Throws<Exception>(() => unit.Customers.Delete(id));
             Assert.AreEqual(ex.Message, "Object cannot be deleted because child objects are present");
