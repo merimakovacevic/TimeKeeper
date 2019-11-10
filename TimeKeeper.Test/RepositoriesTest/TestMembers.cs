@@ -131,16 +131,6 @@ namespace TimeKeeper.Test.RepositoriesTest
         }
 
         [Test, Order(9)]
-        public void DeleteMember()
-        {
-            int id = 2;//Try to delete the member with id
-
-            unit.Members.Delete(id);
-            int numberOfChanges = unit.Save();
-            Assert.AreEqual(1, numberOfChanges);
-        }
-
-        [Test, Order(10)]
         public void DeleteMemberWithWrongId()
         {
             int id = 40;//Try to delete the member with id (doesn't exist)
@@ -149,6 +139,16 @@ namespace TimeKeeper.Test.RepositoriesTest
             Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");
             int numberOfChanges = unit.Save();
             Assert.AreEqual(0, numberOfChanges);
+        }
+
+        [Test, Order(10)]
+        public void DeleteMember()
+        {
+            int id = 2;//Try to delete the member with id
+
+            unit.Members.Delete(id);
+            int numberOfChanges = unit.Save();
+            Assert.AreEqual(1, numberOfChanges);
         }
     }
 }

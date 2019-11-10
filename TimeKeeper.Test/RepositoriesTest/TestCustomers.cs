@@ -178,7 +178,7 @@ namespace TimeKeeper.Test.RepositoriesTest
 
             foreach (Project project in customerProjects)
             {
-                customer.Projects.Remove(project);
+                //customer.Projects.Remove(project);
                 /*this Delete method wasn't overriden in the specific repository, 
                  * meaning that even if a child entity has child entities itself, it will still be deleted*/
                 unit.Projects.Delete(project);
