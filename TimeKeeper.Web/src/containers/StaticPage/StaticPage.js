@@ -1,15 +1,15 @@
 import React from "react";
 // import axios from "axios";
 
-import Backdrop from "../../components/UI/Backdrop/Backdrop";
-import Navigation from "../../components/Navigation/Navigation";
-import SideDrawer from "../../components/Navigation/SideDrawer/SideDrawer";
-import AboutSection from "../../components/AboutSection/AboutSection";
-import ServicesSection from "../../components/ServicesSection/ServicesSection";
-import TeamSection from "../../components/TeamSection/TeamSection";
-import ContactSection from "../../components/ContactSection/ContactSection";
-import Footer from "../../components/Footer/Footer.js";
-import Login from "../../components/Login/Login";
+import Backdrop from "../../components/StaticPageComponents/UI/Backdrop/Backdrop";
+import Navigation from "../../components/StaticPageComponents/Navigation/Navigation";
+import SideDrawer from "../../components/StaticPageComponents/Navigation/SideDrawer/SideDrawer";
+import AboutSection from "../../components/StaticPageComponents/AboutSection/AboutSection";
+import ServicesSection from "../../components/StaticPageComponents/ServicesSection/ServicesSection";
+import TeamSection from "../../components/StaticPageComponents/TeamSection/TeamSection";
+import ContactSection from "../../components/StaticPageComponents/ContactSection/ContactSection";
+import Footer from "../../components/StaticPageComponents/Footer/Footer.js";
+import Login from "../../components/StaticPageComponents/Login/Login";
 
 class StaticPage extends React.Component {
     state = {

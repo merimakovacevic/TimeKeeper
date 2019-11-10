@@ -3,9 +3,9 @@ import React from "react";
 import "./TeamCard.module.css";
 import classes from "./TeamCard.module.css";
 
-import LnIcon from "../../../assets/socialMediaISvgIcons/linkedin.svg";
-import GitIcon from "../../../assets/socialMediaISvgIcons/github-sign.svg";
-import FbIcon from "../../../assets/socialMediaISvgIcons/facebook.svg";
+import LnIcon from "../../../../assets/socialMediaISvgIcons/linkedin.svg";
+import GitIcon from "../../../../assets/socialMediaISvgIcons/github-sign.svg";
+import FbIcon from "../../../../assets/socialMediaISvgIcons/facebook.svg";
 
 const teamCard = props => (
     <div className={classes.TeamCard}>

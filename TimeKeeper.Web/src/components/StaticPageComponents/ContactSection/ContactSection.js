@@ -1,7 +1,7 @@
 import React from "react";
 
 import classes from "./ContactSection.module.css";
-import mailIcon from "../../assets/svgIcons/mail.svg";
+import mailIcon from "../../../assets/svgIcons/mail.svg";
 import ContactForm from "./ContactForm/ContactForm";
 
 const contactSection = props => (

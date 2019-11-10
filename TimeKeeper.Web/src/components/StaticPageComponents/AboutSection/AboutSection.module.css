@@ -1,6 +1,6 @@
 .Background {
     background-size: cover;
-    background: url("../../assets/backgundWithEffect.png") no-repeat fixed center;
+    background: url("../../../assets/backgundWithEffect.png") no-repeat fixed center;
     height: 100vh;
 }
 

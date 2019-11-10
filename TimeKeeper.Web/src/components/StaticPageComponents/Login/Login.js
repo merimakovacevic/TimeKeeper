@@ -1,11 +1,12 @@
 import React from "react";
 import axios from "axios";
+import { withRouter } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import { Button } from "@material-ui/core";
 
 import * as Yup from "yup";
-
 import classes from "./Login.module.css";
+import config from "../../../config";
 
 const LoginSchema = Yup.object().shape({
     username: Yup.string()
@@ -34,9 +35,11 @@ const login = props => {
             validationSchema={LoginSchema}
             onSubmit={values => {
                 axios
-                    .post("http://192.168.60.73/TimeKeeper/api/users", values)
+                    .post(`${config.apiUrl}users`, values)
                     .then(res => {
-                        alert(`You have logged in ${JSON.stringify(res.data.name)}`);
+                        config.token = "Basic " + res.data.base64;
+                        props.history.replace("/app");
+                        console.log(config);
                     })
                     .catch(err => {
                         console.log(err);
@@ -55,6 +58,7 @@ const login = props => {
                             )}
                             <Field
                                 name="username"
+                                autoComplete="off"
                                 placeholder="Username"
                                 className={classes.Input}
                             />
@@ -65,6 +69,7 @@ const login = props => {
                             )}
                             <Field
                                 placeholder="Password"
+                                autoComplete="off"
                                 name="password"
                                 className={classes.Input}
                                 type="password"
@@ -86,4 +91,4 @@ const login = props => {
         </Formik>
     );
 };
-export default login;
+export default withRouter(login);

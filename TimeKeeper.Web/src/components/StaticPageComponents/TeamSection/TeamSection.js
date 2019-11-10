@@ -5,8 +5,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./arrowStyle.css";
 import classes from "./TeamSection.module.css";
-import pictures from "../../data/profilePictures";
-import teamData from "../../data/teamMembers.json";
+import pictures from "../../../data/profilePictures";
+import teamData from "../../../data/teamMembers.json";
 import TeamCard from "./TeamCard/TeamCard";
 
 const teamSection = props => {
@@ -57,7 +57,7 @@ const teamSection = props => {
             gitLink={d.socialMedia.git}
             fbLink={d.socialMedia.fb}
         />
-    ))
+    ));
 
     return (
         <div id={props.passedId} className={classes.TeamSection}>
@@ -70,9 +70,7 @@ const teamSection = props => {
                 style={{ margin: "0 2rem", listStyleType: "none" }}
                 className={classes.TeamSectionList}
             >
-                <Slider {...settings}>
-                    {teamMembers}
-                </Slider>
+                <Slider {...settings}>{teamMembers}</Slider>
             </ul>
         </div>
     );

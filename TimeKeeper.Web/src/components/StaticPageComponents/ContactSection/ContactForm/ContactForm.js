@@ -6,23 +6,28 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 
 import classes from "./ContactForm.module.css";
-import Smiley from "../../../assets/svgIcons/thumbs-up.svg";
-import SadSmiley from "../../../assets/svgIcons/sad.svg";
+import Smiley from "../../../../assets/svgIcons/thumbs-up.svg";
+import SadSmiley from "../../../../assets/svgIcons/sad.svg";
 
 const ContactSchema = Yup.object().shape({
     email: Yup.string()
+        .min(3, "Email is too short")
+        .max(254, "Email is too long")
         .email("Invalid email")
-        .required("E-mail is Required"),
+        .required("E-mail is required"),
     name: Yup.string()
-        .min(2, "Too Short!")
-        .max(50, "Too Long!")
-        .required("Name is Required"),
-    phone: Yup.string()
-        .min(6, "Too Short!")
-        .max(50, "Too Long!"),
+        .min(3, "Too Short!")
+        .max(20, "Too Long!")
+        .required("Name is required"),
+    phone: Yup.number()
+        .typeError("Phone number can only contain numbers")
+        .required("Phone is required")
+        .min(100000000, "Too short")
+        .max(999999999999999, "Too long"),
     message: Yup.string()
-        .max(250, "Invalid email")
-        .required("Message is Required")
+        .min(1, "Message is too short")
+        .max(400, "Message is too long")
+        .required("Message is required")
 });
 
 const contactForm = props => (
