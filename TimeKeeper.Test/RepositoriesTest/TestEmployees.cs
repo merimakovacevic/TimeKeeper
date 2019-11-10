@@ -76,7 +76,7 @@ namespace TimeKeeper.Test.RepositoriesTest
         }
 
         [Test, Order(6)]
-        public void ChangeEmployeeWithWrongId()
+        public void ChangeNonExistingEmployee()
         {
             int id = 40;//Try to change the employee with id (doesn't exist)
             Employee employee = new Employee
@@ -94,9 +94,30 @@ namespace TimeKeeper.Test.RepositoriesTest
         }
 
         [Test, Order(7)]
+        public void ChangeEmployeeWithWrongId()
+        {
+            //Try to change the employee with a wrong id argument in update method
+            int id = 1;
+            int wrongId = 2;
+            Employee employee = new Employee
+            {
+                Id = id,
+                FirstName = "John",
+                Position = unit.EmployeePositions.Get(1),
+                Status = unit.EmploymentStatuses.Get(1)
+            };
+
+            var ex = Assert.Throws<ArgumentException>(() => unit.Employees.Update(employee, wrongId));
+            Assert.AreEqual(ex.Message, $"Error! Id of the sent object: {employee.Id} and id in url: {wrongId} do not match");
+            int numberOfChanges = unit.Save();
+            Assert.AreEqual(0, numberOfChanges);
+        }
+
+        [Test, Order(8)]
         public void ChangeEmployeeStatus()
         {
-            int id = 2;//Try to change the employee with id
+            //Try to change the employee with id
+            int id = 2;
             Employee employee = new Employee
             {
                 Id = id,
@@ -110,10 +131,11 @@ namespace TimeKeeper.Test.RepositoriesTest
             Assert.AreEqual(3, employee.Status.Id);
         }
 
-        [Test, Order(8)]
+        [Test, Order(9)]
         public void ChangeEmployeeEndDate()
         {
-            int id = 2;//Try to change the employee with id
+            //Try to change the employee with id
+            int id = 2;
             DateTime endDate = new DateTime(2019, 10, 23);
             Employee employee = new Employee
             {
@@ -128,10 +150,11 @@ namespace TimeKeeper.Test.RepositoriesTest
             Assert.AreEqual(endDate, employee.EndDate);
         }
 
-        [Test, Order(9)]
+        [Test, Order(10)]
         public void DeleteEmployeeWithChildren()
         {
-            int id = 2;//Try to delete the employee with id            
+            //Try to delete the employee with id
+            int id = 2;            
 
             var ex = Assert.Throws<Exception>(() => unit.Employees.Delete(id));
             Assert.AreEqual(ex.Message, "Object cannot be deleted because child objects are present");
@@ -139,10 +162,11 @@ namespace TimeKeeper.Test.RepositoriesTest
             Assert.AreEqual(0, numberOfChanges);
         }
 
-        [Test, Order(10)]
+        [Test, Order(11)]
         public void DeleteEmployeeWithWrongId()
         {
-            int id = 40;//Try to delete the employee with id (doesn't exist)            
+            //Try to delete the employee with id (doesn't exist) 
+            int id = 40;           
 
             var ex = Assert.Throws<ArgumentException>(() => unit.Employees.Delete(id));
             Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");
@@ -150,10 +174,11 @@ namespace TimeKeeper.Test.RepositoriesTest
             Assert.AreEqual(0, numberOfChanges);
         }
 
-        [Test, Order(9)]
+        [Test, Order(12)]
         public void DeleteEmployee()
         {
-            int id = 2;//Try to delete the employee with id
+            //Try to delete the employee with id
+            int id = 2;
 
             Employee employee = unit.Employees.Get(id);
             //This list will be used for iteration only
