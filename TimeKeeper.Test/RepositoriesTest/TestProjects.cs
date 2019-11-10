@@ -33,8 +33,8 @@ namespace TimeKeeper.Test.RepositoriesTest
         public void GetProjectByWrongId()
         {
             int id = 40; //Project with id doesn't exist in the test database
-            var result = unit.Projects.Get(id);
-            Assert.IsNull(result);
+            var ex = Assert.Throws<ArgumentException>(() => unit.Projects.Get(id));
+            Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");
         }
 
 
@@ -43,7 +43,11 @@ namespace TimeKeeper.Test.RepositoriesTest
         {
             Project project = new Project
             {
-                Name = "Test Project"
+                Name = "Test Project",
+                Team = unit.Teams.Get(1),
+                Status = unit.ProjectStatuses.Get(1),
+                Pricing = unit.PricingStatuses.Get(1),
+                Customer = unit.Customers.Get(1)
             };
             unit.Projects.Insert(project);
             int numberOfChanges = unit.Save();
@@ -84,7 +88,8 @@ namespace TimeKeeper.Test.RepositoriesTest
                 Pricing = unit.PricingStatuses.Get(1),
                 Customer = unit.Customers.Get(1)
             };
-            unit.Projects.Update(project, id);
+            var ex = Assert.Throws<ArgumentException>(() => unit.Projects.Update(project, id));
+            Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");
             int numberOfChanges = unit.Save();
             Assert.AreEqual(0, numberOfChanges);
         }
@@ -153,13 +158,14 @@ namespace TimeKeeper.Test.RepositoriesTest
         }
 
         [Test, Order(10)]
-        public void DeleteProject()
+        public void DeleteProjectWithChildren()
         {
             int id = 2;//Try to delete the project with id
-
-            unit.Projects.Delete(id);
+            
+            var ex = Assert.Throws<Exception>(() => unit.Projects.Delete(id));
+            Assert.AreEqual(ex.Message, "Object cannot be deleted because child objects are present");
             int numberOfChanges = unit.Save();
-            Assert.AreEqual(1, numberOfChanges);
+            Assert.AreEqual(0, numberOfChanges);
         }
 
         [Test, Order(11)]
@@ -167,9 +173,31 @@ namespace TimeKeeper.Test.RepositoriesTest
         {
             int id = 40;//Try to delete the project with id (doesn't exist)
 
-            unit.Projects.Delete(id);
+            var ex = Assert.Throws<ArgumentException>(() => unit.Projects.Delete(id));
+            Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");            
             int numberOfChanges = unit.Save();
             Assert.AreEqual(0, numberOfChanges);
+        }
+
+        [Test, Order(10)]
+        public void DeleteProject()
+        {
+            int id = 2;//Try to delete the project with id
+
+            Project project = unit.Projects.Get(2);
+            //first all child entities will have to be deleted
+            //this list will be used for iteration only
+            List<JobDetail> projectTasks = project.Tasks.ToList();
+            foreach(JobDetail task in projectTasks)
+            {
+                project.Tasks.Remove(task);
+                unit.Tasks.Delete(task);
+            }
+
+            unit.Projects.Delete(id);
+            int numberOfChanges = unit.Save();
+            //67 child entities and 1 parent entitiy will be deleted, making it 68 changes
+            Assert.AreEqual(68, numberOfChanges);
         }
     }
 }

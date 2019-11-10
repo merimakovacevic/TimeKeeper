@@ -33,8 +33,8 @@ namespace TimeKeeper.Test.RepositoriesTest
         public void GetMemberByWrongId()
         {
             int id = 40; //Member with id doesn't exist in the test database
-            var result = unit.Members.Get(id);
-            Assert.IsNull(result);
+            var ex = Assert.Throws<ArgumentException>(() =>  unit.Members.Get(id));
+            Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");
         }
 
 
@@ -44,7 +44,7 @@ namespace TimeKeeper.Test.RepositoriesTest
             Member member = new Member
             {
                 Team = unit.Teams.Get(1),
-                Employee = unit.Employees.Get(58),
+                Employee = unit.Employees.Get(1),
                 Role = unit.Roles.Get(1),
                 Status = unit.MemberStatuses.Get(1)
             };
@@ -63,7 +63,7 @@ namespace TimeKeeper.Test.RepositoriesTest
             {
                 Id = id,
                 Team = unit.Teams.Get(1),
-                Employee = unit.Employees.Get(58),
+                Employee = unit.Employees.Get(1),
                 Role = unit.Roles.Get(roleId),
                 Status = unit.MemberStatuses.Get(1)
             };
@@ -82,7 +82,7 @@ namespace TimeKeeper.Test.RepositoriesTest
             {
                 Id = id,
                 Team = unit.Teams.Get(1),
-                Employee = unit.Employees.Get(58),
+                Employee = unit.Employees.Get(1),
                 Role = unit.Roles.Get(1),
                 Status = unit.MemberStatuses.Get(statusId)
             };
@@ -100,11 +100,12 @@ namespace TimeKeeper.Test.RepositoriesTest
             {
                 Id = id,
                 Team = unit.Teams.Get(1),
-                Employee = unit.Employees.Get(58),
+                Employee = unit.Employees.Get(1),
                 Role = unit.Roles.Get(1),
                 Status = unit.MemberStatuses.Get(1)
             };
-            unit.Members.Update(member, id);
+            var ex = Assert.Throws<ArgumentException>(() => unit.Members.Update(member, id));
+            Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");
             int numberOfChanges = unit.Save();
             Assert.AreEqual(0, numberOfChanges);
         }
@@ -123,8 +124,9 @@ namespace TimeKeeper.Test.RepositoriesTest
         public void DeleteMemberWithWrongId()
         {
             int id = 40;//Try to delete the member with id (doesn't exist)
-
-            unit.Members.Delete(id);
+            
+            var ex = Assert.Throws<ArgumentException>(() => unit.Members.Delete(id));
+            Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");
             int numberOfChanges = unit.Save();
             Assert.AreEqual(0, numberOfChanges);
         }

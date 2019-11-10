@@ -85,11 +85,11 @@ namespace TimeKeeper.Test.RepositoriesTest
                 FirstName = "John",
                 Position = unit.EmployeePositions.Get(1),
                 Status = unit.EmploymentStatuses.Get(1)
-            };
-            int numberOfChanges = unit.Save();
+            };           
 
             var ex = Assert.Throws<ArgumentException>(() => unit.Employees.Update(employee, id));
-            Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");            
+            Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");
+            int numberOfChanges = unit.Save();
             Assert.AreEqual(0, numberOfChanges);
         }
 
@@ -131,22 +131,22 @@ namespace TimeKeeper.Test.RepositoriesTest
         [Test, Order(9)]
         public void DeleteEmployeeWithChildren()
         {
-            int id = 2;//Try to delete the employee with id
-            int numberOfChanges = unit.Save();
+            int id = 2;//Try to delete the employee with id            
 
             var ex = Assert.Throws<Exception>(() => unit.Employees.Delete(id));
             Assert.AreEqual(ex.Message, "Object cannot be deleted because child objects are present");
+            int numberOfChanges = unit.Save();
             Assert.AreEqual(0, numberOfChanges);
         }
 
         [Test, Order(10)]
         public void DeleteEmployeeWithWrongId()
         {
-            int id = 40;//Try to delete the employee with id (doesn't exist)
-            int numberOfChanges = unit.Save();
+            int id = 40;//Try to delete the employee with id (doesn't exist)            
 
             var ex = Assert.Throws<ArgumentException>(() => unit.Employees.Delete(id));
-            Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");            
+            Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");
+            int numberOfChanges = unit.Save();
             Assert.AreEqual(0, numberOfChanges);
         }
 
@@ -156,6 +156,7 @@ namespace TimeKeeper.Test.RepositoriesTest
             int id = 2;//Try to delete the employee with id
 
             Employee employee = unit.Employees.Get(id);
+            //This list will be used for iteration only
             List<Day> employeeCalendar = employee.Calendar.ToList();
 
             foreach(Day day in employeeCalendar)
@@ -166,7 +167,7 @@ namespace TimeKeeper.Test.RepositoriesTest
 
             int numberOfChanges = unit.Save();
 
-            //Two child entities and one parent entity will be deleted
+            //Two child entities and one parent entity will be deleted, making it 3 changes
             Assert.AreEqual(3, numberOfChanges);
         }
     }

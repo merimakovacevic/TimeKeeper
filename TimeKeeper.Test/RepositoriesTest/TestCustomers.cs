@@ -91,19 +91,18 @@ namespace TimeKeeper.Test.RepositoriesTest
         }
 
         [Test, Order(7)]
-        public void ChangeCustomerWithWrongId()
+        public void ChangeNonExistingCustomer()
         {
             int id = 40;//Try to change the customer with id (doesn't exist)
             Customer customer = new Customer
             {
                 Id = id,
                 Name = "Test Customer"
-            };
-
-            int numberOfChanges = unit.Save();
+            };            
 
             var ex = Assert.Throws<ArgumentException>(() => unit.Customers.Update(customer, id));
             Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");
+            int numberOfChanges = unit.Save();
             Assert.AreEqual(0, numberOfChanges);
         }
 
@@ -133,6 +132,8 @@ namespace TimeKeeper.Test.RepositoriesTest
 
             var ex = Assert.Throws<Exception>(() => unit.Customers.Delete(id));
             Assert.AreEqual(ex.Message, "Object cannot be deleted because child objects are present");
+            int numberOfChanges = unit.Save();
+            Assert.AreEqual(0, numberOfChanges);
         }
 
         [Test, Order(10)]
@@ -165,8 +166,7 @@ namespace TimeKeeper.Test.RepositoriesTest
 
             unit.Customers.Delete(id);
             int numberOfChanges = unit.Save();
-
-            //Two child entities and one Customer will be deleted, making it three changes
+            //Two child entities and one Customer will be deleted, making it 3 changes
             Assert.AreEqual(3, numberOfChanges);
         }
     }
