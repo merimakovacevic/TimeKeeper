@@ -189,44 +189,46 @@ class EnhancedTable extends React.Component {
                         </TableHead>
 
                         <TableBody>
-                            {stableSort(data, getSorting(order, orderBy)).map(n => {
-                                const isSelected = this.isSelected(n.id);
-                                return (
-                                    <TableRow
-                                        hover
-                                        onClick={event => this.handleClick(event, n.id)}
-                                        tabIndex={-1}
-                                        key={n.id}
-                                        selected={isSelected}
-                                    >
-                                        <TableCell component="th" scope="row">
-                                            {n.businessName}
-                                        </TableCell>
-                                        <TableCell>{n.contactName}</TableCell>
-                                        <TableCell>{n.email}</TableCell>
-                                        <TableCell>{n.status}</TableCell>
-                                        <TableCell align="center">
-                                            {" "}
-                                            <ButtonGroup>
-                                                <Button
-                                                    variant="outlined"
-                                                    size="small"
-                                                    color="primary"
-                                                >
-                                                    View
-                                                </Button>
-                                                <Button
-                                                    variant="outlined"
-                                                    size="small"
-                                                    color="primary"
-                                                >
-                                                    Edit
-                                                </Button>
-                                            </ButtonGroup>
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })}
+                            {stableSort(data, getSorting(order, orderBy))
+                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                .map(n => {
+                                    const isSelected = this.isSelected(n.id);
+                                    return (
+                                        <TableRow
+                                            hover
+                                            onClick={event => this.handleClick(event, n.id)}
+                                            tabIndex={-1}
+                                            key={n.id}
+                                            selected={isSelected}
+                                        >
+                                            <TableCell component="th" scope="row">
+                                                {n.businessName}
+                                            </TableCell>
+                                            <TableCell>{n.contactName}</TableCell>
+                                            <TableCell>{n.email}</TableCell>
+                                            <TableCell>{n.status}</TableCell>
+                                            <TableCell align="center">
+                                                {" "}
+                                                <ButtonGroup>
+                                                    <Button
+                                                        variant="outlined"
+                                                        size="small"
+                                                        color="primary"
+                                                    >
+                                                        View
+                                                    </Button>
+                                                    <Button
+                                                        variant="outlined"
+                                                        size="small"
+                                                        color="primary"
+                                                    >
+                                                        Edit
+                                                    </Button>
+                                                </ButtonGroup>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
                         </TableBody>
                     </Table>
                 </div>
