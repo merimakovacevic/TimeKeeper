@@ -5,9 +5,8 @@ const styles = theme => ({
         width: "90%",
         padding: "1rem 1rem 0",
         position: "relative",
-        top: "50%",
         left: "50%",
-        transform: "translate(-50%, -50%)"
+        transform: "translate(-50%)"
     },
     root2: {
         margin: 0

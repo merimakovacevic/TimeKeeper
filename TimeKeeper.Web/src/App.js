@@ -9,6 +9,7 @@ class App extends React.Component {
     state = {};
 
     componentDidMount() {
+        console.log(config.token);
         return config.token === "" ? this.props.history.push("/") : null;
     }
 

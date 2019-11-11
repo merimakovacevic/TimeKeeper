@@ -24,6 +24,8 @@ import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/Add";
 
+import Modal from "../../../components/TimeKeeperComponents/Modal/Modal";
+
 let counter = 0;
 const createData = (name, surname, email, phone) => {
     counter += 1;
@@ -55,6 +57,8 @@ const rows = [
 
 class EnhancedTable extends React.Component {
     state = {
+        selectedId: null,
+        show: false,
         loading: null,
         order: "asc",
         orderBy: "name",
@@ -94,11 +98,17 @@ class EnhancedTable extends React.Component {
 
     handleChangePage = (event, page) => this.setState({ page });
 
-    isSelected = id => this.state.selected.indexOf(id) !== -1;
+    handleOpen = value => {
+        this.setState({ show: true, selectedId: value });
+    };
+
+    handleClose = () => {
+        this.setState({ show: false });
+    };
 
     render() {
         const { classes } = this.props;
-        const { data, order, orderBy, rowsPerPage, page, loading } = this.state;
+        const { data, order, orderBy, rowsPerPage, page, loading, show } = this.state;
 
         return (
             <React.Fragment>
@@ -111,6 +121,13 @@ class EnhancedTable extends React.Component {
                     </Backdrop>
                 ) : (
                     <Paper className={classes.root}>
+                        {show ? (
+                            <Modal
+                                show={show}
+                                id={this.state.selectedId}
+                                key={Math.random() * 1516156}
+                            />
+                        ) : null}
                         <Toolbar className={classNames(classes.root2, {})}>
                             <div className={classes.title}>
                                 <Typography variant="h5" id="tableTitle">
@@ -127,6 +144,7 @@ class EnhancedTable extends React.Component {
                             </div>
                         </Toolbar>
                         <div className={classes.tableWrapper}>
+                            <Modal />
                             <Table className={classes.table} aria-labelledby="tableTitle">
                                 <TableHead>
                                     <TableRow>
@@ -169,15 +187,8 @@ class EnhancedTable extends React.Component {
                                     {stableSort(data, getSorting(order, orderBy))
                                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                         .map(n => {
-                                            const isSelected = this.isSelected(n.id);
                                             return (
-                                                <TableRow
-                                                    hover
-                                                    onClick={event => this.handleClick(event, n.id)}
-                                                    tabIndex={-1}
-                                                    key={n.id}
-                                                    selected={isSelected}
-                                                >
+                                                <TableRow hover tabIndex={-1} key={n.id}>
                                                     <TableCell component="th" scope="row">
                                                         {n.name}
                                                     </TableCell>
@@ -188,7 +199,14 @@ class EnhancedTable extends React.Component {
                                                         {" "}
                                                         <ButtonGroup>
                                                             <Button color="primary">View</Button>
-                                                            <Button color="primary">Edit </Button>
+                                                            <Button
+                                                                onClick={() =>
+                                                                    this.handleOpen(n.id)
+                                                                }
+                                                                color="primary"
+                                                            >
+                                                                Edit{" "}
+                                                            </Button>
                                                         </ButtonGroup>
                                                     </TableCell>
                                                 </TableRow>
