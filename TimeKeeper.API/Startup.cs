@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -12,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using TimeKeeper.API.Authorization;
 using TimeKeeper.API.Services;
 using TimeKeeper.DAL;
 
@@ -35,6 +37,17 @@ namespace TimeKeeper.API
             services.AddCors();
             services.AddMvc();
 
+            services.AddAuthorization(o => 
+            {
+                o.AddPolicy("IsMember", builder =>
+                {
+                    builder.RequireAuthenticatedUser();
+                    builder.AddRequirements(new IsMemberRequirement());
+
+                });
+            });
+
+            services.AddScoped<IAuthorizationHandler, IsMemberHandler>();
             //Enables anonymous access to our application (IIS security is not used) o. AutomaticAuthentication = false
             services.Configure<IISOptions>(o =>
             {
@@ -61,14 +74,16 @@ namespace TimeKeeper.API
                 o.Scope.Add("address"); //address of the user
                 o.Scope.Add("roles");
                 o.Scope.Add("timekeeper");
+                o.Scope.Add("teams");
                 o.SaveTokens = true; //save the tokens in cookies
                 o.GetClaimsFromUserInfoEndpoint = true; //get all claims defined for users, by default it's false
                 o.ClaimActions.MapUniqueJsonKey("address", "address"); //address isn't mapped by default, unlike profile and id
                 o.ClaimActions.MapUniqueJsonKey("role", "role");
+                o.ClaimActions.MapUniqueJsonKey("team", "team");
                 o.TokenValidationParameters = new TokenValidationParameters
                 {
                     NameClaimType = JwtClaimTypes.GivenName,
-                    RoleClaimType = JwtClaimTypes.Role
+                    RoleClaimType = JwtClaimTypes.Role               
                 };
             });
                
