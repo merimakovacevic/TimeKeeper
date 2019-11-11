@@ -109,6 +109,7 @@ class EnhancedTable extends React.Component {
             createData("Armin", "Odob", "maiiil@mail.com", "+33351531531"),
             createData("Amila", "Test", "maiiil@mail.com", "+33351531531")
         ],
+        rowsPerPage: 5,
 
         page: 0
     };
@@ -135,7 +136,7 @@ class EnhancedTable extends React.Component {
 
     render() {
         const { classes } = this.props;
-        const { data, order, orderBy, page, loading } = this.state;
+        const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
 
         return (
             <Paper className={classes.root}>
@@ -232,6 +233,7 @@ class EnhancedTable extends React.Component {
                 <TablePagination
                     component="div"
                     count={data.length}
+                    rowsPerPage={rowsPerPage}
                     page={page}
                     backIconButtonProps={{
                         "aria-label": "Previous Page"
