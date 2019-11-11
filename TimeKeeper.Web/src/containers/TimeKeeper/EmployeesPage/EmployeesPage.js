@@ -262,7 +262,7 @@ class EnhancedTable extends React.Component {
                             }}
                             onChangePage={this.handleChangePage}
                             labelRowsPerPage=""
-                            rowsPerPageOptions=""
+                            rowsPerPageOptions={[]}
                         />
                     </Paper>
                 )}

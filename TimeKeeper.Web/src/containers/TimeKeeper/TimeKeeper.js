@@ -89,8 +89,8 @@ const styles = theme => ({
         ...theme.mixins.toolbar
     },
     content: {
-        flexGrow: 1,
-        padding: theme.spacing(3)
+        flexGrow: 1
+        // padding: theme.spacing(3)
     }
 });
 
@@ -201,7 +201,6 @@ class TimeKeeper extends React.Component {
                             id="simple-menu"
                             anchorEl={anchorDbEl}
                             open={Boolean(anchorDbEl)}
-                            onClose={handleClose}
                             style={{ left: open ? 150 : 35 }}
                         >
                             {" "}
