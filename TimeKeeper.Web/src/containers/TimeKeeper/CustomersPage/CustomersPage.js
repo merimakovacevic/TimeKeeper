@@ -1,9 +1,12 @@
 import React from "react";
 import axios from "axios";
-import config from "../../../config";
 import classNames from "classnames";
+import config from "../../../config";
 
 import { withStyles } from "@material-ui/core/styles";
+import { ButtonGroup } from "@material-ui/core";
+import { Backdrop } from "@material-ui/core";
+import styles from "../Styles/TableStyles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -15,14 +18,10 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
-import { ButtonGroup } from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { Backdrop } from "@material-ui/core";
-
-import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 
-import { lighten } from "@material-ui/core/styles/colorManipulator";
+import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/Add";
 
 let counter = 0;
@@ -53,64 +52,6 @@ const rows = [
     { id: "status", label: "Status" },
     { id: "actions", label: "" }
 ];
-
-const styles = theme => ({
-    root: {
-        width: "90%",
-        padding: "1rem 1rem 0",
-        position: "relative",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)"
-    },
-    root2: {
-        margin: 0
-    },
-    table: {
-        minWidth: 1020
-    },
-    tableWrapper: {
-        overflowX: "auto",
-        padding: "1rem 2rem"
-    },
-    highlight:
-        theme.palette.type === "light"
-            ? {
-                  color: theme.palette.secondary.main,
-                  backgroundColor: lighten(theme.palette.secondary.light, 0.85)
-              }
-            : {
-                  color: theme.palette.text.primary,
-                  backgroundColor: theme.palette.secondary.dark
-              },
-    spacer: {
-        flex: "1 1 100%"
-    },
-    actions: {
-        color: theme.palette.text.secondary
-    },
-    title: {
-        flex: "0 0 auto"
-    },
-    tableCell: {
-        fontSize: "1.1rem",
-        fontWeight: "bold",
-        backgroundColor: "#f5f6fa"
-    },
-    loader: {
-        color: "white"
-    },
-    loaderText: {
-        color: "white",
-        marginTop: "2rem"
-    },
-    center: {
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center"
-    }
-});
 
 class EnhancedTable extends React.Component {
     state = {
