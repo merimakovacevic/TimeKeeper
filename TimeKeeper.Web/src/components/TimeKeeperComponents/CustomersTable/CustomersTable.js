@@ -110,8 +110,7 @@ class EnhancedTable extends React.Component {
             createData("Amila", "Test", "maiiil@mail.com", "+33351531531")
         ],
 
-        page: 0,
-        rowsPerPage: 5
+        page: 0
     };
 
     handleRequestSort = property => {
@@ -132,16 +131,11 @@ class EnhancedTable extends React.Component {
         this.setState({ page });
     };
 
-    handleChangeRowsPerPage = event => {
-        this.setState({ rowsPerPage: event.target.value });
-    };
-
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
     render() {
         const { classes } = this.props;
-        const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
-        const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+        const { data, order, orderBy, page, loading } = this.state;
 
         return (
             <Paper className={classes.root}>
@@ -194,54 +188,50 @@ class EnhancedTable extends React.Component {
                         </TableHead>
 
                         <TableBody>
-                            {stableSort(data, getSorting(order, orderBy))
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map(n => {
-                                    const isSelected = this.isSelected(n.id);
-                                    return (
-                                        <TableRow
-                                            hover
-                                            onClick={event => this.handleClick(event, n.id)}
-                                            tabIndex={-1}
-                                            key={n.id}
-                                            selected={isSelected}
-                                        >
-                                            <TableCell component="th" scope="row">
-                                                {n.businessName}
-                                            </TableCell>
-                                            <TableCell>{n.contactName}</TableCell>
-                                            <TableCell>{n.email}</TableCell>
-                                            <TableCell>{n.status}</TableCell>
-                                            <TableCell align="center">
-                                                {" "}
-                                                <ButtonGroup>
-                                                    <Button
-                                                        variant="outlined"
-                                                        size="small"
-                                                        color="primary"
-                                                    >
-                                                        View
-                                                    </Button>
-                                                    <Button
-                                                        variant="outlined"
-                                                        size="small"
-                                                        color="primary"
-                                                    >
-                                                        Edit
-                                                    </Button>
-                                                </ButtonGroup>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
+                            {stableSort(data, getSorting(order, orderBy)).map(n => {
+                                const isSelected = this.isSelected(n.id);
+                                return (
+                                    <TableRow
+                                        hover
+                                        onClick={event => this.handleClick(event, n.id)}
+                                        tabIndex={-1}
+                                        key={n.id}
+                                        selected={isSelected}
+                                    >
+                                        <TableCell component="th" scope="row">
+                                            {n.businessName}
+                                        </TableCell>
+                                        <TableCell>{n.contactName}</TableCell>
+                                        <TableCell>{n.email}</TableCell>
+                                        <TableCell>{n.status}</TableCell>
+                                        <TableCell align="center">
+                                            {" "}
+                                            <ButtonGroup>
+                                                <Button
+                                                    variant="outlined"
+                                                    size="small"
+                                                    color="primary"
+                                                >
+                                                    View
+                                                </Button>
+                                                <Button
+                                                    variant="outlined"
+                                                    size="small"
+                                                    color="primary"
+                                                >
+                                                    Edit
+                                                </Button>
+                                            </ButtonGroup>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
                         </TableBody>
                     </Table>
                 </div>
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
                     component="div"
                     count={data.length}
-                    rowsPerPage={rowsPerPage}
                     page={page}
                     backIconButtonProps={{
                         "aria-label": "Previous Page"
@@ -250,7 +240,8 @@ class EnhancedTable extends React.Component {
                         "aria-label": "Next Page"
                     }}
                     onChangePage={this.handleChangePage}
-                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                    labelRowsPerPage=""
+                    rowsPerPageOptions=""
                 />
             </Paper>
         );

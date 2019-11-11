@@ -146,8 +146,6 @@ class EnhancedTable extends React.Component {
 
     handleChangePage = (event, page) => this.setState({ page });
 
-    handleChangeRowsPerPage = event => this.setState({ rowsPerPage: event.target.value });
-
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
     render() {
@@ -263,7 +261,8 @@ class EnhancedTable extends React.Component {
                                 "aria-label": "Next Page"
                             }}
                             onChangePage={this.handleChangePage}
-                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                            labelRowsPerPage=""
+                            rowsPerPageOptions=""
                         />
                     </Paper>
                 )}
