@@ -68,6 +68,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpGet("{id}")]
+        [Authorize(Policy = "IsMember")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Get(int id)
@@ -76,17 +77,16 @@ namespace TimeKeeper.API.Controllers
                 LogIdentity();
 
                 Logger.Info($"Try to get team with {id}");
-
                 Team team = Unit.Teams.Get(id);
-                if (team == null)
+
+                /*if (team == null)
                 {
                     Logger.Error($"There is no team with specified id {id}");
                     return NotFound();
-                }
-                else
-                {
-                    return Ok(team.Create());
-                }
+                }*/
+
+                return Ok(team.Create());
+
             }
             catch (Exception ex)
             {
@@ -102,6 +102,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPost]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Post([FromBody] Team team)
@@ -128,6 +129,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Put(int id, [FromBody] Team team)
@@ -135,13 +137,15 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Unit.Teams.Update(team, id);
-                int numberOfChanges = Unit.Save();
+                Unit.Save();
+
+                /*int numberOfChanges = Unit.Save();
 
                 if (numberOfChanges == 0)
                 {
                     Logger.Error($"Team with {id} not found");
                     return NotFound();
-                }
+                }*/
                 Logger.Info($"Changed team with id {id}");
                 return Ok(team.Create());
             }
@@ -160,6 +164,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -167,15 +172,17 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Unit.Teams.Delete(id);
-
-                int numberOfChanges = Unit.Save();
                 Logger.Info($"Attempt to delete team with id {id}");
+                Unit.Teams.Delete(id);
+                Unit.Save();
+
+                /*int numberOfChanges = Unit.Save();
+                
                 if (numberOfChanges == 0)
                 {
                     Logger.Error($"Attempt to delete team with id {id}");
                     return NotFound();
-                }
+                }*/
                 Logger.Info($"Deleted team with id {id}");
                 return NoContent();
             }

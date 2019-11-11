@@ -33,8 +33,8 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                var result = Unit.Tasks.Get().ToList().Select(x => x.Create()).ToList();
                 Logger.Info($"Try to get all tasks");
+                var result = Unit.Tasks.Get().ToList().Select(x => x.Create()).ToList();                
                 return Ok(result);
             }
             catch(Exception ex)
@@ -59,13 +59,15 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info($"Try to get task with {id}");
-                var result = Unit.Tasks.Get(id);
-                if (result == null)
+                var task = Unit.Tasks.Get(id);
+
+                /*if (result == null)
                 {
                     Logger.Error($"Task with id {id} cannot be found");
                     return NotFound();
-                }
-                return Ok(result.Create());
+                }*/
+
+                return Ok(task.Create());
             }
             catch(Exception ex)
             {
@@ -123,13 +125,15 @@ namespace TimeKeeper.API.Controllers
                 //jobDetail.Project = Unit.Projects.Get(jobDetail.Project.Id);
 
                 Unit.Tasks.Update(jobDetail, id);
+                Unit.Save();
+                /*
                 int numberOfChanges = Unit.Save();
 
                 if (numberOfChanges == 0)
                 {
                     Logger.Error($"Task with {id} not found");
                     return NotFound();
-                }
+                }*/
                 Logger.Info($"Changed task with id {id}");
                 return Ok(jobDetail.Create());
             }
@@ -155,15 +159,17 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Unit.Tasks.Delete(id);
                 Logger.Info($"Attempt to delete task with id {id}");
-                int numberOfChanges = Unit.Save();
+                Unit.Tasks.Delete(id);
+                Unit.Save();
+
+                /*int numberOfChanges = Unit.Save();
 
                 if (numberOfChanges == 0)
                 {
                     Logger.Error($"Task with id {id} not found");
                     return NotFound();
-                }
+                }*/
                 Logger.Info($"Deleted task with id {id}");
                 return NoContent();
             }
