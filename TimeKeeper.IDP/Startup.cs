@@ -20,6 +20,7 @@ namespace TimeKeeper.IDP
                     .AddDeveloperSigningCredential()
                     .AddTestUsers(Config.GetUsers())
                     .AddInMemoryIdentityResources(Config.GetResources())
+                    .AddInMemoryApiResources(Config.GetApiResources())
                     .AddInMemoryClients(Config.GetClients());
         }
 

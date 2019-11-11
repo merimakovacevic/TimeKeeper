@@ -16,7 +16,7 @@ using TimeKeeper.LOG;
 namespace TimeKeeper.API.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Roles = "admin")]
+    [Authorize]
     [ApiController]
     public class TeamsController : BaseController
     {
@@ -38,8 +38,9 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 LogIdentity();
-
-                return Ok(Unit.Teams.Get().ToList().Select(x => x.Create()).ToList());//without the first ToList(), we will have a lazy loading exception?
+                int userId = int.Parse(User.Claims.FirstOrDefault(x => x.Type == "sub").Value.ToString());
+                var query = Unit.Teams.Get(x => x.Members.Any(y => y.Employee.Id == userId));
+                return Ok(query.ToList().Select(x => x.Create()).ToList());//without the first ToList(), we will have a lazy loading exception?
             }
             catch (Exception ex)
             {

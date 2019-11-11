@@ -17,7 +17,7 @@ namespace TimeKeeper.IDP
             {
                 new TestUser
                 {
-                    SubjectId = "john",
+                    SubjectId = "1",
                     Username = "johndoe",
                     Password = "$ch00l",
                     Claims = new List<Claim>
@@ -25,12 +25,13 @@ namespace TimeKeeper.IDP
                         new Claim("given_name", "John"),
                         new Claim("family_name", "Doe"),
                         new Claim("role", "user"),
-                        new Claim("address", "Sarajevo")
+                        new Claim("address", "Sarajevo"),
+                        new Claim("team", "alpha")
                     }
                 },
                 new TestUser
                 {
-                    SubjectId = "jane",
+                    SubjectId = "2",
                     Username = "janedoe",
                     Password = "$ch00l",
                     Claims = new List<Claim>
@@ -38,7 +39,8 @@ namespace TimeKeeper.IDP
                         new Claim("given_name", "Jane"),
                         new Claim("family_name", "Doe"),
                         new Claim("role", "admin"),
-                        new Claim("address", "Mostar")
+                        new Claim("address", "Mostar"),
+                        new Claim("team", "bravo")
                     }
                 }
             };
@@ -51,7 +53,16 @@ namespace TimeKeeper.IDP
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
                 new IdentityResources.Address(),
-                new IdentityResource("roles", "Your roles", new List<string> { "role" })
+                new IdentityResource("roles", "Your roles", new List<string> { "role" }),
+                new IdentityResource("teams", "Your teams", new List<string> { "team" })
+            };
+        }
+
+        public static IEnumerable<ApiResource> GetApiResources()
+        {
+            return new List<ApiResource>
+            {
+                new ApiResource("timekeeper", "Time Keeper API", new List<string> { "role" })
             };
         }
 
@@ -70,7 +81,9 @@ namespace TimeKeeper.IDP
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Address,
-                        "roles" //"roles" were added manually, that's why it isn't found in the StandardScopes
+                        "roles", //"roles" were added manually, that's why it isn't found in the StandardScopes,
+                        "timekeeper",
+                        "teams"
                     },
                     ClientSecrets = { new Secret("mistral_talents".Sha256()) }
                 }
