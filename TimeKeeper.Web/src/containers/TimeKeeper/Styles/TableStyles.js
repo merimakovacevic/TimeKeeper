@@ -55,6 +55,10 @@ const styles = theme => ({
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center"
+    },
+
+    twoWordLabel: {
+        width: "32rem"
     }
 });
 
