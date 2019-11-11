@@ -5,16 +5,16 @@ import NavigationItem from "./NavigationItem/NavigationItem";
 
 const navigationItems = props => (
     <ul className={classes.NavigationItems}>
-        <NavigationItem click={props.clicked} link="#about">
+        <NavigationItem id="aboutButton" click={props.clicked} link="#about">
             About
         </NavigationItem>
-        <NavigationItem click={props.clicked} link="#services">
+        <NavigationItem id="servicesButton" click={props.clicked} link="#services">
             Services
         </NavigationItem>
-        <NavigationItem click={props.clicked} link="#team">
+        <NavigationItem id="teamButton"  click={props.clicked} link="#team">
             Team
         </NavigationItem>
-        <NavigationItem click={props.clicked} link="#contact">
+        <NavigationItem  id="contactButton" click={props.clicked} link="#contact">
             Contact
         </NavigationItem>
     </ul>
