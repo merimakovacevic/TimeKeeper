@@ -250,7 +250,8 @@ class EnhancedTable extends React.Component {
                         "aria-label": "Next Page"
                     }}
                     onChangePage={this.handleChangePage}
-                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                    labelRowsPerPage=""
+                    rowsPerPageOptions=""
                 />
             </Paper>
         );
