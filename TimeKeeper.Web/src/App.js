@@ -13,7 +13,6 @@ class App extends React.Component {
     }
 
     render() {
-        console.log(config.token);
         return (
             <Switch>
                 <Route exact path="/">

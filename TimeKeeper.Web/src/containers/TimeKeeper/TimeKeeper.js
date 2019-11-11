@@ -1,5 +1,5 @@
 import React from "react";
-import { withRouter, Switch, Route } from "react-router-dom";
+import { withRouter, Route } from "react-router-dom";
 
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
