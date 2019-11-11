@@ -57,6 +57,7 @@ const login = props => {
                                 <div className={classes.ErrorMessage}> &nbsp; </div>
                             )}
                             <Field
+                            id="usernameLogin"
                                 name="username"
                                 autoComplete="off"
                                 placeholder="Username"
@@ -68,6 +69,7 @@ const login = props => {
                                 <div className={classes.ErrorMessage}> &nbsp; </div>
                             )}
                             <Field
+                            id="passwordLogin"
                                 placeholder="Password"
                                 autoComplete="off"
                                 name="password"
@@ -76,6 +78,7 @@ const login = props => {
                             />
 
                             <Button
+                            id="loginButton"
                                 variant="contained"
                                 color="primary"
                                 fullWidth

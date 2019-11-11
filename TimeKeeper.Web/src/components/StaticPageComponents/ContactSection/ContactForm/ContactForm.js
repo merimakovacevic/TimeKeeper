@@ -67,6 +67,7 @@ const contactForm = props => (
                             <div className={classes.ErrorMessage}>&nbsp;</div>
                         )}
                         <Field
+                            id="emailInputStatic"
                             name="email"
                             type="email"
                             placeholder="Your e-mail"
@@ -77,14 +78,14 @@ const contactForm = props => (
                         ) : (
                             <div className={classes.ErrorMessage}>&nbsp;</div>
                         )}
-                        <Field name="name" placeholder="Your name" className={classes.Input} />
+                        <Field id="nameInputStatic" name="name" placeholder="Your name" className={classes.Input} />
 
                         {errors.phone && touched.phone ? (
                             <div className={classes.ErrorMessage}>{errors.phone}!</div>
                         ) : (
                             <div className={classes.ErrorMessage}>&nbsp;</div>
                         )}
-                        <Field name="phone" placeholder="Your phone" className={classes.Input} />
+                        <Field id="phoneInput" name="phone" placeholder="Your phone" className={classes.Input} />
 
                         {errors.message && touched.message ? (
                             <div className={classes.ErrorMessage}>{errors.message}!</div>
@@ -97,9 +98,11 @@ const contactForm = props => (
                             as="textarea"
                             cols="30"
                             rows="10"
+                            id="messageInputStatic"
                             className={classes.Textarea}
                         />
                         <Button
+                        id="buttonSendStatic"
                             variant="contained"
                             color="primary"
                             fullWidth
