@@ -1,5 +1,4 @@
 import React from "react";
-// import axios from "axios";
 
 import Backdrop from "../../components/StaticPageComponents/UI/Backdrop/Backdrop";
 import Navigation from "../../components/StaticPageComponents/Navigation/Navigation";
@@ -15,19 +14,18 @@ class StaticPage extends React.Component {
     state = {
         showSideDrawer: false,
         modalOpen: false,
+        loading: false,
         isLoggedIn: false,
+        logInError: null,
         sending: false,
         sendSuccess: null,
         sendFail: null
     };
 
-    // componentDidMount() {
-    //     axios("http://192.168.60.73/TimeKeeper/api/members").then(res => console.log(res));
-    // }
-
-    successfullLogin = value => {
+    loginHandler = value => {
         this.setState({ isLoggedIn: value });
     };
+    loginLoadingHandler = value => this.setState({ loading: value });
 
     successfullSend = () => this.setState({ sendSuccess: true, sending: false });
     failedSend = () => this.setState({ sendFail: true, sending: false });
@@ -50,33 +48,34 @@ class StaticPage extends React.Component {
         const {
             showSideDrawer,
             modalOpen,
-            isLoggedIn,
             sendSuccess,
             sending,
-            sendFail
+            sendFail,
+            loading,
+            isLoggedIn,
+            logInError
         } = this.state;
         const {
             sideDrawerClosedHandler,
             drawerToggleClicked,
             toggleBackdrop,
-            successfullLogin,
+            loginHandler,
             sendStart,
             failedSend,
-            successfullSend
+            successfullSend,
+            loginLoadingHandler
         } = this;
 
         return (
             <React.Fragment>
                 <Backdrop show={modalOpen} clicked={toggleBackdrop}></Backdrop>
                 <Login
-                    isLoggedIn={isLoggedIn}
-                    successfulLogin={successfullLogin}
+                    loginHandler={loginHandler}
+                    loginLoadingHandler={loginLoadingHandler}
                     show={modalOpen}
-                    sending={this.sending}
-                    sendSuccess={this.sendSuccess}
-                    sendStart={this.sendStart}
-                    failedSend={this.failedSend}
-                    successfullSend={this.successfullSend}
+                    loading={loading}
+                    isLoggedIn={isLoggedIn}
+                    logInError={logInError}
                 />
                 <Navigation ToggleButtonClicked={drawerToggleClicked} clicked={toggleBackdrop} />
                 <SideDrawer

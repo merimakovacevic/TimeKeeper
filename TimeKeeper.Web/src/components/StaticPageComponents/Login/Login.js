@@ -3,6 +3,7 @@ import axios from "axios";
 import { withRouter } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import { Button } from "@material-ui/core";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import * as Yup from "yup";
 import classes from "./Login.module.css";
@@ -20,12 +21,8 @@ const LoginSchema = Yup.object().shape({
         .required("Password can't be empty!")
 });
 const login = props => {
-    // const { isLoggedIn } = props;
-
-    // let onSubmit = function() {
-    //     props.successfulLogin(true);
-    // };
-
+    const { loading } = props;
+    const { loginHandler, loginLoadingHandler } = props;
     return (
         <Formik
             initialValues={{
@@ -34,15 +31,18 @@ const login = props => {
             }}
             validationSchema={LoginSchema}
             onSubmit={values => {
+                loginLoadingHandler(true);
                 axios
                     .post(`${config.apiUrl}users`, values)
                     .then(res => {
                         config.token = "Basic " + res.data.base64;
+                        loginHandler(false);
+                        loginHandler(true);
                         props.history.replace("/app");
-                        console.log(config);
                     })
                     .catch(err => {
-                        console.log(err);
+                        loginLoadingHandler(false);
+                        loginHandler(false);
                     });
             }}
         >
@@ -81,8 +81,18 @@ const login = props => {
                                 fullWidth
                                 type="submit"
                                 className={classes.Button}
+                                disabled={loading ? true : false}
                             >
-                                SIGN IN
+                                {props.loading ? (
+                                    <CircularProgress
+                                        color="secondary"
+                                        size={24}
+                                        thickness={4}
+                                        style={{ color: "white" }}
+                                    />
+                                ) : (
+                                    "Log in"
+                                )}
                             </Button>
                         </Form>
                     </div>
