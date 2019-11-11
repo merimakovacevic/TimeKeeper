@@ -15,7 +15,7 @@ const navigation = props => (
             <NavigationItems />
         </nav>
         <Button
-        id="toggleButton"
+        id="toggleButtonStatus"
             variant="contained"
             color="primary"
             className={classes.Button}
