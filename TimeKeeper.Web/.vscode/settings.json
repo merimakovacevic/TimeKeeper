@@ -5,12 +5,9 @@
         "editor.formatOnSave": false
     },
     "editor.wordWrap": "on",
-    "prettier.printWidth": 100,
-    "prettier.semi": true,
     "prettier.singleQuote": false,
 
     "editor.tabSize": 4,
-    "prettier.tabWidth": 4,
     /////////////////////////////////
     "editor.fontFamily": "'Fira Code', 'Operator Mono', 'iA Writer Duospace', 'Source Code Pro', Menlo, Monaco, monospace",
     "editor.fontLigatures": true,

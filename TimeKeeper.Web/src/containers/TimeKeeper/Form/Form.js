@@ -7,6 +7,7 @@ import axios from "axios";
 import config from "../../../config";
 
 const styles = theme => ({
+    parrent: {},
     wrapper: {
         display: "flex",
         width: "100%",
