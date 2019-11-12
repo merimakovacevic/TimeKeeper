@@ -20,7 +20,8 @@ import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Tooltip from "@material-ui/core/Tooltip";
-import DropDown from "./DropDown";
+import DropDown from "./DropDownTeam";
+import DropDownMonth from "./DropDownMonth";
 import IconButton from "@material-ui/core/IconButton";
 
 let counter = 0;
@@ -142,7 +143,7 @@ class EnhancedTable extends React.Component {
                   Team tracking
                 </Typography>
               </div>
-              <DropDown></DropDown>
+              <DropDown></DropDown> <DropDownMonth></DropDownMonth>
               <div className={classes.spacer} />
               <div className={classes.actions}></div>
             </Toolbar>
