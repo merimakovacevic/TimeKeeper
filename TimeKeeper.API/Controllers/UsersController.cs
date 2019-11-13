@@ -42,27 +42,72 @@ namespace TimeKeeper.API.Controllers
             }  
         }
 
-        [Authorize]
+        /*        [AllowAnonymous]
+                [HttpPost]
+                [Route("api/login")]
+                public IActionResult Login([FromBody] User user)
+                {
+                    try
+                    {
+                        User control = Unit.Users.Get(x => x.Username == user.Username && x.Password == user.Password).FirstOrDefault();
+
+                        if (control == null) return NotFound();
+                        byte[] bytes = Encoding.ASCII.GetBytes($"{control.Username}:{control.Password}");
+                        string base64 = Convert.ToBase64String(bytes);
+                        return Ok(new
+                        {
+                            control.Id,
+                            control.Name,
+                            control.Role,
+                            base64
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        return HandleException(ex);
+                    }
+                }*/
+
+        /// <summary>
+        /// This method is used for login
+        /// </summary>
+        /// <returns status="200">OK</returns>
+        /// <returns status="404">NotFound</returns>
+        /// <returns status="400">BadRequest</returns>
         [HttpGet]
         [Route("login")]
+        [Authorize]
         public IActionResult Login()
         {
-            if (User.Identity.IsAuthenticated)
+            try
             {
-                var accessToken = HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken).Result;
-                var response = new
+                if (User.Identity.IsAuthenticated)
                 {
-                    Id = User.Claims.FirstOrDefault(c => c.Type == "sub").Value.ToString(),
-                    Name = User.Claims.FirstOrDefault(c => c.Type == "given_name").Value.ToString(),
-                    Role = User.Claims.FirstOrDefault(c => c.Type == "role").Value.ToString(),
-                    accessToken // Bearer accessToken
-                };
-                return Ok(response);
+                    var accessToken = HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken).Result;
+                    var response = new
+                    {
+                        Id = User.Claims.FirstOrDefault(c => c.Type == "sub").Value.ToString(),
+                        Name = User.Claims.FirstOrDefault(c => c.Type == "given_name").Value.ToString(),
+                        Role = User.Claims.FirstOrDefault(c => c.Type == "role").Value.ToString(),
+                        accessToken //Bearer {accessToken}
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
-            else return NotFound();
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
         }
 
-
+        /// <summary>
+        /// This method is used for logout
+        /// </summary>
+        /// <returns></returns>
         [AllowAnonymous]
         [Route("api/logout")]
         [HttpGet]

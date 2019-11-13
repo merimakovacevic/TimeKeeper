@@ -27,7 +27,8 @@ namespace TimeKeeper.IDP
         {
             services.AddCors();
             services.AddMvc();
-            string connectionString = Configuration["ConnectionStrings:Local"];
+
+            string connectionString = Configuration["ConnectionString"];
             services.AddDbContext<TimeKeeperContext>(o => { o.UseNpgsql(connectionString); });
 
             services.AddIdentityServer()

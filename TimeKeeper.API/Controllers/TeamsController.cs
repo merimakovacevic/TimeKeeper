@@ -16,11 +16,9 @@ using TimeKeeper.LOG;
 namespace TimeKeeper.API.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize]
     [ApiController]
     public class TeamsController : BaseController
     {
-
         public TeamsController(TimeKeeperContext context) : base(context) { }
 
 
@@ -39,7 +37,8 @@ namespace TimeKeeper.API.Controllers
             {
                 int userId = int.Parse(GetUserClaim("sub"));
                 string userRole = GetUserClaim("role");
-                if (userRole == "admin")
+
+                if(userRole == "admin")
                 {
                     return Ok(Unit.Teams.Get().ToList().Select(x => x.Create()).ToList());
                 }
@@ -54,7 +53,6 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
-
 
         /// <summary>
         /// This method returns team with specified id
@@ -71,8 +69,6 @@ namespace TimeKeeper.API.Controllers
         public IActionResult Get(int id)
         {
             try {
-                //LogIdentity();
-
                 Logger.Info($"Try to get team with {id}");
                 Team team = Unit.Teams.Get(id);
 
@@ -99,7 +95,8 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPost]
-        [Authorize(Roles ="admin")]
+        //[Authorize(Policy = "IsAdmin")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Post([FromBody] Team team)
@@ -126,6 +123,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
+        //[Authorize(Policy = "IsAdmin")]
         [Authorize(Roles = "admin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -161,6 +159,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpDelete("{id}")]
+        //[Authorize(Policy = "IsAdmin")]
         [Authorize(Roles = "admin")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]

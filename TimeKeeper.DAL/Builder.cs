@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using TimeKeeper.Domain.Entities;
+
 namespace TimeKeeper.DAL
 {
     public static class Builder

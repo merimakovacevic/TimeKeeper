@@ -27,7 +27,6 @@ namespace TimeKeeper.IDP
                         Claims = new List<Claim>
                     {
                         new Claim("given_name", user.Name),
-                        new Claim("family_name", user.Name),
                         new Claim("role", user.Role)
                     }
                     });

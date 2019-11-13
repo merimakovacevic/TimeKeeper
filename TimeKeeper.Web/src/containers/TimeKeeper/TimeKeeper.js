@@ -28,6 +28,7 @@ import RestoreIcon from "@material-ui/icons/Restore";
 import EmployeesPage from "./EmployeesPage/EmployeesPage";
 import CustomersPage from "./CustomersPage/CustomersPage";
 import ProjectsPage from "./ProjectsPage/ProjectsPage";
+import TeamTimeTracking from "./TeamTimeTracking/TeamTimeTracking";
 
 const drawerWidth = 240;
 
@@ -97,6 +98,7 @@ const styles = theme => ({
 class TimeKeeper extends React.Component {
     state = {
         database: ["Employees", "Teams", "Customers", "Projects"],
+        teamTracking: ["Team Tracking"],
         reports: [
             "Personal Report",
             "Monthly Report",
@@ -107,6 +109,7 @@ class TimeKeeper extends React.Component {
         open: false,
         anchorDbEl: null,
         anchorSrEl: null,
+        anchorTeamEl: null,
         test: ""
     };
 
@@ -125,10 +128,15 @@ class TimeKeeper extends React.Component {
         this.setState({ anchorSrEl: event.currentTarget });
     };
 
+    handleTeamClick = event => {
+        this.setState({ anchorTeamEl: event.currentTarget });
+    };
+
     handleClose = event => {
         this.setState({
             anchorDbEl: null,
             anchorSrEl: null,
+            anchorTeamEl: null,
             test: event.currentTarget.id.toLowerCase()
         });
         this.props.history.push(`/app/${event.currentTarget.id.toLowerCase()}`);
@@ -136,12 +144,21 @@ class TimeKeeper extends React.Component {
 
     render() {
         const { classes, theme } = this.props;
-        const { open, anchorDbEl, anchorSrEl, reports, database } = this.state;
+        const {
+            open,
+            anchorDbEl,
+            anchorSrEl,
+            anchorTeamEl,
+            reports,
+            database,
+            teamTracking
+        } = this.state;
         const {
             handleDrawerOpen,
             handleDrawerClose,
             handleSrClick,
             handleDbClick,
+            handleTeamClick,
             handleClose
         } = this;
 
@@ -199,6 +216,7 @@ class TimeKeeper extends React.Component {
                         </ListItem>
                         <Menu
                             id="simple-menu"
+                            onClose={handleClose}
                             anchorEl={anchorDbEl}
                             open={Boolean(anchorDbEl)}
                             style={{ left: open ? 150 : 35 }}
@@ -213,12 +231,26 @@ class TimeKeeper extends React.Component {
                     </List>
                     <Divider />
                     <List>
-                        <ListItem button>
+                        <ListItem button aria-haspopup="true" onClick={handleTeamClick}>
                             <ListItemIcon>
                                 <RestoreIcon />
                             </ListItemIcon>
-                            <ListItemText primary={"Time Tracking"} />
+                            <ListItemText primary={"Team Tracking"} />
                         </ListItem>
+                        <Menu
+                            id="simple-menu"
+                            onClose={handleClose}
+                            anchorEl={anchorTeamEl}
+                            open={Boolean(anchorTeamEl)}
+                            style={{ left: open ? 150 : 35 }}
+                        >
+                            {" "}
+                            {teamTracking.map((m, i) => (
+                                <MenuItem id={m.replace(" ", "-")} key={i} onClick={handleClose}>
+                                    {m}
+                                </MenuItem>
+                            ))}
+                        </Menu>
                     </List>
                     <Divider />
                     <List>
@@ -253,6 +285,9 @@ class TimeKeeper extends React.Component {
                     </Route>
                     <Route path="/app/projects">
                         <ProjectsPage />
+                    </Route>
+                    <Route path="/app/team-tracking">
+                        <TeamTimeTracking />
                     </Route>
                 </main>
             </div>

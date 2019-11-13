@@ -10,6 +10,7 @@ using TimeKeeper.API.Factory;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.Utility.Services;
+using TimeKeeper.API.Services;
 
 namespace TimeKeeper.API.Controllers
 {
@@ -33,8 +34,18 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Logger.Info($"Try to fetch all employees");
-                return Ok(Unit.Employees.Get().ToList().Select(x => x.Create()).ToList());                
+                int userId = int.Parse(GetUserClaim("sub"));
+                string userRole = GetUserClaim("role");
+
+                if (userRole == "admin" || userRole=="lead")
+                {
+                    Logger.Info($"Try to fetch all employees");
+                    return Ok(Unit.Employees.Get().ToList().Select(x => x.Create()).ToList());
+                }
+                else
+                {
+                    return Ok(Unit.GetEmployeeTeams(userId));
+                }
             }
             catch (Exception ex)
             {
@@ -50,6 +61,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpGet("{id}")]
+        [Authorize(Policy ="IsEmployee")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Get(int id)

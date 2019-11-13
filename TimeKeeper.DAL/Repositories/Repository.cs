@@ -37,13 +37,19 @@ namespace TimeKeeper.DAL.Repositories
             return entity;
         }
 
-        public virtual void Insert(Entity entity) => _dbSet.Add(entity);
+        public virtual void Insert(Entity entity)
+        {
+            entity.Build(_context);
+            _dbSet.Add(entity);
+        }
 
         public virtual void Update(Entity entity, int id)
         {
+            entity.Build(_context);
             Entity old = Get(id);
             ValidateUpdate(entity, id);
             _context.Entry(old).CurrentValues.SetValues(entity);
+            old.Relate(entity);
         }
 
         public void Delete(Entity entity) => _dbSet.Remove(entity);
