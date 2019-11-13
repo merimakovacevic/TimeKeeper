@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
@@ -8,14 +8,13 @@ using TimeKeeper.DAL;
 
 namespace TimeKeeper.API.Authorization
 {
-    public class IsAdminHandler : AuthorizationHandler<IsRoleRequirement>
+    public class IsLeadOrEmployeeHandler : AuthorizationHandler<IsRoleRequirement>
     {
         protected UnitOfWork Unit;
-        public IsAdminHandler(TimeKeeperContext context)
+        public IsLeadOrEmployeeHandler(TimeKeeperContext context)
         {
             Unit = new UnitOfWork(context);
         }
-
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsRoleRequirement requirement)
         {
             var filterContext = context.Resource as AuthorizationFilterContext;
@@ -25,27 +24,19 @@ namespace TimeKeeper.API.Authorization
                 return Task.CompletedTask;
             }
 
-            /*if (!int.TryParse(filterContext.RouteData.Values["id"].ToString(), out int teamId))
+            if (!int.TryParse(filterContext.RouteData.Values["id"].ToString(), out int teamId))
             {
-                //context.Fail();
+                context.Fail();
                 return Task.CompletedTask;
             }
-            Team team = Unit.Teams.Get(teamId);*/
-
-            if (!int.TryParse(context.User.Claims.FirstOrDefault(c => c.Type == "sub").Value, out int empId))
+            string employeeId = context.User.Claims.FirstOrDefault(c => c.Type == "sub").Value;
+            if (!int.TryParse(employeeId, out int empId))
             {
                 context.Fail();
                 return Task.CompletedTask;
             }
 
-            /*
-            if (team.Members.Any(x => x.Employee.Id == empId))
-            {
-                context.Succeed(requirement);
-                return Task.CompletedTask;
-            }*/
-
-            string userRole = context.User.Claims.FirstOrDefault(c => c.Type == "role").Value;
+            string userRole = context.User.Claims.FirstOrDefault(x => x.Type == "role").Value;
 
             if (userRole == "admin")
             {
@@ -53,7 +44,8 @@ namespace TimeKeeper.API.Authorization
                 return Task.CompletedTask;
             }
 
-            //context.Fail();
+            string userTeam = context.User.Claims.FirstOrDefault(x => x.Type == "team").Value;
+
             return Task.CompletedTask;
         }
     }

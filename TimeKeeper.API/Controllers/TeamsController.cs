@@ -35,7 +35,6 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-
                 int userId = int.Parse(GetUserClaim("sub"));
                 string userRole = GetUserClaim("role");
 
@@ -47,7 +46,7 @@ namespace TimeKeeper.API.Controllers
                 {
                     var query = Unit.Teams.Get(x => x.Members.Any(y => y.Employee.Id == userId));
                     return Ok(query.ToList().Select(x => x.Create()).ToList());//without the first ToList(), we will have a lazy loading exception?
-                }                
+                }
             }
             catch (Exception ex)
             {

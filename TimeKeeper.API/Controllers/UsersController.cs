@@ -14,7 +14,6 @@ using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Controllers
 {
-    [Authorize]
     [ApiController]
     public class UsersController : BaseController
     {
@@ -99,11 +98,10 @@ namespace TimeKeeper.API.Controllers
                     return NotFound();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return HandleException(ex);
             }
-
         }
 
         /// <summary>

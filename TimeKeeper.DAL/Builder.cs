@@ -11,12 +11,10 @@ namespace TimeKeeper.DAL
         {
             if (typeof(T) == typeof(Project)) Create(entity as Project, context);
         }
-
         public static void Relate<T>(this T oldEntity, T newEntity)
         {
             if (typeof(T) == typeof(Project)) Modify(oldEntity as Project, newEntity as Project);
         }
-
         private static void Create(Project project, TimeKeeperContext context)
         {
             project.Team = context.Teams.Find(project.Team.Id);
@@ -24,7 +22,6 @@ namespace TimeKeeper.DAL
             project.Status = context.ProjectStatuses.Find(project.Status.Id);
             project.Pricing = context.PricingStatuses.Find(project.Pricing.Id);
         }
-
         private static void Modify(Project oldProject, Project newProject)
         {
             oldProject.Team = newProject.Team;

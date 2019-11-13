@@ -9,7 +9,7 @@ using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Authorization
 {
-    public class IsMemberHandler : AuthorizationHandler<IsRoleRequirement>
+    public class IsMemberHandler : AuthorizationHandler<HasAccessToTeam>
     {
         protected UnitOfWork Unit;
         public IsMemberHandler(TimeKeeperContext context)
@@ -17,7 +17,7 @@ namespace TimeKeeper.API.Authorization
             Unit = new UnitOfWork(context);
         }
 
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsRoleRequirement requirement)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, HasAccessToTeam requirement)
         {
             /*var role = context.User.Claims.FirstOrDefault(c => c.Type == "role").Value.ToString();
             if (role == "admin" || role == "lead")
