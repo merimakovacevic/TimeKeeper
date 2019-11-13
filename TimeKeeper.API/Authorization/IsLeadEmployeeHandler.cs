@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 using TimeKeeper.API.Models;
 using TimeKeeper.API.Services;
 using TimeKeeper.DAL;
+using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Authorization
 {
-    public class IsPersonHandler: AuthorizationHandler<HasAccessToEmployee>
+    public class IsLeadEmployeeHandler : AuthorizationHandler<HasAccessToEmployee>
     {
         protected UnitOfWork Unit;
-        public IsPersonHandler(TimeKeeperContext context)
+        public IsLeadEmployeeHandler(TimeKeeperContext context)
         {
             Unit = new UnitOfWork(context);
         }
@@ -39,10 +40,13 @@ namespace TimeKeeper.API.Authorization
                 context.Fail();
                 return Task.CompletedTask;
             }
-            string userRole = context.User.Claims.FirstOrDefault(c => c.Type == "role").Value;
 
-            List<EmployeeModel> employees = Unit.GetEmployeeTeamMembers(int.Parse(context.User.Claims.FirstOrDefault(c => c.Type == "sub").Value));
-            if (employees.Any(x => x.Id == employeeId) && HttpMethods.IsGet(filterContext.HttpContext.Request.Method))
+            string userRole = context.User.Claims.FirstOrDefault(c => c.Type == "role").Value.ToString();
+            int userId = int.Parse(context.User.Claims.FirstOrDefault(c => c.Type == "sub").Value.ToString());
+            Employee employee = Unit.Employees.Get(employeeId);
+
+            //lead can edit only his employee data
+            if (userRole == "lead" && userId == employeeId && HttpMethods.IsPut(filterContext.HttpContext.Request.Method))
             {
                 context.Succeed(requirement);
                 return Task.CompletedTask;

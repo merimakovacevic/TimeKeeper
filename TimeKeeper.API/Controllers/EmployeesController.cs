@@ -44,7 +44,7 @@ namespace TimeKeeper.API.Controllers
                 }
                 else
                 {
-                    return Ok(Unit.GetEmployeeTeams(userId));
+                    return Ok(Unit.GetEmployeeTeamMembers(userId));
                 }
             }
             catch (Exception ex)
@@ -129,7 +129,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Policy = "IsEmployee")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Put(int id, [FromBody] Employee employee)
