@@ -19,12 +19,12 @@ namespace TimeKeeper.API.Authorization
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsRoleRequirement requirement)
         {
-            var role = context.User.Claims.FirstOrDefault(c => c.Type == "role").Value.ToString();
+            /*var role = context.User.Claims.FirstOrDefault(c => c.Type == "role").Value.ToString();
             if (role == "admin" || role == "lead")
             {
                 context.Succeed(requirement);
                 return Task.CompletedTask;
-            }
+            }*/
 
             var filterContext = context.Resource as AuthorizationFilterContext;
             if(filterContext == null)
