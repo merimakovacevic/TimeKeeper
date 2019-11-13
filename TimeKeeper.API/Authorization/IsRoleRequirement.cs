@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace TimeKeeper.API.Authorization
 {
-    public class IsMemberRequirement : IAuthorizationRequirement
+    public class IsRoleRequirement : IAuthorizationRequirement
     {
-        public IsMemberRequirement() { }
+        public IsRoleRequirement() { }
     }
 }

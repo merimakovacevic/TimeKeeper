@@ -218,6 +218,8 @@ namespace TimeKeeper.Test.RepositoriesTest
                 unit.Tasks.Delete(task);
             }
 
+            unit.Save();
+
             unit.Projects.Delete(id);
             int numberOfChanges = unit.Save();
             //67 child entities and 1 parent entitiy will be deleted, making it 68 changes
