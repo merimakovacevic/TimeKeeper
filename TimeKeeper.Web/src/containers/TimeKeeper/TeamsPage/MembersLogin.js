@@ -1,18 +1,17 @@
 import React from "react";
-import TeamsView from "./TeamsView";
-import Members from "./MembersLogin";
+import MembersView from "./MembersView";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-/* import teams from "./../../data/team.json";
- */ import config from "../../../config";
+/* import NavigationLogin from "../NavigationLogin/NavigationLogin";
+ */ import TeamsLogin from "./TeamsLogin";
+import TeamsView from "./TeamsView";
+import config from "../../../config";
 import axios from "axios";
-/* import NavigationLogin from "../NavigationLogin/NavigationLogin"; */
-import Container from "@material-ui/core/Container";
 function createData(name, description, members) {
   return { name, description, members };
 }
-class TeamsLogin extends React.Component {
+class MembersLogin extends React.Component {
   state = {
     data: []
   };
@@ -37,11 +36,9 @@ class TeamsLogin extends React.Component {
     let settings = {
       dots: true,
       infinite: true,
-      speed: 800,
+      speed: 400,
       slidesToShow: 3,
       slidesToScroll: 1,
-      autoplay: true,
-      autoplaySpeed: 3000,
       responsive: [
         {
           breakpoint: 1200,
@@ -72,22 +69,22 @@ class TeamsLogin extends React.Component {
         }
       ]
     };
-    const teamView = this.state.data.map((member, i) => (
-      <TeamsView
+    const membersView = this.state.data.map((name, description, member, i) => (
+      <MembersView
         key={i}
         team_name={member.name}
         description={member.description}
-        firstName={member.members.firstName}
-        name={member.members.name}
+        //firstName={member.members.firstName}
+        //name={member.members.name}
       />
     ));
     return (
-      <Container>
-        <h2 className="teams">Teams</h2>
-        <a className="btn btn-teams">Add Teams</a>
-        <Slider {...settings}>{teamView}</Slider>
-      </Container>
+      <div>
+        <h3 className="teams">Team</h3>
+
+        <Slider {...settings}>{membersView}</Slider>
+      </div>
     );
   }
 }
-export default TeamsLogin;
+export default MembersLogin;

@@ -5,10 +5,9 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import CardActions from "@material-ui/core/CardActions";
-import MembersLogin from "./MembersLogin";
-import MembersView from "./MembersView";
-import Container from "@material-ui/core/Container";
-class TeamsView extends React.Component {
+import { Container } from "@material-ui/core";
+//import MembersLogin from "../MembersLogin/MembersLogin";
+class MembersView extends React.Component {
   state = {
     flipped: false,
     showTeamMember: false
@@ -22,31 +21,23 @@ class TeamsView extends React.Component {
   render() {
     return (
       <Container>
+        <h6>{this.props.description}</h6>
         <Card
           className="teamCards shadow-drop-2-center"
           onClick={() => this.routeTo()}
         >
           <CardActionArea>
             <CardContent>
+              <Typography component="p"></Typography>
               <Typography component="p">
-                <h4>{this.props.team_name}</h4>
-              </Typography>
-              <Typography component="p">
-                <p className="descriptionTeam">{this.props.description}</p>
+                <p className="descriptionTeam">{this.props.name}</p>
               </Typography>
             </CardContent>
           </CardActionArea>
-          <CardActions>
-            <Button size="small" color="primary" onClick={this.routeTo}>
-              Find out for more
-            </Button>
-            <Button id="edit">Edit</Button>
-            <Button id="delete">Delete</Button>
-          </CardActions>
-          {this.state.showTeamMember ? <MembersView id /> : null}
+          <CardActions></CardActions>
         </Card>
       </Container>
     );
   }
 }
-export default TeamsView;
+export default MembersView;
