@@ -8,12 +8,12 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Controllers
 {
-    [Authorize(Roles = "admin")]
     [ApiController]
     public class UsersController : BaseController
     {
@@ -42,31 +42,26 @@ namespace TimeKeeper.API.Controllers
             }  
         }
 
-        [AllowAnonymous]
-        [HttpPost]
-        [Route("api/login")]
-        public IActionResult Login([FromBody] User user)
+        [Authorize]
+        [HttpGet]
+        [Route("login")]
+        public IActionResult Login()
         {
-            try
+            if (User.Identity.IsAuthenticated)
             {
-                User control = Unit.Users.Get(x => x.Username == user.Username && x.Password == user.Password).FirstOrDefault();
-
-                if (control == null) return NotFound();
-                byte[] bytes = Encoding.ASCII.GetBytes($"{control.Username}:{control.Password}");
-                string base64 = Convert.ToBase64String(bytes);
-                return Ok(new
+                var accessToken = HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken).Result;
+                var response = new
                 {
-                    control.Id,
-                    control.Name,
-                    control.Role,
-                    base64
-                });
+                    Id = User.Claims.FirstOrDefault(c => c.Type == "sub").Value.ToString(),
+                    Name = User.Claims.FirstOrDefault(c => c.Type == "given_name").Value.ToString(),
+                    Role = User.Claims.FirstOrDefault(c => c.Type == "role").Value.ToString(),
+                    accessToken // Bearer accessToken
+                };
+                return Ok(response);
             }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
+            else return NotFound();
         }
+
 
         [AllowAnonymous]
         [Route("api/logout")]

@@ -42,12 +42,16 @@ namespace TimeKeeper.API
                 o.AddPolicy("IsMember", builder =>
                 {
                     builder.RequireAuthenticatedUser();
-                    builder.AddRequirements(new IsMemberRequirement());
-
+                    builder.AddRequirements(new IsRoleRequirement());
                 });
+                //o.AddPolicy("IsAdmin", builder =>
+                //{
+                //    builder.RequireRole("admin");
+                //});
             });
 
             services.AddScoped<IAuthorizationHandler, IsMemberHandler>();
+            //services.AddScoped<IAuthorizationHandler, IsAdminHandler>();
             //Enables anonymous access to our application (IIS security is not used) o. AutomaticAuthentication = false
             services.Configure<IISOptions>(o =>
             {

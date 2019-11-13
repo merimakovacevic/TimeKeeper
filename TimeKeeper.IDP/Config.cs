@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using TimeKeeper.DAL;
 
 namespace TimeKeeper.IDP
 {
@@ -13,37 +14,26 @@ namespace TimeKeeper.IDP
     {
         public static List<TestUser> GetUsers()
         {
-            return new List<TestUser>
+            List<TestUser> users = new List<TestUser>();
+            using (UnitOfWork unit = new UnitOfWork(new TimeKeeperContext()))
             {
-                new TestUser
+                foreach (var user in unit.Users.Get())
                 {
-                    SubjectId = "1",
-                    Username = "johndoe",
-                    Password = "$ch00l",
-                    Claims = new List<Claim>
+                    users.Add(new TestUser
                     {
-                        new Claim("given_name", "John"),
-                        new Claim("family_name", "Doe"),
-                        new Claim("role", "user"),
-                        new Claim("address", "Sarajevo"),
-                        new Claim("team", "Alpha")
-                    }
-                },
-                new TestUser
-                {
-                    SubjectId = "2",
-                    Username = "janedoe",
-                    Password = "$ch00l",
-                    Claims = new List<Claim>
+                        SubjectId = user.Id.ToString(),
+                        Username = user.Username,
+                        Password = user.Password,
+                        Claims = new List<Claim>
                     {
-                        new Claim("given_name", "Jane"),
-                        new Claim("family_name", "Doe"),
-                        new Claim("role", "admin"),
-                        new Claim("address", "Mostar"),
-                        new Claim("team", "Bravo")
+                        new Claim("given_name", user.Name),
+                        new Claim("family_name", user.Name),
+                        new Claim("role", user.Role)
                     }
+                    });
                 }
-            };
+            }
+            return users;
         }
 
         public static IEnumerable<IdentityResource> GetResources()
