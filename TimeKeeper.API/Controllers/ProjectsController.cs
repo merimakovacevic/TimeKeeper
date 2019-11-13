@@ -12,7 +12,7 @@ using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProjectsController : BaseController

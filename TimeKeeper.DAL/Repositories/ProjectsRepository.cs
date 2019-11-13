@@ -20,7 +20,7 @@ namespace TimeKeeper.DAL.Repositories
 
         public override void Insert(Project project)
         {
-            Build(project);
+            //Build(project);
             base.Insert(project);
         }
 
@@ -33,10 +33,10 @@ namespace TimeKeeper.DAL.Repositories
             {
                 Build(project);
                 _context.Entry(old).CurrentValues.SetValues(project);
-                old.Team = project.Team;
+                /*old.Team = project.Team;
                 old.Customer = project.Customer;
                 old.Status = project.Status;
-                old.Pricing = project.Pricing;
+                old.Pricing = project.Pricing;*/
             }
         }
 

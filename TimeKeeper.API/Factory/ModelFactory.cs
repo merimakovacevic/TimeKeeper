@@ -117,5 +117,15 @@ namespace TimeKeeper.API.Factory
                 JobDetails = day.JobDetails.Select(x => x.Master()).ToList()
             };
         }
+
+        public static TimeTrackingModel CreateTimeTracking(this Employee employee)
+        {
+            return new TimeTrackingModel
+            {
+                FullName = employee.FullName,
+                //WorkingHours = GetHoursByDayType
+
+            };
+        }
     }
 }

@@ -16,11 +16,9 @@ using TimeKeeper.LOG;
 namespace TimeKeeper.API.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
     [ApiController]
     public class TeamsController : BaseController
     {
-
         public TeamsController(TimeKeeperContext context) : base(context) { }
 
 
@@ -37,25 +35,23 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                LogIdentity();
-                int userId = int.Parse(User.Claims.FirstOrDefault(x => x.Type == "sub").Value.ToString());
-                var query = Unit.Teams.Get(x => x.Members.Any(y => y.Employee.Id == userId));
-                return Ok(query.ToList().Select(x => x.Create()).ToList());//without the first ToList(), we will have a lazy loading exception?
+
+                int userId = int.Parse(GetUserClaim("sub"));
+                string userRole = GetUserClaim("role");
+
+                if(userRole == "admin")
+                {
+                    return Ok(Unit.Teams.Get().ToList().Select(x => x.Create()).ToList());
+                }
+                else
+                {
+                    var query = Unit.Teams.Get(x => x.Members.Any(y => y.Employee.Id == userId));
+                    return Ok(query.ToList().Select(x => x.Create()).ToList());//without the first ToList(), we will have a lazy loading exception?
+                }                
             }
             catch (Exception ex)
             {
                 return HandleException(ex);
-            }
-        }
-
-        [NonAction]
-        private void LogIdentity()
-        {
-            var identityToken = HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
-            Logger.Info($"Identity token: {identityToken.Result}");
-            foreach (var claim in User.Claims)
-            {
-                Logger.Info($"Claim type: {claim.Type} - value: {claim.Value}");
             }
         }
 
@@ -74,8 +70,6 @@ namespace TimeKeeper.API.Controllers
         public IActionResult Get(int id)
         {
             try {
-                LogIdentity();
-
                 Logger.Info($"Try to get team with {id}");
                 Team team = Unit.Teams.Get(id);
 
@@ -102,7 +96,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPost]
-        [Authorize(Roles = "admin")]
+        [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Post([FromBody] Team team)
@@ -129,7 +123,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Put(int id, [FromBody] Team team)
@@ -164,7 +158,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpDelete("{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
