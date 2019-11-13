@@ -6,25 +6,26 @@ import TimeKeeper from "./containers/TimeKeeper/TimeKeeper";
 
 import config from "./config";
 class App extends React.Component {
-    state = {};
+  state = {};
 
-    componentDidMount() {
-        console.log(config.token);
-        return config.token === "" ? this.props.history.push("/") : null;
-    }
+  // componentDidMount() {
+  //   console.log(config.token);
+  //   return config.token === "" ? this.props.history.push("/") : null;
+  // }
 
-    render() {
-        return (
-            <Switch>
-                <Route exact path="/">
-                    <StaticPage />
-                </Route>
-                <Route path="/app">
-                    <TimeKeeper />
-                </Route>
-            </Switch>
-        );
-    }
+  render() {
+    return (
+      <Switch>
+        <Route exact path="/">
+          {/* <Form /> */}
+          <StaticPage />
+        </Route>
+        <Route path="/app">
+          <TimeKeeper />
+        </Route>
+      </Switch>
+    );
+  }
 }
 
 export default withRouter(App);
