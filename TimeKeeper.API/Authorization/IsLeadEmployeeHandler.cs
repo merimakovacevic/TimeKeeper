@@ -45,8 +45,8 @@ namespace TimeKeeper.API.Authorization
             int userId = int.Parse(context.User.Claims.FirstOrDefault(c => c.Type == "sub").Value.ToString());
             Employee employee = Unit.Employees.Get(employeeId);
 
-            //lead can edit only his employee data
-            if (userRole == "lead" && userId == employeeId && HttpMethods.IsPut(filterContext.HttpContext.Request.Method))
+            //lead and user can edit only his employee data
+            if (userId == employeeId && HttpMethods.IsPut(filterContext.HttpContext.Request.Method))
             {
                 context.Succeed(requirement);
                 return Task.CompletedTask;
