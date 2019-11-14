@@ -95,8 +95,6 @@ class EnhancedTable extends React.Component {
 
     handleChangePage = (event, page) => this.setState({ page });
 
-    isSelected = id => this.state.selected.indexOf(id) !== -1;
-
     render() {
         const { classes } = this.props;
         const { data, order, orderBy, rowsPerPage, page, loading } = this.state;
@@ -170,15 +168,8 @@ class EnhancedTable extends React.Component {
                                     {stableSort(data, getSorting(order, orderBy))
                                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                         .map(n => {
-                                            const isSelected = this.isSelected(n.id);
                                             return (
-                                                <TableRow
-                                                    hover
-                                                    onClick={event => this.handleClick(event, n.id)}
-                                                    tabIndex={-1}
-                                                    key={n.id}
-                                                    selected={isSelected}
-                                                >
+                                                <TableRow hover tabIndex={-1} key={n.id}>
                                                     <TableCell component="th" scope="row">
                                                         {n.projectName}
                                                     </TableCell>
