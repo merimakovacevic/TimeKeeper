@@ -4,9 +4,9 @@
         "role": "Front-end Developer",
         "about": "HTML, CSS, JavaScript, React.js. React Native.",
         "socialMedia": {
-            "ln": "",
-            "git": "",
-            "fb": ""
+            "ln": "https://www.linkedin.com/in/tajibsmajlovic/",
+            "git": "https://github.com/TajibSmajlovic",
+            "fb": "https://www.google.com/"
         },
         "r": "FE"
     },
@@ -15,9 +15,9 @@
         "role": "Front-end Developer",
         "about": "HTML, CSS, JavaScript, React.js. React Native.",
         "socialMedia": {
-            "ln": "",
-            "git": "",
-            "fb": ""
+            "ln": "https://www.linkedin.com/in/ajdin-zorlak-7a2038197/",
+            "git": "https://github.com/zorlakov",
+            "fb": "https://www.facebook.com/ajdin.zorlak.3"
         },
         "r": "FE"
     },
@@ -26,9 +26,9 @@
         "role": "Back-end Developer",
         "about": "C#, .NetCore, PostgreSQL. Entity Framework.",
         "socialMedia": {
-            "ln": "asd",
-            "git": "",
-            "fb": ""
+            "ln": "https://www.linkedin.com/in/merima-kova%C4%8Devi%C4%87-055b6b190/",
+            "git": "https://github.com/merimakovacevic",
+            "fb": "https://www.facebook.com/merima.kovacevic.75"
         },
         "r": "BE"
     },
@@ -37,9 +37,9 @@
         "role": "Back-end Developer",
         "about": "C#, .NetCore, PostgreSQL. Entity Framework.",
         "socialMedia": {
-            "ln": "asd",
-            "git": "",
-            "fb": ""
+            "ln": "https://www.linkedin.com/in/armin-odoba%C5%A1i%C4%87-7ab6a254/",
+            "git": "https://github.com/ArminOdobasic",
+            "fb": "https://www.facebook.com/armin.odobasic"
         },
         "r": "BE"
     },
@@ -48,9 +48,9 @@
         "role": "QA Engineer",
         "about": "Test planning. Unit testing. Integration testing.",
         "socialMedia": {
-            "ln": "asd",
-            "git": "",
-            "fb": ""
+            "ln": "https://www.linkedin.com/in/amilasikalo/",
+            "git": "https://github.com/asikalo2",
+            "fb": "https://www.facebook.com/amilashh?ref=br_rs"
         },
         "r": "QA"
     },
@@ -59,9 +59,9 @@
         "role": "Project manager",
         "about": "Agile methodology. SCRUM principles. Spotify.",
         "socialMedia": {
-            "ln": "asd",
-            "git": "",
-            "fb": ""
+            "ln": "https://www.linkedin.com/in/nadja-sisic/",
+            "git": "https://github.com/nsisic",
+            "fb": "https://www.facebook.com/nadja.sisic"
         },
         "r": "PM"
     }

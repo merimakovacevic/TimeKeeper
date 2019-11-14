@@ -1,17 +1,30 @@
 import React from "react";
+import { Switch, Route, withRouter } from "react-router-dom";
 
+import config from './config'
 import StaticPage from "./containers/StaticPage/StaticPage";
+import TimeKeeper from "./containers/TimeKeeper/TimeKeeper";
 
 class App extends React.Component {
-    state = {};
+  state = {};
 
-    render() {
-        return (
-            <React.Fragment>
-                <StaticPage />
-            </React.Fragment>
-        );
-    }
+  componentDidMount() {
+    console.log(config.token);
+    return config.token === "" ? this.props.history.push("/") : null;
+  }
+
+  render() {
+    return (
+      <Switch>
+        <Route exact path="/">
+          <StaticPage />
+        </Route>
+        <Route path="/app">
+          <TimeKeeper />
+        </Route>
+      </Switch>
+    );
+  }
 }
 
-export default App;
+export default withRouter(App);

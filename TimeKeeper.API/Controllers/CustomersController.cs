@@ -37,8 +37,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch(Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
         /// <summary>
@@ -58,25 +57,17 @@ namespace TimeKeeper.API.Controllers
             {
                 Logger.Info($"Try to fetch customer with id {id}");
                 Customer customer = Unit.Customers.Get(id);
-                if(customer == null)
-                {
-                    Logger.Error($"Customer with id {id} cannot be found");
-                    return NotFound();
-                }
-                else
-                {
-                    return Ok(customer.Create());
-                }
+
+                return Ok(customer.Create());                
             }
             catch(Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
 
         /// <summary>
-        /// This method inserts a new team
+        /// This method inserts a new customer
         /// </summary>
         /// <param name="customer">New customer that will be inserted</param>
         /// <returns>Model of inserted customer</returns>
@@ -89,7 +80,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                customer.Status = Unit.CustomerStatuses.Get(customer.Status.Id);
+                //customer.Status = Unit.CustomerStatuses.Get(customer.Status.Id);
 
                 Unit.Customers.Insert(customer);
                 Unit.Save();
@@ -99,7 +90,7 @@ namespace TimeKeeper.API.Controllers
             catch (Exception ex)
             {
                 Logger.Fatal(ex);
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -118,16 +109,17 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                customer.Status = Unit.CustomerStatuses.Get(customer.Status.Id);
+                //customer.Status = Unit.CustomerStatuses.Get(customer.Status.Id);
+                Logger.Info($"Attempt to update customer with id {id}");
                 Unit.Customers.Update(customer, id);
-                int numberOfChanges = Unit.Save();
-               Logger.Info($"Attempt to update customer with id {id}");
+                Unit.Save();
+                /*int numberOfChanges = Unit.Save();                
 
                 if (numberOfChanges == 0)
                 {
                     Logger.Error($"Customer with id {id} cannot be found");
                     return NotFound();
-                }
+                }*/
 
                 Logger.Info($"Customer {customer.Name} with id {customer.Id} updated");
                 return Ok(customer.Create());
@@ -135,7 +127,7 @@ namespace TimeKeeper.API.Controllers
             catch (Exception ex)
             {
                 Logger.Fatal(ex);
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -155,14 +147,16 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Unit.Customers.Delete(id);
-                int numberOfChanges = Unit.Save();
                 Logger.Info($"Attempt to delete customer with id {id}");
+                Unit.Customers.Delete(id);
+                Unit.Save();
+                /*int numberOfChanges = Unit.Save();
+                
                 if (numberOfChanges == 0)
                 {
                     Logger.Error($"Customer with id {id} cannot be found");
                     return NotFound();
-                }
+                }*/
 
                 Logger.Info($"Customer with id {id} deleted");
                 return NoContent();
@@ -170,7 +164,7 @@ namespace TimeKeeper.API.Controllers
             catch (Exception ex)
             {
                 Logger.Fatal(ex);
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
     }

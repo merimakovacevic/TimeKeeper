@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,13 +14,13 @@ using TimeKeeper.Domain.Entities;
 namespace TimeKeeper.API.Controllers
 {
     [Authorize(Roles = "admin")]
-    [Route("api/[controller]")]
     [ApiController]
     public class UsersController : BaseController
     {
         public UsersController(TimeKeeperContext context) : base(context) { }
 
         [HttpGet]
+        [Route("api/users")]
         public IActionResult Get()
         {
             try
@@ -37,13 +38,13 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }  
         }
 
         [AllowAnonymous]
         [HttpPost]
+        [Route("api/login")]
         public IActionResult Login([FromBody] User user)
         {
             try
@@ -63,9 +64,21 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
+
+        [AllowAnonymous]
+        [Route("api/logout")]
+        [HttpGet]
+        public async Task Logout()//asynchronous method that doesn't return a value. Task<IActionResult> returns a value
+        {
+            if(User.Identity.IsAuthenticated)
+            {
+                await HttpContext.SignOutAsync("Cookies");
+                await HttpContext.SignOutAsync("oidc");
+            }
+        }
+
     }
 }

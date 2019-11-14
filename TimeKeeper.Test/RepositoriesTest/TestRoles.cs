@@ -33,8 +33,8 @@ namespace TimeKeeper.Test.RepositoriesTest
         public void GetRoleByWrongId()
         {
             int id = 40; //Role with id doesn't exist in the test database
-            var result = unit.Roles.Get(id);
-            Assert.IsNull(result);
+            var ex = Assert.Throws<ArgumentException>(() => unit.Roles.Get(id));
+            Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");
         }
 
         
@@ -43,8 +43,8 @@ namespace TimeKeeper.Test.RepositoriesTest
         {
             Role role = new Role
             {
-                HourlyPrice=20,
-                MonthlyPrice=2000
+                HourlyPrice = 20,
+                MonthlyPrice = 2000
             };
             unit.Roles.Insert(role);
             int numberOfChanges = unit.Save();
@@ -55,12 +55,13 @@ namespace TimeKeeper.Test.RepositoriesTest
         [Test, Order(5)]
         public void ChangeRolesName()
         {
-            int id = 2;//Try to change the role with id
+            //Try to change the role with id
+            int id = 2;
             string name = "Backend developer";
             Role role = new Role
             {
                 Id = id,
-                Name=name
+                Name = name
             };
             unit.Roles.Update(role, id);
             int numberOfChanges = unit.Save();
@@ -69,39 +70,87 @@ namespace TimeKeeper.Test.RepositoriesTest
         }
 
 
-        [Test, Order(7)]
-        public void ChangeRoleWithWrongId()
+        [Test, Order(6)]
+        public void ChangeNonExistingRole()
         {
-            int id = 40;//Try to change the role with id (doesn't exist)
+            //Try to change the role with id (doesn't exist)
+            int id = 40;
             Role role = new Role
             {
                 Id = id,
-                HourlyPrice=20
+                HourlyPrice = 20
             };
-            unit.Roles.Update(role, id);
+
+            var ex = Assert.Throws<ArgumentException>(() => unit.Roles.Update(role, id));            
+            Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");
+            int numberOfChanges = unit.Save();
+            Assert.AreEqual(0, numberOfChanges);
+        }
+
+        [Test, Order(7)]
+        public void ChangeRoleWithWrongId()
+        {
+            //Try to change the role with a wrong id argument in update method
+            int id = 1;
+            int wrongId = 2;
+
+            Role role = new Role
+            {
+                Id = id,
+                HourlyPrice = 20
+            };
+
+            var ex = Assert.Throws<ArgumentException>(() => unit.Roles.Update(role, wrongId));
+            Assert.AreEqual(ex.Message, $"Error! Id of the sent object: {role.Id} and id in url: {wrongId} do not match");
+            int numberOfChanges = unit.Save();
+            Assert.AreEqual(0, numberOfChanges);
+        }
+
+        [Test, Order(8)]
+        public void DeleteRoleWithChildren()
+        {
+            int id = 2;//Try to delete the role with id
+
+            var ex = Assert.Throws<Exception>(() => unit.Roles.Delete(id));
+            Assert.AreEqual(ex.Message, "Object cannot be deleted because child objects are present");
             int numberOfChanges = unit.Save();
             Assert.AreEqual(0, numberOfChanges);
         }
 
         [Test, Order(9)]
-        public void DeleteRole()
-        {
-            int id = 2;//Try to delete the role with id
-
-            unit.Roles.Delete(id);
-            int numberOfChanges = unit.Save();
-            Assert.AreEqual(1, numberOfChanges);
-        }
-
-        [Test, Order(10)]
         public void DeleteRoleWithWrongId()
         {
             int id = 40;//Try to delete the role with id (doesn't exist)
 
-            unit.Roles.Delete(id);
+            var ex = Assert.Throws<ArgumentException>(() => unit.Roles.Delete(id));
+            Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");            
             int numberOfChanges = unit.Save();
             Assert.AreEqual(0, numberOfChanges);
         }
-        
+
+        [Test, Order(10)]
+        public void DeleteRole()
+        {
+            int id = 2;//Try to delete the role with id
+
+            Role role = unit.Roles.Get(id);
+
+            //first all child entities need to be deleted
+            //this list will be used for iteration
+            List<Member> roleMembers = role.Members.ToList();
+
+            foreach(Member member in roleMembers)
+            {
+                //role.Members.Remove(member);
+                unit.Members.Delete(member);                
+            }
+
+            unit.Roles.Delete(id);
+
+            int numberOfChanges = unit.Save();
+            //Two child entities and one parent entity will be deleted, making it 3 changes
+            Assert.AreEqual(3, numberOfChanges);
+        }
+
     }
 }

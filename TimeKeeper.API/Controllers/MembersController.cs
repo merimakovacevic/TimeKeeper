@@ -33,21 +33,12 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                //This is only neccessary if there is a team in the route
-                /*
-                TeamModel team = Unit.Teams.Get(teamId).Create();
-                if (team == null)
-                {
-                    //Log.LogError($"Team with id {teamId} cannot be found");
-                    return NotFound("Team not found");
-                }*/
                 Logger.Info("Try to get all members");
                 return Ok(Unit.Members.Get().ToList().Select(x => x.Create()).ToList());
             }
             catch(Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
 
@@ -66,28 +57,14 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                /*
-                Team team = Unit.Teams.Get(teamId);
-                //Log.LogInformation($"Try to get team with {teamId}");
-                if (team == null)
-                {
-                    //Log.LogError($"Team with id {teamId} cannot be found");
-                    return NotFound("Team not found");
-                }*/
                 Logger.Info($"Try to get member with {id}");
                 Member member = Unit.Members.Get(id);
 
-                if (member == null)
-                {
-                    Logger.Error($"Member with id {id} cannot be found");
-                    return NotFound();
-                }
                 return Ok(member.Create());
             }
             catch(Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
 
@@ -105,11 +82,6 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                member.Team = Unit.Teams.Get(member.Team.Id);
-                member.Employee = Unit.Employees.Get(member.Employee.Id);
-                member.Role = Unit.Roles.Get(member.Role.Id);
-                member.Status = Unit.MemberStatuses.Get(member.Status.Id);
-
                 Unit.Members.Insert(member);
                 Unit.Save();
                 Logger.Info($"Member {member.Employee.FirstName} added with id {member.Id}");
@@ -117,8 +89,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
 
@@ -137,29 +108,16 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                member.Team = Unit.Teams.Get(member.Team.Id);
-                member.Employee = Unit.Employees.Get(member.Employee.Id);
-                member.Role = Unit.Roles.Get(member.Role.Id);
-                member.Status = Unit.MemberStatuses.Get(member.Status.Id);
-
                 Unit.Members.Update(member, id);
-                int numberOfChanges = Unit.Save();
-
-                if(numberOfChanges == 0)
-                {
-                    Logger.Error($"Member with id {id} cannout be found");
-                    return NotFound();
-                }
+                Unit.Save();
 
                 Logger.Info($"Changed member with id {id}");
-
                 return Ok(member.Create());
             
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
 
@@ -179,22 +137,16 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Unit.Members.Delete(id);
                 Logger.Info($"Attempt to delete team with id {id}");
-                int numberOfChanges = Unit.Save();
+                Unit.Members.Delete(id); 
+                Unit.Save();
 
-                if (numberOfChanges == 0)
-                {
-                    Logger.Error($"Member with id {id} not found");
-                    return NotFound();
-                }
                 Logger.Info($"Deleted team with id {id}");
                 return NoContent();
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
     }

@@ -1,0 +1,39 @@
+.Background {
+    background-size: cover;
+    background: url("../../../assets/backgundWithEffect.png") no-repeat fixed center;
+    height: 100vh;
+}
+
+.HeadText {
+    width: 90%;
+    margin-bottom: 1rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    text-transform: uppercase;
+
+    font-weight: bold;
+    font-size: 2.5rem;
+    color: white;
+    transform: translate(-50%, -50%);
+}
+
+.DownArrow {
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 1rem;
+    width: 100%;
+    text-align: center;
+}
+
+@media only screen and (min-width: 500px) {
+    .HeadText {
+        font-size: 3rem;
+    }
+}
+@media only screen and (min-width: 768px) {
+    .HeadText {
+        font-size: 3.5rem;
+    }
+}
