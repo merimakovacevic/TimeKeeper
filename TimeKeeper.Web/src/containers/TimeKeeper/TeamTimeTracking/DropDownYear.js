@@ -36,21 +36,17 @@ function createData(name) {
   };
 }
 
-class DropDownMonth extends React.Component {
+class DropDownYear extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       labelWidth: 0,
-      selectedMonth: null
+      selectedYear: null
     };
     this.onClickDrop = this.onClickDrop.bind(this);
   }
 
   componentDidMount() {}
-
-  handleChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
 
   onClickDrop = name => event => {
     var value = event.target.value;
@@ -62,56 +58,34 @@ class DropDownMonth extends React.Component {
     console.log(this.state.selectedMonth);
   };
 
+  handleChange = event => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
+
   render() {
     const { classes } = this.props;
     let teams = this.state.teams;
     return (
       <form className={classes.root} autoComplete="off">
         <FormControl className={classes.formControl}>
-          <InputLabel htmlFor="age-simple">Month</InputLabel>
+          <InputLabel htmlFor="age-simple">Year</InputLabel>
           <Select
             name="selectOptions"
             onChange={this.onClickDrop("selectOptions")}
+            onClick={this.state.handlerYear}
             inputProps={{
               name: "age",
               id: "age-simple"
             }}
           >
-            <MenuItem key={1} value={1}>
-              {"January"}
+            <MenuItem key={2019} value={2019}>
+              {"2019"}
             </MenuItem>
-            <MenuItem key={2} value={2}>
-              {"February"}
+            <MenuItem key={2018} value={2018}>
+              {"2018"}
             </MenuItem>
-            <MenuItem key={3} value={3}>
-              {"March"}
-            </MenuItem>
-            <MenuItem key={4} value={4}>
-              {"April"}
-            </MenuItem>
-            <MenuItem key={5} value={5}>
-              {"May"}
-            </MenuItem>
-            <MenuItem key={6} value={6}>
-              {"June"}
-            </MenuItem>
-            <MenuItem key={7} value={7}>
-              {"July"}
-            </MenuItem>
-            <MenuItem key={8} value={8}>
-              {"August"}
-            </MenuItem>
-            <MenuItem key={9} value={9}>
-              {"September"}
-            </MenuItem>
-            <MenuItem key={10} value={10}>
-              {"October"}
-            </MenuItem>
-            <MenuItem key={11} value={11}>
-              {"November"}
-            </MenuItem>
-            <MenuItem key={12} value={12}>
-              {"December"}
+            <MenuItem key={2017} value={2017}>
+              {"2017"}
             </MenuItem>
           </Select>
         </FormControl>
@@ -120,7 +94,7 @@ class DropDownMonth extends React.Component {
   }
 }
 
-DropDownMonth.propTypes = {
+DropDownYear.propTypes = {
   classes: PropTypes.object.isRequired
 };
-export default withStyles(styles)(DropDownMonth);
+export default withStyles(styles)(DropDownYear);

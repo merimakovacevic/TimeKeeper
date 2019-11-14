@@ -23,6 +23,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import DropDown from "./DropDownTeam";
 import DropDownMonth from "./DropDownMonth";
 import IconButton from "@material-ui/core/IconButton";
+import DropDownYear from "./DropDownYear";
 
 let counter = 0;
 function createData(
@@ -77,16 +78,61 @@ const rows = [
 ];
 
 class EnhancedTable extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.handlerYear = this.handlerYear.bind(this);
+    this.handlerMonth = this.handlerMonth.bind(this);
+    this.handlerTeam = this.handlerTeam.bind(this);
+  }
+
   state = {
     loading: null,
     order: "asc",
     orderBy: "employee",
     selected: [],
     data: [],
+    selectedTeam: null,
+    selectedYear: null,
+    selectedMonth: null,
     rowsPerPage: 6,
     page: 0
   };
 
+  handlerMonth() {
+    this.setState({
+      selectedMonth: "1"
+    });
+  }
+
+  handlerYear() {
+    this.setState({
+      selectedYear: ""
+    });
+  }
+  handlerTeam() {
+    this.setState({
+      selectedTeam: "1"
+    });
+  }
+
+  onClickV = teamVal => {
+    this.setState({
+      selectedTeam: teamVal
+    });
+  };
+
+  onClickMonth = monthVal => {
+    this.setState({
+      selectedMonth: monthVal
+    });
+  };
+
+  onClickYear = yearVal => {
+    this.setState({
+      selectedYear: yearVal
+    });
+  };
   /* componentDidMount() {
         this.setState({ loading: true });
         axios(`${config.apiUrl}customers`, {
@@ -143,7 +189,13 @@ class EnhancedTable extends React.Component {
                   Team tracking
                 </Typography>
               </div>
-              <DropDown></DropDown> <DropDownMonth></DropDownMonth>
+
+              <DropDown onClickDrop={this.onClickV}></DropDown>
+
+              <DropDownMonth onClickDrop={this.onClickMonth}></DropDownMonth>
+
+              <DropDownYear onClickDrop={this.onClickYear}></DropDownYear>
+
               <div className={classes.spacer} />
               <div className={classes.actions}></div>
             </Toolbar>
