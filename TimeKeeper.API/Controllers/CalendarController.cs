@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TimeKeeper.API.Factory;
 using TimeKeeper.API.Models;
+using TimeKeeper.API.Services;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 
@@ -18,7 +19,11 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class CalendarController : BaseController
     {
-        public CalendarController(TimeKeeperContext context) : base(context) { }
+        protected TeamCalendarService teamCalendarService;
+        public CalendarController(TimeKeeperContext context) : base(context)
+        {
+            teamCalendarService = new TeamCalendarService(Unit);
+        }
 
         /// <summary>
         /// This method returns all days
@@ -189,6 +194,21 @@ namespace TimeKeeper.API.Controllers
                 }
                 Logger.Info($"Deleted day with id {id}");
                 return NoContent();
+            }
+            catch (Exception ex)
+            {
+                Logger.Fatal(ex);
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet("team-time-tracking/{teamId}/{year}/{month}")]
+        public IActionResult GetTimeTracking(int teamId, int year, int month)
+        {
+            try
+            {
+                return Ok(teamCalendarService.TeamMonthReport(teamId, month, year));
+                //return Ok(TeamCalendarService.TeamMonthReport(teamId, month, year));
             }
             catch (Exception ex)
             {
