@@ -1,31 +1,26 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TimeKeeper.API.Models;
+using TimeKeeper.API.Services;
 using TimeKeeper.DAL;
-using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Authorization
 {
-    public class IsUserThisMemberHandler : AuthorizationHandler<HasAccessToTeam>
+    public class CanEditMembersHandler : AuthorizationHandler<HasAccessToMembers>
     {
         protected UnitOfWork Unit;
-        public IsUserThisMemberHandler(TimeKeeperContext context)
+        public CanEditMembersHandler(TimeKeeperContext context)
         {
             Unit = new UnitOfWork(context);
         }
 
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, HasAccessToTeam requirement)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, HasAccessToMembers requirement)
         {
-            /*var role = context.User.Claims.FirstOrDefault(c => c.Type == "role").Value.ToString();
-            if (role == "admin" || role == "lead")
-            {
-                context.Succeed(requirement);
-                return Task.CompletedTask;
-            }*/
-
             var filterContext = context.Resource as AuthorizationFilterContext;
             if (filterContext == null)
             {
@@ -45,10 +40,11 @@ namespace TimeKeeper.API.Authorization
                 return Task.CompletedTask;
             }
 
-            Member member = Unit.Members.Get(memberId);
+            List<EmployeeModel> teamMembers = Unit.GetEmployeeTeamMembers(int.Parse(context.User.Claims.FirstOrDefault(c => c.Type == "sub").Value));
+            string userRole = context.User.Claims.FirstOrDefault(c => c.Type == "role").Value.ToString();
 
-            //User can only see 
-            if (member.Employee.Id == empId)
+            //Each employee can only view his team members (Member entity)
+            if (userRole == "lead" && teamMembers.Any(x => x.Id == memberId) && HttpMethods.IsPut(filterContext.HttpContext.Request.Method))
             {
                 context.Succeed(requirement);
                 return Task.CompletedTask;

@@ -39,7 +39,7 @@ namespace TimeKeeper.API
 
             services.AddAuthorization(o => 
             {
-                o.AddPolicy("IsMember", builder =>
+                o.AddPolicy("IsMemberInTeam", builder =>
                 {
                     builder.RequireAuthenticatedUser();
                     builder.AddRequirements(new HasAccessToTeam());
@@ -59,6 +59,11 @@ namespace TimeKeeper.API
                     builder.RequireAuthenticatedUser();
                     builder.AddRequirements(new HasAccessToProjects());
                 });
+                o.AddPolicy("IsMember", builder =>
+                {
+                    builder.RequireAuthenticatedUser();
+                    builder.AddRequirements(new HasAccessToMembers());
+                });
             });
 
             services.AddScoped<IAuthorizationHandler, IsMemberHandler>();
@@ -66,6 +71,7 @@ namespace TimeKeeper.API
             services.AddScoped<IAuthorizationHandler, IsLeadHandler>();
             services.AddScoped<IAuthorizationHandler, IsPersonHandler>();
             services.AddScoped<IAuthorizationHandler, IsMemberOnProjectHandler>();
+            services.AddScoped<IAuthorizationHandler, CanViewMembersHandler>();
             //Enables anonymous access to our application (IIS security is not used) o. AutomaticAuthentication = false
             services.Configure<IISOptions>(o =>
             {
