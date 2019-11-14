@@ -63,7 +63,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpGet("{id}")]
-        [Authorize(Policy = "IsMember")]
+        [Authorize(Policy = "IsMemberInTeam")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Get(int id)

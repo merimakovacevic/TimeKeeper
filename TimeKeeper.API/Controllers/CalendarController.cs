@@ -20,7 +20,8 @@ namespace TimeKeeper.API.Controllers
     public class CalendarController : BaseController
     {
         protected TeamCalendarService teamCalendarService;
-        public CalendarController(TimeKeeperContext context) : base(context) {
+        public CalendarController(TimeKeeperContext context) : base(context)
+        {
             teamCalendarService = new TeamCalendarService(Unit);
         }
 
@@ -199,6 +200,20 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
-        
+
+        [HttpGet("team-time-tracking/{teamId}/{year}/{month}")]
+        public IActionResult GetTimeTracking(int teamId, int year, int month)
+        {
+            try
+            {
+                return Ok(teamCalendarService.TeamMonthReport(teamId, month, year));
+                //return Ok(TeamCalendarService.TeamMonthReport(teamId, month, year));
+            }
+            catch (Exception ex)
+            {
+                Logger.Fatal(ex);
+                return BadRequest(ex);
+            }
+        }
     }
 }
