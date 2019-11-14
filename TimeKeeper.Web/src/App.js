@@ -1,10 +1,11 @@
 import React from "react";
 import { Switch, Route, withRouter } from "react-router-dom";
 
+import config from './config'
 import StaticPage from "./containers/StaticPage/StaticPage";
 import TimeKeeper from "./containers/TimeKeeper/TimeKeeper";
 
-import config from "./config";
+// import TeamsPage from './containers/TimeKeeper/TeamsPage/TeamsPage'
 class App extends React.Component {
   state = {};
 
@@ -17,7 +18,7 @@ class App extends React.Component {
     return (
       <Switch>
         <Route exact path="/">
-          {/* <Form /> */}
+          {/* <TeamsPage/> */}
           <StaticPage />
         </Route>
         <Route path="/app">

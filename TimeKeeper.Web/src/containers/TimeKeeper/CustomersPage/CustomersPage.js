@@ -66,7 +66,8 @@ class EnhancedTable extends React.Component {
     selected: [],
     data: [],
     rowsPerPage: 6,
-    page: 0
+    page: 0,
+    readOnly: true
   };
 
   componentDidMount() {
@@ -86,6 +87,26 @@ class EnhancedTable extends React.Component {
       .catch(err => this.setState({ loading: false }));
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    // only update chart if the data has changed
+    if (prevState.selectedId && !this.state.selectedId) {
+      this.setState({ loading: true });
+    axios(`${config.apiUrl}customers`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: config.token
+      }
+    })
+      .then(res => {
+        let fetchedData = res.data.map(r =>
+          createData(r.id, r.name, r.contactName, r.emailAddress, r.status)
+        );
+        this.setState({ data: fetchedData, loading: false });
+      })
+      .catch(err => this.setState({ loading: false }));
+    }
+  }
+
   handleRequestSort = property => {
     const orderBy = property;
     let order = "desc";
@@ -99,8 +120,8 @@ class EnhancedTable extends React.Component {
 
   handleChangePage = (event, page) => this.setState({ page });
 
-  handleOpen = value => {
-    this.setState({ open: true, selectedId: value });
+  handleOpen = (value, readOnly) => {
+    this.setState({ open: true, selectedId: value, readOnly: readOnly });
   };
 
   handleNewOpen = value => this.setState({ new: value });
@@ -119,7 +140,8 @@ class EnhancedTable extends React.Component {
       page,
       loading,
       open,
-      selectedId
+      selectedId,
+      readOnly
     } = this.state;
 
     return (
@@ -139,6 +161,7 @@ class EnhancedTable extends React.Component {
             open={open}
             handleClose={this.handleClose}
             id={selectedId}
+            readOnly={readOnly}
             new={this.state.new}
           />
         ) : (
@@ -154,7 +177,7 @@ class EnhancedTable extends React.Component {
                 <Tooltip title="Add">
                   <IconButton
                     aria-label="Add"
-                    onClick={() => this.handleOpen(666)}
+                    onClick={() => this.handleOpen(666, false)}
                   >
                     <AddIcon />
                   </IconButton>
@@ -213,6 +236,8 @@ class EnhancedTable extends React.Component {
                                 variant="outlined"
                                 size="small"
                                 color="primary"
+                                onClick={() => this.handleOpen(n.id, true)}
+                                
                               >
                                 View
                               </Button>
@@ -220,7 +245,7 @@ class EnhancedTable extends React.Component {
                                 variant="outlined"
                                 size="small"
                                 color="primary"
-                                onClick={() => this.handleOpen(n.id)}
+                                onClick={() => this.handleOpen(n.id, false)}
                               >
                                 Edit
                               </Button>

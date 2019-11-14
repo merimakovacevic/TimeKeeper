@@ -244,7 +244,7 @@ class EnhancedTable extends React.Component {
                           <TableCell>{n.phone}</TableCell>
                           <TableCell align="center">
                             {" "}
-                            <ButtonGroup>
+                            <ButtonGroup size='small' fullWidth>
                               <Button
                                 fullWidth
                                 onClick={() => this.handleOpen(n.id)}

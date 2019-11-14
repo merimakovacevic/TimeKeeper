@@ -3,8 +3,6 @@ import { withStyles } from "@material-ui/core/styles";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 
-import moment from "moment";
-
 import Input from "@material-ui/core/Input";
 import {
   Dialog,
@@ -71,12 +69,6 @@ const styles = theme => ({
   }
 });
 
-const test = membersData => {
-  let index = membersData.indexOf(",");
-  let team = membersData.substr(index + 1);
-
-  return team;
-};
 
 const statuses = [
   { id: 1, name: "Prospect" },
@@ -111,7 +103,7 @@ class Inputs extends React.Component {
         }
       })
         .then(res => {
-          console.log(res.data.projects);
+          console.log(res.data);
           this.setState({
             customer: res.data,
             rows: res.data.projects,
@@ -125,7 +117,7 @@ class Inputs extends React.Component {
   render() {
     const CustomInputComponent = props => (
       <Input
-        // required={true}
+        disabled={this.props.readOnly}
         fullWidth={true}
         className={classes.input}
         {...props}
@@ -134,7 +126,7 @@ class Inputs extends React.Component {
 
     const CustomStatusComponent = props => {
       return (
-        <Select fullWidth {...props} className={classes.input}>
+        <Select fullWidth {...props} className={classes.input} disabled={this.props.readOnly}>
           <MenuItem value={1}>Prospect</MenuItem>
           <MenuItem value={2}>Client</MenuItem>
         </Select>
@@ -160,11 +152,17 @@ class Inputs extends React.Component {
             onSubmit={values => {
               let newStatus = statuses.filter(s => values.status === s.id);
               values.status = newStatus[0];
-              console.log(values);
+
+              let address = {
+                street: values.homeAddress,
+                city: values.city
+              }
+               values.homeAddress = address
               delete values.city;
 
               if (customer) {
                 values.id = customer.id;
+                console.log(values);
                 axios
                   .put(
                     `${config.apiUrl}customers/${id}`,
@@ -188,7 +186,7 @@ class Inputs extends React.Component {
                   })
                   .catch(err => {
                     this.setState({ loading: false });
-                    console.log("error");
+                    
                   });
               }
             }}
