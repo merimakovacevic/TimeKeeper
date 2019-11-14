@@ -37,13 +37,15 @@ function createData(name) {
 }
 
 class DropDown extends React.Component {
-  state = {
-    age: "",
-    name: "hai",
-    labelWidth: 0,
-    teams: []
-  };
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      labelWidth: 0,
+      teams: [],
+      selectedId: null
+    };
+    this.onClickDrop = this.onClickDrop.bind(this);
+  }
   componentDidMount() {
     axios(`${config.apiUrl}teams`, {
       headers: {
@@ -65,6 +67,22 @@ class DropDown extends React.Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
+  /* onClickV = () => {
+    // var lang = this.dropdown.value;đž
+    var teamName = "sakkasd";
+    this.props.onClickDrop(teamName);
+  }; */
+
+  onClickDrop = name => event => {
+    var value = event.target.value;
+
+    this.setState({
+      selectedId: value
+    });
+    this.props.onClickDrop(value);
+    console.log(this.state.selectedId);
+  };
+
   render() {
     const { classes } = this.props;
     let teams = this.state.teams;
@@ -73,11 +91,10 @@ class DropDown extends React.Component {
         <FormControl className={classes.formControl}>
           <InputLabel htmlFor="age-simple">Team</InputLabel>
           <Select
-            onChange={this.handleChange}
-            inputProps={{
-              name: "age",
-              id: "age-simple"
-            }}
+            name="selectOptions"
+            onChange={this.onClickDrop("selectOptions")}
+            /*   onClick={() => this.props.onClickDrop(this.state.selectedId)} */
+            inputProps={{}}
           >
             {/* <MenuItem value={this.state.teams}>
               <em>None</em>

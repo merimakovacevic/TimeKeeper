@@ -23,6 +23,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import DropDown from "./DropDownTeam";
 import DropDownMonth from "./DropDownMonth";
 import IconButton from "@material-ui/core/IconButton";
+import DropDownYear from "./DropDownYear";
 
 let counter = 0;
 function createData(
@@ -77,32 +78,76 @@ const rows = [
 ];
 
 class EnhancedTable extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   state = {
     loading: null,
     order: "asc",
     orderBy: "employee",
     selected: [],
     data: [],
+    selectedTeam: null,
+    selectedYear: null,
+    selectedMonth: null,
     rowsPerPage: 6,
     page: 0
   };
 
-  /* componentDidMount() {
-        this.setState({ loading: true });
-        axios(`${config.apiUrl}customers`, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: config.token
-            }
+  onClickV = teamVal => {
+    this.setState({
+      selectedTeam: teamVal
+    });
+  };
+
+  onClickMonth = monthVal => {
+    this.setState({
+      selectedMonth: monthVal
+    });
+  };
+
+  onClickYear = yearVal => {
+    this.setState({
+      selectedYear: yearVal
+    });
+  };
+  componentDidUpdate() {
+    /*     this.setState({ loading: true });
+     */
+
+    if (
+      this.state.selectedTeam != null &&
+      this.state.selectedYear != null &&
+      this.state.selectedMonth != null
+    ) {
+      axios(
+        `http://192.168.60.71/timekeeper/api/calendar/team-time-tracking/${this.state.selectedTeam}/${this.state.selectedYear}/${this.state.selectedMonth}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Base c2FyYWhldjokY2gwMDE="
+          }
+        }
+      )
+        .then(res => {
+          let fetchedData = res.data.map(r =>
+            createData(
+              r.employee.name,
+              r.hourTypes.Workday,
+              r.hourTypes.Busines,
+              r.hourTypes.Holiday,
+              r.hourTypes.Vacation,
+              r.hourTypes.Sick,
+              r.hourTypes.Other
+            )
+          );
+          this.setState({ data: fetchedData, loading: false });
+          console.log(this.state.data);
         })
-            .then(res => {
-                let fetchedData = res.data.map(r =>
-                    createData(r.name, r.contactName, r.emailAddress, r.status)
-                );
-                this.setState({ data: fetchedData, loading: false });
-            })
-            .catch(err => this.setState({ loading: false }));
-    } */
+        .catch(err => this.setState({ loading: false }));
+    }
+  }
 
   handleRequestSort = property => {
     const orderBy = property;
@@ -143,7 +188,13 @@ class EnhancedTable extends React.Component {
                   Team tracking
                 </Typography>
               </div>
-              <DropDown></DropDown> <DropDownMonth></DropDownMonth>
+
+              <DropDown onClickDrop={this.onClickV}></DropDown>
+
+              <DropDownMonth onClickDrop={this.onClickMonth}></DropDownMonth>
+
+              <DropDownYear onClickDrop={this.onClickYear}></DropDownYear>
+
               <div className={classes.spacer} />
               <div className={classes.actions}></div>
             </Toolbar>
