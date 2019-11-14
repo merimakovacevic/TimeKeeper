@@ -12,10 +12,10 @@ using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Authorization
 {
-    public class IsLeadEmployeeHandler : AuthorizationHandler<HasAccessToEmployee>
+    public class HasAccessToEmployeeHandler : AuthorizationHandler<HasAccessToEmployee>
     {
         protected UnitOfWork Unit;
-        public IsLeadEmployeeHandler(TimeKeeperContext context)
+        public HasAccessToEmployeeHandler(TimeKeeperContext context)
         {
             Unit = new UnitOfWork(context);
         }
@@ -45,8 +45,8 @@ namespace TimeKeeper.API.Authorization
             int userId = int.Parse(context.User.Claims.FirstOrDefault(c => c.Type == "sub").Value.ToString());
             Employee employee = Unit.Employees.Get(employeeId);
 
-            //lead can edit only his employee data
-            if (userRole == "lead" && userId == employeeId && HttpMethods.IsPut(filterContext.HttpContext.Request.Method))
+            //lead and user can edit only his employee data
+            if (userId == employeeId && HttpMethods.IsPut(filterContext.HttpContext.Request.Method))
             {
                 context.Succeed(requirement);
                 return Task.CompletedTask;

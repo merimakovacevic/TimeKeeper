@@ -186,21 +186,7 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
-        /*
-        [HttpGet("team-time-tracking/{teamId}/{year}/{month}")]
-        public IActionResult GetTimeTracking(int teamId, int year, int month)
-        {
-            try
-            {
-                return Ok(TeamCalendarService.TeamMonthReport(teamId, month, year));
-                //return Ok(TeamCalendarService.TeamMonthReport(teamId, month, year));
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
-
+        
         [HttpGet("team-time-tracking/{teamId}/{year}/{month}")]
         public IActionResult GetTimeTracking(int teamId, int year, int month)
         {
@@ -211,8 +197,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
     }

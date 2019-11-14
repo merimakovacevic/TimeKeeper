@@ -69,7 +69,7 @@ namespace TimeKeeper.API
             services.AddScoped<IAuthorizationHandler, IsMemberHandler>();
             services.AddScoped<IAuthorizationHandler, IsAdminHandler>();
             services.AddScoped<IAuthorizationHandler, IsLeadHandler>();
-            services.AddScoped<IAuthorizationHandler, IsPersonHandler>();
+            //services.AddScoped<IAuthorizationHandler, IsPersonHandler>();
             services.AddScoped<IAuthorizationHandler, IsMemberOnProjectHandler>();
             services.AddScoped<IAuthorizationHandler, CanViewMembersHandler>();
             //Enables anonymous access to our application (IIS security is not used) o. AutomaticAuthentication = false
