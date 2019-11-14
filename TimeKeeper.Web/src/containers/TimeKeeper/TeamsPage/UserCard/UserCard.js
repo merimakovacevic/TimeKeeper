@@ -6,11 +6,12 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { fontSize } from '@material-ui/system';
 
 const styles = {
   card: {
-    width: 275,
-    minHeight: 275,
+    width: 200,
+    height: 225,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -22,7 +23,8 @@ const styles = {
     marginTop: '-2.5rem'
   },
   pos: {
-    textAlign: 'center'
+    textAlign: 'center',
+    fontSize: '1rem'
   },
   img: {
       height: '80%',
@@ -43,9 +45,7 @@ function SimpleCard(props) {
         <Typography variant="h5" component="h2" className={classes.pos} >
           {props.name}
         </Typography>
-        <Typography className={classes.pos} color="textSecondary" gutterBottom>
-          {props.role}
-        </Typography>
+        
       </CardContent>
      
     </Card>

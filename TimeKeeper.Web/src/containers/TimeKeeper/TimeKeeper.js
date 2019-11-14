@@ -27,6 +27,7 @@ import RestoreIcon from "@material-ui/icons/Restore";
 import EmployeesPage from "./EmployeesPage/EmployeesPage";
 import CustomersPage from "./CustomersPage/CustomersPage";
 import ProjectsPage from "./ProjectsPage/ProjectsPage";
+import TeamsPage from './TeamsPage/TeamsPage'
 
 const drawerWidth = 240;
 
@@ -252,6 +253,9 @@ class TimeKeeper extends React.Component {
                     </Route>
                     <Route path="/app/projects">
                         <ProjectsPage />
+                    </Route>
+                    <Route path="/app/teams">
+                        <TeamsPage />
                     </Route>
                 </main>
             </div>

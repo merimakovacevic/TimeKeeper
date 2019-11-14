@@ -1,43 +1,100 @@
 import React from 'react'
+import axios from 'axios'
+import classNames from "classnames";
+import Slider from "react-slick";
 
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import './TeamsPage.css'
+
+import { withStyles } from "@material-ui/core/styles";
+import { Backdrop } from "@material-ui/core";
+import styles from "../Styles/TableStyles";
+
+import config from "../../../config";
 import TeamCard from './TeamCard/TeamCard'
+import CircularProgress from "@material-ui/core/CircularProgress";
 import TeamDescription from './TeamDescription/TeamDescription'
 import UserCard from './UserCard/UserCard'
 
 class TeamsPage extends React.Component {
 state = {
-    teams: [
-        {id:1, teamName: 'Charlie', description: 'desc za charlie' }
-    ],
-    selectedTeam: {
-
-    },
-    members: [{
-        id: 1, name: 'Tajib', role: 'Front-End'
-    },{
-        id: 2, name: 'Tajib', role: 'Back-End'
-    },{
-        id: 3, name: 'Tajib', role: 'Front-End'
-    }]
+    loading: false,
+    data: null,
+    selectedTeamId: null,
+    selectedTeam: null
+}
+componentDidMount() {
+    this.setState({ loading: true });
+    axios(`${config.apiUrl}teams`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: config.token
+      }
+    })
+      .then(res => {
+        
+        this.setState({ data: res.data, loading: false });
+      })
+      .catch(err => this.setState({ loading: false }));
 }
 
+
 handleClick = (id) => {
-    let selectedTeam = this.state.teams.filter(t => t.id === id)
-    this.setState({selectedTeam: selectedTeam[0]})
+   
+    axios(`${config.apiUrl}teams/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: config.token
+      }
+    })
+      .then(res => {
+        console.log(res)
+        this.setState({ selectedTeam: res.data });
+      })
+      .catch(err => {});
 }
 
     render() {
-        return <div>
-       
-            <TeamDescription/>
-           
+        const {classes} = this.props
+        const {loading, data}= this.state
+
+        let settings = {
+            dots: true,
+            infinite: true,
+            speed: 1000,
+            slidesToShow: 3,
+            slidesToScroll: 1
+            
+        };
+
+        return <React.Fragment>
+        {loading ? <Backdrop open={loading}>
+            <div className={classNames(classes.center)}>
+              <CircularProgress
+                size={100}
+                className={classNames(classes.loader)}
+              />
+              <h1 className={classNames(classes.loaderText)}>Loading...</h1>
+            </div>
+            
 
 
-            {this.state.teams.map(t => <TeamCard key={t.id} id={t.id}  handleClick={this.handleClick} />)}
-        </div>
+          </Backdrop> : data ? <div>
+          <div style={{width: '70vw', height: '50%', margin: 'auto', marginTop: '2rem'}}>
+              <Slider {...settings}>{data.map(d => <div key={d.id} id={d.id} name={d.name} description={d.description} onClick={() => this.handleClick(d.id)} ><TeamCard key={d.id} id={d.id} name={d.name} onCLick={() => this.handleClick(d.id)} /></div>)}</Slider>
+
+              <div style={{width: '50vw', height: '100', margin: 'auto', marginTop: '2rem'}}>
+              <Slider {...settings}>{this.state.selectedTeam ? this.state.selectedTeam.members.map(s => <UserCard key={s.id} name={s.name} ></UserCard>) : null } </Slider>
+      </div>
+
+            </div>
+          </div> : null}
+
+
+            
+        </React.Fragment>
     }
 }
 
-export default TeamsPage
-
-// {this.state.teams.members.map(m => <UserCard key={m.id} role={m.role} name={m.name} />)}
+export default withStyles(styles)(TeamsPage);

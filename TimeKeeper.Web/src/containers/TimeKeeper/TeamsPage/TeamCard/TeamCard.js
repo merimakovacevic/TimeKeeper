@@ -10,15 +10,16 @@ import Typography from '@material-ui/core/Typography';
 const styles = {
   card: {
     width: 275,
-    height: 275,
+    height: 300,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     position: 'relative',
-    justifyContent: 'center'
+    margin: 'auto'
   },  
   name: {
-    marginTop: '-2.5rem'
+    textAlign: 'center',
+    marginBottom: '2rem'
   },
   pos: {
     position: 'absolute',
@@ -26,8 +27,15 @@ const styles = {
   },
 };
 
-function SimpleCard(props) {
-  const { classes, handleClick, id } = props;
+class  SimpleCard extends React.Component {
+state={
+  selectedTeam: null
+}
+
+
+
+  render(){
+  const { classes, click, id, name, description } = this.props;
   
 
   return (
@@ -35,16 +43,18 @@ function SimpleCard(props) {
       <CardContent>
         
         <Typography variant="h5" component="h2" className={classes.name}>
-          Team Name
+          {name}
         </Typography>
        
+
+  <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deserunt facere ullam quasi odio neque dolore, facilis necessitatibus eos? Expedita tempora consectetur maxime eligendi mollitia, eos saepe laboriosam soluta natus. Aliquid?</p>
       </CardContent>
       <CardActions className={classes.pos}>
-        <Button size="small" onClick={() => handleClick(id)} >Learn More</Button>
+        <Button size="small" >Learn More</Button>
       </CardActions>
     </Card>
   );
-}
+}}
 
 
 export default withStyles(styles)(SimpleCard);
