@@ -12,6 +12,7 @@ using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Controllers
 {
+    [Authorize]
     //Will the route for this Controller require refactoring? Employees/{id}/Calendar/{id}/Tasks?
     [Authorize]
     [Route("api/[controller]")]
