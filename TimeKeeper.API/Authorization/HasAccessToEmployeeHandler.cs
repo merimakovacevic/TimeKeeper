@@ -12,10 +12,10 @@ using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Authorization
 {
-    public class IsLeadEmployeeHandler : AuthorizationHandler<HasAccessToEmployee>
+    public class HasAccessToEmployeeHandler : AuthorizationHandler<HasAccessToEmployee>
     {
         protected UnitOfWork Unit;
-        public IsLeadEmployeeHandler(TimeKeeperContext context)
+        public HasAccessToEmployeeHandler(TimeKeeperContext context)
         {
             Unit = new UnitOfWork(context);
         }

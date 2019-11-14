@@ -34,18 +34,8 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                int userId = int.Parse(GetUserClaim("sub"));
-                string userRole = GetUserClaim("role");
-
-                if (userRole == "admin" || userRole=="lead")
-                {
-                    Logger.Info($"Try to fetch all employees");
-                    return Ok(Unit.Employees.Get().ToList().Select(x => x.Create()).ToList());
-                }
-                else
-                {
-                    return Ok(Unit.GetEmployeeTeamMembers(userId));
-                }
+                Logger.Info($"Try to fetch all employees");
+                return Ok(Unit.Employees.Get().ToList().Select(x => x.Create()).ToList());
             }
             catch (Exception ex)
             {
@@ -61,7 +51,6 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpGet("{id}")]
-        [Authorize(Policy ="IsEmployee")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Get(int id)
@@ -70,13 +59,6 @@ namespace TimeKeeper.API.Controllers
             {
                 Logger.Info($"Try to fetch employee with id {id}");
                 Employee employee = Unit.Employees.Get(id);
-                
-                /*if (employee == null)
-                {
-                    Logger.Error($"Employee with id {id} cannot be found");
-                    return NotFound();
-                }*/
-
                  return Ok(employee.Create());                
             }
             catch (Exception ex)
