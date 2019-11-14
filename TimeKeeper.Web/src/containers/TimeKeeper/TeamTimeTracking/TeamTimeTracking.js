@@ -80,10 +80,6 @@ const rows = [
 class EnhancedTable extends React.Component {
   constructor(props) {
     super(props);
-
-    this.handlerYear = this.handlerYear.bind(this);
-    this.handlerMonth = this.handlerMonth.bind(this);
-    this.handlerTeam = this.handlerTeam.bind(this);
   }
 
   state = {
@@ -98,23 +94,6 @@ class EnhancedTable extends React.Component {
     rowsPerPage: 6,
     page: 0
   };
-
-  handlerMonth() {
-    this.setState({
-      selectedMonth: "1"
-    });
-  }
-
-  handlerYear() {
-    this.setState({
-      selectedYear: ""
-    });
-  }
-  handlerTeam() {
-    this.setState({
-      selectedTeam: "1"
-    });
-  }
 
   onClickV = teamVal => {
     this.setState({
@@ -133,22 +112,42 @@ class EnhancedTable extends React.Component {
       selectedYear: yearVal
     });
   };
-  /* componentDidMount() {
-        this.setState({ loading: true });
-        axios(`${config.apiUrl}customers`, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: config.token
-            }
+  componentDidUpdate() {
+    /*     this.setState({ loading: true });
+     */
+
+    if (
+      this.state.selectedTeam != null &&
+      this.state.selectedYear != null &&
+      this.state.selectedMonth != null
+    ) {
+      axios(
+        `http://192.168.60.71/timekeeper/api/calendar/team-time-tracking/${this.state.selectedTeam}/${this.state.selectedYear}/${this.state.selectedMonth}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Base c2FyYWhldjokY2gwMDE="
+          }
+        }
+      )
+        .then(res => {
+          let fetchedData = res.data.map(r =>
+            createData(
+              r.employee.name,
+              r.hourTypes.Workday,
+              r.hourTypes.Busines,
+              r.hourTypes.Holiday,
+              r.hourTypes.Vacation,
+              r.hourTypes.Sick,
+              r.hourTypes.Other
+            )
+          );
+          this.setState({ data: fetchedData, loading: false });
+          console.log(this.state.data);
         })
-            .then(res => {
-                let fetchedData = res.data.map(r =>
-                    createData(r.name, r.contactName, r.emailAddress, r.status)
-                );
-                this.setState({ data: fetchedData, loading: false });
-            })
-            .catch(err => this.setState({ loading: false }));
-    } */
+        .catch(err => this.setState({ loading: false }));
+    }
+  }
 
   handleRequestSort = property => {
     const orderBy = property;

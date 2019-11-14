@@ -55,7 +55,6 @@ class DropDownYear extends React.Component {
       selectedMonth: value
     });
     this.props.onClickDrop(value);
-    console.log(this.state.selectedMonth);
   };
 
   handleChange = event => {
