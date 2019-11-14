@@ -110,15 +110,16 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 //customer.Status = Unit.CustomerStatuses.Get(customer.Status.Id);
+                Logger.Info($"Attempt to update customer with id {id}");
                 Unit.Customers.Update(customer, id);
-                int numberOfChanges = Unit.Save();
-               Logger.Info($"Attempt to update customer with id {id}");
+                Unit.Save();
+                /*int numberOfChanges = Unit.Save();                
 
                 if (numberOfChanges == 0)
                 {
                     Logger.Error($"Customer with id {id} cannot be found");
                     return NotFound();
-                }
+                }*/
 
                 Logger.Info($"Customer {customer.Name} with id {customer.Id} updated");
                 return Ok(customer.Create());
@@ -146,14 +147,16 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Unit.Customers.Delete(id);
-                int numberOfChanges = Unit.Save();
                 Logger.Info($"Attempt to delete customer with id {id}");
+                Unit.Customers.Delete(id);
+                Unit.Save();
+                /*int numberOfChanges = Unit.Save();
+                
                 if (numberOfChanges == 0)
                 {
                     Logger.Error($"Customer with id {id} cannot be found");
                     return NotFound();
-                }
+                }*/
 
                 Logger.Info($"Customer with id {id} deleted");
                 return NoContent();

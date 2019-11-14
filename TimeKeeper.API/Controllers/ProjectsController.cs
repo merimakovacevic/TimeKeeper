@@ -56,18 +56,16 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Project project = Unit.Projects.Get(id);
                 Logger.Info($"Try to fetch project with id {id}");
+                Project project = Unit.Projects.Get(id);                
 
-                if (project == null)
+                /*if (project == null)
                 {
                     Logger.Error($"Project with id {id} cannot be found");
                     return NotFound();
-                }
-                else
-                {
-                    return Ok(project.Create());
-                }
+                }*/
+
+                return Ok(project.Create());                
             }
             catch (Exception ex)
             {
@@ -120,21 +118,23 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-/*                project.Team = Unit.Teams.Get(project.Team.Id);
+                /*project.Team = Unit.Teams.Get(project.Team.Id);
                 project.Customer = Unit.Customers.Get(project.Customer.Id);
                 project.Status = Unit.ProjectStatuses.Get(project.Status.Id);
                 project.Pricing = Unit.PricingStatuses.Get(project.Pricing.Id);*/
 
+                Logger.Info($"Attempt to update project with id {id}");
                 Unit.Projects.Update(project, id);
 
-                int numberOfChanges = Unit.Save();
-                Logger.Info($"Attempt to update project with id {id}");
+                Unit.Save();
+
+                /*int numberOfChanges = Unit.Save();                
 
                 if (numberOfChanges == 0)
                 {
                     Logger.Error($"Project with id {id} cannot be found");
                     return NotFound();
-                }
+                }*/
 
                 Logger.Info($"Project {project.Name} with id {project.Id} updated");
                 return Ok(project.Create());
@@ -161,16 +161,18 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Unit.Projects.Delete(id);
-
-                int numberOfChanges = Unit.Save();
                 Logger.Info($"Attempt to delete project with id {id}");
+                Unit.Projects.Delete(id);
+                Unit.Save();
+
+                /*
+                int numberOfChanges = Unit.Save();                
 
                 if (numberOfChanges == 0)
                 {
                     Logger.Error($"Project with id {id} cannot be found");
                     return NotFound();
-                }
+                }*/
 
                 Logger.Info($"Project with id {id} deleted");
                 return NoContent();

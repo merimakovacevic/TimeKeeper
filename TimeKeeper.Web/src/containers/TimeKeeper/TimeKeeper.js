@@ -27,240 +27,287 @@ import RestoreIcon from "@material-ui/icons/Restore";
 import EmployeesPage from "./EmployeesPage/EmployeesPage";
 import CustomersPage from "./CustomersPage/CustomersPage";
 import ProjectsPage from "./ProjectsPage/ProjectsPage";
+import TeamTimeTracking from "./TeamTimeTracking/TeamTimeTracking";
 import TeamsPage from './TeamsPage/TeamsPage'
 
 const drawerWidth = 240;
 
 const styles = theme => ({
-    root: {
-        display: "flex"
-    },
-    appBar: {
-        zIndex: theme.zIndex.drawer + 1,
-        transition: theme.transitions.create(["width", "margin"], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen
-        }),
-        backgroundColor: "#525A65"
-    },
-    appBarShift: {
-        marginLeft: drawerWidth,
-        width: `calc(100% - ${drawerWidth}px)`,
-        transition: theme.transitions.create(["width", "margin"], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen
-        })
-    },
-    menuButton: {
-        marginLeft: 12,
-        marginRight: 36
-    },
-    hide: {
-        display: "none"
-    },
-    drawer: {
-        width: drawerWidth,
-        flexShrink: 0,
-        whiteSpace: "nowrap"
-    },
-    drawerOpen: {
-        width: drawerWidth,
-        transition: theme.transitions.create("width", {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen
-        })
-    },
-    drawerClose: {
-        transition: theme.transitions.create("width", {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen
-        }),
-        overflowX: "hidden",
-        width: theme.spacing(7) + 1,
-        [theme.breakpoints.up("sm")]: {
-            width: theme.spacing(9) + 1
-        }
-    },
-    toolbar: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "flex-end",
-        padding: "0 8px",
-        ...theme.mixins.toolbar
-    },
-    content: {
-        flexGrow: 1
-        // padding: theme.spacing(3)
+  root: {
+    display: "flex"
+  },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(["width", "margin"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen
+    }),
+    backgroundColor: "#525A65"
+  },
+  appBarShift: {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(["width", "margin"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen
+    })
+  },
+  menuButton: {
+    marginLeft: 12,
+    marginRight: 36
+  },
+  hide: {
+    display: "none"
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+    whiteSpace: "nowrap"
+  },
+  drawerOpen: {
+    width: drawerWidth,
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen
+    })
+  },
+  drawerClose: {
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen
+    }),
+    overflowX: "hidden",
+    width: theme.spacing(7) + 1,
+    [theme.breakpoints.up("sm")]: {
+      width: theme.spacing(9) + 1
     }
+  },
+  toolbar: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    padding: "0 8px",
+    ...theme.mixins.toolbar
+  },
+  content: {
+    flexGrow: 1
+    // padding: theme.spacing(3)
+  }
 });
 
 class TimeKeeper extends React.Component {
-    state = {
-        database: ["Employees", "Teams", "Customers", "Projects"],
-        reports: [
-            "Personal Report",
-            "Monthly Report",
-            "Annual Report",
-            "Project History",
-            "Dashboard"
-        ],
-        open: false,
-        anchorDbEl: null,
-        anchorSrEl: null,
-        test: ""
-    };
+  state = {
+    database: ["Employees", "Teams", "Customers", "Projects"],
+    teamTracking: ["Team Tracking"],
+    reports: [
+      "Personal Report",
+      "Monthly Report",
+      "Annual Report",
+      "Project History",
+      "Dashboard"
+    ],
+    open: false,
+    anchorDbEl: null,
+    anchorSrEl: null,
+    anchorTeamEl: null,
+    test: ""
+  };
 
-    handleDrawerOpen = () => {
-        this.setState({ open: true });
-    };
+  handleDrawerOpen = () => {
+    this.setState({ open: true });
+  };
 
-    handleDrawerClose = () => {
-        this.setState({ open: false });
-    };
+  handleDrawerClose = () => {
+    this.setState({ open: false });
+  };
 
-    handleDbClick = event => {
-        this.setState({ anchorDbEl: event.currentTarget });
-    };
-    handleSrClick = event => {
-        this.setState({ anchorSrEl: event.currentTarget });
-    };
+  handleDbClick = event => {
+    this.setState({ anchorDbEl: event.currentTarget });
+  };
+  handleSrClick = event => {
+    this.setState({ anchorSrEl: event.currentTarget });
+  };
 
-    handleClose = event => {
-        this.setState({
-            anchorDbEl: null,
-            anchorSrEl: null,
-            test: event.currentTarget.id.toLowerCase()
-        });
-        this.props.history.push(`/app/${event.currentTarget.id.toLowerCase()}`);
-    };
+  handleTeamClick = event => {
+    this.setState({ anchorTeamEl: event.currentTarget });
+  };
 
-    render() {
-        const { classes, theme } = this.props;
-        const { open, anchorDbEl, anchorSrEl, reports, database } = this.state;
-        const {
-            handleDrawerOpen,
-            handleDrawerClose,
-            handleSrClick,
-            handleDbClick,
-            handleClose
-        } = this;
+  handleClose = event => {
+    this.setState({
+      anchorDbEl: null,
+      anchorSrEl: null,
+      anchorTeamEl: null,
+      test: event.currentTarget.id.toLowerCase()
+    });
+    this.props.history.push(`/app/${event.currentTarget.id.toLowerCase()}`);
+  };
 
-        return (
-            <div className={classes.root}>
-                <CssBaseline />
-                <AppBar
-                    position="fixed"
-                    className={classNames(classes.appBar, {
-                        [classes.appBarShift]: open
-                    })}
+  render() {
+    const { classes, theme } = this.props;
+    const {
+      open,
+      anchorDbEl,
+      anchorSrEl,
+      anchorTeamEl,
+      reports,
+      database,
+      teamTracking
+    } = this.state;
+    const {
+      handleDrawerOpen,
+      handleDrawerClose,
+      handleSrClick,
+      handleDbClick,
+      handleTeamClick,
+      handleClose
+    } = this;
+
+    return (
+      <div className={classes.root}>
+        <CssBaseline />
+        <AppBar
+          position="fixed"
+          className={classNames(classes.appBar, {
+            [classes.appBarShift]: open
+          })}
+        >
+          <Toolbar disableGutters={!open}>
+            <IconButton
+              color="inherit"
+              aria-label="Open drawer"
+              onClick={handleDrawerOpen}
+              className={classNames(classes.menuButton, {
+                [classes.hide]: open
+              })}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" color="inherit" noWrap>
+              {this.state.test + " Page"}
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          variant="permanent"
+          className={classNames(classes.drawer, {
+            [classes.drawerOpen]: open,
+            [classes.drawerClose]: !open
+          })}
+          classes={{
+            paper: classNames({
+              [classes.drawerOpen]: open,
+              [classes.drawerClose]: !open
+            })
+          }}
+          open={open}
+        >
+          <div className={classes.toolbar}>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === "rtl" ? (
+                <ChevronRightIcon />
+              ) : (
+                <ChevronLeftIcon />
+              )}
+            </IconButton>
+          </div>
+          <Divider />
+          <List>
+            <ListItem button aria-haspopup="true" onClick={handleDbClick}>
+              <ListItemIcon>
+                <StorageIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Database"} />
+            </ListItem>
+            <Menu
+              id="simple-menu"
+              onClose={handleClose}
+              anchorEl={anchorDbEl}
+              open={Boolean(anchorDbEl)}
+              style={{ left: open ? 150 : 35 }}
+            >
+              {" "}
+              {database.map((m, i) => (
+                <MenuItem id={m} key={i} onClick={handleClose}>
+                  {m}
+                </MenuItem>
+              ))}
+            </Menu>
+          </List>
+          <Divider />
+          <List>
+            <ListItem button aria-haspopup="true" onClick={handleTeamClick}>
+              <ListItemIcon>
+                <RestoreIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Team Tracking"} />
+            </ListItem>
+            <Menu
+              id="simple-menu"
+              onClose={handleClose}
+              anchorEl={anchorTeamEl}
+              open={Boolean(anchorTeamEl)}
+              style={{ left: open ? 150 : 35 }}
+            >
+              {" "}
+              {teamTracking.map((m, i) => (
+                <MenuItem
+                  id={m.replace(" ", "-")}
+                  key={i}
+                  onClick={handleClose}
                 >
-                    <Toolbar disableGutters={!open}>
-                        <IconButton
-                            color="inherit"
-                            aria-label="Open drawer"
-                            onClick={handleDrawerOpen}
-                            className={classNames(classes.menuButton, {
-                                [classes.hide]: open
-                            })}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography variant="h6" color="inherit" noWrap>
-                            {this.state.test + " Page"}
-                        </Typography>
-                    </Toolbar>
-                </AppBar>
-                <Drawer
-                    variant="permanent"
-                    className={classNames(classes.drawer, {
-                        [classes.drawerOpen]: open,
-                        [classes.drawerClose]: !open
-                    })}
-                    classes={{
-                        paper: classNames({
-                            [classes.drawerOpen]: open,
-                            [classes.drawerClose]: !open
-                        })
-                    }}
-                    open={open}
+                  {m}
+                </MenuItem>
+              ))}
+            </Menu>
+          </List>
+          <Divider />
+          <List>
+            <ListItem button aria-haspopup="true" onClick={handleSrClick}>
+              <ListItemIcon>
+                <DescriptionIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Reports"} />
+            </ListItem>
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorSrEl}
+              open={Boolean(anchorSrEl)}
+              onClose={handleClose}
+              style={{ left: open ? 150 : 35 }}
+            >
+              {reports.map((m, i) => (
+                <MenuItem
+                  id={m.replace(" ", "-")}
+                  key={i}
+                  onClick={handleClose}
                 >
-                    <div className={classes.toolbar}>
-                        <IconButton onClick={handleDrawerClose}>
-                            {theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-                        </IconButton>
-                    </div>
-                    <Divider />
-                    <List>
-                        <ListItem button aria-haspopup="true" onClick={handleDbClick}>
-                            <ListItemIcon>
-                                <StorageIcon />
-                            </ListItemIcon>
-                            <ListItemText primary={"Database"} />
-                        </ListItem>
-                        <Menu
-                            id="simple-menu"
-                            anchorEl={anchorDbEl}
-                            open={Boolean(anchorDbEl)}
-                            style={{ left: open ? 150 : 35 }}
-                        >
-                            {" "}
-                            {database.map((m, i) => (
-                                <MenuItem id={m} key={i} onClick={handleClose}>
-                                    {m}
-                                </MenuItem>
-                            ))}
-                        </Menu>
-                    </List>
-                    <Divider />
-                    <List>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <RestoreIcon />
-                            </ListItemIcon>
-                            <ListItemText primary={"Time Tracking"} />
-                        </ListItem>
-                    </List>
-                    <Divider />
-                    <List>
-                        <ListItem button aria-haspopup="true" onClick={handleSrClick}>
-                            <ListItemIcon>
-                                <DescriptionIcon />
-                            </ListItemIcon>
-                            <ListItemText primary={"Reports"} />
-                        </ListItem>
-                        <Menu
-                            id="simple-menu"
-                            anchorEl={anchorSrEl}
-                            open={Boolean(anchorSrEl)}
-                            onClose={handleClose}
-                            style={{ left: open ? 150 : 35 }}
-                        >
-                            {reports.map((m, i) => (
-                                <MenuItem id={m.replace(" ", "-")} key={i} onClick={handleClose}>
-                                    {m}
-                                </MenuItem>
-                            ))}
-                        </Menu>
-                    </List>
-                </Drawer>
-                <main className={classes.content}>
-                    <div className={classes.toolbar} />
-                    <Route path="/app/employees">
-                        <EmployeesPage />
-                    </Route>
-                    <Route path="/app/customers">
-                        <CustomersPage />
-                    </Route>
-                    <Route path="/app/projects">
-                        <ProjectsPage />
-                    </Route>
-                    <Route path="/app/teams">
-                        <TeamsPage />
-                    </Route>
-                </main>
-            </div>
-        );
-    }
+                  {m}
+                </MenuItem>
+              ))}
+            </Menu>
+          </List>
+        </Drawer>
+        <main className={classes.content}>
+          <div className={classes.toolbar} />
+          <Route path="/app/employees">
+            <EmployeesPage />
+          </Route>
+          <Route path="/app/teams">
+            <TeamsPage />
+          </Route>
+          <Route path="/app/customers">
+            <CustomersPage />
+          </Route>
+          <Route path="/app/projects">
+            <ProjectsPage />
+          </Route>
+          <Route path="/app/team-tracking">
+            <TeamTimeTracking />
+          </Route>
+        </main>
+      </div>
+    );
+  }
 }
 
 export default withStyles(styles, { withTheme: true })(withRouter(TimeKeeper));

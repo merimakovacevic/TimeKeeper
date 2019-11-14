@@ -137,10 +137,10 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Unit.Members.Delete(id);
                 Logger.Info($"Attempt to delete team with id {id}");
-
+                Unit.Members.Delete(id); 
                 Unit.Save();
+
                 Logger.Info($"Deleted team with id {id}");
                 return NoContent();
             }

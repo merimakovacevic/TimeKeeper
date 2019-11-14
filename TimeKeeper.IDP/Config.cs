@@ -26,7 +26,7 @@ namespace TimeKeeper.IDP
                         new Claim("family_name", "Doe"),
                         new Claim("role", "user"),
                         new Claim("address", "Sarajevo"),
-                        new Claim("team", "alpha")
+                        new Claim("team", "Alpha")
                     }
                 },
                 new TestUser
@@ -40,7 +40,7 @@ namespace TimeKeeper.IDP
                         new Claim("family_name", "Doe"),
                         new Claim("role", "admin"),
                         new Claim("address", "Mostar"),
-                        new Claim("team", "bravo")
+                        new Claim("team", "Bravo")
                     }
                 }
             };
@@ -54,7 +54,7 @@ namespace TimeKeeper.IDP
                 new IdentityResources.Profile(),
                 new IdentityResources.Address(),
                 new IdentityResource("roles", "Your roles", new List<string> { "role" }),
-                new IdentityResource("teams", "Your teams", new List<string> { "team" })
+                new IdentityResource("teams", "Your engagement(s)", new List<string> { "team" })
             };
         }
 

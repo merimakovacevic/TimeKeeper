@@ -36,14 +36,8 @@ const login = props => {
           .post(`${config.apiUrl}users`, values)
           .then(res => {
             config.token = "Basic " + res.data.base64;
-            config.authHeader = {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: config.token
-              }
-            };
             loginHandler(false);
-
+            loginHandler(true);
             props.history.replace("/app");
           })
           .catch(err => {
@@ -63,6 +57,7 @@ const login = props => {
                 <div className={classes.ErrorMessage}> &nbsp; </div>
               )}
               <Field
+                id="usernameLogin"
                 name="username"
                 autoComplete="off"
                 placeholder="Username"
@@ -74,6 +69,7 @@ const login = props => {
                 <div className={classes.ErrorMessage}> &nbsp; </div>
               )}
               <Field
+                id="passwordLogin"
                 placeholder="Password"
                 autoComplete="off"
                 name="password"
@@ -82,11 +78,13 @@ const login = props => {
               />
 
               <Button
+                id="staticLoginButton"
                 variant="contained"
                 color="primary"
                 fullWidth
                 type="submit"
                 className={classes.Button}
+                id="loginButton"
                 disabled={loading ? true : false}
               >
                 {props.loading ? (
