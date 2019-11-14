@@ -78,84 +78,49 @@ const test = membersData => {
   return team;
 };
 
-const positions = [
-  { id: 1, name: "Chief Executive Officer" },
-  { id: 2, name: "Chief Technical Officer" },
-  { id: 3, name: "Chief Operations Officer" },
-  { id: 4, name: "Manager" },
-  { id: 5, name: "HR Manager" },
-  { id: 6, name: "Developer" },
-  { id: 7, name: "UI/UX Designer" },
-  { id: 8, name: "QA Enginee" }
-];
-
 const statuses = [
-  { id: 1, name: "Waiting for the task" },
-  { id: 2, name: "Active" },
-  { id: 3, name: "On hold" },
-  { id: 4, name: "Leaver" }
+  { id: 1, name: "Prospect" },
+  { id: 2, name: "Client" }
 ];
 
 const Schema = Yup.object().shape({
-  salary: Yup.number().required("Salary can't be empty!"),
-  firstName: Yup.string()
-    .min(2, "First Name too short!")
-    .max(32, "First Name too long!")
-    .required("First Name can't be empty!"),
-  lastName: Yup.string()
-    .min(2, "Last Name too short!")
-    .max(32, "Last Name too long!")
-    .required("Last Name can't be empty!"),
-  email: Yup.string().required("Email can't be empty!"),
-  phone: Yup.string().required("Phone Number can't be empty!"),
-  birthday: Yup.string().required("Birth Date can't be empty!"),
-  employmentBeginDate: Yup.string().required(
-    "Employment Begin Date can't be empty!"
-  ),
-  employmentEndDate: Yup.string().required(
-    "Employment End Date can't be empty!"
-  ),
-  position: Yup.string().required("Job Title can't be empty!"),
+  name: Yup.string().required("Bussines Name can't be empty!"),
+  contactName: Yup.string().required("Contact Name can't be empty!"),
+  homeAddress: Yup.string().required("Home Address can't be empty!"),
+  emailAddress: Yup.string().required("Email can't be empty!"),
+  city: Yup.string().required("City can't be empty!"),
+  //phone: Yup.string().required("Phone Number can't be empty!"),
   status: Yup.string().required("Status can't be empty!")
 });
 
 class Inputs extends React.Component {
-  state = { employee: null, finish: false, rows: [] };
+  state = { customer: null, finish: false, rows: [] };
 
-  fetchEmployee = id => {
+  componentDidMount() {
+    this.fetchCustomers(this.props.id);
+  }
+
+  fetchCustomers = id => {
     if (id === 666) {
       this.setState({ finish: true });
     } else {
-      axios(`${config.apiUrl}employees/${id}`, {
+      axios(`${config.apiUrl}customers/${id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: config.token
         }
       })
         .then(res => {
-          //console.log(res.data.members);
-          let fetchedName = [];
-          res.data.members.forEach(r => {
-            let team = test(r.name);
-            let id = r.id;
-            let data = { id, team };
-            fetchedName.push(data);
-          });
-          console.log(fetchedName);
-
+          console.log(res.data.projects);
           this.setState({
-            employee: res.data,
-            rows: fetchedName,
+            customer: res.data,
+            rows: res.data.projects,
             finish: true
           });
         })
         .catch(() => this.setState({ finish: true }));
     }
   };
-
-  componentDidMount() {
-    this.fetchEmployee(this.props.id);
-  }
 
   render() {
     const CustomInputComponent = props => (
@@ -167,38 +132,17 @@ class Inputs extends React.Component {
       />
     );
 
-    const CustomSelectComponent = props => {
-      return (
-        <Select fullWidth {...props} className={classes.input}>
-          <MenuItem value={1}>Chief Executive Officer</MenuItem>
-          <MenuItem value={2}>Chief Technical Officer</MenuItem>
-          <MenuItem value={3}>Chief Operations Officer</MenuItem>
-          <MenuItem value={4}>Manager</MenuItem>
-          <MenuItem value={5}>HR Manager</MenuItem>
-          <MenuItem value={6}>Developer</MenuItem>
-          <MenuItem value={7}>UI/UX Designer</MenuItem>
-          <MenuItem value={8}>QA Engineer</MenuItem>
-        </Select>
-      );
-    };
-
     const CustomStatusComponent = props => {
       return (
         <Select fullWidth {...props} className={classes.input}>
-          <MenuItem value={1}>Waiting for the task</MenuItem>
-          <MenuItem value={2}>Active</MenuItem>
-          <MenuItem value={3}>On hold</MenuItem>
-          <MenuItem value={4}>Leaver</MenuItem>
+          <MenuItem value={1}>Prospect</MenuItem>
+          <MenuItem value={2}>Client</MenuItem>
         </Select>
       );
     };
 
     const { classes, open, handleClose, id } = this.props;
-    const { employee, finish } = this.state;
-
-    // if (!finish && id) {
-    //   this.fetchEmployee(id);
-    // }
+    const { customer, finish } = this.state;
 
     return (
       <React.Fragment>
@@ -206,50 +150,30 @@ class Inputs extends React.Component {
           <Formik
             validationSchema={Schema}
             initialValues={{
-              salary: employee ? employee.salary : "",
-              firstName: employee ? employee.firstName : "",
-              lastName: employee ? employee.lastName : "",
-              email: employee ? employee.email : "",
-              phone: employee ? employee.phone : "",
-              birthday: employee
-                ? moment(employee.birthday).format("YYYY-MM-DD")
-                : "",
-              employmentBeginDate: employee
-                ? moment(employee.beginDate).format("YYYY-MM-DD")
-                : "",
-              employmentEndDate: employee
-                ? moment(employee.endDate).format("YYYY-MM-DD")
-                : "",
-              position: employee ? employee.position.id : "",
-              status: employee ? employee.status.id : ""
+              name: customer ? customer.name : "",
+              contactName: customer ? customer.contactName : "",
+              homeAddress: customer ? customer.homeAddress.street : "",
+              emailAddress: customer ? customer.emailAddress : "",
+              status: customer ? customer.status.id : "",
+              city: customer ? customer.homeAddress.city : ""
             }}
             onSubmit={values => {
-              values.birthday = moment(values.birthday).format(
-                "YYYY-MM-DD HH:mm:ss"
-              );
-              values.endDate = moment(values.endDate).format(
-                "YYYY-MM-DD HH:mm:ss"
-              );
-              values.beginDate = moment(values.beginDate).format(
-                "YYYY-MM-DD HH:mm:ss"
-              );
-
-              let newPosition = positions.filter(p => values.position === p.id);
               let newStatus = statuses.filter(s => values.status === s.id);
-
-              values.position = newPosition[0];
               values.status = newStatus[0];
+              console.log(values);
+              delete values.city;
 
-              if (employee) {
-                values.id = employee.id;
+              if (customer) {
+                values.id = customer.id;
                 axios
                   .put(
-                    `${config.apiUrl}employees/${id}`,
+                    `${config.apiUrl}customers/${id}`,
                     values,
                     config.authHeader
                   )
                   .then(res => {
                     handleClose();
+                    console.log(res);
                   })
                   .catch(err => {
                     this.setState({ loading: false });
@@ -258,7 +182,7 @@ class Inputs extends React.Component {
               } else {
                 console.log(values);
                 axios
-                  .post(`${config.apiUrl}employees`, values, config.authHeader)
+                  .post(`${config.apiUrl}customers`, values, config.authHeader)
                   .then(res => {
                     handleClose();
                   })
@@ -284,33 +208,19 @@ class Inputs extends React.Component {
                           alt="imasda"
                           className={classes.img}
                         />
-                        <InputLabel>Salary</InputLabel>
-                        {errors.salary && touched.salary ? (
-                          <div className={classes.errorMessage}>
-                            {errors.salary}
-                          </div>
-                        ) : (
-                          <div className={classes.errorMessage}> &nbsp; </div>
-                        )}
-                        <Field
-                          name="salary"
-                          type="number"
-                          autoComplete="off"
-                          as={CustomInputComponent}
-                        />
 
                         <Paper className={classes.root}>
                           <Table className={classes.table}>
                             <TableHead className={classes.tableHead}>
                               <TableRow>
                                 <TableCell className={classes.tableCell}>
-                                  Team
+                                  Projects
                                 </TableCell>
                                 <TableCell
                                   className={classes.tableCell}
                                   align="right"
                                 >
-                                  Role
+                                  Team
                                 </TableCell>
                               </TableRow>
                             </TableHead>
@@ -318,11 +228,9 @@ class Inputs extends React.Component {
                               {this.state.rows.map(row => (
                                 <TableRow key={row.id}>
                                   <TableCell component="th" scope="row">
-                                    {row.team}
+                                    {row.name}
                                   </TableCell>
-                                  <TableCell align="right">
-                                    {this.state.employee.position.name}
-                                  </TableCell>
+                                  <TableCell align="right">Charlie</TableCell>
                                 </TableRow>
                               ))}
                             </TableBody>
@@ -331,90 +239,75 @@ class Inputs extends React.Component {
                       </div>
 
                       <div className={classes.container}>
-                        <InputLabel>First Name</InputLabel>
-                        {errors.firstName && touched.firstName ? (
+                        <InputLabel>Bussiness Name</InputLabel>
+                        {errors.name && touched.name ? (
                           <div className={classes.errorMessage}>
-                            {errors.firstName}
+                            {errors.name}
                           </div>
                         ) : (
                           <div className={classes.errorMessage}> &nbsp; </div>
                         )}
                         <Field
-                          name="firstName"
+                          name="name"
                           autoComplete="off"
                           as={CustomInputComponent}
                         />
-                        <InputLabel>Last Name</InputLabel>
-                        {errors.lastName && touched.lastName ? (
+                        <InputLabel>Contact Name</InputLabel>
+                        {errors.contactName && touched.contactName ? (
                           <div className={classes.errorMessage}>
-                            {errors.lastName}
+                            {errors.contactName}
                           </div>
                         ) : (
                           <div className={classes.errorMessage}> &nbsp; </div>
                         )}
                         <Field
                           autoComplete="off"
-                          name="lastName"
+                          name="contactName"
                           as={CustomInputComponent}
                         />
                         <InputLabel>E-Mail</InputLabel>
-                        {errors.email && touched.email ? (
+                        {errors.emailAddress && touched.emailAddress ? (
                           <div className={classes.errorMessage}>
-                            {errors.email}
+                            {errors.emailAddress}
                           </div>
                         ) : (
                           <div className={classes.errorMessage}> &nbsp; </div>
                         )}
                         <Field
-                          name="email"
+                          name="emailAddress"
                           type="email"
                           autoComplete="off"
                           as={CustomInputComponent}
                         />
-                        <InputLabel>Phone Number</InputLabel>
-                        {errors.phone && touched.phone ? (
-                          <div className={classes.errorMessage}>
-                            {errors.phone}
-                          </div>
-                        ) : (
-                          <div className={classes.errorMessage}> &nbsp; </div>
-                        )}
-                        <Field
-                          autoComplete="off"
-                          name="phone"
-                          as={CustomInputComponent}
-                        />
-                        <InputLabel>Birth Date</InputLabel>
-                        {errors.birthday && touched.birthday ? (
-                          <div className={classes.errorMessage}>
-                            {errors.birthday}
-                          </div>
-                        ) : (
-                          <div className={classes.errorMessage}> &nbsp; </div>
-                        )}
-                        <Field
-                          autoComplete="off"
-                          type="date"
-                          name="birthday"
-                          as={CustomInputComponent}
-                        />
                       </div>
                       <div className={classes.container}>
-                        <InputLabel>Employment Begin Date</InputLabel>
-                        {errors.employmentBeginDate &&
-                        touched.employmentBeginDate ? (
+                        <InputLabel>Home Address</InputLabel>
+                        {errors.homeAddress && touched.homeAddress ? (
                           <div className={classes.errorMessage}>
-                            {errors.employmentBeginDate}
+                            {errors.homeAddress}
                           </div>
                         ) : (
                           <div className={classes.errorMessage}> &nbsp; </div>
                         )}
                         <Field
-                          name="employmentBeginDate"
                           autoComplete="off"
-                          type="date"
+                          name="homeAddress"
                           as={CustomInputComponent}
                         />
+                        <InputLabel>City</InputLabel>
+                        {errors.city && touched.city ? (
+                          <div className={classes.errorMessage}>
+                            {errors.city}
+                          </div>
+                        ) : (
+                          <div className={classes.errorMessage}> &nbsp; </div>
+                        )}
+                        <Field
+                          autoComplete="off"
+                          name="city"
+                          as={CustomInputComponent}
+                        />
+
                         <InputLabel>Status</InputLabel>
                         {errors.status && touched.status ? (
                           <div className={classes.errorMessage}>
@@ -428,34 +321,7 @@ class Inputs extends React.Component {
                           name="status"
                           as={CustomStatusComponent}
                         />
-                        <InputLabel>Job Title</InputLabel>
-                        {errors.position && touched.position ? (
-                          <div className={classes.errorMessage}>
-                            {errors.position}
-                          </div>
-                        ) : (
-                          <div className={classes.errorMessage}> &nbsp; </div>
-                        )}
-                        <Field
-                          name="position"
-                          autoComplete="off"
-                          as={CustomSelectComponent}
-                        />
-                        <InputLabel>Employement End Date</InputLabel>
-                        {errors.employementEndDate &&
-                        touched.employementEndDate ? (
-                          <div className={classes.errorMessage}>
-                            {errors.employementEndDate}
-                          </div>
-                        ) : (
-                          <div className={classes.errorMessage}> &nbsp; </div>
-                        )}
-                        <Field
-                          autoComplete="off"
-                          name="employmentEndDate"
-                          type="date"
-                          as={CustomInputComponent}
-                        />
+
                         <div className={classes.buttons}>
                           <Button
                             variant="contained"
@@ -469,7 +335,7 @@ class Inputs extends React.Component {
                             color="secondary"
                             onClick={() => {
                               handleClose();
-                              this.setState({ employee: null, finish: false });
+                              this.setState({ customer: null, finish: false });
                             }}
                           >
                             Cancle
