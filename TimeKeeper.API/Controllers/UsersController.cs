@@ -4,22 +4,23 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Controllers
 {
-    [Authorize(Roles = "admin")]
-    [Route("api/[controller]")]
     [ApiController]
     public class UsersController : BaseController
     {
         public UsersController(TimeKeeperContext context) : base(context) { }
 
         [HttpGet]
+        [Route("api/users")]
         public IActionResult Get()
         {
             try
@@ -37,35 +38,87 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }  
         }
 
-        [AllowAnonymous]
-        [HttpPost]
-        public IActionResult Login([FromBody] User user)
+        /*        [AllowAnonymous]
+                [HttpPost]
+                [Route("api/login")]
+                public IActionResult Login([FromBody] User user)
+                {
+                    try
+                    {
+                        User control = Unit.Users.Get(x => x.Username == user.Username && x.Password == user.Password).FirstOrDefault();
+
+                        if (control == null) return NotFound();
+                        byte[] bytes = Encoding.ASCII.GetBytes($"{control.Username}:{control.Password}");
+                        string base64 = Convert.ToBase64String(bytes);
+                        return Ok(new
+                        {
+                            control.Id,
+                            control.Name,
+                            control.Role,
+                            base64
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        return HandleException(ex);
+                    }
+                }*/
+
+        /// <summary>
+        /// This method is used for login
+        /// </summary>
+        /// <returns status="200">OK</returns>
+        /// <returns status="404">NotFound</returns>
+        /// <returns status="400">BadRequest</returns>
+        [HttpGet]
+        [Route("login")]
+        [Authorize]
+        public IActionResult Login()
         {
             try
             {
-                User control = Unit.Users.Get(x => x.Username == user.Username && x.Password == user.Password).FirstOrDefault();
-
-                if (control == null) return NotFound();
-                byte[] bytes = Encoding.ASCII.GetBytes($"{control.Username}:{control.Password}");
-                string base64 = Convert.ToBase64String(bytes);
-                return Ok(new
+                if (User.Identity.IsAuthenticated)
                 {
-                    control.Id,
-                    control.Name,
-                    control.Role,
-                    base64
-                });
+                    var accessToken = HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken).Result;
+                    var response = new
+                    {
+                        Id = User.Claims.FirstOrDefault(c => c.Type == "sub").Value.ToString(),
+                        Name = User.Claims.FirstOrDefault(c => c.Type == "given_name").Value.ToString(),
+                        Role = User.Claims.FirstOrDefault(c => c.Type == "role").Value.ToString(),
+                        accessToken //Bearer {accessToken}
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
+
+        /// <summary>
+        /// This method is used for logout
+        /// </summary>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [Route("api/logout")]
+        [HttpGet]
+        public async Task Logout()//asynchronous method that doesn't return a value. Task<IActionResult> returns a value
+        {
+            if(User.Identity.IsAuthenticated)
+            {
+                await HttpContext.SignOutAsync("Cookies");
+                await HttpContext.SignOutAsync("oidc");
+            }
+        }
+
     }
 }

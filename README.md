@@ -11,4 +11,4 @@
 - open the Visual Studio TimeKeeper.sln
 - click on TimeKeeper.API in SolutionExplorer in Visual Studio
 - run IIS Express
-- open http://localhost:3000/swagger in browser
+- open http://localhost:8000/swagger in browser

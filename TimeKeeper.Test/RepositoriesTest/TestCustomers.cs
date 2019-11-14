@@ -9,7 +9,7 @@ namespace TimeKeeper.Test.RepositoriesTest
 {
     [TestFixture]
     public class TestCustomers : TestBase
-    {
+    {       
         [Test, Order(1)]
         public void GetAllCustomers()
         {
@@ -18,7 +18,8 @@ namespace TimeKeeper.Test.RepositoriesTest
 
             //Assert
             Assert.AreEqual(2, customersCount); //there are 2 customers in the test database
-        }
+        }       
+
 
         [Test, Order(2)]
         [TestCase(1, "ImageNet Consulting")]
@@ -33,8 +34,8 @@ namespace TimeKeeper.Test.RepositoriesTest
         public void GetCustomerByWrongId()
         {
             int id = 40; //Customer with id doesn't exist in the test database
-            var result = unit.Customers.Get(id);
-            Assert.IsNull(result);
+            var ex = Assert.Throws<ArgumentException>(() => unit.Customers.Get(id));
+            Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");
         }
 
         [Test, Order(4)]
@@ -44,7 +45,8 @@ namespace TimeKeeper.Test.RepositoriesTest
             Customer customer = new Customer
             {
                 Name = "Test Customer",
-                HomeAddress = homeAddress
+                HomeAddress = homeAddress,
+                Status = unit.CustomerStatuses.Get(1)
             };
             unit.Customers.Insert(customer);
             int numberOfChanges = unit.Save();
@@ -59,15 +61,15 @@ namespace TimeKeeper.Test.RepositoriesTest
             Customer customer = new Customer
             {
                 Id = id,
-                Name = "Test Customer"
+                Name = "Test Customer",
+                Status = unit.CustomerStatuses.Get(1)
             };
             unit.Customers.Update(customer, id);
             int numberOfChanges = unit.Save();
             Assert.AreEqual(1, numberOfChanges);
             Assert.AreEqual("Test Customer", customer.Name);
         }
-
-
+        
         [Test, Order(6)]
         public void ChangeCustomersTown()
         {
@@ -79,7 +81,8 @@ namespace TimeKeeper.Test.RepositoriesTest
             Customer customer = new Customer
             {
                 Id = id,
-                HomeAddress = homeAddress
+                HomeAddress = homeAddress,
+                Status = unit.CustomerStatuses.Get(1)
             };
             unit.Customers.Update(customer, id);
             int numberOfChanges = unit.Save();
@@ -88,20 +91,43 @@ namespace TimeKeeper.Test.RepositoriesTest
         }
 
         [Test, Order(7)]
-        public void ChangeCustomerWithWrongId()
+        public void ChangeNonExistingCustomer()
         {
-            int id = 40;//Try to change the customer with id (doesn't exist)
+            //Try to change the customer with id (doesn't exist)
+            int id = 40;
             Customer customer = new Customer
             {
                 Id = id,
-                Name = "Test Customer"
-            };
-            unit.Customers.Update(customer, id);
+                Name = "Test Customer",
+                Status = unit.CustomerStatuses.Get(1)
+            };            
+
+            var ex = Assert.Throws<ArgumentException>(() => unit.Customers.Update(customer, id));
+            Assert.AreEqual(ex.Message, $"There is no object with id: {id} in the database");
             int numberOfChanges = unit.Save();
             Assert.AreEqual(0, numberOfChanges);
         }
 
         [Test, Order(8)]
+        public void ChangeCustomerWithWrongId()
+        {
+            //Try to change the customer with a wrong id argument in update method
+            int id = 1;
+            int wrongId = 2;
+            Customer customer = new Customer
+            {
+                Id = id,
+                Name = "Test Customer",
+                Status = unit.CustomerStatuses.Get(1)
+            };
+
+            var ex = Assert.Throws<ArgumentException>(() => unit.Customers.Update(customer, wrongId));
+            Assert.AreEqual(ex.Message, $"Error! Id of the sent object: {customer.Id} and id in url: {wrongId} do not match");
+            int numberOfChanges = unit.Save();
+            Assert.AreEqual(0, numberOfChanges);
+        }
+
+        [Test, Order(9)]
         public void ChangeCustomerStatus()
         {
             int id = 2;//Try to change the customer with id
@@ -119,24 +145,49 @@ namespace TimeKeeper.Test.RepositoriesTest
             Assert.AreEqual(statusId, customer.Status.Id);
         }
 
-        [Test, Order(9)]
-        public void DeleteCustomer()
+        [Test, Order(10)]
+        public void DeleteCustomerWithChildren()
         {
-            int id = 2;//Try to delete the customer with id
+            int id = 2;//Try to delete the customer with id, exception will be thrown
 
-            unit.Customers.Delete(id);
+            var ex = Assert.Throws<Exception>(() => unit.Customers.Delete(id));
+            Assert.AreEqual(ex.Message, "Object cannot be deleted because child objects are present");
             int numberOfChanges = unit.Save();
-            Assert.AreEqual(1, numberOfChanges);
+            Assert.AreEqual(0, numberOfChanges);
         }
 
-        [Test, Order(10)]
+        [Test, Order(11)]
         public void DeleteCustomerWithWrongId()
         {
             int id = 40;//Try to delete the customer with id (doesn't exist)
 
-            unit.Customers.Delete(id);
+            var ex = Assert.Throws<ArgumentException>(() => unit.Customers.Delete(id));
             int numberOfChanges = unit.Save();
             Assert.AreEqual(0, numberOfChanges);
+        }
+
+        [Test, Order(12)]
+        public void DeleteCustomer()
+        {
+            int id = 2;//Try to delete the customer with id
+            Customer customer = unit.Customers.Get(id);
+
+            //first all child entities need to be deleted
+            //this list will be used for iteration
+            List<Project> customerProjects = customer.Projects.ToList();
+
+            foreach (Project project in customerProjects)
+            {
+                //customer.Projects.Remove(project);
+                /*this Delete method wasn't overriden in the specific repository, 
+                 * meaning that even if a child entity has child entities itself, it will still be deleted*/
+                unit.Projects.Delete(project);
+            }
+
+            unit.Customers.Delete(id);
+            int numberOfChanges = unit.Save();
+            //Two child entities and one Customer will be deleted, making it 3 changes
+            Assert.AreEqual(3, numberOfChanges);
         }
     }
 }

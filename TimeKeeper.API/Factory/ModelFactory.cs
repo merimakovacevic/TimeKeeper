@@ -15,6 +15,8 @@ namespace TimeKeeper.API.Factory
             {
                 Id = team.Id,
                 Name = team.Name,
+                Description = team.Description,
+                StatusActive = team.StatusActive,
                 Members = team.Members.Select(x => x.Master("team")).ToList(),
                 Projects = team.Projects.Select(x => x.Master()).ToList()
             };
@@ -113,6 +115,16 @@ namespace TimeKeeper.API.Factory
                 Date = day.Date,
                 DayType = day.DayType.Master(),
                 JobDetails = day.JobDetails.Select(x => x.Master()).ToList()
+            };
+        }
+
+        public static TimeTrackingModel CreateTimeTracking(this Employee employee)
+        {
+            return new TimeTrackingModel
+            {
+                FullName = employee.FullName,
+                //WorkingHours = GetHoursByDayType
+
             };
         }
     }

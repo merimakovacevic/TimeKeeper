@@ -37,8 +37,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch(Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
         /// <summary>
@@ -59,20 +58,17 @@ namespace TimeKeeper.API.Controllers
             {
                 Logger.Info($"Try to get roles with {id}");
                 Role role = Unit.Roles.Get(id);
-                if (role == null)
+                /*if (role == null)
                 {
                     Logger.Error($"Role with id {id} cannot be found");
                     return NotFound();
-                }
-                else
-                {
-                    return Ok(role.Create());
-                }
+                }*/
+
+                return Ok(role.Create());
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
 
@@ -97,8 +93,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
 
@@ -118,20 +113,21 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Unit.Roles.Update(role, id);
-                int numberOfChanges = Unit.Save();
+                Unit.Save();
+
+                /*int numberOfChanges = Unit.Save();
 
                 if (numberOfChanges == 0)
                 {
                     Logger.Error($"Role with {id} not found");
                     return NotFound();
-                }
+                }*/
                 Logger.Info($"Changed role with id {id}");
                 return Ok(role.Create());
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
 
@@ -151,22 +147,23 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Unit.Roles.Delete(id);
-
-                int numberOfChanges = Unit.Save();
                 Logger.Info($"Attempt to delete role with id {id}");
+                Unit.Roles.Delete(id);
+                Unit.Save();
+
+                /*int numberOfChanges = Unit.Save();
+                
                 if (numberOfChanges == 0)
                 {
                     Logger.Error($"Attempt to delete role with id {id}");
                     return NotFound();
-                }
+                }*/
                 Logger.Info($"Deleted role with id {id}");
                 return NoContent();
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
     }

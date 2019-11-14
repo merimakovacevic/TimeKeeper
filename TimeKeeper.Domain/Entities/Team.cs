@@ -13,6 +13,8 @@ namespace TimeKeeper.Domain.Entities
             Projects = new List<Project>();
         }
         public string Name { get; set; }
+        public string Description { get; set; }
+        public bool StatusActive { get; set; }
         public virtual IList<Member> Members { get; set; }
         public virtual IList<Project> Projects { get; set; }
     }

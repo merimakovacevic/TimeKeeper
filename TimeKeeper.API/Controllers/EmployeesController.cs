@@ -10,6 +10,7 @@ using TimeKeeper.API.Factory;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.Utility.Services;
+using TimeKeeper.API.Services;
 
 namespace TimeKeeper.API.Controllers
 {
@@ -33,13 +34,22 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Logger.Info($"Try to fetch all employees");
-                return Ok(Unit.Employees.Get().ToList().Select(x => x.Create()).ToList());                
+                int userId = int.Parse(GetUserClaim("sub"));
+                string userRole = GetUserClaim("role");
+
+                if (userRole == "admin" || userRole=="lead")
+                {
+                    Logger.Info($"Try to fetch all employees");
+                    return Ok(Unit.Employees.Get().ToList().Select(x => x.Create()).ToList());
+                }
+                else
+                {
+                    return Ok(Unit.GetEmployeeTeamMembers(userId));
+                }
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
         /// <summary>
@@ -51,6 +61,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpGet("{id}")]
+        [Authorize(Policy ="IsEmployee")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Get(int id)
@@ -59,20 +70,18 @@ namespace TimeKeeper.API.Controllers
             {
                 Logger.Info($"Try to fetch employee with id {id}");
                 Employee employee = Unit.Employees.Get(id);
-                if (employee == null)
+                
+                /*if (employee == null)
                 {
                     Logger.Error($"Employee with id {id} cannot be found");
                     return NotFound();
-                }
-                else
-                {
-                    return Ok(employee.Create());
-                }
+                }*/
+
+                 return Ok(employee.Create());                
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
 
@@ -84,14 +93,15 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPost]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Post([FromBody] Employee employee)
         {
             try
             {
-                employee.Status = Unit.EmploymentStatuses.Get(employee.Status.Id);
-                employee.Position = Unit.EmployeePositions.Get(employee.Position.Id);
+                //employee.Status = Unit.EmploymentStatuses.Get(employee.Status.Id);
+                //employee.Position = Unit.EmployeePositions.Get(employee.Position.Id);
                 Unit.Employees.Insert(employee);
                 Unit.Save();
 
@@ -106,8 +116,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
 
@@ -120,31 +129,33 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
+        [Authorize(Policy = "IsEmployee")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Put(int id, [FromBody] Employee employee)
         {
             try
             {
-                employee.Status = Unit.EmploymentStatuses.Get(employee.Status.Id);
-                employee.Position = Unit.EmployeePositions.Get(employee.Position.Id);
+                //employee.Status = Unit.EmploymentStatuses.Get(employee.Status.Id);
+                //employee.Position = Unit.EmployeePositions.Get(employee.Position.Id);
+                Logger.Info($"Attempt to update employee with id {id}");
                 Unit.Employees.Update(employee, id);
+                Unit.Save();
 
-                int numberOfChanges = Unit.Save();
+                /*int numberOfChanges = Unit.Save();
                 Logger.Info($"Attempt to update employee with id {id}");
 
                 if (numberOfChanges == 0)
                 {
                    Logger.Error($"Employee with id {id} cannot be found");
                     return NotFound();
-                }
+                }*/
                 Logger.Info($"Employee {employee.FirstName} {employee.LastName} with id {employee.Id} updated");
                 return Ok(employee.Create());
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
 
@@ -157,6 +168,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -164,24 +176,25 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
+                Logger.Info($"Attempt to delete employee with id {id}");
                 Unit.Employees.Delete(id);
+                Unit.Save();
 
-                int numberOfChanges = Unit.Save();
+                /*int numberOfChanges = Unit.Save();
                 Logger.Info($"Attempt to delete employee with id {id}");
 
                 if (numberOfChanges == 0)
                 {
                     Logger.Error($"Employee with id {id} cannot be found");
                     return NotFound();
-                }
+                }*/
 
                 Logger.Info($"Employee with id {id} deleted");
                 return NoContent();
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
     }

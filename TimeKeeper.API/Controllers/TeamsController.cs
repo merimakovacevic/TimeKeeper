@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using TimeKeeper.API.Factory;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
@@ -13,12 +15,10 @@ using TimeKeeper.LOG;
 
 namespace TimeKeeper.API.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TeamsController : BaseController
     {
-
         public TeamsController(TimeKeeperContext context) : base(context) { }
 
 
@@ -35,12 +35,22 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                return Ok(Unit.Teams.Get().ToList().Select(x => x.Create()).ToList());//without the first ToList(), we will have a lazy loading exception?
+                int userId = int.Parse(GetUserClaim("sub"));
+                string userRole = GetUserClaim("role");
+
+                if(userRole == "admin")
+                {
+                    return Ok(Unit.Teams.Get().ToList().Select(x => x.Create()).ToList());
+                }
+                else
+                {
+                    var query = Unit.Teams.Get(x => x.Members.Any(y => y.Employee.Id == userId));
+                    return Ok(query.ToList().Select(x => x.Create()).ToList());//without the first ToList(), we will have a lazy loading exception?
+                }
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
 
@@ -53,27 +63,27 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpGet("{id}")]
+        [Authorize(Policy = "IsMember")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Get(int id)
         {
-            try { 
-            Logger.Info($"Try to get team with {id}");
+            try {
+                Logger.Info($"Try to get team with {id}");
                 Team team = Unit.Teams.Get(id);
-                if (team == null)
+
+                /*if (team == null)
                 {
                     Logger.Error($"There is no team with specified id {id}");
                     return NotFound();
-                }
-                else
-                {
-                    return Ok(team.Create());
-                }
+                }*/
+
+                return Ok(team.Create());
+
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
 
@@ -85,6 +95,8 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPost]
+        //[Authorize(Policy = "IsAdmin")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Post([FromBody] Team team)
@@ -98,8 +110,7 @@ namespace TimeKeeper.API.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
 
@@ -112,6 +123,8 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
+        //[Authorize(Policy = "IsAdmin")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Put(int id, [FromBody] Team team)
@@ -119,20 +132,21 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Unit.Teams.Update(team, id);
-                int numberOfChanges = Unit.Save();
+                Unit.Save();
+
+                /*int numberOfChanges = Unit.Save();
 
                 if (numberOfChanges == 0)
                 {
                     Logger.Error($"Team with {id} not found");
                     return NotFound();
-                }
+                }*/
                 Logger.Info($"Changed team with id {id}");
                 return Ok(team.Create());
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
 
@@ -145,6 +159,8 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpDelete("{id}")]
+        //[Authorize(Policy = "IsAdmin")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -152,22 +168,23 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Unit.Teams.Delete(id);
-
-                int numberOfChanges = Unit.Save();
                 Logger.Info($"Attempt to delete team with id {id}");
+                Unit.Teams.Delete(id);
+                Unit.Save();
+
+                /*int numberOfChanges = Unit.Save();
+                
                 if (numberOfChanges == 0)
                 {
                     Logger.Error($"Attempt to delete team with id {id}");
                     return NotFound();
-                }
+                }*/
                 Logger.Info($"Deleted team with id {id}");
                 return NoContent();
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
     }
