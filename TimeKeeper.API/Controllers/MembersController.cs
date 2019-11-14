@@ -10,6 +10,7 @@ using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
+using TimeKeeper.API.Services;
 
 namespace TimeKeeper.API.Controllers
 {
@@ -33,8 +34,19 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Logger.Info("Try to get all members");
-                return Ok(Unit.Members.Get().ToList().Select(x => x.Create()).ToList());
+                int userId = int.Parse(GetUserClaim("sub"));
+                string userRole = GetUserClaim("role");
+
+                if (userRole == "admin")
+                {
+                    Logger.Info("Try to get all members");
+                    return Ok(Unit.Members.Get().ToList().Select(x => x.Create()).ToList());
+                }
+                else
+                {
+                    return Ok(Unit.GetEmployeeTeamMembers(userId));
+                }
+
             }
             catch(Exception ex)
             {
