@@ -26,18 +26,19 @@ namespace TimeKeeper.API.Factory
             return new EmployeeModel
             {
                 Id = employee.Id,
-                FirstName = employee.FirstName,
-                LastName = employee.LastName,
-                Email = employee.Email,
-                Phone = employee.Phone,
-                Position = employee.Position.Master(),
-                Salary = employee.Salary,
-                Birthday = employee.Birthday,
-                BeginDate = employee.BeginDate,
-                EndDate = employee.EndDate,
-                Status = employee.Status.Master(),
-                Members = employee.Members.Select(x => x.Master("role")).ToList(),
-                Calendar = employee.Calendar.Select(x=>x.Master()).ToList()
+                //FirstName = employee.FirstName,
+                //LastName = employee.LastName,
+                FullName=employee.FullName,
+                Email = employee.Email//,
+                //Phone = employee.Phone,
+                //Position = employee.Position.Master(),
+                //Salary = employee.Salary,
+                //Birthday = employee.Birthday,
+                //BeginDate = employee.BeginDate,
+                //EndDate = employee.EndDate,
+                //Status = employee.Status.Master(),
+                //Members = employee.Members.Select(x => x.Master("role")).ToList(),
+                //Calendar = employee.Calendar.Select(x=>x.Master()).ToList()
             };
         }
         public static CustomerModel Create(this Customer customer)
