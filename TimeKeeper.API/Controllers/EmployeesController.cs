@@ -11,6 +11,7 @@ using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.Utility.Services;
 using TimeKeeper.API.Services;
+using Newtonsoft.Json;
 
 namespace TimeKeeper.API.Controllers
 {
@@ -30,12 +31,29 @@ namespace TimeKeeper.API.Controllers
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Get()
+        public IActionResult GetAll(int page = 1, int pageSize = 10)
         {
             try
             {
                 Logger.Info($"Try to fetch all employees");
-                return Ok(Unit.Employees.Get().ToList().Select(x => x.Create()).ToList());
+
+                int totalItems = Unit.Employees.Get().Count();
+                int totalPages = (int)Math.Ceiling(totalItems / (decimal)pageSize);
+
+                if (page < 0) page = 0;
+                if (page > totalPages) page = totalPages;
+                int currentPage = page - 1;
+
+                var query = Unit.Employees.Get().Skip(currentPage * pageSize).Take(pageSize);
+                var pagination1 = new
+                {
+                    pageSize,
+                    totalItems,
+                    totalPages,
+                    page
+                };
+                HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(pagination1));
+                return Ok(query.ToList().Select(x => x.Create()).ToList());                
             }
             catch (Exception ex)
             {
