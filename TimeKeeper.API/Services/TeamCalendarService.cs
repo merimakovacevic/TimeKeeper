@@ -32,9 +32,9 @@ namespace TimeKeeper.API.Services
                     List<Day> dayTypeDays = employeeDays.FindAll(x => x.DayType.Id == dayType.Id);
                     int sum = (int)dayTypeDays.Sum(x => x.TotalHours);
                     missingEntries -= sum;
-                    teamTimeTracking[teamTimeTracking.Count() - 1].hourTypes.Add(dayType.Name, sum);
+                    teamTimeTracking[teamTimeTracking.Count() - 1].HourTypes.Add(dayType.Name, sum);
                 }
-                teamTimeTracking[teamTimeTracking.Count() - 1].hourTypes.Add("Missing entries", missingEntries);
+                teamTimeTracking[teamTimeTracking.Count() - 1].HourTypes.Add("Missing entries", missingEntries);
             }
             return teamTimeTracking;
         }

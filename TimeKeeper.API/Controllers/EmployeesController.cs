@@ -12,6 +12,9 @@ using TimeKeeper.Domain.Entities;
 using TimeKeeper.Utility.Services;
 using TimeKeeper.API.Services;
 using Newtonsoft.Json;
+using TimeKeeper.API.Models;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace TimeKeeper.API.Controllers
 {
@@ -20,7 +23,10 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class EmployeesController : BaseController
     {
-        public EmployeesController(TimeKeeperContext context) : base(context) { }
+        PaginationService<Employee> Pagination;
+        public EmployeesController(TimeKeeperContext context) : base(context) {
+            Pagination = new PaginationService<Employee>();
+        }
 
         /// <summary>
         /// This method returns all employees
@@ -32,29 +38,19 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult GetAll(int page = 1, int pageSize = 10)
+
         {
             try
             {
                 Logger.Info($"Try to fetch all employees");
 
-                int totalItems = Unit.Employees.Get().Count();
-                int totalPages = (int)Math.Ceiling(totalItems / (decimal)pageSize);
-
-                if (page < 0) page = 0;
-                if (page > totalPages) page = totalPages;
-                int currentPage = page - 1;
-
-                var query = Unit.Employees.Get().Skip(currentPage * pageSize).Take(pageSize);
-                var pagination1 = new
-                {
-                    pageSize,
-                    totalItems,
-                    totalPages,
-                    page
-                };
-                HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(pagination1));
-                return Ok(query.ToList().Select(x => x.Create()).ToList());                
+                Tuple < PaginationModel, List<Employee>> employeesPagination = Pagination.CreatePagination(page, pageSize, Unit.Employees.Get() as DbSet<Employee>);
+                
+                HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(employeesPagination.Item1));
+                return Ok(employeesPagination.Item2.ToList().Select(x => x.Create()).ToList());
+                    
             }
+
             catch (Exception ex)
             {
                 return HandleException(ex);
