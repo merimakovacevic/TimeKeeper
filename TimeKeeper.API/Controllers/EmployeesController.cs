@@ -17,7 +17,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TimeKeeper.API.Controllers
 {
-   // [Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeesController : BaseController
