@@ -87,8 +87,8 @@ namespace TimeKeeper.API.Factory
             return new JobDetailModel
             {
                 Id = jobDetail.Id,
-                Description = jobDetail.Description,
-                Day = jobDetail.Day.Master(),
+                //Description = jobDetail.Description,
+                //Day = jobDetail.Day.Master(),
                 Project = jobDetail.Project.Master(),
                 Hours = jobDetail.Hours
             };
@@ -115,17 +115,16 @@ namespace TimeKeeper.API.Factory
                 Employee = day.Employee.Master(),
                 Date = day.Date,
                 DayType = day.DayType.Master(),
-                JobDetails = day.JobDetails.Select(x => x.Master()).ToList()
+                JobDetails = day.JobDetails.Select(x => x.Create()).ToList()
             };
         }
 
-        public static TimeTrackingModel CreateTimeTracking(this Employee employee)
+        public static EmployeeTimeModel CreateTimeModel(this Employee employee)
         {
-            return new TimeTrackingModel
+            return new EmployeeTimeModel
             {
-                FullName = employee.FullName,
-                //WorkingHours = GetHoursByDayType
-
+                Employee = employee.Create(),
+                HourTypes = new Dictionary<string, decimal>()                
             };
         }
     }

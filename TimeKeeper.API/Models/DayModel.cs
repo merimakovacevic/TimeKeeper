@@ -9,12 +9,12 @@ namespace TimeKeeper.API.Models
     {
         public DayModel()
         {
-            JobDetails = new List<MasterModel>();
+            JobDetails = new List<JobDetailModel>();
         }
         public int Id { get; set; }
         public MasterModel Employee { get; set; }
         public DateTime Date { get; set; }
         public MasterModel DayType { get; set; }
-        public List<MasterModel> JobDetails { get; set; }//shouldn't this property be called Tasks?
+        public List<JobDetailModel> JobDetails { get; set; }
     }
 }

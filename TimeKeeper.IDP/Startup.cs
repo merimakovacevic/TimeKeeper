@@ -47,6 +47,12 @@ namespace TimeKeeper.IDP
                 app.UseDeveloperExceptionPage();
             }
             app.UseIdentityServer();
+
+            app.UseCors(c => c.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader()
+                  .AllowCredentials());
+
             app.UseStaticFiles();
             app.UseMvcWithDefaultRoute();
         }

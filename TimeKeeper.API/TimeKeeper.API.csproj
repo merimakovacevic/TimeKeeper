@@ -30,4 +30,8 @@
     <ProjectReference Include="..\TimeKeeper.Mail\TimeKeeper.Mail.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="BusinessLogic\" />
+  </ItemGroup>
+
 </Project>
