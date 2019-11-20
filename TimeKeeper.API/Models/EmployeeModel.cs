@@ -8,11 +8,11 @@ namespace TimeKeeper.API.Models
 {
     public class EmployeeModel
     {
-        public EmployeeModel()
+        /*public EmployeeModel()
         {
             Members = new List<MasterModel>();
             Calendar = new List<MasterModel>();
-        }
+        }*/
 
         public int Id { get; set; }
         public string FirstName { get; set; }

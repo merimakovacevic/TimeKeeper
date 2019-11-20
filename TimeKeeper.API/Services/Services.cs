@@ -40,8 +40,19 @@ namespace TimeKeeper.API.Services
             return unit.Teams.Get(x => x.Members.Any(y => y.Employee.Id == userId)).ToList();
         }
 
+        public static List<Project> GetEmployeeProjects(this UnitOfWork unit, int employeeId)
+        {
+            List<Team> employeeTeams = GetEmployeeTeams(unit, employeeId);
+            List<Project> employeeProjects = new List<Project>();
 
- 
+            foreach(Team team in employeeTeams)
+            {
+                employeeProjects.AddRange(team.Projects);
+            }
+
+            return employeeProjects;
+        }
+
         public static Task FilterContextCheck(AuthorizationHandlerContext context/*, UnitOfWork unit*/)
         {
             var filterContext = context.Resource as AuthorizationFilterContext;

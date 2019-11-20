@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using TimeKeeper.API.Models;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace TimeKeeper.API.Controllers
 {
     [Authorize]
@@ -36,7 +37,8 @@ namespace TimeKeeper.API.Controllers
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult GetAll(int page = 1, int pageSize=10)
+        public IActionResult GetAll(int page = 1, int pageSize = 10)
+
         {
             try
             {
