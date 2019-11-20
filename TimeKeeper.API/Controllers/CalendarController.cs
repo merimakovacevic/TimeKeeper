@@ -19,10 +19,10 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class CalendarController : BaseController
     {
-        protected TeamCalendarService teamCalendarService;
+        protected CalendarService calendarService;
         public CalendarController(TimeKeeperContext context) : base(context)
         {
-            teamCalendarService = new TeamCalendarService(Unit);
+            calendarService = new CalendarService(Unit);
         }
 
         /// <summary>
@@ -41,15 +41,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Employee emp = Unit.Employees.Get(employeeId);
-
-                /*if (emp == null)
-                {
-                    Logger.Error($"Employee with id {employeeId} cannot be found");
-                    return NotFound("Task not found");
-                }  */              
-
-                return Ok(emp.Calendar.Where(x => x.Date.Year == year && x.Date.Month == month).Select(x => x.Create()));
+                return Ok(calendarService.GetEmployeeMonth(employeeId, year, month));
             }
             catch (Exception ex)
             {
@@ -193,7 +185,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                return Ok(teamCalendarService.TeamMonthReport(teamId, month, year));
+                return Ok(calendarService.TeamMonthReport(teamId, month, year));
                 //return Ok(TeamCalendarService.TeamMonthReport(teamId, month, year));
             }
             catch (Exception ex)
@@ -208,7 +200,7 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Employee emp = Unit.Employees.Get(employeeId);
-                return Ok(teamCalendarService.CreateEmployeeReport(emp, year, month));
+                return Ok(calendarService.CreateEmployeeReport(emp, year, month));
             }
             catch (Exception ex)
             {
