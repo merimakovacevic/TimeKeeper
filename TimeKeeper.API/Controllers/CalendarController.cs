@@ -200,5 +200,19 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
+
+        [HttpGet("employee-time-tracking/{employeeId}/{year}/{month}")]
+        public IActionResult GetPersonalReport(int employeeId, int year, int month)
+        {
+            try
+            {
+                Employee emp = Unit.Employees.Get(employeeId);
+                return Ok(teamCalendarService.PersonalReportMonth(emp, year, month));
+            }
+            catch(Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
     }
 }

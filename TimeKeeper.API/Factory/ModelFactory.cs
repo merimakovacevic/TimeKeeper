@@ -29,7 +29,7 @@ namespace TimeKeeper.API.Factory
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
                 FullName=employee.FullName,
-                Email = employee.Email//,
+                Email = employee.Email,
                 Phone = employee.Phone,
                 Position = employee.Position.Master(),
                 Salary = employee.Salary,
