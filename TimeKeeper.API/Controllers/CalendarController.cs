@@ -185,7 +185,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                return Ok(calendarService.TeamMonthReport(teamId, year, month));
+                return Ok(calendarService.GetTeamMonthReport(teamId, year, month));
                 //return Ok(TeamCalendarService.TeamMonthReport(teamId, month, year));
             }
             catch (Exception ex)
@@ -200,7 +200,7 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Employee emp = Unit.Employees.Get(employeeId);
-                return Ok(calendarService.CreateEmployeeReport(employeeId, year, month));
+                return Ok(calendarService.GetEmployeeMonthReport(employeeId, year, month));
             }
             catch (Exception ex)
             {

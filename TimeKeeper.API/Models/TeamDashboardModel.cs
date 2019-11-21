@@ -9,16 +9,12 @@ namespace TimeKeeper.API.Models
     {
         public TeamDashboardModel()
         {
-            PaidTimeOff = new Dictionary<EmployeeModel, decimal>();
-            Overtime = new Dictionary<EmployeeModel, decimal>();
             EmployeeTimes = new List<EmployeeTimeModel>();
         }
         public int EmployeesCount { get; set; }
         public int ProjectsCount { get; set; }
-        public int TotalHours { get; set; }
-        public int WorkingHours { get; set; }
-        Dictionary<EmployeeModel, decimal> PaidTimeOff { get; set; }
-        Dictionary<EmployeeModel, decimal> Overtime { get; set; }
-        List<EmployeeTimeModel> EmployeeTimes { get; set; }
+        public decimal TotalHours { get; set; }
+        public decimal WorkingHours { get; set; }
+        public List<EmployeeTimeModel> EmployeeTimes { get; set; }
     }
 }
