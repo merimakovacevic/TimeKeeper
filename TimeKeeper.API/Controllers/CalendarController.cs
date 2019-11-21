@@ -19,10 +19,10 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class CalendarController : BaseController
     {
-        protected TeamCalendarService teamCalendarService;
+        protected CalendarService calendarService;
         public CalendarController(TimeKeeperContext context) : base(context)
         {
-            teamCalendarService = new TeamCalendarService(Unit);
+            calendarService = new CalendarService(Unit);
         }
 
         /// <summary>
@@ -41,15 +41,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Employee emp = Unit.Employees.Get(employeeId);
-
-                /*if (emp == null)
-                {
-                    Logger.Error($"Employee with id {employeeId} cannot be found");
-                    return NotFound("Task not found");
-                }  */              
-
-                return Ok(emp.Calendar.Where(x => x.Date.Year == year && x.Date.Month == month).Select(x => x.Create()));
+                return Ok(calendarService.GetEmployeeMonth(employeeId, year, month));
             }
             catch (Exception ex)
             {
@@ -186,19 +178,33 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
-
+        
+        
         [HttpGet("team-time-tracking/{teamId}/{year}/{month}")]
         public IActionResult GetTimeTracking(int teamId, int year, int month)
         {
             try
             {
-                return Ok(teamCalendarService.TeamMonthReport(teamId, month, year));
+                return Ok(calendarService.TeamMonthReport(teamId, year, month));
                 //return Ok(TeamCalendarService.TeamMonthReport(teamId, month, year));
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex);
-                return BadRequest(ex);
+                return HandleException(ex);
+            }
+        }
+
+        [HttpGet("employee-time-tracking/{employeeId}/{year}/{month}")]
+        public IActionResult GetPersonalReport(int employeeId, int year, int month)
+        {
+            try
+            {
+                Employee emp = Unit.Employees.Get(employeeId);
+                return Ok(calendarService.CreateEmployeeReport(employeeId, year, month));
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
             }
         }
     }

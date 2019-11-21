@@ -39,15 +39,46 @@ namespace TimeKeeper.API
 
             services.AddAuthorization(o => 
             {
+                o.AddPolicy("IsMemberInTeam", builder =>
+                {
+                    builder.RequireAuthenticatedUser();
+                    builder.AddRequirements(new HasAccessToTeam());
+
+                });/*
+                o.AddPolicy("IsAdmin", builder =>
+                {
+                    builder.RequireRole("admin");
+                });*/
+                o.AddPolicy("IsEmployee", builder =>
+                {
+                    builder.RequireAuthenticatedUser();
+                    builder.AddRequirements(new HasAccessToEmployee());
+                });
+                o.AddPolicy("IsMemberOnProject", builder =>
+                {
+                    builder.RequireAuthenticatedUser();
+                    builder.AddRequirements(new HasAccessToProjects());
+                });
                 o.AddPolicy("IsMember", builder =>
                 {
                     builder.RequireAuthenticatedUser();
-                    builder.AddRequirements(new IsMemberRequirement());
-
+                    builder.AddRequirements(new HasAccessToMembers());
+                });
+                o.AddPolicy("HasAccessToCustomer", builder =>
+                {
+                    builder.RequireAuthenticatedUser();
+                    builder.AddRequirements(new HasAccessToCustomer());
                 });
             });
 
             services.AddScoped<IAuthorizationHandler, IsMemberHandler>();
+            services.AddScoped<IAuthorizationHandler, IsAdminHandler>();
+            services.AddScoped<IAuthorizationHandler, IsLeadHandler>();
+            //services.AddScoped<IAuthorizationHandler, IsPersonHandler>();
+            services.AddScoped<IAuthorizationHandler, IsMemberOnProjectHandler>();
+            services.AddScoped<IAuthorizationHandler, CanViewMembersHandler>();
+            services.AddScoped<IAuthorizationHandler, CanViewCustomerHandler>();
+            services.AddScoped<IAuthorizationHandler, HasAccessToEmployeeHandler>();
             //Enables anonymous access to our application (IIS security is not used) o. AutomaticAuthentication = false
             services.Configure<IISOptions>(o =>
             {

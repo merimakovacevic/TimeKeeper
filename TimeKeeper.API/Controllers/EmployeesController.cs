@@ -10,6 +10,11 @@ using TimeKeeper.API.Factory;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.Utility.Services;
+using TimeKeeper.API.Services;
+using Newtonsoft.Json;
+using TimeKeeper.API.Models;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace TimeKeeper.API.Controllers
 {
@@ -18,7 +23,10 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class EmployeesController : BaseController
     {
-        public EmployeesController(TimeKeeperContext context) : base(context) { }
+        PaginationService<Employee> Pagination;
+        public EmployeesController(TimeKeeperContext context) : base(context) {
+            Pagination = new PaginationService<Employee>();
+        }
 
         /// <summary>
         /// This method returns all employees
@@ -29,13 +37,20 @@ namespace TimeKeeper.API.Controllers
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Get()
+        public IActionResult GetAll(int page = 1, int pageSize = 10)
+
         {
             try
             {
                 Logger.Info($"Try to fetch all employees");
-                return Ok(Unit.Employees.Get().ToList().Select(x => x.Create()).ToList());                
+
+                Tuple < PaginationModel, List<Employee>> employeesPagination = Pagination.CreatePagination(page, pageSize, Unit.Employees.Get() as DbSet<Employee>);
+                
+                HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(employeesPagination.Item1));
+                return Ok(employeesPagination.Item2.ToList().Select(x => x.Create()).ToList());
+                    
             }
+
             catch (Exception ex)
             {
                 return HandleException(ex);
@@ -58,13 +73,6 @@ namespace TimeKeeper.API.Controllers
             {
                 Logger.Info($"Try to fetch employee with id {id}");
                 Employee employee = Unit.Employees.Get(id);
-                
-                /*if (employee == null)
-                {
-                    Logger.Error($"Employee with id {id} cannot be found");
-                    return NotFound();
-                }*/
-
                  return Ok(employee.Create());                
             }
             catch (Exception ex)
@@ -81,6 +89,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPost]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Post([FromBody] Employee employee)
@@ -116,6 +125,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
+        [Authorize(Policy = "IsEmployee")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Put(int id, [FromBody] Employee employee)
@@ -154,6 +164,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
