@@ -41,22 +41,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Employee emp = Unit.Employees.Get(employeeId);
-                List<DayModel> calendar =  calendarService.GetEmployeeMonth(employeeId, year, month);
-
-                /*if (emp == null)
-                {
-                    Logger.Error($"Employee with id {employeeId} cannot be found");
-                    return NotFound("Task not found");
-                }  */
-                var result = Unit.Calendar.Get(x => x.Date.Year == year && x.Date.Month == month).Select(x => x.Create());
-                foreach(var d in result)
-                {
-                    calendar[d.Date.Day - 1] = d;
-                }
-
-                return Ok(calendar);
-                //return Ok(emp.Calendar.Where(x => x.Date.Year == year && x.Date.Month == month).Select(x => x.Create()));
+                return Ok(calendarService.GetEmployeeMonth(employeeId, year, month));
             }
             catch (Exception ex)
             {
