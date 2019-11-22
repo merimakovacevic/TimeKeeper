@@ -37,5 +37,20 @@ namespace TimeKeeper.Test.ControllersTest
             Assert.AreEqual(future, value.Count(x => x.DayType.Name == "Future"));
             Assert.AreEqual(weekend, value.Count(x => x.DayType.Name == "Weekend"));
         }
+        
+        [Test, Order(2)]
+        public void GetDayById()
+        {
+            int id = 3;
+            int employeeId = 3;
+            var controller = new CalendarController(unit.Context);
+
+            var response = controller.Get(id) as ObjectResult;
+            var value = response.Value as DayModel;
+
+            Assert.AreEqual(200, response.StatusCode);
+            Assert.AreEqual(employeeId, value.Employee.Id);
+            Assert.AreEqual(1, value.JobDetails.Count());
+        }
     }
 }
