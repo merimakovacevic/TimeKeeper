@@ -13,5 +13,7 @@ namespace TimeKeeper.API.Models
         }
         public EmployeeModel Employee { get; set; }
         public Dictionary<string, decimal> HourTypes { get; set; }
+        public decimal PaidTimeOff { get; set; }
+        public decimal Overtime { get; set; }
     }
 }

@@ -53,7 +53,7 @@ namespace TimeKeeper.Test.ControllersTest
             int id = 40; //Member with id 40 doesn't exist in the test database
             var controller = new MembersController(unit.Context);
 
-            var response = controller.Get(id) as StatusCodeResult;
+            var response = controller.Get(id) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }
@@ -139,7 +139,7 @@ namespace TimeKeeper.Test.ControllersTest
                 Status = unit.MemberStatuses.Get(1)
             };
 
-            var response = controller.Put(id, member) as StatusCodeResult;
+            var response = controller.Put(id, member) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }

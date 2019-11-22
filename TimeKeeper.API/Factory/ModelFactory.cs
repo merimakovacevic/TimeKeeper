@@ -124,7 +124,7 @@ namespace TimeKeeper.API.Factory
             return new EmployeeTimeModel
             {
                 Employee = employee.Create(),
-                HourTypes = new Dictionary<string, decimal>()                
+                HourTypes = new Dictionary<string, decimal>()
             };
         }
     }

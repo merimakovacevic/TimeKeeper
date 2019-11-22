@@ -15,6 +15,7 @@ namespace TimeKeeper.API.Models
         public MasterModel Employee { get; set; }
         public DateTime Date { get; set; }
         public MasterModel DayType { get; set; }
+        public int TotalHours { get; set; }
         public List<JobDetailModel> JobDetails { get; set; }
     }
 }
