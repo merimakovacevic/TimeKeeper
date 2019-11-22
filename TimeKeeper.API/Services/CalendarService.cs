@@ -110,6 +110,7 @@ namespace TimeKeeper.API.Services
                 day = day.AddDays(1);
             }
             List<DayModel> employeeDays = unit.Calendar.Get(x => x.Employee.Id == empId && x.Date.Year == year && x.Date.Month == month).Select(x => x.Create()).ToList();
+
             foreach (var d in employeeDays)
             {
                 calendar[d.Date.Day - 1] = d;
