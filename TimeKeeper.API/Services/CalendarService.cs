@@ -12,25 +12,49 @@ namespace TimeKeeper.API.Services
     public class CalendarService
     {
         protected UnitOfWork unit;
+        protected List<DayType> dayTypesInMemory;
         public CalendarService(UnitOfWork _unit)
         {
             unit = _unit;
+            dayTypesInMemory = unit.DayTypes.Get().ToList();
+            dayTypesInMemory.Add(new DayType { Id = 10, Name = "Future" });
+            dayTypesInMemory.Add(new DayType { Id = 11, Name = "Empty" });
+            dayTypesInMemory.Add(new DayType { Id = 12, Name = "Weekend" });
+            dayTypesInMemory.Add(new DayType { Id = 13, Name = "N/A" });
         }
 
-        public List<EmployeeTimeModel> TeamMonthReport(int teamId, int year, int month)
+        public TeamDashboardModel GetTeamDashboard(int teamId, int year, int month)
+        {
+
+            TeamDashboardModel teamDashboard = new TeamDashboardModel();
+
+            teamDashboard.EmployeeTimes = GetTeamMonthReport(teamId, year, month);
+            teamDashboard.EmployeesCount = teamDashboard.EmployeeTimes.Count();
+            teamDashboard.ProjectsCount = unit.Teams.Get(teamId).Projects.Count();
+
+            foreach(EmployeeTimeModel employeeTime in teamDashboard.EmployeeTimes)
+            {
+                teamDashboard.TotalHours += employeeTime.HourTypes["Total hours"];
+                teamDashboard.WorkingHours += employeeTime.HourTypes["Workday"];
+            }
+
+            return teamDashboard;
+        }
+
+        public List<EmployeeTimeModel> GetTeamMonthReport(int teamId, int year, int month)
         {
             Team team = unit.Teams.Get(teamId);
             List<EmployeeTimeModel> employeeTimeModels = new List<EmployeeTimeModel>();
 
             foreach (Member member in team.Members)
             {
-                employeeTimeModels.Add(CreateEmployeeReport(member.Employee.Id, year, month));
+                employeeTimeModels.Add(GetEmployeeMonthReport(member.Employee.Id, year, month));
             }
 
             return employeeTimeModels;
         }
 
-        public EmployeeTimeModel CreateEmployeeReport(int employeeId, int year, int month)
+        public EmployeeTimeModel GetEmployeeMonthReport(int employeeId, int year, int month)
         {
             Employee employee = unit.Employees.Get(employeeId);
             EmployeeTimeModel employeePersonalReport = employee.CreateTimeModel();
@@ -108,19 +132,11 @@ namespace TimeKeeper.API.Services
 
         private void SetDayTypes(Dictionary<string, decimal> hourTypes)
         {
-            List<DayType> dayTypes = unit.DayTypes.Get().ToList();
-            DayType future = new DayType { Id = 10, Name = "Future" };
-            DayType empty = new DayType { Id = 11, Name = "Empty" };
-            DayType weekend = new DayType { Id = 12, Name = "Weekend" };
-            DayType na = new DayType { Id = 13, Name = "N/A" };
-            foreach (DayType day in dayTypes)
+            //List<DayType> dayTypes = unit.DayTypes.Get().ToList();
+            foreach (DayType day in dayTypesInMemory)
             {
                 hourTypes.Add(day.Name, 0);
             }
-            hourTypes.Add(future.Name, 0);
-            hourTypes.Add(empty.Name, 0);
-            hourTypes.Add(weekend.Name, 0);
-            hourTypes.Add(na.Name, 0);
         }
 
                 /*
