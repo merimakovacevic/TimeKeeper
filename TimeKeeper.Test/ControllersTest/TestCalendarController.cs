@@ -5,14 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TimeKeeper.API.Controllers;
+using TimeKeeper.API.Factory;
 using TimeKeeper.API.Models;
 using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.Test.ControllersTest
 {
     [TestFixture]
-    public class TestCalendarController : TestBase
-    {
+    public class TestCalendarController : BaseTestDatabase
+    {         
+
         [Test, Order(1)]
         [TestCase(3, 2019, 2, 3, 17, 0, 0, 8)]
         [TestCase(2, 2019, 6, 1, 19, 0, 0, 10)]
@@ -37,7 +39,9 @@ namespace TimeKeeper.Test.ControllersTest
             Assert.AreEqual(future, value.Count(x => x.DayType.Name == "Future"));
             Assert.AreEqual(weekend, value.Count(x => x.DayType.Name == "Weekend"));
         }
+
         
+
         [Test, Order(2)]
         public void GetDayById()
         {
@@ -51,6 +55,123 @@ namespace TimeKeeper.Test.ControllersTest
             Assert.AreEqual(200, response.StatusCode);
             Assert.AreEqual(employeeId, value.Employee.Id);
             Assert.AreEqual(1, value.JobDetails.Count());
+        }
+
+        [Test, Order(3)]
+        public void GetNonExistingDay()
+        {
+            int id = 1000;
+            var controller = new CalendarController(unit.Context);
+
+            var response = controller.Get(id) as ObjectResult;
+
+            Assert.AreEqual(404, response.StatusCode);
+        }
+
+        [Test, Order(4)]
+        public void InsertDay()
+        {
+            var controller = new CalendarController(unit.Context);
+
+            Day day = new Day
+            {
+                Employee = unit.Employees.Get(1),
+                DayType = unit.DayTypes.Get(1),
+                Date = DateTime.Now
+            };
+
+            var response = controller.Post(day) as ObjectResult;
+            var value = response.Value as DayModel;
+
+            Assert.AreEqual(200, response.StatusCode);
+            Assert.AreEqual(101, value.Id);//id of the new day will be 3
+        }
+
+        [Test, Order(5)]
+        public void ChangeDay()
+        {
+            //Try to change day with id 2
+            var controller = new CalendarController(unit.Context);
+            int id = 2;
+
+            Day day = new Day
+            {
+                Id = id,
+                Employee = unit.Employees.Get(1),
+                DayType = unit.DayTypes.Get(1),
+                Date = DateTime.Now
+            };
+
+            var response = controller.Put(id, day) as ObjectResult;
+            var value = response.Value as DayModel;
+
+            Assert.AreEqual(200, response.StatusCode);
+            Assert.AreEqual(1, value.Employee.Id);//id of the new day will be 3
+        }
+
+        [Test, Order(6)]
+        public void ChangeNonExistingDay()
+        {
+            //Try to change day with id
+            var controller = new CalendarController(unit.Context);
+            int id = 1000;
+
+            Day day = new Day
+            {
+                Id = id,
+                Employee = unit.Employees.Get(1),
+                DayType = unit.DayTypes.Get(1),
+                Date = DateTime.Now
+            };
+
+            var response = controller.Put(id, day) as ObjectResult;
+
+            Assert.AreEqual(404, response.StatusCode);
+        }
+
+        [Test, Order(6)]
+        public void ChangeDayWithWrongId()
+        {
+            //Try to change day with id
+            var controller = new CalendarController(unit.Context);
+            int id = 2;
+            int wrongId = 3;
+
+            Day day = new Day
+            {
+                Id = id,
+                Employee = unit.Employees.Get(1),
+                DayType = unit.DayTypes.Get(1),
+                Date = DateTime.Now
+            };
+
+            var response = controller.Put(wrongId, day) as ObjectResult;
+
+            Assert.AreEqual(400, response.StatusCode);
+        }
+
+        [Test, Order(7)]
+        public void DeleteDay()
+        {
+            //Try to delete day with id
+            var controller = new CalendarController(unit.Context);
+            int id = 2;
+
+            var response = controller.Delete(id) as StatusCodeResult;
+
+            Assert.AreEqual(204, response.StatusCode);
+        }
+
+        [Test, Order(8)]
+        public void DeleteNonExistingDay()
+        {
+            //Try to delete day with id
+            var controller = new CalendarController(unit.Context);
+            int id = 1000;
+
+            var response = controller.Delete(id) as ObjectResult;
+
+            Assert.AreEqual(404, response.StatusCode);
         }
     }
 }

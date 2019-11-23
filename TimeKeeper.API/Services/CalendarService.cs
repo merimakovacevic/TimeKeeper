@@ -80,7 +80,7 @@ namespace TimeKeeper.API.Services
                     employeePersonalReport.PaidTimeOff += day.TotalHours;
                 }
             }
-            hours.Add("Missing entries", calendar.FindAll(x => x.DayType.Name == "Empty").Sum(x => x.TotalHours));
+            hours.Add("Missing entries", calendar.FindAll(x => x.DayType.Name == "Empty").Count() * 8);
 
             return employeePersonalReport;
         }
