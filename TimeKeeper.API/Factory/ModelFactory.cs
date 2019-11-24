@@ -115,6 +115,7 @@ namespace TimeKeeper.API.Factory
                 Employee = day.Employee.Master(),
                 Date = day.Date,
                 DayType = day.DayType.Master(),
+                TotalHours = day.TotalHours,
                 JobDetails = day.JobDetails.Select(x => x.Create()).ToList()
             };
         }
@@ -124,7 +125,9 @@ namespace TimeKeeper.API.Factory
             return new EmployeeTimeModel
             {
                 Employee = employee.Create(),
-                HourTypes = new Dictionary<string, decimal>()
+                HourTypes = new Dictionary<string, decimal>(),
+                Overtime = 0,
+                PaidTimeOff = 0
             };
         }
     }

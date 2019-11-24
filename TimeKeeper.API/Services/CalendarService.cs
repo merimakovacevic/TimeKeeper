@@ -6,6 +6,7 @@ using TimeKeeper.API.Factory;
 using TimeKeeper.API.Models;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
+
 namespace TimeKeeper.API.Services
 {
     public class CalendarService
@@ -15,24 +16,31 @@ namespace TimeKeeper.API.Services
         {
             unit = _unit;
         }
+
         public List<EmployeeTimeModel> TeamMonthReport(int teamId, int year, int month)
         {
             Team team = unit.Teams.Get(teamId);
             List<EmployeeTimeModel> employeeTimeModels = new List<EmployeeTimeModel>();
+
             foreach (Member member in team.Members)
             {
                 employeeTimeModels.Add(CreateEmployeeReport(member.Employee.Id, year, month));
             }
             return employeeTimeModels;
         }
+
         public EmployeeTimeModel CreateEmployeeReport(int employeeId, int year, int month)
         {
             Employee employee = unit.Employees.Get(employeeId);
             EmployeeTimeModel employeePersonalReport = employee.CreateTimeModel();
             List<DayModel> calendar = GetEmployeeMonth(employeeId, year, month);
+
             SetDayTypes(employeePersonalReport.HourTypes);
+
             Dictionary<string, decimal> hours = employeePersonalReport.HourTypes;
+
             hours.Add("Total hours", 0);
+
             foreach (DayModel day in calendar)
             {
                 hours[day.DayType.Name] += day.TotalHours;//CalculateHoursOnProject(day, project);
@@ -40,14 +48,15 @@ namespace TimeKeeper.API.Services
                 if (day.DayType.Name == "Workday" && day.TotalHours > 8)
                 {
                     employeePersonalReport.Overtime += day.TotalHours - 8;
-                }
+                }   
                 //Any additional day types to be added as paid time off?
-                if (day.DayType.Name != "Workday")
+                if(day.DayType.Name != "Workday")
                 {
                     employeePersonalReport.PaidTimeOff += day.TotalHours;
                 }
             }
             hours.Add("Missing entries", calendar.FindAll(x => x.DayType.Name == "Empty").Sum(x => x.TotalHours));
+
             return employeePersonalReport;
         }
 
@@ -82,6 +91,7 @@ namespace TimeKeeper.API.Services
             }
             return calendar;
         }
+
         public bool ValidateMonth(int year, int month)
         {
             if (month > 12 || month < 1) return false;
@@ -94,6 +104,7 @@ namespace TimeKeeper.API.Services
             }
             return true;
         }
+
         private void SetDayTypes(Dictionary<string, decimal> hourTypes)
         {
             List<DayType> dayTypes = unit.DayTypes.Get().ToList();
@@ -110,6 +121,7 @@ namespace TimeKeeper.API.Services
             hourTypes.Add(weekend.Name, 0);
             hourTypes.Add(na.Name, 0);
         }
+
                 /*
          private decimal CalculateHoursOnProject(Day employeeDay, Project project)
          {
@@ -121,12 +133,15 @@ namespace TimeKeeper.API.Services
                      totalHoursOnProject += jobDetail.Hours;
                  }
              }
+
              return totalHoursOnProject;
          }
+
          private decimal GetMonthlyWorkingHours(int year, int month)
          {
              int daysInMonth = DateTime.DaysInMonth(year, month);
              int workingDays = 0;
+
              for (int i = 1; i <= daysInMonth; i++)
              {
                  DateTime thisDay = new DateTime(year,month,i);
@@ -135,7 +150,10 @@ namespace TimeKeeper.API.Services
                      workingDays += 1;
                  }
              }
+
              return workingDays;
          }*/
+
+
     }
 }
