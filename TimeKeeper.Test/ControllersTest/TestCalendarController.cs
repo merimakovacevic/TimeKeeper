@@ -40,6 +40,8 @@ namespace TimeKeeper.Test.ControllersTest
             Assert.AreEqual(weekend, value.Count(x => x.DayType.Name == "Weekend"));
         }
 
+        /*This method is for manual creation of the assertion employee time models.
+         * The calculated hours assigned were calculated using queries in PostgreSQL*/
         private List<EmployeeTimeModel> CreateTeamReport(int teamId)
         {
             List<EmployeeTimeModel> employeeTimes = new List<EmployeeTimeModel>();
@@ -47,8 +49,7 @@ namespace TimeKeeper.Test.ControllersTest
             employeeTimes = unit.Teams.Get(teamId).Members.Select(x => x.Employee.CreateTimeModel()).ToList();
 
             foreach (EmployeeTimeModel employeeTime in employeeTimes)
-            {
-                //
+            {                
                 employeeTime.HourTypes.SetHourTypes(unit);
                 //SetHourTypes(employeeTime.HourTypes);
                 employeeTime.TotalHours = 160;
@@ -60,14 +61,7 @@ namespace TimeKeeper.Test.ControllersTest
             employeeTimes.FirstOrDefault(x => x.Employee.Id == 1).HourTypes["Missing entries"] = 19 * 8;
             employeeTimes.FirstOrDefault(x => x.Employee.Id == 4).HourTypes["Workday"] = 16;
             employeeTimes.FirstOrDefault(x => x.Employee.Id == 4).HourTypes["Missing entries"] = 18 * 8;
-            /*
-            employeeTimes.Where(x => x.Employee.Id == 5).Select(x => x.HourTypes["Workday"] = 16);
-            employeeTimes.Where(x => x.Employee.Id == 5).Select(x => x.HourTypes["Missing entries"] = 18 * 8);
-            employeeTimes.Where(x => x.Employee.Id == 1).Select(x => x.HourTypes["Workday"] = 8);
-            employeeTimes.Where(x => x.Employee.Id == 1).Select(x => x.HourTypes["Missing entries"] = 19 * 8);
-            employeeTimes.Where(x => x.Employee.Id == 4).Select(x => x.HourTypes["Workday"] = 16);
-            employeeTimes.Where(x => x.Employee.Id == 4).Select(x => x.HourTypes["Missing entries"] = 18 * 8);*/
-
+           
             return employeeTimes;
         }
 

@@ -13,6 +13,8 @@ namespace TimeKeeper.Test.ControllersRealDatabase
     [TestFixture]
     public class TestCalendarController : BaseRealDatabase
     {
+        /*This method is for manual creation of the assertion employee time models.
+         * The calculated hours assigned were calculated using queries in PostgreSQL*/
         private List<EmployeeTimeModel> CreateEmployeeTimeModels()
         {
             List<EmployeeTimeModel> employeeTimes = new List<EmployeeTimeModel>();
