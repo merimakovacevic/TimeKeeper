@@ -40,8 +40,6 @@ namespace TimeKeeper.Test.ControllersTest
             Assert.AreEqual(weekend, value.Count(x => x.DayType.Name == "Weekend"));
         }
 
-        
-
         [Test, Order(2)]
         public void GetDayById()
         {
