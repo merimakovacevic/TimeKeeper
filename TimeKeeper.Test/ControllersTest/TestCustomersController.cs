@@ -11,7 +11,7 @@ using TimeKeeper.Domain.Entities;
 namespace TimeKeeper.Test.ControllersTest
 {
     [TestFixture]
-    public class TestCustomersController : TestBase
+    public class TestCustomersController : BaseTestDatabase
     {
         [Test, Order(1)]
         public void GetAllCustomers()

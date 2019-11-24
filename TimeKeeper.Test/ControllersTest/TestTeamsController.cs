@@ -12,7 +12,7 @@ using TimeKeeper.Domain.Entities;
 namespace TimeKeeper.Test.ControllersTest
 {
     [TestFixture]
-    public class TestTeamsController : TestBase
+    public class TestTeamsController : BaseTestDatabase
     {
 
         [Test, Order(1)]

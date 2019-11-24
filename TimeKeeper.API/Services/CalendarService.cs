@@ -80,7 +80,7 @@ namespace TimeKeeper.API.Services
                     employeePersonalReport.PaidTimeOff += day.TotalHours;
                 }
             }
-            hours.Add("Missing entries", calendar.FindAll(x => x.DayType.Name == "Empty").Sum(x => x.TotalHours));
+            hours.Add("Missing entries", calendar.FindAll(x => x.DayType.Name == "Empty").Count() * 8);
 
             return employeePersonalReport;
         }
@@ -110,6 +110,7 @@ namespace TimeKeeper.API.Services
                 day = day.AddDays(1);
             }
             List<DayModel> employeeDays = unit.Calendar.Get(x => x.Employee.Id == empId && x.Date.Year == year && x.Date.Month == month).Select(x => x.Create()).ToList();
+
             foreach (var d in employeeDays)
             {
                 calendar[d.Date.Day - 1] = d;
