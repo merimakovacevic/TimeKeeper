@@ -12,11 +12,10 @@ namespace TimeKeeper.API.Services
     public class CalendarService
     {
         protected UnitOfWork unit;
-        protected List<DayType> dayTypesInMemory;
+
         public CalendarService(UnitOfWork _unit)
         {
             unit = _unit;
-            dayTypesInMemory = _unit.CreateInMemoryDayTypes();
         }
 
         public TeamDashboardModel GetTeamDashboard(int teamId, int year, int month)
