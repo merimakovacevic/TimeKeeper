@@ -12,7 +12,7 @@ using TimeKeeper.Domain.Entities;
 namespace TimeKeeper.Test.ControllersTest
 {
     [TestFixture]
-    public class TestRolesController: TestBase
+    public class TestRolesController: BaseTestDatabase
     {
         [Test, Order(1)]
         public void GetAllRoles()

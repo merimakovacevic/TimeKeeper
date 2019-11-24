@@ -9,7 +9,7 @@ using TimeKeeper.Seed;
 namespace TimeKeeper.Test
 {
     [TestFixture]
-    public class TestBase
+    public class BaseTestDatabase
     {
         public TimeKeeperContext context;
         public UnitOfWork unit;

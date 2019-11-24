@@ -13,12 +13,6 @@ namespace TimeKeeper.API.Services
 {
     public static class Services
     {
-        //public static bool IsTeamMember(this Employee firstEmployee, Employee secondEmployee, Team team)
-        //{
-        //    bool isTeamMember = true;
-            
-        //}
-
         public static List<EmployeeModel> GetEmployeeTeamMembers(this UnitOfWork unit, int userId)
         {
             List<Team> userTeams = unit.GetEmployeeTeams(userId);
@@ -53,28 +47,37 @@ namespace TimeKeeper.API.Services
             return employeeProjects;
         }
 
-        public static Task FilterContextCheck(AuthorizationHandlerContext context/*, UnitOfWork unit*/)
+        public static List<DayType> CreateInMemoryDayTypes(this UnitOfWork unit)
         {
-            var filterContext = context.Resource as AuthorizationFilterContext;
-            if (filterContext == null)
-            {
-                context.Fail();
-                return Task.CompletedTask;
-            }
-            /*
-            if (!int.TryParse(filterContext.RouteData.Values["id"].ToString(), out int teamId))
-            {
-                context.Fail();
-                return Task.CompletedTask;
-            }*/
+            List<DayType> dayTypesInMemory = unit.DayTypes.Get().ToList();
 
-            if (!int.TryParse(context.User.Claims.FirstOrDefault(c => c.Type == "sub").Value, out int employeeId))
+            dayTypesInMemory.Add(new DayType { Id = 10, Name = "Future" });
+            dayTypesInMemory.Add(new DayType { Id = 11, Name = "Empty" });
+            dayTypesInMemory.Add(new DayType { Id = 12, Name = "Weekend" });
+            dayTypesInMemory.Add(new DayType { Id = 13, Name = "N/A" });
+
+            return dayTypesInMemory;
+        }
+
+        public static void SetHourTypes(this Dictionary<string, decimal> hourTypes, UnitOfWork unit)
+        {
+            List<DayType> dayTypes = unit.DayTypes.Get().ToList();
+            foreach (DayType day in dayTypes)
             {
-                context.Fail();
-                return Task.CompletedTask;
+                hourTypes.Add(day.Name, 0);
             }
 
-            return Task.CompletedTask;
+            hourTypes.Add("Missing entries", 0);
+        }
+
+        public static bool IsWeekend(this DateTime date)
+        {
+            return date.DayOfWeek == DayOfWeek.Sunday || date.DayOfWeek == DayOfWeek.Saturday;
+        }
+
+        public static bool IsWeekend(this DayModel day)
+        {
+            return day.Date.IsWeekend();
         }
     }
 }

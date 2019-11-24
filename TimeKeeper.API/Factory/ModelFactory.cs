@@ -126,6 +126,7 @@ namespace TimeKeeper.API.Factory
             {
                 Employee = employee.Create(),
                 HourTypes = new Dictionary<string, decimal>(),
+                TotalHours = 0,
                 Overtime = 0,
                 PaidTimeOff = 0
             };
