@@ -59,6 +59,17 @@ namespace TimeKeeper.API.Services
             return dayTypesInMemory;
         }
 
+        public static void SetHourTypes(this Dictionary<string, decimal> hourTypes, UnitOfWork unit)
+        {
+            List<DayType> dayTypes = unit.DayTypes.Get().ToList();
+            foreach (DayType day in dayTypes)
+            {
+                hourTypes.Add(day.Name, 0);
+            }
+
+            hourTypes.Add("Missing entries", 0);
+        }
+
         public static bool IsWeekend(this DateTime date)
         {
             return date.DayOfWeek == DayOfWeek.Sunday || date.DayOfWeek == DayOfWeek.Saturday;

@@ -56,7 +56,10 @@ namespace TimeKeeper.API.Services
             EmployeeTimeModel employeeReport = employee.CreateTimeModel();
             List<DayModel> calendar = GetEmployeeMonth(employeeId, year, month);
 
-            SetHourTypes(employeeReport.HourTypes);
+            employeeReport.HourTypes.SetHourTypes(unit);
+
+            //The SetHourTypes function was moved to TimeKeeper.Api.Services.Services
+            //SetHourTypes(employeeReport.HourTypes);
             Dictionary<string, decimal> hours = employeeReport.HourTypes;//this is to shorten down the Dictionary name
 
             foreach (DayModel day in calendar)
@@ -154,6 +157,7 @@ namespace TimeKeeper.API.Services
             return true;
         }
 
+        /*
         public void SetHourTypes(Dictionary<string, decimal> hourTypes)
         {
             List <DayType> dayTypes = unit.DayTypes.Get().ToList();
@@ -163,7 +167,7 @@ namespace TimeKeeper.API.Services
             }
 
             hourTypes.Add("Missing entries", 0);
-        }
+        }*/
 
                 /*
          private decimal CalculateHoursOnProject(Day employeeDay, Project project)

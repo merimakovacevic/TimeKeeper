@@ -7,14 +7,14 @@ using System.Text;
 using TimeKeeper.API.Controllers;
 using TimeKeeper.API.Factory;
 using TimeKeeper.API.Models;
+using TimeKeeper.API.Services;
 using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.Test.ControllersTest
 {
     [TestFixture]
     public class TestCalendarController : BaseTestDatabase
-    {         
-
+    {
         [Test, Order(1)]
         [TestCase(3, 2019, 2, 3, 17, 0, 0, 8)]
         [TestCase(2, 2019, 6, 1, 19, 0, 0, 10)]
@@ -38,6 +38,62 @@ namespace TimeKeeper.Test.ControllersTest
             Assert.AreEqual(na, value.Count(x => x.DayType.Name == "N/A"));
             Assert.AreEqual(future, value.Count(x => x.DayType.Name == "Future"));
             Assert.AreEqual(weekend, value.Count(x => x.DayType.Name == "Weekend"));
+        }
+
+        private List<EmployeeTimeModel> CreateTeamReport(int teamId)
+        {
+            List<EmployeeTimeModel> employeeTimes = new List<EmployeeTimeModel>();
+            List<DayType> dayTypes = unit.DayTypes.Get().ToList();
+            employeeTimes = unit.Teams.Get(teamId).Members.Select(x => x.Employee.CreateTimeModel()).ToList();
+
+            foreach (EmployeeTimeModel employeeTime in employeeTimes)
+            {
+                //
+                employeeTime.HourTypes.SetHourTypes(unit);
+                //SetHourTypes(employeeTime.HourTypes);
+                employeeTime.TotalHours = 160;
+            }
+
+            employeeTimes.FirstOrDefault(x => x.Employee.Id == 5).HourTypes["Workday"] = 16;
+            employeeTimes.FirstOrDefault(x => x.Employee.Id == 5).HourTypes["Missing entries"] = 18 * 8;
+            employeeTimes.FirstOrDefault(x => x.Employee.Id == 1).HourTypes["Workday"] = 8;
+            employeeTimes.FirstOrDefault(x => x.Employee.Id == 1).HourTypes["Missing entries"] = 19 * 8;
+            employeeTimes.FirstOrDefault(x => x.Employee.Id == 4).HourTypes["Workday"] = 16;
+            employeeTimes.FirstOrDefault(x => x.Employee.Id == 4).HourTypes["Missing entries"] = 18 * 8;
+            /*
+            employeeTimes.Where(x => x.Employee.Id == 5).Select(x => x.HourTypes["Workday"] = 16);
+            employeeTimes.Where(x => x.Employee.Id == 5).Select(x => x.HourTypes["Missing entries"] = 18 * 8);
+            employeeTimes.Where(x => x.Employee.Id == 1).Select(x => x.HourTypes["Workday"] = 8);
+            employeeTimes.Where(x => x.Employee.Id == 1).Select(x => x.HourTypes["Missing entries"] = 19 * 8);
+            employeeTimes.Where(x => x.Employee.Id == 4).Select(x => x.HourTypes["Workday"] = 16);
+            employeeTimes.Where(x => x.Employee.Id == 4).Select(x => x.HourTypes["Missing entries"] = 18 * 8);*/
+
+            return employeeTimes;
+        }
+
+        [Test, Order(2)]
+        [TestCase(3, 2019, 6)]
+        public void GetTeamTimeTracking(int teamId, int year, int month)
+        {
+            var controller = new CalendarController(unit.Context);
+            var response = controller.GetTimeTracking(teamId, year, month) as ObjectResult;
+            var value = response.Value as List<EmployeeTimeModel>;
+
+            //this dictionary is only used for iteration through it's keys
+            Dictionary<string, decimal> hourTypes = new Dictionary<string, decimal>();
+            hourTypes.SetHourTypes(unit);
+            //SetHourTypes(hourTypes);
+
+            List<EmployeeTimeModel> employeeTimes = CreateTeamReport(teamId);
+
+            Assert.AreEqual(200, response.StatusCode);
+            foreach (KeyValuePair<string, decimal> hourType in hourTypes)
+            {
+                Assert.AreEqual(value.Sum(x => x.HourTypes[hourType.Key]), employeeTimes.Sum(x => x.HourTypes[hourType.Key]));
+            }
+            Assert.AreEqual(value.Sum(x => x.TotalHours), employeeTimes.Sum(x => x.TotalHours));
+            Assert.AreEqual(value.Sum(x => x.PaidTimeOff), employeeTimes.Sum(x => x.PaidTimeOff));
+            Assert.AreEqual(value.Sum(x => x.Overtime), employeeTimes.Sum(x => x.Overtime));
         }
 
         [Test, Order(2)]

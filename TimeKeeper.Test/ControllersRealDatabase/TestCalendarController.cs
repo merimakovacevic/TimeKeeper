@@ -5,6 +5,7 @@ using System.Linq;
 using TimeKeeper.API.Controllers;
 using TimeKeeper.API.Factory;
 using TimeKeeper.API.Models;
+using TimeKeeper.API.Services;
 using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.Test.ControllersRealDatabase
@@ -24,10 +25,8 @@ namespace TimeKeeper.Test.ControllersRealDatabase
 
             //This test employee has only 12 work hours in the test database
             EmployeeTimeModel firstEmployee = unit.Employees.Get(firstEmployeeId).CreateTimeModel();
-            foreach (DayType dayType in dayTypes)
-            {
-                firstEmployee.HourTypes.Add(dayType.Name, 0);
-            }
+            firstEmployee.HourTypes.SetHourTypes(unit);
+            //SetHourTypes(firstEmployee.HourTypes);
 
             firstEmployee.HourTypes["Workday"] = 120;
             firstEmployee.HourTypes["Holiday"] = 16;
@@ -38,7 +37,7 @@ namespace TimeKeeper.Test.ControllersRealDatabase
              * But, 2 of those 8 weekend days are entered as holidays, which ARE saved in the database. 
              * This means that there are actually 3 missing entries = 24 hours*/
              //Technically, holidays/vacations aren't paid if they happen to be on a weekend, and thus should not be saved!
-            firstEmployee.HourTypes.Add("Missing entries", 24);
+            firstEmployee.HourTypes["Missing entries"] = 24;
             firstEmployee.TotalHours = 200;
             //Total hours + Weekends for the month = 248
 
@@ -50,10 +49,8 @@ namespace TimeKeeper.Test.ControllersRealDatabase
             //
             int secondEmployeeId = 41;
             EmployeeTimeModel secondEmployee = unit.Employees.Get(secondEmployeeId).CreateTimeModel();
-            foreach (DayType dayType in dayTypes)
-            {
-                secondEmployee.HourTypes.Add(dayType.Name, 0);
-            }
+            secondEmployee.HourTypes.SetHourTypes(unit);
+            //SetHourTypes(secondEmployee.HourTypes);
 
             secondEmployee.HourTypes["Workday"] = 215;
             secondEmployee.HourTypes["Holiday"] = 0;
@@ -64,7 +61,7 @@ namespace TimeKeeper.Test.ControllersRealDatabase
              * But, 2 of those 8 weekend days are entered as holidays, which ARE saved in the database. 
              * This means that there are actually 3 missing entries = 24 hours*/
             //Technically, holidays/vacations aren't paid if they happen to be on a weekend, and thus should not be saved!
-            secondEmployee.HourTypes.Add("Missing entries", 0);
+            secondEmployee.HourTypes["Missing entries"] = 0;
             secondEmployee.TotalHours = 215;
             //Total hours + Weekends for the month = 247
 
