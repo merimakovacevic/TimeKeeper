@@ -7,7 +7,7 @@ using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.Test.RepositoriesTest
 {
-    public class TestCalendar: TestBase
+    public class TestCalendar: BaseTestDatabase
     {
         [Test, Order(1)]
         public void GetAllDays()
@@ -61,7 +61,9 @@ namespace TimeKeeper.Test.RepositoriesTest
             Day day = new Day
             {
                 Id=id,
-                Date = date
+                Date = date,
+                Employee=unit.Employees.Get(6),
+                DayType=unit.DayTypes.Get(1)
             };
             unit.Calendar.Update(day, id);
             int numberOfChanges = unit.Save();
@@ -76,7 +78,8 @@ namespace TimeKeeper.Test.RepositoriesTest
             Day day = new Day
             {
                 Id = id,
-                Employee = unit.Employees.Get(2)
+                Employee = unit.Employees.Get(2),
+                DayType=unit.DayTypes.Get(1)
             };
             unit.Calendar.Update(day, id);
             int numberOfChanges = unit.Save();
@@ -91,6 +94,7 @@ namespace TimeKeeper.Test.RepositoriesTest
             Day day = new Day
             {
                 Id = id,
+                Employee=unit.Employees.Get(6),
                 DayType = unit.DayTypes.Get(2)
             };
             unit.Calendar.Update(day, id);
@@ -104,7 +108,7 @@ namespace TimeKeeper.Test.RepositoriesTest
         {
             //Try to change the day with a wrong id argument in update method
             int id = 1;
-            int wrongId = 102;
+            int wrongId = 2;
             Day day = new Day
             {
                 Id = id,
