@@ -47,18 +47,6 @@ namespace TimeKeeper.API.Services
             return employeeProjects;
         }
 
-        public static List<DayType> CreateInMemoryDayTypes(this UnitOfWork unit)
-        {
-            List<DayType> dayTypesInMemory = unit.DayTypes.Get().ToList();
-
-            dayTypesInMemory.Add(new DayType { Id = 10, Name = "Future" });
-            dayTypesInMemory.Add(new DayType { Id = 11, Name = "Empty" });
-            dayTypesInMemory.Add(new DayType { Id = 12, Name = "Weekend" });
-            dayTypesInMemory.Add(new DayType { Id = 13, Name = "N/A" });
-
-            return dayTypesInMemory;
-        }
-
         public static void SetHourTypes(this Dictionary<string, decimal> hourTypes, UnitOfWork unit)
         {
             List<DayType> dayTypes = unit.DayTypes.Get().ToList();
