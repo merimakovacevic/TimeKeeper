@@ -6,7 +6,7 @@ import config from "../../../config";
 import { withStyles } from "@material-ui/core/styles";
 import { ButtonGroup } from "@material-ui/core";
 import { Backdrop } from "@material-ui/core";
-import styles from "../../../Styles/TableStyles";
+import styles from "../../../styles/TableStyles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";

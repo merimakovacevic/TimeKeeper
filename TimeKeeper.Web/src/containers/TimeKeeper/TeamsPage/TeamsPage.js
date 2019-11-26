@@ -9,7 +9,7 @@ import './TeamsPage.css'
 
 import { withStyles } from "@material-ui/core/styles";
 import { Backdrop } from "@material-ui/core";
-import styles from "../../../Styles/TableStyles";
+import styles from "../../../styles/TableStyles";
 
 import config from "../../../config";
 import TeamCard from './TeamCard/TeamCard'
