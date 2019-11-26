@@ -46,7 +46,6 @@ namespace TimeKeeper.API.Services
             {
                 employeeTimeModels.Add(GetEmployeeMonthReport(member.Employee.Id, year, month));
             }
-
             return employeeTimeModels;
         }
 
@@ -106,7 +105,7 @@ namespace TimeKeeper.API.Services
            
             return employeeReport;
         }
- 
+
         public List<DayModel> GetEmployeeMonth(int empId, int year, int month)
         {
             List<DayModel> calendar = new List<DayModel>();

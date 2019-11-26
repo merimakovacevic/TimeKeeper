@@ -48,7 +48,7 @@ namespace TimeKeeper.Test.ControllersTest
             int id = 40; //Team with id 4 doesn't exist in the test database
             var controller = new TeamsController(unit.Context);
 
-            var response = controller.Get(id) as StatusCodeResult;
+            var response = controller.Get(id) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }
@@ -101,7 +101,7 @@ namespace TimeKeeper.Test.ControllersTest
                 Name = "Zulu"
             };
 
-            var response = controller.Put(id, team) as StatusCodeResult;
+            var response = controller.Put(id, team) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }
