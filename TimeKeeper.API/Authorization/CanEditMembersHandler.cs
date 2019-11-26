@@ -18,7 +18,7 @@ namespace TimeKeeper.API.Authorization
         {
             Unit = new UnitOfWork(context);
         }
-
+   
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, HasAccessToMembers requirement)
         {
             var filterContext = context.Resource as AuthorizationFilterContext;

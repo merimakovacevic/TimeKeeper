@@ -35,6 +35,7 @@ namespace TimeKeeper.API.Controllers
                 var role = User.Claims.FirstOrDefault(c => c.Type == "role").Value.ToString();
                 if (role == "user") return Unauthorized();
                 var query = Unit.Customers.Get();
+
                 if (role == "lead")
                 {
                     var empid = (User.Claims.FirstOrDefault(c => c.Type == "sub").Value.ToString());
@@ -43,11 +44,8 @@ namespace TimeKeeper.API.Controllers
                     List<Project> projects = new List<Project>();
                     foreach (var team in teams)
                     {
-                        //var awaitedProjects = ;
-
                         projects.AddRange(Unit.Projects.Get(x => x.Team.Id == team));
                     }
-                    //await Unit.Teams.Get().Projects.GroupBy(x => x.Team.Id).Select(y => y.Key).ToList();
                     List<Customer> customers = new List<Customer>();
                     foreach (var project in projects)
                     {
@@ -106,8 +104,6 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                //customer.Status = Unit.CustomerStatuses.Get(customer.Status.Id);
-
                 Unit.Customers.Insert(customer);
                 Unit.Save();
                 Logger.Info($"Customer {customer.Name} added with id {customer.Id}");
@@ -136,17 +132,9 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                //customer.Status = Unit.CustomerStatuses.Get(customer.Status.Id);
                 Logger.Info($"Attempt to update customer with id {id}");
                 Unit.Customers.Update(customer, id);
                 Unit.Save();
-                /*int numberOfChanges = Unit.Save();                
-
-                if (numberOfChanges == 0)
-                {
-                    Logger.Error($"Customer with id {id} cannot be found");
-                    return NotFound();
-                }*/
 
                 Logger.Info($"Customer {customer.Name} with id {customer.Id} updated");
                 return Ok(customer.Create());
@@ -178,13 +166,6 @@ namespace TimeKeeper.API.Controllers
                 Logger.Info($"Attempt to delete customer with id {id}");
                 Unit.Customers.Delete(id);
                 Unit.Save();
-                /*int numberOfChanges = Unit.Save();
-                
-                if (numberOfChanges == 0)
-                {
-                    Logger.Error($"Customer with id {id} cannot be found");
-                    return NotFound();
-                }*/
 
                 Logger.Info($"Customer with id {id} deleted");
                 return NoContent();

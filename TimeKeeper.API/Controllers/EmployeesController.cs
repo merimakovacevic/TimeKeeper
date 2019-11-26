@@ -44,7 +44,7 @@ namespace TimeKeeper.API.Controllers
             {
                 Logger.Info($"Try to fetch all employees");
 
-                Tuple < PaginationModel, List<Employee>> employeesPagination = Pagination.CreatePagination(page, pageSize, Unit.Employees.Get() as DbSet<Employee>);
+                Tuple <PaginationModel, List<Employee>> employeesPagination = Pagination.CreatePagination(page, pageSize, Unit.Employees.Get() as DbSet<Employee>);
                 
                 HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(employeesPagination.Item1));
                 return Ok(employeesPagination.Item2.ToList().Select(x => x.Create()).ToList());
@@ -96,8 +96,6 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                //employee.Status = Unit.EmploymentStatuses.Get(employee.Status.Id);
-                //employee.Position = Unit.EmployeePositions.Get(employee.Position.Id);
                 Unit.Employees.Insert(employee);
                 Unit.Save();
 
@@ -132,20 +130,10 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                //employee.Status = Unit.EmploymentStatuses.Get(employee.Status.Id);
-                //employee.Position = Unit.EmployeePositions.Get(employee.Position.Id);
                 Logger.Info($"Attempt to update employee with id {id}");
                 Unit.Employees.Update(employee, id);
                 Unit.Save();
 
-                /*int numberOfChanges = Unit.Save();
-                Logger.Info($"Attempt to update employee with id {id}");
-
-                if (numberOfChanges == 0)
-                {
-                   Logger.Error($"Employee with id {id} cannot be found");
-                    return NotFound();
-                }*/
                 Logger.Info($"Employee {employee.FirstName} {employee.LastName} with id {employee.Id} updated");
                 return Ok(employee.Create());
             }
@@ -175,15 +163,6 @@ namespace TimeKeeper.API.Controllers
                 Logger.Info($"Attempt to delete employee with id {id}");
                 Unit.Employees.Delete(id);
                 Unit.Save();
-
-                /*int numberOfChanges = Unit.Save();
-                Logger.Info($"Attempt to delete employee with id {id}");
-
-                if (numberOfChanges == 0)
-                {
-                    Logger.Error($"Employee with id {id} cannot be found");
-                    return NotFound();
-                }*/
 
                 Logger.Info($"Employee with id {id} deleted");
                 return NoContent();
