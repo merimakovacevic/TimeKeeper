@@ -1,0 +1,13 @@
+// Login actions
+export const AUTH_START = "AUTH_START";
+export const AUTH_SUCCESS = "AUTH_SUCCESS";
+export const AUTH_FAIL = "AUTH_FAIL";
+
+// Employees actions
+export const EMPLOYEES_FETCH_START = "EMPLOYEES_FETCH_START";
+export const EMPLOYEES_FETCH_SUCCESS = "EMPLOYEES_FETCH_SUCCESS";
+export const EMPLOYEES_FETCH_FAIL = "EMPLOYEES_FETCH_FAIL";
+export const EMPLOYEE_SELECTED = "EMPLOYEE_SELECTED";
+export const EMPLOYEE_EDITED = "EMPLOYEE_EDITED";
+
+// Customers
