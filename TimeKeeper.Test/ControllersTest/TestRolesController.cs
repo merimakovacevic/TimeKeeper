@@ -12,7 +12,7 @@ using TimeKeeper.Domain.Entities;
 namespace TimeKeeper.Test.ControllersTest
 {
     [TestFixture]
-    public class TestRolesController: BaseTestDatabase
+    public class TestRolesController: TestBaseTestDatabase
     {
         [Test, Order(1)]
         public void GetAllRoles()
@@ -125,7 +125,7 @@ namespace TimeKeeper.Test.ControllersTest
             var controller = new RolesController(unit.Context);
             int id = 40;//Try to delete the Role with id (doesn't exist)
 
-            var response = controller.Delete(id) as StatusCodeResult;
+            var response = controller.Delete(id) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }

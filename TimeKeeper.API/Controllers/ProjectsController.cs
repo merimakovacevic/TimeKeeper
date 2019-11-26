@@ -38,7 +38,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Logger.Info($"Try to get all Projects");
+                Logger.Info($"Try to fetch ${pageSize} projects from page ${page}");
                 Tuple<PaginationModel, List<Project>> projectsPagination;
                 List<Project> query;
 

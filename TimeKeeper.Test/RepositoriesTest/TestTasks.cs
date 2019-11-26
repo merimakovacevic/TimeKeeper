@@ -7,7 +7,7 @@ using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.Test.RepositoriesTest
 {
-    public class TestTasks : BaseTestDatabase
+    public class TestTasks : TestBaseTestDatabase
     {
         [Test, Order(1)]
         public void GetAllTasks()

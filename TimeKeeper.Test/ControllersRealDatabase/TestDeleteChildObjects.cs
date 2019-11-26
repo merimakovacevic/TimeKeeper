@@ -8,7 +8,7 @@ using TimeKeeper.Domain.Entities;
 namespace TimeKeeper.Test.ControllersRealDatabase
 {
     [TestFixture]
-    public class TestDeleteChildObjects : BaseRealDatabase
+    public class TestDeleteChildObjects : TestBaseRealDatabase
     {
         [Test, Order(1)]
         public void GetProjects()
@@ -18,6 +18,7 @@ namespace TimeKeeper.Test.ControllersRealDatabase
             Assert.AreEqual(11, projects.Count());        
         }
 
+        /*
         [Test, Order(2)]
         public void GetTeamAfterDeletingProject()
         {
@@ -42,5 +43,6 @@ namespace TimeKeeper.Test.ControllersRealDatabase
             project.Deleted = false;
             unit.Save();
         }
+        */
     }
 }

@@ -11,14 +11,15 @@ using TimeKeeper.Domain.Entities;
 namespace TimeKeeper.Test.ControllersTest
 {
     [TestFixture]
-    public class TestCustomersController : BaseTestDatabase
+    public class TestCustomersController : TestBaseTestDatabase
     {
         [Test, Order(1)]
-        public void GetAllCustomers()
+        [TestCase(1, 5)]
+        public void GetAllCustomers(int page, int pageSize)
         {
             var controller = new CustomersController(unit.Context);
 
-            var response = controller.Get() as ObjectResult;
+            var response = controller.GetAll(page, pageSize) as ObjectResult;
             var value = response.Value as List<CustomerModel>;
 
             Assert.AreEqual(200, response.StatusCode);

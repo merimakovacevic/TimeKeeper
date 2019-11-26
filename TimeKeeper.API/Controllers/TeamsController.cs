@@ -42,6 +42,8 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
+                Logger.Info($"Try to fetch ${pageSize} teams from page ${page}");
+
                 int userId = int.Parse(GetUserClaim("sub"));
                 string userRole = GetUserClaim("role");
                 Tuple<PaginationModel, List<Team>> teamsPagination;
