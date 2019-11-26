@@ -11,7 +11,6 @@ using TimeKeeper.API.Models;
 using TimeKeeper.API.Services;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
-
 namespace TimeKeeper.API.Controllers
 {
     [Authorize]
@@ -24,7 +23,6 @@ namespace TimeKeeper.API.Controllers
         {
             calendarService = new CalendarService(Unit);
         }
-
         /// <summary>
         /// This method returns all days
         /// </summary>
@@ -48,7 +46,6 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
-
         /// <summary>
         /// This method returns day with specified id
         /// </summary>
@@ -65,7 +62,6 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Day day = Unit.Calendar.Get(id);
-
                 Logger.Info($"Try to get day with {id}");
 
                 return Ok(day.Create());
@@ -75,7 +71,6 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
-
         /// <summary>
         /// This method inserts a new day
         /// </summary>
@@ -89,7 +84,7 @@ namespace TimeKeeper.API.Controllers
         public IActionResult Post([FromBody] Day day)
         {
             try
-            {                
+            {
                 Unit.Calendar.Insert(day);
                 Unit.Save();
                 Logger.Info($"Day {day.Date} added with id {day.Id}");
@@ -100,7 +95,6 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
-
         /// <summary>
         /// This method updates data for day with specified id
         /// </summary>
@@ -128,7 +122,6 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
-
         /// <summary>
         /// This method deletes day with specified id
         /// </summary>
@@ -157,8 +150,8 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
-        
-        
+
+
         [HttpGet("team-time-tracking/{teamId}/{year}/{month}")]
         public IActionResult GetTimeTracking(int teamId, int year, int month)
         {
@@ -171,7 +164,6 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
-
         [HttpGet("employee-time-tracking/{employeeId}/{year}/{month}")]
         public IActionResult GetPersonalReport(int employeeId, int year, int month)
         {

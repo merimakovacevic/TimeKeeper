@@ -92,11 +92,6 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                /*project.Team = Unit.Teams.Get(project.Team.Id);
-                project.Customer = Unit.Customers.Get(project.Customer.Id);
-                project.Status = Unit.ProjectStatuses.Get(project.Status.Id);
-                project.Pricing = Unit.PricingStatuses.Get(project.Pricing.Id);*/
-
                 Unit.Projects.Insert(project);
                 Unit.Save();
 
@@ -125,11 +120,6 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                /*project.Team = Unit.Teams.Get(project.Team.Id);
-                project.Customer = Unit.Customers.Get(project.Customer.Id);
-                project.Status = Unit.ProjectStatuses.Get(project.Status.Id);
-                project.Pricing = Unit.PricingStatuses.Get(project.Pricing.Id);*/
-
                 Logger.Info($"Attempt to update project with id {id}");
                 Unit.Projects.Update(project, id);
 
