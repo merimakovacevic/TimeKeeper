@@ -69,14 +69,9 @@ namespace TimeKeeper.API.Controllers
         public IActionResult Get(int id)
         {
             try {
+
                 Logger.Info($"Try to get team with {id}");
                 Team team = Unit.Teams.Get(id);
-
-                /*if (team == null)
-                {
-                    Logger.Error($"There is no team with specified id {id}");
-                    return NotFound();
-                }*/
 
                 return Ok(team.Create());
 
