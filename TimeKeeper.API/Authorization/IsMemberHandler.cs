@@ -9,7 +9,7 @@ using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Authorization
 {
-    public class IsMemberHandler : AuthorizationHandler<IsMemberRequirement>
+    public class IsMemberHandler : AuthorizationHandler<HasAccessToTeam>
     {
         protected UnitOfWork Unit;
         public IsMemberHandler(TimeKeeperContext context)
@@ -17,8 +17,15 @@ namespace TimeKeeper.API.Authorization
             Unit = new UnitOfWork(context);
         }
 
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsMemberRequirement requirement)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, HasAccessToTeam requirement)
         {
+            /*var role = context.User.Claims.FirstOrDefault(c => c.Type == "role").Value.ToString();
+            if (role == "admin" || role == "lead")
+            {
+                context.Succeed(requirement);
+                return Task.CompletedTask;
+            }*/
+
             var filterContext = context.Resource as AuthorizationFilterContext;
             if(filterContext == null)
             {
@@ -45,7 +52,7 @@ namespace TimeKeeper.API.Authorization
                 return Task.CompletedTask;
             }
 
-            context.Fail();
+            //context.Fail();
             return Task.CompletedTask;
         }
     }

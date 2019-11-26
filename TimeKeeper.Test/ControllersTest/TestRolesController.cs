@@ -12,7 +12,7 @@ using TimeKeeper.Domain.Entities;
 namespace TimeKeeper.Test.ControllersTest
 {
     [TestFixture]
-    public class TestRolesController: TestBase
+    public class TestRolesController: BaseTestDatabase
     {
         [Test, Order(1)]
         public void GetAllRoles()
@@ -49,7 +49,7 @@ namespace TimeKeeper.Test.ControllersTest
             int id = 40; //Role with id 40 doesn't exist in the test database
             var controller = new RolesController(unit.Context);
 
-            var response = controller.Get(id) as StatusCodeResult;
+            var response = controller.Get(id) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }
@@ -102,7 +102,7 @@ namespace TimeKeeper.Test.ControllersTest
                 Name = "Backend developer"
             };
 
-            var response = controller.Put(id, role) as StatusCodeResult;
+            var response = controller.Put(id, role) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }

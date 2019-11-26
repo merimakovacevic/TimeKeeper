@@ -8,7 +8,7 @@ using TimeKeeper.Domain.Entities;
 namespace TimeKeeper.Test.RepositoriesTest
 {
     [TestFixture]
-    public class TestProjects : TestBase
+    public class TestProjects : BaseTestDatabase
     {
         [Test, Order(1)]
         public void GetAllProjects()
@@ -217,6 +217,8 @@ namespace TimeKeeper.Test.RepositoriesTest
                 //project.Tasks.Remove(task);
                 unit.Tasks.Delete(task);
             }
+
+            unit.Save();
 
             unit.Projects.Delete(id);
             int numberOfChanges = unit.Save();

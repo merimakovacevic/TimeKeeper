@@ -10,7 +10,7 @@ using TimeKeeper.Domain.Entities;
 namespace TimeKeeper.Test.ControllersTest
 {
     [TestFixture]
-    class TestProjectsController : TestBase
+    class TestProjectsController : BaseTestDatabase
     {
         [Test, Order(1)]
         public void GetAllProjects()
@@ -45,7 +45,7 @@ namespace TimeKeeper.Test.ControllersTest
             int id = 40; //project with id 4 doesn't exist in the test database
             var controller = new ProjectsController(unit.Context);
 
-            var response = controller.Get(id) as StatusCodeResult;
+            var response = controller.Get(id) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }
@@ -110,7 +110,7 @@ namespace TimeKeeper.Test.ControllersTest
                 Pricing = unit.PricingStatuses.Get(1)
             };
 
-            var response = controller.Put(id, project) as StatusCodeResult;
+            var response = controller.Put(id, project) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }

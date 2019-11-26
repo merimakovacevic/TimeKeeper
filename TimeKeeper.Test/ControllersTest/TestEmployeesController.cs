@@ -10,14 +10,14 @@ using TimeKeeper.Domain.Entities;
 namespace TimeKeeper.Test.ControllersTest
 {
     [TestFixture]
-    public class TestEmployeesController : TestBase
+    public class TestEmployeesController : BaseTestDatabase
     {
         [Test, Order(1)]
         public void GetAllEmployees()
         {
             var controller = new EmployeesController(unit.Context);
 
-            var response = controller.Get() as ObjectResult;
+            var response = controller.GetAll() as ObjectResult;
             var value = response.Value as List<EmployeeModel>;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -48,7 +48,7 @@ namespace TimeKeeper.Test.ControllersTest
             int id = 40; //Employee with id 40 doesn't exist in the test database
             var controller = new EmployeesController(unit.Context);
 
-            var response = controller.Get(id) as StatusCodeResult;
+            var response = controller.Get(id) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }
@@ -116,7 +116,7 @@ namespace TimeKeeper.Test.ControllersTest
                 Status = unit.EmploymentStatuses.Get(1)
             };
 
-            var response = controller.Put(id, employee) as StatusCodeResult;
+            var response = controller.Put(id, employee) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }

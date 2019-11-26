@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using TimeKeeper.DAL;
 
 namespace TimeKeeper.IDP
 {
@@ -13,37 +14,28 @@ namespace TimeKeeper.IDP
     {
         public static List<TestUser> GetUsers()
         {
-            return new List<TestUser>
+            List<TestUser> users = new List<TestUser>();
+            using (UnitOfWork unit = new UnitOfWork(new TimeKeeperContext()))
             {
-                new TestUser
+                foreach (var user in unit.Users.Get())
                 {
-                    SubjectId = "1",
-                    Username = "johndoe",
-                    Password = "$ch00l",
-                    Claims = new List<Claim>
+                    List<string> teamList = unit.Members.Get().Where(m => m.Employee.Id == user.Id).Select(t => t.Id.ToString()).ToList();
+                    string teams = string.Join(",", teamList);
+                    users.Add(new TestUser
                     {
-                        new Claim("given_name", "John"),
-                        new Claim("family_name", "Doe"),
-                        new Claim("role", "user"),
-                        new Claim("address", "Sarajevo"),
-                        new Claim("team", "Alpha")
-                    }
-                },
-                new TestUser
-                {
-                    SubjectId = "2",
-                    Username = "janedoe",
-                    Password = "$ch00l",
-                    Claims = new List<Claim>
+                        SubjectId = user.Id.ToString(),
+                        Username = user.Username,
+                        Password = user.Password,
+                        Claims = new List<Claim>
                     {
-                        new Claim("given_name", "Jane"),
-                        new Claim("family_name", "Doe"),
-                        new Claim("role", "admin"),
-                        new Claim("address", "Mostar"),
-                        new Claim("team", "Bravo")
+                        new Claim("name", user.Name),
+                        new Claim("role", user.Role),
+                        new Claim("team", teams)
                     }
+                    });
                 }
-            };
+            }
+            return users;
         }
 
         public static IEnumerable<IdentityResource> GetResources()
@@ -54,6 +46,7 @@ namespace TimeKeeper.IDP
                 new IdentityResources.Profile(),
                 new IdentityResources.Address(),
                 new IdentityResource("roles", "Your roles", new List<string> { "role" }),
+                new IdentityResource("names", "Your name", new List<string> {"name"}),
                 new IdentityResource("teams", "Your engagement(s)", new List<string> { "team" })
             };
         }
@@ -62,7 +55,7 @@ namespace TimeKeeper.IDP
         {
             return new List<ApiResource>
             {
-                new ApiResource("timekeeper", "Time Keeper API", new List<string> { "role" })
+                new ApiResource("timekeeper", "Time Keeper API"/*, new List<string> { "role" }*/)
             };
         }
 
@@ -73,19 +66,29 @@ namespace TimeKeeper.IDP
                 {
                     ClientName = "TimeKeeper",
                     ClientId = "tk2019",
-                    AllowedGrantTypes = GrantTypes.Hybrid,
-                    RedirectUris = { "https://localhost:44350/signin-oidc" },
-                    PostLogoutRedirectUris = { "https://localhost:44350/signout-callback-oidc" },
+                    ClientSecrets = { new Secret("mistral_talents".Sha256()) },
+
+                    AllowedGrantTypes = GrantTypes.Implicit,
+                    RequireConsent=false, //not showing form "do you give rights to your app to access you claims.."
+
+                    //RedirectUris = { "https://localhost:44350/signin-oidc" },
+                    RedirectUris = { "https://localhost:3300/auth-callback" },
+                    //PostLogoutRedirectUris = { "https://localhost:44350/signout-callback-oidc" },
+                    PostLogoutRedirectUris = { "https://localhost:3300/" },
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        IdentityServerConstants.StandardScopes.Address,
+                        IdentityServerConstants.StandardScopes.Address, //is this necessary?
                         "roles", //"roles" were added manually, that's why it isn't found in the StandardScopes,
                         "timekeeper",
+                        "names",
                         "teams"
                     },
-                    ClientSecrets = { new Secret("mistral_talents".Sha256()) }
+                    AllowOfflineAccess=true,
+                    AllowAccessTokensViaBrowser=true,
+                    AllowedCorsOrigins={"http://localhost:3300", "https://localhost:3000", "https://localhost:44350" },
+                    AccessTokenLifetime=3600 //this is also default, id token lasts for 5 minutes 
                 }
             };
         }

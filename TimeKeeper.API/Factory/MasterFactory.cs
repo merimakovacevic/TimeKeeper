@@ -77,7 +77,7 @@ namespace TimeKeeper.API.Factory
             return new MasterModel
             {
                 Id = jd.Id,
-                Name = $"{jd.Description}"
+                Name = $"{jd.Description}"                
             };
         }
 

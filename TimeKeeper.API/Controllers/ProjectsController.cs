@@ -12,7 +12,6 @@ using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProjectsController : BaseController
@@ -32,8 +31,19 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Logger.Info($"Try to fetch all projects");
-                return Ok(Unit.Projects.Get().ToList().Select(x => x.Create()).ToList());
+                int userId = int.Parse(User.Claims.FirstOrDefault(x => x.Type == "sub").Value.ToString());
+                string role = User.Claims.FirstOrDefault(x => x.Type == "role").Value.ToString();
+
+                if (role == "admin" || role == "lead")
+                {
+                    Logger.Info($"Try to get all Projects");
+                    return Ok(Unit.Projects.Get().ToList().Select(x => x.Create()).ToList());
+                }
+                else
+                {
+                    var query = Unit.Projects.Get(x => x.Team.Members.Any(y => y.Employee.Id == userId));
+                    return Ok(query.ToList().Select(x => x.Create()).ToList());
+                }
             }
             catch (Exception ex)
             {
@@ -49,6 +59,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpGet("{id}")]
+        [Authorize(Policy = "IsMemberOnProject")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -80,6 +91,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPost]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Post([FromBody] Project project)
@@ -112,6 +124,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Put(int id, [FromBody] Project project)
@@ -154,6 +167,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
