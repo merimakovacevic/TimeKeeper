@@ -67,11 +67,7 @@ namespace TimeKeeper.API.Controllers
                 Day day = Unit.Calendar.Get(id);
 
                 Logger.Info($"Try to get day with {id}");
-                /*if (day == null)
-                {
-                    Logger.Error($"Day with id {id} cannot be found");
-                    return NotFound("Day not found");
-                }*/
+
                 return Ok(day.Create());
             }
             catch (Exception ex)
@@ -120,19 +116,9 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                //day.Employee = Unit.Employees.Get(day.Employee.Id);
-                //day.DayType = Unit.DayTypes.Get(day.DayType.Id);
-
                 Logger.Info($"Attempt to update day with id {id}");
                 Unit.Calendar.Update(day, id);
                 Unit.Save();
-                /*int numberOfChanges = Unit.Save();                
-
-                if (numberOfChanges == 0)
-                {
-                    Logger.Error($"Day with id {id} cannot be found");
-                    return NotFound();
-                }*/
 
                 Logger.Info($"Changed day with id {id}");
                 return Ok(day.Create());
@@ -162,14 +148,7 @@ namespace TimeKeeper.API.Controllers
                 Logger.Info($"Attempt to delete day with id {id}");
                 Unit.Calendar.Delete(id);
                 Unit.Save();
-                /*
-                int numberOfChanges = Unit.Save();
 
-                if (numberOfChanges == 0)
-                {
-                    Logger.Error($"Attempt to delete day with id {id}");
-                    return NotFound();
-                }*/
                 Logger.Info($"Deleted day with id {id}");
                 return NoContent();
             }
@@ -186,7 +165,6 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 return Ok(calendarService.GetTeamMonthReport(teamId, year, month));
-                //return Ok(TeamCalendarService.TeamMonthReport(teamId, month, year));
             }
             catch (Exception ex)
             {
@@ -199,7 +177,6 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Employee emp = Unit.Employees.Get(employeeId);
                 return Ok(calendarService.GetEmployeeMonthReport(employeeId, year, month));
             }
             catch (Exception ex)

@@ -70,12 +70,6 @@ namespace TimeKeeper.API.Controllers
                 Logger.Info($"Try to fetch project with id {id}");
                 Project project = Unit.Projects.Get(id);                
 
-                /*if (project == null)
-                {
-                    Logger.Error($"Project with id {id} cannot be found");
-                    return NotFound();
-                }*/
-
                 return Ok(project.Create());                
             }
             catch (Exception ex)
@@ -141,14 +135,6 @@ namespace TimeKeeper.API.Controllers
 
                 Unit.Save();
 
-                /*int numberOfChanges = Unit.Save();                
-
-                if (numberOfChanges == 0)
-                {
-                    Logger.Error($"Project with id {id} cannot be found");
-                    return NotFound();
-                }*/
-
                 Logger.Info($"Project {project.Name} with id {project.Id} updated");
                 return Ok(project.Create());
             }
@@ -178,15 +164,6 @@ namespace TimeKeeper.API.Controllers
                 Logger.Info($"Attempt to delete project with id {id}");
                 Unit.Projects.Delete(id);
                 Unit.Save();
-
-                /*
-                int numberOfChanges = Unit.Save();                
-
-                if (numberOfChanges == 0)
-                {
-                    Logger.Error($"Project with id {id} cannot be found");
-                    return NotFound();
-                }*/
 
                 Logger.Info($"Project with id {id} deleted");
                 return NoContent();

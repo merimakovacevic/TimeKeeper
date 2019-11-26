@@ -18,7 +18,6 @@ namespace TimeKeeper.Test.ControllersRealDatabase
         private List<EmployeeTimeModel> CreateEmployeeTimeModels()
         {
             List<EmployeeTimeModel> employeeTimes = new List<EmployeeTimeModel>();
-            List<DayType> dayTypes = unit.DayTypes.Get().ToList();
 
             //
             //ASSERT EMPLOYEE NR. 1 - id nr 2 - William Brown

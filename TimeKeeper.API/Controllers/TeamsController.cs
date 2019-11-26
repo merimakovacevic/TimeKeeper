@@ -45,7 +45,7 @@ namespace TimeKeeper.API.Controllers
                 else
                 {
                     var query = Unit.Teams.Get(x => x.Members.Any(y => y.Employee.Id == userId));
-                    return Ok(query.ToList().Select(x => x.Create()).ToList());//without the first ToList(), we will have a lazy loading exception?
+                    return Ok(query.ToList().Select(x => x.Create()).ToList());
                 }
             }
             catch (Exception ex)
@@ -129,13 +129,6 @@ namespace TimeKeeper.API.Controllers
                 Unit.Teams.Update(team, id);
                 Unit.Save();
 
-                /*int numberOfChanges = Unit.Save();
-
-                if (numberOfChanges == 0)
-                {
-                    Logger.Error($"Team with {id} not found");
-                    return NotFound();
-                }*/
                 Logger.Info($"Changed team with id {id}");
                 return Ok(team.Create());
             }
@@ -167,13 +160,6 @@ namespace TimeKeeper.API.Controllers
                 Unit.Teams.Delete(id);
                 Unit.Save();
 
-                /*int numberOfChanges = Unit.Save();
-                
-                if (numberOfChanges == 0)
-                {
-                    Logger.Error($"Attempt to delete team with id {id}");
-                    return NotFound();
-                }*/
                 Logger.Info($"Deleted team with id {id}");
                 return NoContent();
             }
