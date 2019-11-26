@@ -8,7 +8,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Newtonsoft.Json;
 using TimeKeeper.API.Factory;
+using TimeKeeper.API.Models;
+using TimeKeeper.API.Services;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.LOG;
@@ -19,34 +22,43 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class TeamsController : BaseController
     {
-        public TeamsController(TimeKeeperContext context) : base(context) { }
+        private PaginationService<Team> _pagination;
+        public TeamsController(TimeKeeperContext context) : base(context)
+        {
+            _pagination = new PaginationService<Team>();
+        }
 
 
         /// <summary>
-        /// This method returns all teams
+        /// This method returns all teams from a selected page, given the page size
         /// </summary>
-        /// <returns>All teams</returns>
+        /// <returns>All teams from a page</returns>
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Get()
+        public IActionResult GetAll(int page = 1, int pageSize = 5)
         {
             try
             {
                 int userId = int.Parse(GetUserClaim("sub"));
                 string userRole = GetUserClaim("role");
+                Tuple<PaginationModel, List<Team>> teamsPagination;
+                List<Team> query;
 
                 if(userRole == "admin")
                 {
-                    return Ok(Unit.Teams.Get().ToList().Select(x => x.Create()).ToList());
+                    query = Unit.Teams.Get().ToList();                    
                 }
                 else
                 {
-                    var query = Unit.Teams.Get(x => x.Members.Any(y => y.Employee.Id == userId));
-                    return Ok(query.ToList().Select(x => x.Create()).ToList());
+                    query = Unit.Teams.Get(x => x.Members.Any(y => y.Employee.Id == userId)).ToList();
                 }
+
+                teamsPagination = _pagination.CreatePagination(page, pageSize, query);
+                HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(teamsPagination.Item1));
+                return Ok(teamsPagination.Item2.Select(x => x.Create()).ToList());
             }
             catch (Exception ex)
             {

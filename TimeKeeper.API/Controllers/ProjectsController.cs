@@ -6,7 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using TimeKeeper.API.Factory;
+using TimeKeeper.API.Models;
+using TimeKeeper.API.Services;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 
@@ -16,34 +19,45 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class ProjectsController : BaseController
     {
-        public ProjectsController(TimeKeeperContext context) : base(context) { }
+        private PaginationService<Project> _pagination;
+        public ProjectsController(TimeKeeperContext context) : base(context)
+        {
+            _pagination = new PaginationService<Project>();
+        }
 
         /// <summary>
-        /// This method returns all projects
+        /// This method returns all projects rom a selected page, given the page size
         /// </summary>
-        /// <returns>All projects</returns>
+        /// <returns>All projects from a page</returns>
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Get()
+        public IActionResult GetAll(int page = 1, int pageSize = 5)
         {
             try
             {
+                Logger.Info($"Try to get all Projects");
+                Tuple<PaginationModel, List<Project>> projectsPagination;
+                List<Project> query;
+
                 int userId = int.Parse(User.Claims.FirstOrDefault(x => x.Type == "sub").Value.ToString());
                 string role = User.Claims.FirstOrDefault(x => x.Type == "role").Value.ToString();
 
                 if (role == "admin" || role == "lead")
                 {
-                    Logger.Info($"Try to get all Projects");
-                    return Ok(Unit.Projects.Get().ToList().Select(x => x.Create()).ToList());
+                    query = Unit.Projects.Get().ToList();
                 }
                 else
                 {
-                    var query = Unit.Projects.Get(x => x.Team.Members.Any(y => y.Employee.Id == userId));
-                    return Ok(query.ToList().Select(x => x.Create()).ToList());
+                    query = Unit.Projects.Get(x => x.Team.Members.Any(y => y.Employee.Id == userId)).ToList();                    
                 }
+
+                projectsPagination = _pagination.CreatePagination(page, pageSize, query);
+                HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(projectsPagination.Item1));
+                return Ok(projectsPagination.Item2.Select(x => x.Create()).ToList());
+
             }
             catch (Exception ex)
             {

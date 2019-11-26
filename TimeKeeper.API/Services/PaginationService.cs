@@ -32,26 +32,5 @@ namespace TimeKeeper.API.Services
                     query.ToList()
                 );
         }
-
-        /*public Tuple<PaginationModel, List<Entity>> CreatePagination(int page, int pageSize, IList<Entity> list)
-        {
-            int totalItems = list.Count();
-            int totalPages = (int)Math.Ceiling(totalItems / (decimal)pageSize);
-            if (page < 1) page = 1;
-            if (page > totalPages) page = totalPages;
-            int currentPage = page - 1;
-            var query = list.Skip(currentPage * pageSize).Take(pageSize);
-            return new Tuple<PaginationModel, List<Entity>>
-                (
-                    new PaginationModel
-                    {
-                        PageSize = pageSize,
-                        TotalItems = totalItems,
-                        TotalPages = totalPages,
-                        Page = page
-                    },
-                    query.ToList()
-                );
-        }*/
     }
 }

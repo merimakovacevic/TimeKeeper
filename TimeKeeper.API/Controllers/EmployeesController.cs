@@ -43,7 +43,7 @@ namespace TimeKeeper.API.Controllers
             {
                 Logger.Info($"Try to fetch ${pageSize} employees from page ${page}");
 
-                Tuple <PaginationModel, List<Employee>> employeesPagination = _pagination.CreatePagination(page, pageSize, Unit.Employees.Get() as DbSet<Employee>);
+                Tuple <PaginationModel, List<Employee>> employeesPagination = _pagination.CreatePagination(page, pageSize, Unit.Employees.Get());
                 
                 HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(employeesPagination.Item1));
                 return Ok(employeesPagination.Item2.ToList().Select(x => x.Create()).ToList());

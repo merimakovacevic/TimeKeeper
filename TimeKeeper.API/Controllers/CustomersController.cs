@@ -45,7 +45,9 @@ namespace TimeKeeper.API.Controllers
                 Tuple<PaginationModel, List<Customer>> customersPagination;
 
                 var role = User.Claims.FirstOrDefault(c => c.Type == "role").Value.ToString();
-                if (role == "user") return Unauthorized();                
+                if (role == "user") return Unauthorized();
+
+                List<Customer> query;
 
                 if (role == "lead")
                 {
@@ -59,20 +61,20 @@ namespace TimeKeeper.API.Controllers
                         projects.AddRange(Unit.Projects.Get(x => x.Team.Id == team));
                     }
 
-                    List<Customer> customers = new List<Customer>();
+                    query = new List<Customer>();
+
                     foreach (var project in projects)
                     {
-                        customers.Add(project.Customer);
+                        query.Add(project.Customer);
                     }
-
-                    customersPagination = _pagination.CreatePagination(page, pageSize, customers/* as DbSet<Customer>*/);
-                    HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(customersPagination.Item1));
-
-                    return Ok(customersPagination.Item2.Select(x => x.Create()).ToList());
-                    //return Ok(customers.Select(x => x.Create()).ToList());
+                }
+                else
+                {
+                    query = Unit.Customers.Get().ToList();
                 }
 
-                customersPagination = _pagination.CreatePagination(page, pageSize, Unit.Customers.Get()/* as DbSet<Customer>*/);
+                customersPagination = _pagination.CreatePagination(page, pageSize, query);
+                HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(customersPagination.Item1));
                 return Ok(customersPagination.Item2.Select(x => x.Create()).ToList());
                 //return Ok(Unit.Customers.Get().OrderBy(x => x.Name).ToList().Select(x => x.Create()).ToList());
             }
