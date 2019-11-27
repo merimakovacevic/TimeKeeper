@@ -5,14 +5,15 @@ import thunk from "redux-thunk";
 import {
   userReducer,
   employeesReducer,
-  customersReducer
+  customersReducer,
+  projectsReducer
 } from "./reducers/index";
-/* import { customersReducer } from "./reducers/customersReducer"; */
 
 const rootReducer = combineReducers({
   user: userReducer,
   employees: employeesReducer,
-  customers: customersReducer
+  customers: customersReducer,
+  projects: projectsReducer
 });
 
 const configureStore = () => {

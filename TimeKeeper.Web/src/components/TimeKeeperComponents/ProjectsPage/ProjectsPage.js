@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { fetchCustomers, customerSelect } from "../../../store/actions/index";
+import { fetchProjects, projectSelect } from "../../../store/actions/index";
 import { withStyles } from "@material-ui/core/styles";
 import {
   Table,
@@ -17,22 +17,22 @@ import {
   Toolbar,
   Typography
 } from "@material-ui/core";
-import styles from "../../../styles/CustomersPageStyles";
+import styles from "../../../styles/ProjectsPageStyles";
 
 import AddIcon from "@material-ui/icons/Add";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-const CustomersPage = (props) => {
+const ProjectsPage = (props) => {
   const { classes } = props;
   const { data, loading, error } = props;
-  const { fetchCustomers, customerSelect } = props;
-  let customers = data;
+  const { fetchProjects, projectSelect } = props;
+  let projects = data;
 
   useEffect(() => {
-    fetchCustomers();
-    customers = data;
+    fetchProjects();
+    projects = data;
   }, []);
 
   return (
@@ -69,7 +69,7 @@ const CustomersPage = (props) => {
                 id="tableTitle"
                 style={{ color: "white" }}
               >
-                Customers
+                Projects
               </Typography>
             </div>
 
@@ -95,13 +95,13 @@ const CustomersPage = (props) => {
                   No.
                 </CustomTableCell>
                 <CustomTableCell className={classes.tableHeadFontsize}>
-                  Business Name
+                  Project
                 </CustomTableCell>
                 <CustomTableCell className={classes.tableHeadFontsize}>
-                  Contact Name
+                  Customer Name
                 </CustomTableCell>
                 <CustomTableCell className={classes.tableHeadFontsize}>
-                  E-mail
+                  Team
                 </CustomTableCell>
                 <CustomTableCell
                   className={classes.tableHeadFontsize}
@@ -119,12 +119,12 @@ const CustomersPage = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {customers.map((e, i) => (
+              {projects.map((e, i) => (
                 <TableRow key={e.id}>
-                  <CustomTableCell>{i + 1}</CustomTableCell>
+                  <CustomTableCell>{e.id}</CustomTableCell>
                   <CustomTableCell>{e.name}</CustomTableCell>
-                  <CustomTableCell>{e.contactName}</CustomTableCell>
-                  <CustomTableCell>{e.emailAddress}</CustomTableCell>
+                  <CustomTableCell>{e.customer.name}</CustomTableCell>
+                  <CustomTableCell>{e.team.name}</CustomTableCell>
                   <CustomTableCell>{e.status.name}</CustomTableCell>
 
                   <CustomTableCell align="center">
@@ -134,7 +134,7 @@ const CustomersPage = (props) => {
                     <IconButton
                       aria-label="Edit"
                       className={classes.editButton}
-                      onClick={() => customerSelect(e.id)}
+                      onClick={() => projectSelect(e.id)}
                     >
                       <EditIcon style={{ fill: "green" }} />
                     </IconButton>
@@ -168,12 +168,12 @@ const CustomTableCell = withStyles((theme) => ({
 
 const mapStateToProps = (state) => {
   return {
-    data: state.customers.data,
-    loading: state.customers.loading,
-    error: state.customers.error
+    data: state.projects.data,
+    loading: state.projects.loading,
+    error: state.projects.error
   };
 };
 
-export default connect(mapStateToProps, { fetchCustomers, customerSelect })(
-  withStyles(styles)(CustomersPage)
+export default connect(mapStateToProps, { fetchProjects, projectSelect })(
+  withStyles(styles)(ProjectsPage)
 );

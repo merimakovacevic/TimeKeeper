@@ -32,9 +32,8 @@ import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 
 import EmployeesPage from "../../components/TimeKeeperComponents/EmployeesPage/EmployeesPage";
 import CustomersPage from "../../components/TimeKeeperComponents/CustomersPage/CustomersPage";
+import ProjectsPage from "../../components/TimeKeeperComponents/ProjectsPage/ProjectsPage";
 
-/* import CustomersPage from "./CustomersPage/CustomersPage";
- */ import ProjectsPage from "./ProjectsPage/ProjectsPage";
 import TeamTimeTracking from "./TeamTimeTracking/TeamTimeTracking";
 import TeamsPage from "./TeamsPage/TeamsPage";
 
