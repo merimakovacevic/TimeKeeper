@@ -8,7 +8,7 @@ using TimeKeeper.Domain.Entities;
 namespace TimeKeeper.Test.RepositoriesTest
 {
     [TestFixture]
-    public class TestMembers : BaseTestDatabase
+    public class TestMembers : TestBaseTestDatabase
     {
         [Test, Order(1)]
         public void GetAllMembers()

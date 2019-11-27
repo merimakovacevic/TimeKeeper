@@ -12,7 +12,7 @@ using TimeKeeper.Domain.Entities;
 namespace TimeKeeper.Test.ControllersTest
 {
     [TestFixture]
-    public class TestTeamsController : BaseTestDatabase
+    public class TestTeamsController : TestBaseTestDatabase
     {
 
         [Test, Order(1)]
@@ -20,7 +20,7 @@ namespace TimeKeeper.Test.ControllersTest
         {
             var controller = new TeamsController(unit.Context);
 
-            var response = controller.Get() as ObjectResult;
+            var response = controller.GetAll() as ObjectResult;
             var value = response.Value as List<TeamModel>;
 
             Assert.AreEqual(200, response.StatusCode); 
@@ -124,7 +124,7 @@ namespace TimeKeeper.Test.ControllersTest
             var controller = new TeamsController(unit.Context);
             int id = 40;//Try to delete the team with id (doesn't exist)
 
-            var response = controller.Delete(id) as StatusCodeResult;
+            var response = controller.Delete(id) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }

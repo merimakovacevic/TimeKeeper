@@ -9,7 +9,7 @@ using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.Test.ControllersTest
 {
-    public class TestTasksController : BaseTestDatabase
+    public class TestTasksController : TestBaseTestDatabase
     {
         [Test, Order(1)]
         public void GetAllTasks()

@@ -21,9 +21,11 @@ namespace TimeKeeper.API.Services
         public TeamDashboardModel GetTeamDashboard(int teamId, int year, int month)
         {
 
-            TeamDashboardModel teamDashboard = new TeamDashboardModel();
+            TeamDashboardModel teamDashboard = new TeamDashboardModel
+            {
+                EmployeeTimes = GetTeamMonthReport(teamId, year, month)
+            };
 
-            teamDashboard.EmployeeTimes = GetTeamMonthReport(teamId, year, month);
             teamDashboard.EmployeesCount = teamDashboard.EmployeeTimes.Count();
             teamDashboard.ProjectsCount = unit.Teams.Get(teamId).Projects.Count();
 

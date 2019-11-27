@@ -7,7 +7,7 @@ using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.Test.RepositoriesTest
 {
-    public class TestCalendar: BaseTestDatabase
+    public class TestCalendar: TestBaseTestDatabase
     {
         [Test, Order(1)]
         public void GetAllDays()

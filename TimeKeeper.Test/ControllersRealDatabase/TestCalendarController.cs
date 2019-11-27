@@ -11,7 +11,7 @@ using TimeKeeper.Domain.Entities;
 namespace TimeKeeper.Test.ControllersRealDatabase
 {
     [TestFixture]
-    public class TestCalendarController : BaseRealDatabase
+    public class TestCalendarController : TestBaseRealDatabase
     {
         /*This method is for manual creation of the assertion employee time models.
          * The calculated hours assigned were calculated using queries in PostgreSQL*/
