@@ -1,13 +1,10 @@
 import React from "react";
 import axios from "axios";
-import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import { Button } from "@material-ui/core";
 
 import CircularProgress from "@material-ui/core/CircularProgress";
-
-import { auth } from "../../../store/actions/authActions";
 
 import * as Yup from "yup";
 import classes from "./Login.module.css";
@@ -35,7 +32,6 @@ const login = (props) => {
 			}}
 			validationSchema={LoginSchema}
 			onSubmit={(values) => {
-				props.auth();
 				loginLoadingHandler(true);
 				axios
 					.post(`${config.apiUrl}users`, values)
@@ -112,4 +108,4 @@ const login = (props) => {
 	);
 };
 
-export default withRouter(connect(null, { auth })(login));
+export default login;

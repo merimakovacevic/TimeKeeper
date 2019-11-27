@@ -78,7 +78,7 @@ const EmployeesPage = (props) => {
 					<Table className={classes.table}>
 						<TableHead>
 							<TableRow>
-								<CustomTableCell className={classes.tableHeadFontsize} style={{ width: "8%" }}>
+								<CustomTableCell className={classes.tableHeadFontsize} style={{ width: "9%" }}>
 									No.
 								</CustomTableCell>
 								<CustomTableCell className={classes.tableHeadFontsize}>First Name</CustomTableCell>

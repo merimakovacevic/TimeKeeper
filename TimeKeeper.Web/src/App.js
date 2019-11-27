@@ -5,6 +5,11 @@ import { connect } from "react-redux";
 import config from "./config";
 import StaticPage from "./containers/StaticPage/StaticPage";
 import TimeKeeper from "./containers/TimeKeeper/TimeKeeper";
+import { PrivateRoute } from "./components/PrivateRoute";
+import { Callback } from "./components/Callback";
+import { Logout } from "./components/Logout";
+import { LogoutCallback } from "./components/LogoutCallback";
+import { SilentRenew } from "./components/SilentRenew";
 
 class App extends React.Component {
 	// componentDidMount() {
@@ -16,12 +21,12 @@ class App extends React.Component {
 	render() {
 		return (
 			<Switch>
-				<Route exact path="/">
-					<StaticPage />
-				</Route>
-				<Route path="/app">
-					<TimeKeeper />
-				</Route>
+				<Route exact={true} path="/auth-callback" component={Callback} />
+				<Route exact={true} path="/logout" component={Logout} />
+				<Route exact={true} path="/logout/callback" component={LogoutCallback} />
+				<Route exact={true} path="/silentrenew" component={SilentRenew} />
+				<PrivateRoute path="/app" component={TimeKeeper} />
+				<Route exact path="/" component={StaticPage} />
 			</Switch>
 		);
 	}

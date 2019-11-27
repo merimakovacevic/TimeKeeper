@@ -3,7 +3,7 @@ const styles = (theme) => ({
 		width: "90%",
 		margin: "auto",
 		marginTop: theme.spacing(3),
-		overflowX: "auto"
+		overflowX: "hidden"
 	},
 	toolbar: {
 		display: "flexbox",
@@ -12,7 +12,8 @@ const styles = (theme) => ({
 		backgroundColor: "#40454F"
 	},
 	table: {
-		minWidth: 700
+		minWidth: 700,
+		width: "101%"
 	},
 	button: {
 		color: "white",
