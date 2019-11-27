@@ -1,4 +1,10 @@
-import { AUTH_FAIL, AUTH_SUCCESS } from "./actionTypes";
+import { AUTH_FAIL, AUTH_SUCCESS, AUTH_START } from "./actionTypes";
+
+export const authStart = () => {
+	return {
+		type: AUTH_START
+	};
+};
 
 export const authFail = (error) => {
 	return {
@@ -11,5 +17,11 @@ export const authSuccess = (user) => {
 	return {
 		type: AUTH_SUCCESS,
 		user
+	};
+};
+
+export const auth = () => {
+	return (dispatch) => {
+		// dispatch(authStart());
 	};
 };

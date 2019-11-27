@@ -1,5 +1,6 @@
 import React from "react";
 import { withRouter, Route } from "react-router-dom";
+import { connect } from "react-redux";
 
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
@@ -19,6 +20,7 @@ import {
 	MenuItem
 } from "@material-ui/core";
 import styles from "../../styles/NavigationStyles";
+import userManager from "../../utils/userManager";
 
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
@@ -62,192 +64,207 @@ class TimeKeeper extends React.Component {
 		this.props.history.push(`/app/${event.currentTarget.id.toLowerCase()}`);
 	};
 
+	logout = () => {
+		userManager.removeUser();
+	};
+
 	render() {
-		const { classes, theme } = this.props;
+		const { classes, theme, user } = this.props;
 		const { open, anchorDbEl, anchorSrEl, anchorUserEl, reports, database } = this.state;
 		const { handleDrawerOpen, handleDrawerClose, handleSrClick, handleDbClick, handleClose, handleUserEl } = this;
 
 		return (
-			<div className={classes.root}>
-				<CssBaseline />
-				<AppBar
-					position="fixed"
-					className={classNames(classes.appBar, {
-						[classes.appBarShift]: open
-					})}
-				>
-					<Toolbar disableGutters={!open}>
-						<IconButton
-							color="inherit"
-							aria-label="Open drawer"
-							onClick={handleDrawerOpen}
-							className={classNames(classes.hover, classes.menuButton, {
-								[classes.hide]: open
+			<React.Fragment>
+				{user === null ? (
+					this.props.history.replace("/")
+				) : (
+					<div className={classes.root}>
+						<CssBaseline />
+						<AppBar
+							position="fixed"
+							className={classNames(classes.appBar, {
+								[classes.appBarShift]: open
 							})}
 						>
-							<AppsIcon fontSize="large" />
-						</IconButton>
+							<Toolbar disableGutters={!open}>
+								<IconButton
+									color="inherit"
+									aria-label="Open drawer"
+									onClick={handleDrawerOpen}
+									className={classNames(classes.hover, classes.menuButton, {
+										[classes.hide]: open
+									})}
+								>
+									<AppsIcon fontSize="large" />
+								</IconButton>
 
-						<Typography
-							variant="h6"
-							color="inherit"
-							noWrap
-							className={classes.header}
-							onClick={() => this.props.history.replace("/app")}
+								<Typography
+									variant="h6"
+									color="inherit"
+									noWrap
+									className={classes.header}
+									onClick={() => this.props.history.replace("/app")}
+								>
+									Time Keeper
+								</Typography>
+								<div style={{ position: "absolute", right: 10 }}>
+									<IconButton
+										aria-label="account of current user"
+										aria-controls="menu-appbar"
+										aria-haspopup="true"
+										onClick={handleUserEl}
+										color="inherit"
+										className={classes.hover}
+									>
+										<AccountCircleIcon fontSize="large" />
+									</IconButton>
+									<Menu
+										id="menu-appbar"
+										anchorEl={anchorUserEl}
+										anchorOrigin={{
+											vertical: "top",
+											horizontal: "right"
+										}}
+										keepMounted
+										transformOrigin={{
+											vertical: "top",
+											horizontal: "right"
+										}}
+										open={anchorUserEl ? true : false}
+										onClose={handleClose}
+										className={classes.menu}
+									>
+										<MenuItem onClick={handleClose}>Calendar</MenuItem>
+										<MenuItem onClick={handleClose}>My Profile</MenuItem>
+										<MenuItem onClick={this.logout}>Log Out</MenuItem>
+									</Menu>
+								</div>
+							</Toolbar>
+						</AppBar>
+						<Drawer
+							variant="permanent"
+							className={classNames(classes.drawer, {
+								[classes.drawerOpen]: open,
+								[classes.drawerClose]: !open
+							})}
+							classes={{
+								paper: classNames({
+									[classes.drawerOpen]: open,
+									[classes.drawerClose]: !open
+								})
+							}}
+							open={open}
 						>
-							Time Keeper
-						</Typography>
-						<div style={{ position: "absolute", right: 10 }} >
-							<IconButton
-								aria-label="account of current user"
-								aria-controls="menu-appbar"
-								aria-haspopup="true"
-								onClick={handleUserEl}
-								color="inherit"
-								className={classes.hover}
-							>
-								<AccountCircleIcon fontSize="large" />
-							
-							</IconButton>
-							<Menu
-								id="menu-appbar"
-								anchorEl={anchorUserEl}
-								anchorOrigin={{
-									vertical: "top",
-									horizontal: "right"
-								}}
-								keepMounted
-								transformOrigin={{
-									vertical: "top",
-									horizontal: "right"
-								}}
-								open={anchorUserEl ? true : false}
-								onClose={handleClose}
-								className={classes.menu}
-							>
-								<MenuItem onClick={handleClose}>Calendar</MenuItem>
-								<MenuItem onClick={handleClose}>My Profile</MenuItem>
-								<MenuItem onClick={handleClose}>Log Out</MenuItem>
-							</Menu>
-						</div>
-					</Toolbar>
-				</AppBar>
-				<Drawer
-					variant="permanent"
-					className={classNames(classes.drawer, {
-						[classes.drawerOpen]: open,
-						[classes.drawerClose]: !open
-					})}
-					classes={{
-						paper: classNames({
-							[classes.drawerOpen]: open,
-							[classes.drawerClose]: !open
-						})
-					}}
-					open={open}
-				>
-					<div className={classes.toolbar}>
-						<IconButton onClick={handleDrawerClose} className={classes.hover}>
-							{theme.direction === "rtl" ? (
-								<ChevronRightIcon />
-							) : (
-								<ChevronLeftIcon style={{ fill: "white" }} />
-							)}
-						</IconButton>
+							<div className={classes.toolbar}>
+								<IconButton onClick={handleDrawerClose} className={classes.hover}>
+									{theme.direction === "rtl" ? (
+										<ChevronRightIcon />
+									) : (
+										<ChevronLeftIcon style={{ fill: "white" }} />
+									)}
+								</IconButton>
+							</div>
+
+							<List>
+								<ListItem button aria-haspopup="true" onClick={handleDbClick} className={classes.hover}>
+									<ListItemIcon>
+										<StorageIcon style={{ fill: "white" }} />
+										{!open ? <ArrowRightIcon style={{ fill: "white" }} /> : null}
+									</ListItemIcon>
+
+									<ListItemText style={{ color: "white" }}>Database</ListItemText>
+									<ListItemIcon>
+										<ArrowRightIcon style={{ fill: "white" }} />
+									</ListItemIcon>
+								</ListItem>
+								<Menu
+									id="simple-menu"
+									onClose={handleClose}
+									anchorEl={anchorDbEl}
+									open={Boolean(anchorDbEl)}
+									style={{ left: open ? 170 : 45 }}
+									className={classes.menu}
+								>
+									{" "}
+									{database.map((m, i) => (
+										<MenuItem id={m} key={i} onClick={handleClose}>
+											{m}
+										</MenuItem>
+									))}
+								</Menu>
+							</List>
+							<Divider style={{ backgroundColor: "grey" }} />
+							<List>
+								<ListItem
+									button
+									aria-haspopup="true"
+									onClick={() => this.props.history.push("/app/team-tracking")}
+									className={classes.hover}
+								>
+									<ListItemIcon>
+										<RestoreIcon style={{ fill: "white" }} />
+									</ListItemIcon>
+									<ListItemText style={{ color: "white" }}>Team Tracking</ListItemText>
+								</ListItem>
+							</List>
+							<Divider style={{ backgroundColor: "grey" }} />
+							<List>
+								<ListItem button aria-haspopup="true" onClick={handleSrClick} className={classes.hover}>
+									<ListItemIcon>
+										<DescriptionIcon style={{ fill: "white" }} />
+										{!open ? <ArrowRightIcon style={{ fill: "white" }} /> : null}
+									</ListItemIcon>
+									<ListItemText style={{ color: "white" }}>Reports</ListItemText>
+									<ListItemIcon>
+										<ArrowRightIcon style={{ fill: "white" }} />
+									</ListItemIcon>
+								</ListItem>
+								<Menu
+									id="simple-menu"
+									anchorEl={anchorSrEl}
+									open={Boolean(anchorSrEl)}
+									onClose={handleClose}
+									style={{ left: open ? 170 : 45 }}
+									className={classes.menu}
+								>
+									{reports.map((m, i) => (
+										<MenuItem id={m.replace(" ", "-")} key={i} onClick={handleClose}>
+											{m}
+										</MenuItem>
+									))}
+								</Menu>
+							</List>
+							<Divider style={{ backgroundColor: "grey" }} />
+						</Drawer>
+						<main className={classes.content}>
+							<div className={classes.toolbar} />
+							<Route path="/app/employees">
+								<EmployeesPage />
+							</Route>
+							<Route path="/app/teams">
+								<TeamsPage />
+							</Route>
+							<Route path="/app/customers">
+								<CustomersPage />
+							</Route>
+							<Route path="/app/projects">
+								<ProjectsPage />
+							</Route>
+							<Route path="/app/team-tracking">
+								<TeamTimeTracking />
+							</Route>
+						</main>
 					</div>
-
-					<List>
-						<ListItem button aria-haspopup="true" onClick={handleDbClick} className={classes.hover}>
-							<ListItemIcon>
-								<StorageIcon style={{ fill: "white" }} />
-								{!open ? <ArrowRightIcon style={{ fill: "white" }} /> : null}
-							</ListItemIcon>
-
-							<ListItemText style={{ color: "white" }}>Database</ListItemText>
-							<ListItemIcon>
-								<ArrowRightIcon style={{ fill: "white" }} />
-							</ListItemIcon>
-						</ListItem>
-						<Menu
-							id="simple-menu"
-							onClose={handleClose}
-							anchorEl={anchorDbEl}
-							open={Boolean(anchorDbEl)}
-							style={{ left: open ? 170 : 45 }}
-							className={classes.menu}
-						>
-							{" "}
-							{database.map((m, i) => (
-								<MenuItem id={m} key={i} onClick={handleClose}>
-									{m}
-								</MenuItem>
-							))}
-						</Menu>
-					</List>
-					<Divider style={{ backgroundColor: "grey" }} />
-					<List>
-						<ListItem
-							button
-							aria-haspopup="true"
-							onClick={() => this.props.history.push("/app/team-tracking")}
-							className={classes.hover}
-						>
-							<ListItemIcon>
-								<RestoreIcon style={{ fill: "white" }} />
-							</ListItemIcon>
-							<ListItemText style={{ color: "white" }}>Team Tracking</ListItemText>
-						</ListItem>
-					</List>
-					<Divider style={{ backgroundColor: "grey" }} />
-					<List>
-						<ListItem button aria-haspopup="true" onClick={handleSrClick} className={classes.hover}>
-							<ListItemIcon>
-								<DescriptionIcon style={{ fill: "white" }} />
-								{!open ? <ArrowRightIcon style={{ fill: "white" }} /> : null}
-							</ListItemIcon>
-							<ListItemText style={{ color: "white" }}>Reports</ListItemText>
-							<ListItemIcon>
-								<ArrowRightIcon style={{ fill: "white" }} />
-							</ListItemIcon>
-						</ListItem>
-						<Menu
-							id="simple-menu"
-							anchorEl={anchorSrEl}
-							open={Boolean(anchorSrEl)}
-							onClose={handleClose}
-							style={{ left: open ? 170 : 45 }}
-							className={classes.menu}
-						>
-							{reports.map((m, i) => (
-								<MenuItem id={m.replace(" ", "-")} key={i} onClick={handleClose}>
-									{m}
-								</MenuItem>
-							))}
-						</Menu>
-					</List>
-					<Divider style={{ backgroundColor: "grey" }} />
-				</Drawer>
-				<main className={classes.content}>
-					<div className={classes.toolbar} />
-					<Route path="/app/employees">
-						<EmployeesPage />
-					</Route>
-					<Route path="/app/teams">
-						<TeamsPage />
-					</Route>
-					<Route path="/app/customers">
-						<CustomersPage />
-					</Route>
-					<Route path="/app/projects">
-						<ProjectsPage />
-					</Route>
-					<Route path="/app/team-tracking">
-						<TeamTimeTracking />
-					</Route>
-				</main>
-			</div>
+				)}
+			</React.Fragment>
 		);
 	}
 }
 
-export default withStyles(styles, { withTheme: true })(withRouter(TimeKeeper));
+const mapStateToProps = (state) => {
+	return {
+		user: state.user.user
+	};
+};
+
+export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(withRouter(TimeKeeper)));

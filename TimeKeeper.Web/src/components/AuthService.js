@@ -132,4 +132,4 @@ class AuthService {
 	};
 }
 
-export default connect(null, { authSuccess })(AuthService);
+export default AuthService;

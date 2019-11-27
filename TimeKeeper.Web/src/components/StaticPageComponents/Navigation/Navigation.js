@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 
 import { Button } from "@material-ui/core";
+import userManager from "../../../utils/userManager";
 
 import classes from "./Navigation.module.css";
 import Logo from "../Logo/Logo";
@@ -23,12 +24,14 @@ const navigation = (props) => (
 			className={classes.Button}
 			// onClick={props.clicked}
 			onClick={() => {
-				let authService = new AuthService();
-				authService.signinRedirect();
+				// let authService = new AuthService();
+				// authService.signinRedirect();
+				userManager.signinRedirect();
 			}}
 		>
 			LOGIN
 		</Button>
+		
 	</header>
 );
 
