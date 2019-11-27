@@ -242,7 +242,7 @@ class TimeKeeper extends React.Component {
 							<Route path="/app/employees">
 								<EmployeesPage />
 							</Route>
-							<Route path="/app/teams">
+							{/* <Route path="/app/teams">
 								<TeamsPage />
 							</Route>
 							<Route path="/app/customers">
@@ -253,7 +253,7 @@ class TimeKeeper extends React.Component {
 							</Route>
 							<Route path="/app/team-tracking">
 								<TeamTimeTracking />
-							</Route>
+							</Route> */}
 						</main>
 					</div>
 				)}

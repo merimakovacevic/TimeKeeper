@@ -13,7 +13,7 @@ const styles = (theme) => ({
 	},
 	table: {
 		minWidth: 700,
-		width: "101%"
+		width: "100%"
 	},
 	button: {
 		fontSize: "1.2rem",
