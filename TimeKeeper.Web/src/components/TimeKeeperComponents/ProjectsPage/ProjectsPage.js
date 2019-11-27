@@ -69,7 +69,7 @@ const ProjectsPage = (props) => {
                 id="tableTitle"
                 style={{ color: "white" }}
               >
-                Projects:
+                Projects
               </Typography>
             </div>
 

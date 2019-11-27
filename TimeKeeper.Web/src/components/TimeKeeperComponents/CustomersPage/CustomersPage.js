@@ -69,7 +69,7 @@ const CustomersPage = (props) => {
                 id="tableTitle"
                 style={{ color: "white" }}
               >
-                Customers:
+                Customers
               </Typography>
             </div>
 
@@ -121,7 +121,7 @@ const CustomersPage = (props) => {
             <TableBody>
               {customers.map((e, i) => (
                 <TableRow key={e.id}>
-                  <CustomTableCell>{e.id}</CustomTableCell>
+                  <CustomTableCell>{i + 1}</CustomTableCell>
                   <CustomTableCell>{e.name}</CustomTableCell>
                   <CustomTableCell>{e.contactName}</CustomTableCell>
                   <CustomTableCell>{e.emailAddress}</CustomTableCell>
