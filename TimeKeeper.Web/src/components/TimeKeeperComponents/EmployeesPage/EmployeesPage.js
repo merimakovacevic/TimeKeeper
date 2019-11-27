@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { fetchEmployees, employeeSelect } from "../../../store/actions/index";
-//import { loadEmployees } from "../../../utils/api";
 import { withStyles } from "@material-ui/core/styles";
 import {
 	Table,
@@ -32,7 +31,6 @@ const EmployeesPage = (props) => {
 	let employees = data;
 
 	useEffect(() => {
-		//loadEmployees();
 		fetchEmployees();
 		employees = data;
 	}, []);

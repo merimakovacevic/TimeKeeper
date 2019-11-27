@@ -3,7 +3,6 @@ import { store } from "../../index";
 
 import { EMPLOYEES_FETCH_START, EMPLOYEES_FETCH_SUCCESS, EMPLOYEES_FETCH_FAIL, EMPLOYEE_SELECTED } from "./actionTypes";
 import { employeesUrl } from "../../utils/api";
-import config from "../../config";
 
 const employeesFetchStart = () => {
 	return {

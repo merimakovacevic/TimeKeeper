@@ -10,7 +10,6 @@ const userManagerConfig = {
 	filterProtocolClaims: true,
 	loadUserInfo: true,
 	automaticSilentRenew: true,
-	loadUserInfo: true
 	// silent_redirect_uri: "http://localhost:3000/app"
 };
 

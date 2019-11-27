@@ -30,7 +30,6 @@ import RestoreIcon from "@material-ui/icons/Restore";
 import AppsIcon from "@material-ui/icons/Apps";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 
 import EmployeesPage from "../../components/TimeKeeperComponents/EmployeesPage/EmployeesPage";
 import CustomersPage from "./CustomersPage/CustomersPage";
@@ -114,8 +113,9 @@ class TimeKeeper extends React.Component {
 										aria-haspopup="true"
 										onClick={handleUserEl}
 										color="inherit"
-										className={classes.hover}
+										className={classNames(classes.hover, classes.borderRadius)}
 									>
+										<p style={{ fontSize: "1.1rem", paddingRight: ".8rem" }}>{user.profile.name}</p>
 										<AccountCircleIcon fontSize="large" />
 									</IconButton>
 									<Menu
@@ -132,6 +132,7 @@ class TimeKeeper extends React.Component {
 										}}
 										open={anchorUserEl ? true : false}
 										onClose={handleClose}
+										style={{ top: "40px" }}
 										className={classes.menu}
 									>
 										<MenuItem onClick={handleClose}>Calendar</MenuItem>

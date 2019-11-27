@@ -4,8 +4,6 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { OidcProvider } from "redux-oidc";
 
-import { AuthProvider } from "./components/AuthContext";
-
 import configureStore from "./store/configureStore";
 import userManager from "./utils/userManager";
 

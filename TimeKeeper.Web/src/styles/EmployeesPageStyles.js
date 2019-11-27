@@ -8,7 +8,7 @@ const styles = (theme) => ({
 	toolbar: {
 		display: "flexbox",
 		justifyContent: "space-between",
-		padding: "1.2rem",
+		padding: ".5rem 0.1rem .5rem .8rem",
 		backgroundColor: "#40454F"
 	},
 	table: {
@@ -16,7 +16,6 @@ const styles = (theme) => ({
 		width: "101%"
 	},
 	button: {
-		color: "white",
 		fontSize: "1.2rem",
 		padding: 0,
 		color: "#A3A6B4"

@@ -43,8 +43,7 @@ const styles = (theme) => ({
 		backgroundColor: "#24292e",
 		width: drawerWidth,
 		flexShrink: 0,
-		whiteSpace: "nowrap",
-		backgroundColor: "#24292e"
+		whiteSpace: "nowrap"
 	},
 	drawerOpen: {
 		backgroundColor: "#24292e",
@@ -86,10 +85,13 @@ const styles = (theme) => ({
 		position: "fixed",
 		cursor: "pointer",
 		left: "50%",
-		transform: "translateX(-50%)",
-		"&:hover": {
-			backgroundColor: "#424656 !important"
-		}
+		transform: "translateX(-50%)"
+		// "&:hover": {
+		// 	backgroundColor: "#424656 !important"
+		// }
+	},
+	borderRadius: {
+		borderRadius: "5px !important"
 	}
 });
 

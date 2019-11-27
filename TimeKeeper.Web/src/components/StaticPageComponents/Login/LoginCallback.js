@@ -2,8 +2,9 @@ import React from "react";
 import { connect } from "react-redux";
 import { CallbackComponent } from "redux-oidc";
 import { withRouter } from "react-router-dom";
-import userManager from "../utils/userManager";
-import config from "../config";
+import { CircularProgress, Backdrop } from "@material-ui/core";
+
+import userManager from "../../../utils/userManager";
 
 class CallbackPage extends React.Component {
 	render() {
@@ -17,7 +18,19 @@ class CallbackPage extends React.Component {
 					console.error(error);
 				}}
 			>
-				<div>Redirecting...</div>
+				<Backdrop open={true}>
+					<div
+						style={{
+							display: "flex",
+							flexDirection: "column",
+							justifyContent: "center",
+							alignItems: "center"
+						}}
+					>
+						<CircularProgress size={100} style={{ color: "white", textAlign: "center" }} />
+						<h1 style={{ color: "white", marginTop: "1rem" }}>Preparing TimeKeeper Application</h1>
+					</div>
+				</Backdrop>
 			</CallbackComponent>
 		);
 	}
