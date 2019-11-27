@@ -72,9 +72,9 @@ namespace TimeKeeper.IDP
                     RequireConsent=false, //not showing form "do you give rights to your app to access you claims.."
 
                     //RedirectUris = { "https://localhost:44350/signin-oidc" },
-                    RedirectUris = { "https://localhost:3300/auth-callback" },
+                    RedirectUris = { "http://localhost:3000/auth-callback" },
                     //PostLogoutRedirectUris = { "https://localhost:44350/signout-callback-oidc" },
-                    PostLogoutRedirectUris = { "https://localhost:3300/" },
+                    PostLogoutRedirectUris = { "http://localhost:3000/" },
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
@@ -87,8 +87,8 @@ namespace TimeKeeper.IDP
                     },
                     AllowOfflineAccess=true,
                     AllowAccessTokensViaBrowser=true,
-                    AllowedCorsOrigins={"http://localhost:3300", "https://localhost:3000", "https://localhost:44350" },
-                    AccessTokenLifetime=3600 //this is also default, id token lasts for 5 minutes 
+                    AllowedCorsOrigins={"http://localhost:3300", "http://localhost:3000", "https://localhost:44350" },
+                    AccessTokenLifetime=3600 //this is also default, id token lasts for 5 minutes
                 }
             };
         }
