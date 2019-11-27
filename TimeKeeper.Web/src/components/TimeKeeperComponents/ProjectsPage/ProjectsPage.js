@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { fetchEmployees, employeeSelect } from "../../../store/actions/index";
+import { fetchProjects, projectSelect } from "../../../store/actions/index";
 import { withStyles } from "@material-ui/core/styles";
 import {
   Table,
@@ -17,22 +17,22 @@ import {
   Toolbar,
   Typography
 } from "@material-ui/core";
-import styles from "../../../styles/EmployeesPageStyles";
+import styles from "../../../styles/ProjectsPageStyles";
 
 import AddIcon from "@material-ui/icons/Add";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-const EmployeesPage = (props) => {
+const ProjectsPage = (props) => {
   const { classes } = props;
   const { data, loading, error } = props;
-  const { fetchEmployees, employeeSelect } = props;
-  let employees = data;
+  const { fetchProjects, projectSelect } = props;
+  let projects = data;
 
   useEffect(() => {
-    fetchEmployees();
-    employees = data;
+    fetchProjects();
+    projects = data;
   }, []);
 
   return (
@@ -69,34 +69,46 @@ const EmployeesPage = (props) => {
                 id="tableTitle"
                 style={{ color: "white" }}
               >
-                Employees
+                Projects
               </Typography>
             </div>
 
-						<div>
-							<Tooltip title="Add">
-								<IconButton
-									aria-label="Add"
-									onClick={() => this.handleOpen(666, false)}
-									className={classes.hover}
-								>
-									<AddIcon fontSize="large" style={{ fill: "white" }} />
-								</IconButton>
-							</Tooltip>
-						</div>
-					</Toolbar>
-					<Table className={classes.table}>
-						<TableHead>
-							<TableRow>
-								<CustomTableCell className={classes.tableHeadFontsize} style={{ width: "9%" }}>
-									No.
-								</CustomTableCell>
-								<CustomTableCell className={classes.tableHeadFontsize}>First Name</CustomTableCell>
-								<CustomTableCell className={classes.tableHeadFontsize}>Last Name</CustomTableCell>
-								<CustomTableCell className={classes.tableHeadFontsize}>E-mail</CustomTableCell>
-								<CustomTableCell className={classes.tableHeadFontsize} style={{ width: "13%" }}>
-									Phone
-								</CustomTableCell>
+            <div>
+              <Tooltip title="Add">
+                <IconButton
+                  aria-label="Add"
+                  onClick={() => this.handleOpen(666, false)}
+                  className={classes.hover}
+                >
+                  <AddIcon fontSize="large" style={{ fill: "white" }} />
+                </IconButton>
+              </Tooltip>
+            </div>
+          </Toolbar>
+          <Table className={classes.table}>
+            <TableHead>
+              <TableRow>
+                <CustomTableCell
+                  className={classes.tableHeadFontsize}
+                  style={{ width: "8%" }}
+                >
+                  No.
+                </CustomTableCell>
+                <CustomTableCell className={classes.tableHeadFontsize}>
+                  Project
+                </CustomTableCell>
+                <CustomTableCell className={classes.tableHeadFontsize}>
+                  Customer Name
+                </CustomTableCell>
+                <CustomTableCell className={classes.tableHeadFontsize}>
+                  Team
+                </CustomTableCell>
+                <CustomTableCell
+                  className={classes.tableHeadFontsize}
+                  style={{ width: "13%" }}
+                >
+                  Status
+                </CustomTableCell>
 
                 <CustomTableCell
                   className={classes.tableHeadFontsize}
@@ -107,13 +119,13 @@ const EmployeesPage = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {employees.map((e, i) => (
+              {projects.map((e, i) => (
                 <TableRow key={e.id}>
                   <CustomTableCell>{e.id}</CustomTableCell>
-                  <CustomTableCell>{e.firstName}</CustomTableCell>
-                  <CustomTableCell>{e.lastName}</CustomTableCell>
-                  <CustomTableCell>{e.email}</CustomTableCell>
-                  <CustomTableCell>{e.phone}</CustomTableCell>
+                  <CustomTableCell>{e.name}</CustomTableCell>
+                  <CustomTableCell>{e.customer.name}</CustomTableCell>
+                  <CustomTableCell>{e.team.name}</CustomTableCell>
+                  <CustomTableCell>{e.status.name}</CustomTableCell>
 
                   <CustomTableCell align="center">
                     <IconButton aria-label="View">
@@ -122,7 +134,7 @@ const EmployeesPage = (props) => {
                     <IconButton
                       aria-label="Edit"
                       className={classes.editButton}
-                      onClick={() => employeeSelect(e.id)}
+                      onClick={() => projectSelect(e.id)}
                     >
                       <EditIcon style={{ fill: "green" }} />
                     </IconButton>
@@ -156,12 +168,12 @@ const CustomTableCell = withStyles((theme) => ({
 
 const mapStateToProps = (state) => {
   return {
-    data: state.employees.data,
-    loading: state.employees.loading,
-    error: state.employees.error
+    data: state.projects.data,
+    loading: state.projects.loading,
+    error: state.projects.error
   };
 };
 
-export default connect(mapStateToProps, { fetchEmployees, employeeSelect })(
-  withStyles(styles)(EmployeesPage)
+export default connect(mapStateToProps, { fetchProjects, projectSelect })(
+  withStyles(styles)(ProjectsPage)
 );

@@ -5,19 +5,19 @@ import { connect } from "react-redux";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import {
-	Drawer,
-	AppBar,
-	Toolbar,
-	List,
-	CssBaseline,
-	Typography,
-	Divider,
-	IconButton,
-	ListItem,
-	ListItemIcon,
-	ListItemText,
-	Menu,
-	MenuItem
+  Drawer,
+  AppBar,
+  Toolbar,
+  List,
+  CssBaseline,
+  Typography,
+  Divider,
+  IconButton,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem
 } from "@material-ui/core";
 import styles from "../../styles/NavigationStyles";
 import userManager from "../../utils/userManager";
@@ -32,36 +32,44 @@ import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
 import EmployeesPage from "../../components/TimeKeeperComponents/EmployeesPage/EmployeesPage";
-import CustomersPage from "./CustomersPage/CustomersPage";
-import ProjectsPage from "./ProjectsPage/ProjectsPage";
+import CustomersPage from "../../components/TimeKeeperComponents/CustomersPage/CustomersPage";
+import ProjectsPage from "../../components/TimeKeeperComponents/ProjectsPage/ProjectsPage";
+
 import TeamTimeTracking from "./TeamTimeTracking/TeamTimeTracking";
 import TeamsPage from "./TeamsPage/TeamsPage";
 
 class TimeKeeper extends React.Component {
-	state = {
-		database: ["Employees", "Teams", "Customers", "Projects"],
-		reports: ["Personal Report", "Monthly Report", "Annual Report", "Project History", "Dashboard"],
-		open: false,
-		anchorDbEl: null,
-		anchorSrEl: null,
-		anchorUserEl: null
-	};
+  state = {
+    database: ["Employees", "Teams", "Customers", "Projects"],
+    reports: [
+      "Personal Report",
+      "Monthly Report",
+      "Annual Report",
+      "Project History",
+      "Dashboard"
+    ],
+    open: false,
+    anchorDbEl: null,
+    anchorSrEl: null,
+    anchorUserEl: null
+  };
 
-	handleDrawerOpen = () => this.setState({ open: true });
-	handleDrawerClose = () => this.setState({ open: false });
+  handleDrawerOpen = () => this.setState({ open: true });
+  handleDrawerClose = () => this.setState({ open: false });
 
-	handleDbClick = (event) => this.setState({ anchorDbEl: event.currentTarget });
-	handleSrClick = (event) => this.setState({ anchorSrEl: event.currentTarget });
-	handleUserEl = (event) => this.setState({ anchorUserEl: event.currentTarget });
+  handleDbClick = (event) => this.setState({ anchorDbEl: event.currentTarget });
+  handleSrClick = (event) => this.setState({ anchorSrEl: event.currentTarget });
+  handleUserEl = (event) =>
+    this.setState({ anchorUserEl: event.currentTarget });
 
-	handleClose = (event) => {
-		this.setState({
-			anchorDbEl: null,
-			anchorSrEl: null,
-			anchorUserEl: null
-		});
-		this.props.history.push(`/app/${event.currentTarget.id.toLowerCase()}`);
-	};
+  handleClose = (event) => {
+    this.setState({
+      anchorDbEl: null,
+      anchorSrEl: null,
+      anchorUserEl: null
+    });
+    this.props.history.push(`/app/${event.currentTarget.id.toLowerCase()}`);
+  };
 
 	logout = () => {
 		userManager.removeUser();
