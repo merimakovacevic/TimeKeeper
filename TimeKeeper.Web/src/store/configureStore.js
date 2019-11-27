@@ -8,7 +8,6 @@ import {
   customersReducer,
   projectsReducer
 } from "./reducers/index";
-/* import { customersReducer } from "./reducers/customersReducer"; */
 
 const rootReducer = combineReducers({
   user: userReducer,
