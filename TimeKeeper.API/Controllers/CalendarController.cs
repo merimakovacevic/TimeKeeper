@@ -176,5 +176,17 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
+        [HttpGet("monthly-overview/{year}/{month}")]
+        public IActionResult GetMonthlyOverview(int year, int month)
+        {
+            try
+            {
+                return Ok(calendarService.GetMonthlyOverview(year, month));
+            }
+            catch(Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
     }
 }
