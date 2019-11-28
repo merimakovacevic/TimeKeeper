@@ -9,7 +9,7 @@ using TimeKeeper.Utility.Services;
 namespace TimeKeeper.Test.RepositoriesTest
 {
     [TestFixture]
-    public class TestUsers : BaseTestDatabase
+    public class TestUsers : TestBaseTestDatabase
     {
         [Test, Order(1)]
         public void GetAllUsers()

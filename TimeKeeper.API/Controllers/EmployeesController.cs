@@ -23,28 +23,27 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class EmployeesController : BaseController
     {
-        PaginationService<Employee> Pagination;
+        private PaginationService<Employee> _pagination;
         public EmployeesController(TimeKeeperContext context) : base(context) {
-            Pagination = new PaginationService<Employee>();
+            _pagination = new PaginationService<Employee>();
         }
 
         /// <summary>
-        /// This method returns all employees
+        /// This method returns all employees from a selected page, given the page size
         /// </summary>
-        /// <returns>All employees</returns>
+        /// <returns>All employees from a page</returns>
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult GetAll(int page = 1, int pageSize = 10)
-
+        public IActionResult GetAll(int page = 1, int pageSize = 5)
         {
             try
             {
-                Logger.Info($"Try to fetch all employees");
+                Logger.Info($"Try to fetch ${pageSize} employees from page ${page}");
 
-                Tuple <PaginationModel, List<Employee>> employeesPagination = Pagination.CreatePagination(page, pageSize, Unit.Employees.Get() as DbSet<Employee>);
+                Tuple <PaginationModel, List<Employee>> employeesPagination = _pagination.CreatePagination(page, pageSize, Unit.Employees.Get());
                 
                 HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(employeesPagination.Item1));
                 return Ok(employeesPagination.Item2.ToList().Select(x => x.Create()).ToList());

@@ -13,7 +13,7 @@ using TimeKeeper.Domain.Entities;
 namespace TimeKeeper.Test.ControllersTest
 {
     [TestFixture]
-    public class TestCalendarController : BaseTestDatabase
+    public class TestCalendarController : TestBaseTestDatabase
     {
         [Test, Order(1)]
         [TestCase(3, 2019, 2, 3, 17, 0, 0, 8)]
@@ -195,7 +195,7 @@ namespace TimeKeeper.Test.ControllersTest
 
             var response = controller.Put(wrongId, day) as ObjectResult;
 
-            Assert.AreEqual(400, response.StatusCode);
+            Assert.AreEqual(404, response.StatusCode);
         }
 
         [Test, Order(7)]

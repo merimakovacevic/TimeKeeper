@@ -1,8 +1,11 @@
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    scroll-behavior: smooth;
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+	scroll-behavior: smooth;
+	font-family: "Raleway", sans-serif;
+}
 
-    font-family: "Raleway", sans-serif;
+body {
+	background-color: #5f6769 !important;
 }

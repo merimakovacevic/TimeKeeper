@@ -7,7 +7,7 @@ using TimeKeeper.DAL;
 namespace TimeKeeper.Test
 {
     [TestFixture]
-    public class BaseRealDatabase
+    public class TestBaseRealDatabase
     {
         public TimeKeeperContext context;
         public UnitOfWork unit;
