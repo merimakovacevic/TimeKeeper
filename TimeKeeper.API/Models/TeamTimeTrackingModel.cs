@@ -10,9 +10,9 @@ namespace TimeKeeper.API.Models
     {
         public TeamTimeTrackingModel()
         {
-            hourTypes = new Dictionary<string, decimal>();
+            HourTypes = new Dictionary<string, decimal>();
         }
         public Employee Employee { get; set; }
-        public Dictionary<string, decimal> hourTypes { get; set; }
+        public Dictionary<string, decimal> HourTypes { get; set; }
     }
 }

@@ -176,6 +176,7 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
+
         [HttpGet("personal-dashboard-month/{employeeId}/{year}/{month}")]
         public IActionResult GetPersonalMonthDashboard(int employeeId, int year, int month)
         {
@@ -197,6 +198,19 @@ namespace TimeKeeper.API.Controllers
                 return Ok(calendarService.GetEmployeeYearDashboard(employeeId, year));
             }
             catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        [HttpGet("monthly-overview/{year}/{month}")]
+        public IActionResult GetMonthlyOverview(int year, int month)
+        {
+            try
+            {
+                return Ok(calendarService.GetMonthlyOverview(year, month));
+            }
+            catch(Exception ex)
             {
                 return HandleException(ex);
             }

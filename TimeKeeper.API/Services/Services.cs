@@ -68,7 +68,13 @@ namespace TimeKeeper.API.Services
             return day.Date.IsWeekend();
         }
 
+
         public static bool IsAbsence(this DayModel day)
+        {
+            return day.DayType.Name != "Workday";
+        }
+
+        public static bool IsAbsence(this Day day)
         {
             return day.DayType.Name != "Workday";
         }
