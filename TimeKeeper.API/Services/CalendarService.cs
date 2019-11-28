@@ -26,6 +26,7 @@ namespace TimeKeeper.API.Services
                 EmployeeTimes = GetTeamMonthReport(teamId, year, month)
             };
 
+            //projects for this month!!!
             teamDashboard.EmployeesCount = teamDashboard.EmployeeTimes.Count();
             teamDashboard.ProjectsCount = unit.Teams.Get(teamId).Projects.Count();
 
@@ -40,6 +41,8 @@ namespace TimeKeeper.API.Services
 
         public List<EmployeeTimeModel> GetTeamMonthReport(int teamId, int year, int month)
         {
+            //Show only team members that were active during this month
+            //filter total hours > 0?
             Team team = unit.Teams.Get(teamId);
             List<EmployeeTimeModel> employeeTimeModels = new List<EmployeeTimeModel>();
 
@@ -50,8 +53,55 @@ namespace TimeKeeper.API.Services
             return employeeTimeModels;
         }
 
+        public PersonalDashboardModel GetEmployeeYearDashboard (int employeeId, int year)
+        {
+            EmployeeTimeModel employeeYearTime = unit.Employees.Get(employeeId).CreateTimeModel();
+            employeeYearTime.HourTypes.SetHourTypes(unit);
+
+            for (int i = 1; i <= 12; i++)
+            {
+                EmployeeTimeModel employeeMonthTime = GetEmployeeMonthReport(employeeId, year, i);
+                foreach(KeyValuePair<string, decimal> hourType in employeeMonthTime.HourTypes)
+                {
+                    employeeYearTime.HourTypes[hourType.Key] += hourType.Value;
+                }
+                employeeYearTime.Overtime += employeeMonthTime.Overtime;
+                employeeYearTime.PaidTimeOff += employeeMonthTime.PaidTimeOff;
+            }
+
+            List<DayModel> calendar = GetEmployeeCalendar(employeeId, year);
+
+            PersonalDashboardModel personalDashboard = new PersonalDashboardModel
+            {
+                Employee = employeeYearTime.Employee,
+                TotalHours = GetYearlyWorkingDays(year) * 8,
+                WorkingHours = employeeYearTime.HourTypes["Workday"],
+                BradfordFactor = GetBradfordFactor(calendar)
+            };
+
+            return personalDashboard;
+        }
+               
+        public PersonalDashboardModel GetEmployeeMonthDashboard(int employeeId, int year, int month)
+        {
+            EmployeeTimeModel employeeTime = GetEmployeeMonthReport(employeeId, year, month);
+            List<DayModel> calendar = GetEmployeeCalendar(employeeId, year, month);
+            //unit.Employees.Get(employeeId).Calendar.Select(x => x.Create()).ToList();
+
+            PersonalDashboardModel personalDashboard = new PersonalDashboardModel
+            {
+                Employee = employeeTime.Employee,
+                TotalHours = GetMonthlyWorkingDays(year, month) * 8,
+                WorkingHours = employeeTime.HourTypes["Workday"],
+                BradfordFactor = GetBradfordFactor(calendar)
+            };
+
+            return personalDashboard;
+        }
+        
         public EmployeeTimeModel GetEmployeeMonthReport(int employeeId, int year, int month)
         {
+            //TOTAL HOURS IN DASHBOARD - MONTHLY THEORETICAL WORKING HOURS
             Employee employee = unit.Employees.Get(employeeId);
             EmployeeTimeModel employeeReport = employee.CreateTimeModel();
             List<DayModel> calendar = GetEmployeeMonth(employeeId, year, month);
@@ -109,6 +159,30 @@ namespace TimeKeeper.API.Services
 
         public List<DayModel> GetEmployeeMonth(int empId, int year, int month)
         {
+            List<DayModel> calendar = GetEmptyEmployeeCalendar(empId, year, month);
+            List<DayModel> employeeDays = GetEmployeeCalendar(empId, year, month);
+
+            foreach (var d in employeeDays)
+            {
+                calendar[d.Date.Day - 1] = d;
+            }
+            return calendar;
+        }
+        
+        public List<DayModel> GetEmployeeCalendar(int empId, int year)
+        {
+            //Add validaiton!
+            return unit.Calendar.Get(x => x.Employee.Id == empId && x.Date.Year == year).Select(x => x.Create()).ToList();
+        }
+
+        public List<DayModel> GetEmployeeCalendar(int empId, int year, int month)
+        {
+            //Add validaiton!
+            return unit.Calendar.Get(x => x.Employee.Id == empId && x.Date.Year == year && x.Date.Month == month).Select(x => x.Create()).ToList();
+        }
+
+        public List<DayModel> GetEmptyEmployeeCalendar(int empId, int year, int month)
+        {
             List<DayModel> calendar = new List<DayModel>();
             if (!ValidateMonth(year, month)) throw new Exception("Invalid data! Check year and month");
 
@@ -135,12 +209,7 @@ namespace TimeKeeper.API.Services
                 calendar.Add(newDay);
                 day = day.AddDays(1);
             }
-            List<DayModel> employeeDays = unit.Calendar.Get(x => x.Employee.Id == empId && x.Date.Year == year && x.Date.Month == month).Select(x => x.Create()).ToList();
 
-            foreach (var d in employeeDays)
-            {
-                calendar[d.Date.Day - 1] = d;
-            }
             return calendar;
         }
 
@@ -157,6 +226,78 @@ namespace TimeKeeper.API.Services
             return true;
         }
 
+        public decimal GetBradfordFactor(List<DayModel> calendar)
+        {   
+            //an absence instance are any number of consecutive absence days. 3 consecutive absence days make an instance.
+            int absenceInstances = 0;
+            int absenceDays = 0;
+            calendar = calendar.OrderBy(x => x.Date).ToList();
+            
+            //Bradford factor calculates only dates until the rpesent day, because the calendar in argument returns the whole period
+            absenceDays = calendar.Where(x => x.IsAbsence() && x.Date < DateTime.Now).Count();
+
+            for (int i = 0; i < calendar.Count; i++)
+            {
+                if (calendar[i].IsAbsence() && calendar[i].Date < DateTime.Now)
+                {
+                    if(i == 0) absenceInstances++;
+
+                    else if(!calendar[i-1].IsAbsence())
+                    {
+                        absenceInstances++;
+                    }
+                }
+            }
+            return (decimal)Math.Pow(absenceInstances, 2) * absenceDays;
+        }
+
+        private decimal GetMonthlyWorkingDays(int year, int month)
+        {
+            //this method counts only days until the present day
+            int daysInMonth = DateTime.DaysInMonth(year, month);
+            int workingDays = 0;
+
+            for (int i = 1; i <= daysInMonth; i++)
+            {
+                DateTime thisDay = new DateTime(year, month, i);
+                if (!thisDay.IsWeekend() && thisDay < DateTime.Now )
+                {
+                    workingDays++;
+                }
+            }
+
+            return workingDays;
+        }
+
+        private decimal GetMonthlyWorkingDays(Employee employee, int year, int month)
+        {
+            //this method counts only days until the present day
+            int daysInMonth = DateTime.DaysInMonth(year, month);
+            int workingDays = 0;
+
+            for (int i = 1; i <= daysInMonth; i++)
+            {
+                DateTime thisDay = new DateTime(year, month, i);
+                if (!thisDay.IsWeekend() && thisDay < DateTime.Now && employee.BeginDate < thisDay && (employee.EndDate != new DateTime(1, 1, 1) && employee.EndDate != null && thisDay > employee.EndDate))
+                {
+                    workingDays++;
+                }
+            }
+
+            return workingDays;
+        }
+
+        private decimal GetYearlyWorkingDays(int year)
+        {
+            decimal workingDays = 0;
+            for (int i = 1; i <= 12; i++)
+            {
+                workingDays += GetMonthlyWorkingDays(year, i);
+            }
+
+            return workingDays;
+        }
+
         /*
         public void SetHourTypes(Dictionary<string, decimal> hourTypes)
         {
@@ -169,37 +310,22 @@ namespace TimeKeeper.API.Services
             hourTypes.Add("Missing entries", 0);
         }*/
 
-                /*
-         private decimal CalculateHoursOnProject(Day employeeDay, Project project)
+        /*
+ private decimal CalculateHoursOnProject(Day employeeDay, Project project)
+ {
+     decimal totalHoursOnProject = 0;
+     foreach (JobDetail jobDetail in employeeDay.JobDetails)
+     {
+         if (project.Id == jobDetail.Project.Id)
          {
-             decimal totalHoursOnProject = 0;
-             foreach (JobDetail jobDetail in employeeDay.JobDetails)
-             {
-                 if (project.Id == jobDetail.Project.Id)
-                 {
-                     totalHoursOnProject += jobDetail.Hours;
-                 }
-             }
-
-             return totalHoursOnProject;
+             totalHoursOnProject += jobDetail.Hours;
          }
+     }
 
-         private decimal GetMonthlyWorkingHours(int year, int month)
-         {
-             int daysInMonth = DateTime.DaysInMonth(year, month);
-             int workingDays = 0;
+     return totalHoursOnProject;
+ }*/
 
-             for (int i = 1; i <= daysInMonth; i++)
-             {
-                 DateTime thisDay = new DateTime(year,month,i);
-                 if(thisDay.DayOfWeek != DayOfWeek.Saturday && thisDay.DayOfWeek != DayOfWeek.Sunday)
-                 {
-                     workingDays += 1;
-                 }
-             }
 
-             return workingDays;
-         }*/
 
 
     }
