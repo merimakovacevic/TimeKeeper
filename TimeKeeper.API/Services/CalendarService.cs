@@ -85,7 +85,7 @@ namespace TimeKeeper.API.Services
                     /*if the total recorded hours for a Workday are less than 8, the difference is added to the missing entries*/
                     /*If tasks are added to weekend day, the day is saved as a workday. In that case, it is not necessary to add
                      the difference to the missing entries*/
-                    if (day.TotalHours < 8 && !day.IsWeekend())
+                    if (day.TotalHours < 8 && !day.IsWeekend()) //is this necessary? SHOULD WE DELETE IT?
                     {
                         hours["Missing entries"] += 8 - day.TotalHours;
                     }
@@ -180,9 +180,9 @@ namespace TimeKeeper.API.Services
              }
 
              return totalHoursOnProject;
-         }
+         }*/
 
-         private decimal GetMonthlyWorkingHours(int year, int month)
+         private int GetMonthlyWorkingDays(int year, int month)
          {
              int daysInMonth = DateTime.DaysInMonth(year, month);
              int workingDays = 0;
@@ -197,8 +197,102 @@ namespace TimeKeeper.API.Services
              }
 
              return workingDays;
-         }*/
+         }
 
+        public MonthlyOverviewModel GetMonthlyOverview(int year, int month)
+        {
+            MonthlyOverviewModel monthlyOverview = new MonthlyOverviewModel();
+            //List<Project> projects = unit.Projects.Get().ToList().Where(x => x.StartDate.Year == year && x.StartDate.Month==month || 
+            //                                                        x.EndDate.Year == year && x.EndDate.Month == month ||  
+            //                                                        x.EndDate.Year <= year && x.StartDate.Year >= year).ToList();
+            List<EmployeeModel> employees = new List<EmployeeModel>();
+            List<JobDetail> tasks = unit.Tasks.Get().Where(x => x.Day.Date.Year==year && x.Day.Date.Month==month).ToList();
+            //List<JobDetail> tasks= tasksAll.Where(x => x.Day.Date.Year == year && x.Day.Date.Month == month).ToList();
+            List<Project> projects = new List<Project>();
+            foreach(JobDetail task in tasks)
+            {
+                if (!IsDuplicate(projects, task.Project))
+                {
+                    projects.Add(task.Project);
+                }
+            }
+            Dictionary<string, decimal> projectColumns = SetMonthlyOverviewColumns(projects);
+            monthlyOverview.HoursByProject = projectColumns;
+            monthlyOverview.TotalHours = 0;
+            monthlyOverview.EmployeeProjectHours = new List<EmployeeProjectModel>();
 
+            foreach (JobDetail task in tasks)
+            {
+                if (!IsDuplicate(employees, task.Day.Employee)) {
+                    employees.Add(task.Day.Employee.Create());
+                }
+            }
+            foreach(EmployeeModel emp in employees)
+            {
+                List<JobDetail> employeesTasks = tasks.Where(x => x.Day.Employee.Id == emp.Id).ToList();
+                EmployeeProjectModel employeeProjectModel = GetEmployeeMonthlyOverview(projects, emp, employeesTasks);
+                foreach(KeyValuePair<string, decimal> keyValuePair in employeeProjectModel.HoursByProject)
+                {
+                    monthlyOverview.HoursByProject[keyValuePair.Key] += keyValuePair.Value;
+                }
+                monthlyOverview.EmployeeProjectHours.Add(employeeProjectModel);
+                monthlyOverview.TotalHours += employeeProjectModel.TotalHours;
+            }
+            monthlyOverview.TotalWorkingDays = GetMonthlyWorkingDays(year, month);
+            monthlyOverview.TotalPossibleWorkingHours = monthlyOverview.TotalWorkingDays * 8;
+            return monthlyOverview;
+
+        }
+
+        public bool IsDuplicate(List<EmployeeModel> employees, Employee employee)
+        {
+            foreach(EmployeeModel emp in employees)
+            {
+                if (emp.Id == employee.Id)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool IsDuplicate(List<Project> projects, Project project)
+        {
+            foreach (Project proj in projects)
+            {
+                if (proj.Id == project.Id)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public EmployeeProjectModel GetEmployeeMonthlyOverview(List<Project> projects, EmployeeModel employee, List<JobDetail> tasks)
+        {
+            Dictionary<string, decimal> projectColumns = SetMonthlyOverviewColumns(projects);
+            EmployeeProjectModel employeeProject = new EmployeeProjectModel();
+            employeeProject.Employee = unit.Employees.Get(employee.Id).Master();
+            employeeProject.HoursByProject = projectColumns;
+            employeeProject.TotalHours = 0;
+            employeeProject.PaidTimeOff = 0;
+            foreach (JobDetail task in tasks)
+            {
+                employeeProject.HoursByProject[task.Project.Name] += task.Hours;
+                employeeProject.TotalHours += task.Hours;
+                if (task.Day.IsAbsence()) employeeProject.PaidTimeOff += 8;
+            }
+            return employeeProject;
+        }
+
+        public Dictionary<string, decimal> SetMonthlyOverviewColumns(List<Project> projects)
+        {
+            Dictionary<string, decimal> projectColumns = new Dictionary<string, decimal>(); 
+            foreach(Project project in projects)
+            {
+                projectColumns.Add(project.Name, 0);
+            }
+            return projectColumns;
+        }
     }
 }
