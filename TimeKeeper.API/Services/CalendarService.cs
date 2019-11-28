@@ -393,5 +393,134 @@ namespace TimeKeeper.API.Services
             }
             return projectColumns;
         }
+        //PROJECT HISTORY
+        public Dictionary<int, decimal> SetYearsColumns(int projectId)
+        {
+            Dictionary<int, decimal> yearColumns = new Dictionary<int, decimal>();
+            List<JobDetail> tasks = unit.Projects.Get().ToList().FirstOrDefault(x => x.Id == projectId).Tasks.ToList();
+            foreach (JobDetail a in tasks)
+            {
+                if (!IsDuplicateYear(yearColumns, a.Day.Date.Year))
+                    yearColumns.Add(a.Day.Date.Year, 0);
+            }
+            return yearColumns;
+        }
+        public bool IsDuplicateEmployee(List<Employee> employees, Employee employee)
+        {
+            if (employees.Count == 0) return false;
+            foreach (Employee emp in employees)
+            {
+                if (emp.Id == employee.Id)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public bool IsDuplicateYear(Dictionary<int, decimal> yearColumns, int year)
+        {
+            if (yearColumns.ContainsKey(year)) {
+                return true;
+                }
+            return false;
+        }
+        public ProjectHistoryModel GetProjectHistoryModel(int projectId)
+        {
+            ProjectHistoryModel projectHistory = new ProjectHistoryModel();
+
+            List<JobDetail> tasks = unit.Projects.Get().ToList().FirstOrDefault(x => x.Id == projectId).Tasks.ToList();
+            List<Employee> employees = new List<Employee>();
+
+            foreach (JobDetail a in tasks)
+            {
+                if (unit.Employees.Get().ToList().FirstOrDefault(x => x.Id == a.Day.Employee.Id) != null && !IsDuplicateEmployee(employees, a.Day.Employee))
+                {
+                    employees.Add(unit.Employees.Get(a.Day.Employee.Id));
+                }
+            }
+
+            foreach (Employee emp in employees)
+            {
+                EmployeeProjectHistoryModel e = new EmployeeProjectHistoryModel
+                {
+                    EmployeeName = emp.FullName,
+                    HoursPerYears = SetYearsColumns(projectId),
+                    TotalHoursPerProjectPerEmployee = 0
+                };
+                foreach (JobDetail a in tasks)
+                {
+                    if (a.Day.Employee.Id == emp.Id && e.HoursPerYears.ContainsKey(a.Day.Date.Year))
+                    {
+                        e.HoursPerYears[a.Day.Date.Year] += a.Hours;
+                    }
+                }
+                foreach (KeyValuePair<int, decimal> keyValuePair in e.HoursPerYears)
+                {
+                    e.TotalHoursPerProjectPerEmployee += keyValuePair.Value;
+                }
+                projectHistory.Employees.Add(e);
+            }
+            projectHistory.TotalYearlyProjectHours = SetYearsColumns(projectId);
+            
+            foreach (EmployeeProjectHistoryModel empProjectModel in projectHistory.Employees)
+            {
+                foreach (KeyValuePair<int, decimal> keyValuePair in empProjectModel.HoursPerYears)
+                {
+                    projectHistory.TotalYearlyProjectHours[keyValuePair.Key] += keyValuePair.Value;
+                }
+                projectHistory.TotalHoursPerProject += empProjectModel.TotalHoursPerProjectPerEmployee;
+            }
+            return projectHistory;
+        }
+        //ANNUAL OVERVIEW
+        // Months for annual overviews
+        public Dictionary<int, decimal> SetMonths()
+        {
+            Dictionary<int, decimal> HoursPerMonth = new Dictionary<int, decimal>();
+            for (int i = 1; i <= 12; i++)
+            {
+                HoursPerMonth.Add(i, 0);
+            }
+            return HoursPerMonth;
+        }
+        public ProjectAnnualOverviewModel GetProjectAnnualOverview(int projectId, int year)
+        {
+            // Arrange
+            var project = unit.Projects.Get(projectId);
+            var tasksOnProject = unit.Tasks.Get().Where(x => x.Project.Id == projectId && x.Day.Date.Year == year).ToList();
+            ProjectAnnualOverviewModel projectAnnualOverview = new ProjectAnnualOverviewModel { Project = project.Master() };
+            // Fill
+            projectAnnualOverview.Months = SetMonths();
+            foreach (var TaskOnProject in tasksOnProject)
+            {
+                projectAnnualOverview.Months[TaskOnProject.Day.Date.Month] += TaskOnProject.Hours;
+                projectAnnualOverview.Total += TaskOnProject.Hours;
+            }
+            // Return
+            return projectAnnualOverview;
+        }
+        public TotalAnnualOverviewModel GetTotalAnnualOverview(int year)
+        {
+            // Arrange
+            TotalAnnualOverviewModel totalAnnualOverview = new TotalAnnualOverviewModel();
+            List<ProjectAnnualOverviewModel> annualList = new List<ProjectAnnualOverviewModel>();
+            var projectsInYear = unit.Projects.Get().ToList();
+            totalAnnualOverview.Months = SetMonths();
+            // Fill
+            foreach (Project projectInYear in projectsInYear)
+            {
+                var tasksInYear = unit.Tasks.Get().Where(x => x.Project.Id == projectInYear.Id && x.Day.Date.Year == year).ToList();
+                ProjectAnnualOverviewModel projectOverview = GetProjectAnnualOverview(projectInYear.Id, year);
+                annualList.Add(projectOverview);
+                totalAnnualOverview.Projects = annualList.ToList();
+                foreach (var taskInYear in tasksInYear)
+                {
+                    totalAnnualOverview.Months[taskInYear.Day.Date.Month] += taskInYear.Hours;
+                    totalAnnualOverview.SumTotal += taskInYear.Hours;
+                }
+            }
+            // Return
+            return totalAnnualOverview;
+        }
     }
 }
