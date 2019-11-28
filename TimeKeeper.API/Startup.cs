@@ -5,10 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -87,37 +89,47 @@ namespace TimeKeeper.API
 
             services.AddAuthentication(o =>
             {
-                o.DefaultScheme = "Cookies";
-                o.DefaultChallengeScheme = "oidc";
-            }).AddCookie("Cookies", o =>
+                o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                //o.DefaultScheme = "Cookies";
+                //o.DefaultChallengeScheme = "oidc";
+            }).AddJwtBearer(o =>
             {
-                o.AccessDeniedPath = "/AccessDenied";
-            })
-            .AddOpenIdConnect("oidc", o => //will be called in case the client is not authenticated
-            {
-                o.SignInScheme = "Cookies";
-                o.Authority = "https://localhost:44300"; //identity guarantor
-                o.ClientId = "tk2019"; //client application in Config in IDP
-                o.ClientSecret = "mistral_talents"; //key used to sign tokens, usually given by the identity provider
-                o.ResponseType = "code id_token";
-                o.Scope.Add("openid"); //identity of the user that signed in
-                o.Scope.Add("profile"); //profile of the user (given name, last name)
-                o.Scope.Add("address"); //address of the user
-                o.Scope.Add("roles");
-                o.Scope.Add("timekeeper");
-                o.Scope.Add("teams");
-                o.SaveTokens = true; //save the tokens in cookies
-                o.GetClaimsFromUserInfoEndpoint = true; //get all claims defined for users, by default it's false
-                o.ClaimActions.MapUniqueJsonKey("address", "address"); //address isn't mapped by default, unlike profile and id
-                o.ClaimActions.MapUniqueJsonKey("role", "role");
-                o.ClaimActions.MapUniqueJsonKey("team", "team");
-                o.TokenValidationParameters = new TokenValidationParameters
-                {
-                    NameClaimType = JwtClaimTypes.GivenName,
-                    RoleClaimType = JwtClaimTypes.Role               
-                };
+                o.Authority = "https://localhost:44300/";
+                o.Audience = "timekeeper";
+                o.RequireHttpsMetadata = false;
             });
-               
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            //AddCookie("Cookies", o =>
+            //{
+            //    o.AccessDeniedPath = "/AccessDenied";
+            //})
+            //.AddOpenIdConnect("oidc", o => //will be called in case the client is not authenticated
+            //{
+            //    o.SignInScheme = "Cookies";
+            //    o.Authority = "https://localhost:44300"; //identity guarantor
+            //    o.ClientId = "tk2019"; //client application in Config in IDP
+            //    o.ClientSecret = "mistral_talents"; //key used to sign tokens, usually given by the identity provider
+            //    o.ResponseType = "code id_token";
+            //    o.Scope.Add("openid"); //identity of the user that signed in
+            //    o.Scope.Add("profile"); //profile of the user (given name, last name)
+            //    o.Scope.Add("address"); //address of the user
+            //    o.Scope.Add("roles");
+            //    o.Scope.Add("timekeeper");
+            //    o.Scope.Add("teams");
+            //    o.SaveTokens = true; //save the tokens in cookies
+            //    o.GetClaimsFromUserInfoEndpoint = true; //get all claims defined for users, by default it's false
+            //    o.ClaimActions.MapUniqueJsonKey("address", "address"); //address isn't mapped by default, unlike profile and id
+            //    o.ClaimActions.MapUniqueJsonKey("role", "role");
+            //    o.ClaimActions.MapUniqueJsonKey("team", "team");
+            //    o.TokenValidationParameters = new TokenValidationParameters
+            //    {
+            //        NameClaimType = JwtClaimTypes.GivenName,
+            //        RoleClaimType = JwtClaimTypes.Role               
+            //    };
+            //});
+
             string connectionString = Configuration["ConnectionString"];          
             services.AddDbContext<TimeKeeperContext>(o => { o.UseNpgsql(connectionString); });
 
@@ -160,6 +172,7 @@ namespace TimeKeeper.API
                               .AllowAnyMethod()
                               .AllowAnyHeader()
                               .AllowCredentials());
+            //app.UseMvcWithDefaultRoute();
             app.UseAuthentication();
             app.UseMvc();
         }
