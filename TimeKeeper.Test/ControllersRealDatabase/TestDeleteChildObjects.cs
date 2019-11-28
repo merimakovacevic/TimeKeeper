@@ -34,15 +34,19 @@ namespace TimeKeeper.Test.ControllersRealDatabase
             projects = unit.Projects.Get().ToList();
             Assert.AreEqual(10, projects.Count());
 
-            //this team has 2 projects, and one of them was deleted
+            //this team has 2 projects, and one of them was just deleted
             Team team = unit.Teams.Get(3);
 
-            //only one project should be left, but there are actually two showing up - the test fails
+            //* The test fails
+            //* Only one project should be left, 
+            //* but there are actually two showing up in the team's Projects list during this test.
+            //* Only if we restart the application, it won't appear in the team's Projects list
+            //* The test fails
             Assert.AreEqual(1, team.Projects.Count);
 
             project.Deleted = false;
             unit.Save();
-        }
-        */
+        }*/
+        
     }
 }
