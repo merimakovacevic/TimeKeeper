@@ -5,19 +5,19 @@ import { connect } from "react-redux";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import {
-  Drawer,
-  AppBar,
-  Toolbar,
-  List,
-  CssBaseline,
-  Typography,
-  Divider,
-  IconButton,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem
+	Drawer,
+	AppBar,
+	Toolbar,
+	List,
+	CssBaseline,
+	Typography,
+	Divider,
+	IconButton,
+	ListItem,
+	ListItemIcon,
+	ListItemText,
+	Menu,
+	MenuItem
 } from "@material-ui/core";
 import styles from "../../styles/NavigationStyles";
 import userManager from "../../utils/userManager";
@@ -39,40 +39,47 @@ import TeamTimeTracking from "./TeamTimeTracking/TeamTimeTracking";
 import TeamsPage from "./TeamsPage/TeamsPage";
 
 class TimeKeeper extends React.Component {
-  state = {
-    database: ["Employees", "Teams", "Customers", "Projects"],
-    reports: [
-      "Personal Report",
-      "Monthly Report",
-      "Annual Report",
-      "Project History",
-      "Dashboard"
-    ],
-    open: false,
-    anchorDbEl: null,
-    anchorSrEl: null,
-    anchorUserEl: null
-  };
+	state = {
+		database: [],
+		reports: ["Personal Report", "Monthly Report", "Annual Report", "Project History", "Dashboard"],
+		open: false,
+		anchorDbEl: null,
+		anchorSrEl: null,
+		anchorUserEl: null
+	};
 
-  handleDrawerOpen = () => this.setState({ open: true });
-  handleDrawerClose = () => this.setState({ open: false });
+	componentDidMount() {
+		const { user } = this.props;
+		if (!user) {
+			return this.props.history.replace("/");
+		} else {
+			let role = user.profile.role;
+			if (role === "user") {
+				this.setState({ database: ["Employees"] });
+			} else {
+				this.setState({ database: ["Employees", "Teams", "Customers", "Projects"] });
+			}
+		}
+	}
 
-  handleDbClick = (event) => this.setState({ anchorDbEl: event.currentTarget });
-  handleSrClick = (event) => this.setState({ anchorSrEl: event.currentTarget });
-  handleUserEl = (event) =>
-    this.setState({ anchorUserEl: event.currentTarget });
+	handleDrawerOpen = () => this.setState({ open: true });
+	handleDrawerClose = () => this.setState({ open: false });
 
-  handleClose = (event) => {
-    this.setState({
-      anchorDbEl: null,
-      anchorSrEl: null,
-      anchorUserEl: null
-    });
-    this.props.history.push(`/app/${event.currentTarget.id.toLowerCase()}`);
-  };
+	handleDbClick = (event) => this.setState({ anchorDbEl: event.currentTarget });
+	handleSrClick = (event) => this.setState({ anchorSrEl: event.currentTarget });
+	handleUserEl = (event) => this.setState({ anchorUserEl: event.currentTarget });
+
+	handleClose = (event) => {
+		this.setState({
+			anchorDbEl: null,
+			anchorSrEl: null,
+			anchorUserEl: null
+		});
+		this.props.history.push(`/app/${event.currentTarget.id.toLowerCase()}`);
+	};
 
 	logout = () => {
-		userManager.removeUser();
+		userManager.signoutRedirect();
 	};
 
 	render() {
@@ -123,7 +130,9 @@ class TimeKeeper extends React.Component {
 										color="inherit"
 										className={classNames(classes.hover, classes.borderRadius)}
 									>
-										<p style={{ fontSize: "1.1rem", paddingRight: ".8rem" }}>{user.profile.name}</p>
+										<p style={{ fontSize: "1.1rem", paddingRight: ".8rem" }}>
+											{user.profile.name} ({user.profile.role})
+										</p>
 										<AccountCircleIcon fontSize="large" />
 									</IconButton>
 									<Menu
@@ -250,15 +259,17 @@ class TimeKeeper extends React.Component {
 							<Route path="/app/employees">
 								<EmployeesPage />
 							</Route>
-							{/* <Route path="/app/teams">
-								<TeamsPage />
-							</Route>
 							<Route path="/app/customers">
 								<CustomersPage />
 							</Route>
 							<Route path="/app/projects">
 								<ProjectsPage />
 							</Route>
+							{/* <Route path="/app/teams">
+								<TeamsPage />
+							</Route>
+							
+				
 							<Route path="/app/team-tracking">
 								<TeamTimeTracking />
 							</Route> */}

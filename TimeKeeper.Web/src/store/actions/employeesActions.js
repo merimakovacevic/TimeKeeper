@@ -1,8 +1,17 @@
-import axios from "axios";
-import { store } from "../../index";
-
-import { EMPLOYEES_FETCH_START, EMPLOYEES_FETCH_SUCCESS, EMPLOYEES_FETCH_FAIL, EMPLOYEE_SELECTED } from "./actionTypes";
-import { employeesUrl } from "../../utils/api";
+import {
+	EMPLOYEES_FETCH_START,
+	EMPLOYEES_FETCH_SUCCESS,
+	EMPLOYEES_FETCH_FAIL,
+	EMPLOYEE_FETCH_START,
+	EMPLOYEE_FETCH_SUCCESS,
+	EMPLOYEE_FETCH_FAIL,
+	EMPLOYEE_SELECT,
+	EMPLOYEE_CANCEL,
+	EMPLOYEE_EDIT_START,
+	EMPLOYEE_EDIT_FAIL,
+	EMPLOYEE_EDIT_SUCCESS
+} from "./actionTypes";
+import { employeesUrl, apiGetAllRequest, apiGetOneRequest, apiPutRequest } from "../../utils/api";
 
 const employeesFetchStart = () => {
 	return {
@@ -27,44 +36,89 @@ const employeesFetchFail = (error) => {
 export const fetchEmployees = () => {
 	return (dispatch) => {
 		dispatch(employeesFetchStart());
-		apiRequest(employeesUrl)
+		apiGetAllRequest(employeesUrl)
 			.then((res) => {
-				console.log(res);
 				dispatch(employeesFetchSuccess(res.data.data));
 			})
 			.catch((err) => dispatch(employeesFetchFail(err)));
 	};
 };
 
-export const employeeSelect = (id) => {
+export const employeeSelect = (id, mode) => {
 	return {
-		type: EMPLOYEE_SELECTED,
-		id
+		type: EMPLOYEE_SELECT,
+		id,
+		mode
 	};
 };
 
-function loadEmployees() {
-	return apiRequest(employeesUrl).then((result) => {
-		console.log(result);
-	});
-}
-
-// a request helper which reads the access_token from the redux state and passes it in its HTTP request
-function apiRequest(url, method = "GET") {
-	const token = store.getState().user.user.access_token;
-	let headers = new Headers();
-
-	headers = {
-		Accept: "application/json",
-		Authorization: `Bearer ${token}`
+const employeeFetchStart = () => {
+	return {
+		type: EMPLOYEE_FETCH_START
 	};
+};
 
-	const options = {
-		method,
-		headers
+const employeeFetchFail = (error) => {
+	return {
+		type: EMPLOYEE_FETCH_FAIL,
+		error
 	};
+};
 
-	return axios(url, options)
-		.then((data) => ({ data }))
-		.catch((error) => ({ error }));
-}
+const employeeFetchSuccess = (data) => {
+	return {
+		type: EMPLOYEE_FETCH_SUCCESS,
+		data
+	};
+};
+
+export const fetchEmployee = (id) => {
+	return (dispatch) => {
+		dispatch(employeeFetchStart());
+		apiGetOneRequest(employeesUrl, id)
+			.then((res) => {
+				return dispatch(employeeFetchSuccess(res.data.data));
+			})
+			.catch((err) => dispatch(employeeFetchFail(err)));
+	};
+};
+
+const employeeEditStart = () => {
+	return {
+		type: EMPLOYEE_EDIT_START
+	};
+};
+
+const employeeEditFail = (error) => {
+	return {
+		type: EMPLOYEE_EDIT_FAIL,
+		error
+	};
+};
+
+export const employeeEditCancel = () => {
+	return {
+		type: EMPLOYEE_CANCEL
+	};
+};
+
+const employeeEditSuccess = () => {
+	return {
+		type: EMPLOYEE_EDIT_SUCCESS,
+		reload: 'employeeEditReload'
+	};
+};
+
+export const employeePut = (id, body) => {
+	return (dispatch) => {
+		dispatch(employeeEditStart());
+		apiPutRequest(employeesUrl, id, body)
+			.then((res) => {
+				dispatch(employeeEditSuccess());
+				dispatch(employeeEditCancel());
+			})
+			.catch((err) => {
+				dispatch(employeeEditFail(err));
+			});
+	};
+};
