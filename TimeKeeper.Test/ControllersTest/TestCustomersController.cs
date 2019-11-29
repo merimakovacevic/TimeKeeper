@@ -11,14 +11,15 @@ using TimeKeeper.Domain.Entities;
 namespace TimeKeeper.Test.ControllersTest
 {
     [TestFixture]
-    public class TestCustomersController : TestBase
+    public class TestCustomersController : TestBaseTestDatabase
     {
         [Test, Order(1)]
-        public void GetAllCustomers()
+        [TestCase(1, 5)]
+        public void GetAllCustomers(int page, int pageSize)
         {
             var controller = new CustomersController(unit.Context);
 
-            var response = controller.Get() as ObjectResult;
+            var response = controller.GetAll(page, pageSize) as ObjectResult;
             var value = response.Value as List<CustomerModel>;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -45,7 +46,7 @@ namespace TimeKeeper.Test.ControllersTest
             var controller = new CustomersController(unit.Context);
             int id = 40; //Customer with id doesn't exist in the test database
 
-            var response = controller.Get(id) as StatusCodeResult;
+            var response = controller.Get(id) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }
@@ -126,17 +127,18 @@ namespace TimeKeeper.Test.ControllersTest
         {
             var controller = new CustomersController(unit.Context);
             int id = 40;//Try to change the customer with id (doesn't exist)
-
+            Address homeAddress = new Address { City = "Sarajevo" };
             Customer customer = new Customer
             {
                 Id = id,
                 Name = "Test Customer",
+                HomeAddress = homeAddress,
                 Status = unit.CustomerStatuses.Get(1)
             };
 
-            var response = controller.Put(id, customer) as StatusCodeResult;
+            var response = controller.Put(id, customer) as ObjectResult;
 
-            Assert.AreEqual(404, response.StatusCode);
+            Assert.AreEqual(400, response.StatusCode);
         }
 
         [Test, Order(8)]

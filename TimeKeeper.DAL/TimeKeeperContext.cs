@@ -42,14 +42,11 @@ namespace TimeKeeper.DAL
                 optionBuilder.UseNpgsql(_conStr);
             }
             optionBuilder.UseLazyLoadingProxies(true);
-            /*This option was used to supress the Detached Object warning when calling MasterController 
-             * for Employees (EmployeePosition is used in Master method for Employee, causing the warning)
-             * It was solved by adding an addition ToList() method call before the Select method in the controller             .*/
-            //optionBuilder.ConfigureWarnings(w => w.Ignore(CoreEventId.DetachedLazyLoadingWarning));
             base.OnConfiguring(optionBuilder);
         }
         protected override void OnModelCreating(ModelBuilder builder)
-        {            
+        {
+            base.OnModelCreating(builder);
             builder.Entity<Customer>().OwnsOne(x => x.HomeAddress);
             builder.Entity<Customer>().HasQueryFilter(x => !x.Deleted);
             builder.Entity<Member>().HasQueryFilter(x => !x.Deleted);
@@ -67,7 +64,6 @@ namespace TimeKeeper.DAL
             builder.Entity<Team>().HasQueryFilter(x => !x.Deleted);
             builder.Entity<User>().HasQueryFilter(x => !x.Deleted);
             builder.Entity<MemberStatus>().HasQueryFilter(x => !x.Deleted);
-            base.OnModelCreating(builder);//moved from first line of the method, does it mather where this is placed?
         }
 
         public override int SaveChanges()

@@ -10,6 +10,10 @@ using TimeKeeper.API.Factory;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.Utility.Services;
+using TimeKeeper.API.Services;
+using Newtonsoft.Json;
+using TimeKeeper.API.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace TimeKeeper.API.Controllers
 {
@@ -18,29 +22,39 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class EmployeesController : BaseController
     {
-        public EmployeesController(TimeKeeperContext context) : base(context) { }
+        private PaginationService<Employee> _pagination;
+
+        public EmployeesController(TimeKeeperContext context) : base(context)
+        {
+            _pagination = new PaginationService<Employee>();
+        }
 
         /// <summary>
-        /// This method returns all employees
+        /// This method returns all employees from a selected page, given the page size
         /// </summary>
-        /// <returns>All employees</returns>
+        /// <returns>All employees from a page</returns>
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Get()
+        public IActionResult GetAll(int page = 1, int pageSize = 100)
         {
             try
             {
-                Logger.Info($"Try to fetch all employees");
-                return Ok(Unit.Employees.Get().ToList().Select(x => x.Create()).ToList());                
+                Logger.Info($"Try to fetch ${pageSize} employees from page ${page}");
+
+                Tuple<PaginationModel, List<Employee>> employeesPagination = _pagination.CreatePagination(page, pageSize, Unit.Employees.Get());
+
+                HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(employeesPagination.Item1));
+                return Ok(employeesPagination.Item2.ToList().Select(x => x.Create()).ToList());
             }
             catch (Exception ex)
             {
                 return HandleException(ex);
             }
         }
+
         /// <summary>
         /// This method returns employee with specified id
         /// </summary>
@@ -58,14 +72,7 @@ namespace TimeKeeper.API.Controllers
             {
                 Logger.Info($"Try to fetch employee with id {id}");
                 Employee employee = Unit.Employees.Get(id);
-                
-                /*if (employee == null)
-                {
-                    Logger.Error($"Employee with id {id} cannot be found");
-                    return NotFound();
-                }*/
-
-                 return Ok(employee.Create());                
+                return Ok(employee.Create());
             }
             catch (Exception ex)
             {
@@ -81,14 +88,13 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPost]
+        // [Authorize(Roles = "admin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Post([FromBody] Employee employee)
         {
             try
             {
-                //employee.Status = Unit.EmploymentStatuses.Get(employee.Status.Id);
-                //employee.Position = Unit.EmployeePositions.Get(employee.Position.Id);
                 Unit.Employees.Insert(employee);
                 Unit.Save();
 
@@ -116,26 +122,17 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
+        [Authorize(Policy = "IsEmployee")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Put(int id, [FromBody] Employee employee)
         {
             try
             {
-                //employee.Status = Unit.EmploymentStatuses.Get(employee.Status.Id);
-                //employee.Position = Unit.EmployeePositions.Get(employee.Position.Id);
                 Logger.Info($"Attempt to update employee with id {id}");
                 Unit.Employees.Update(employee, id);
                 Unit.Save();
 
-                /*int numberOfChanges = Unit.Save();
-                Logger.Info($"Attempt to update employee with id {id}");
-
-                if (numberOfChanges == 0)
-                {
-                   Logger.Error($"Employee with id {id} cannot be found");
-                    return NotFound();
-                }*/
                 Logger.Info($"Employee {employee.FirstName} {employee.LastName} with id {employee.Id} updated");
                 return Ok(employee.Create());
             }
@@ -154,6 +151,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpDelete("{id}")]
+        //[Authorize(Roles = "admin")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -164,15 +162,6 @@ namespace TimeKeeper.API.Controllers
                 Logger.Info($"Attempt to delete employee with id {id}");
                 Unit.Employees.Delete(id);
                 Unit.Save();
-
-                /*int numberOfChanges = Unit.Save();
-                Logger.Info($"Attempt to delete employee with id {id}");
-
-                if (numberOfChanges == 0)
-                {
-                    Logger.Error($"Employee with id {id} cannot be found");
-                    return NotFound();
-                }*/
 
                 Logger.Info($"Employee with id {id} deleted");
                 return NoContent();

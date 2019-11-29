@@ -8,7 +8,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Newtonsoft.Json;
 using TimeKeeper.API.Factory;
+using TimeKeeper.API.Models;
+using TimeKeeper.API.Services;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.LOG;
@@ -16,46 +19,52 @@ using TimeKeeper.LOG;
 namespace TimeKeeper.API.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
     [ApiController]
     public class TeamsController : BaseController
     {
-
-        public TeamsController(TimeKeeperContext context) : base(context) { }
+        private PaginationService<Team> _pagination;
+        public TeamsController(TimeKeeperContext context) : base(context)
+        {
+            _pagination = new PaginationService<Team>();
+        }
 
 
         /// <summary>
-        /// This method returns all teams
+        /// This method returns all teams from a selected page, given the page size
         /// </summary>
-        /// <returns>All teams</returns>
+        /// <returns>All teams from a page</returns>
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Get()
+        public IActionResult GetAll(int page = 1, int pageSize = 5)
         {
             try
             {
-                LogIdentity();
-                int userId = int.Parse(User.Claims.FirstOrDefault(x => x.Type == "sub").Value.ToString());
-                var query = Unit.Teams.Get(x => x.Members.Any(y => y.Employee.Id == userId));
-                return Ok(query.ToList().Select(x => x.Create()).ToList());//without the first ToList(), we will have a lazy loading exception?
+                Logger.Info($"Try to fetch ${pageSize} teams from page ${page}");
+
+                int userId = int.Parse(GetUserClaim("sub"));
+                string userRole = GetUserClaim("role");
+                Tuple<PaginationModel, List<Team>> teamsPagination;
+                List<Team> query;
+
+                if(userRole == "admin")
+                {
+                    query = Unit.Teams.Get().ToList();                    
+                }
+                else
+                {
+                    query = Unit.Teams.Get(x => x.Members.Any(y => y.Employee.Id == userId)).ToList();
+                }
+
+                teamsPagination = _pagination.CreatePagination(page, pageSize, query);
+                HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(teamsPagination.Item1));
+                return Ok(teamsPagination.Item2.Select(x => x.Create()).ToList());
             }
             catch (Exception ex)
             {
                 return HandleException(ex);
-            }
-        }
-
-        [NonAction]
-        private void LogIdentity()
-        {
-            var identityToken = HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
-            Logger.Info($"Identity token: {identityToken.Result}");
-            foreach (var claim in User.Claims)
-            {
-                Logger.Info($"Claim type: {claim.Type} - value: {claim.Value}");
             }
         }
 
@@ -68,22 +77,15 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpGet("{id}")]
-        [Authorize(Policy = "IsMember")]
+        [Authorize(Policy = "IsMemberInTeam")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Get(int id)
         {
             try {
-                LogIdentity();
 
                 Logger.Info($"Try to get team with {id}");
                 Team team = Unit.Teams.Get(id);
-
-                /*if (team == null)
-                {
-                    Logger.Error($"There is no team with specified id {id}");
-                    return NotFound();
-                }*/
 
                 return Ok(team.Create());
 
@@ -102,6 +104,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPost]
+        //[Authorize(Policy = "IsAdmin")]
         [Authorize(Roles = "admin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -129,6 +132,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
+        //[Authorize(Policy = "IsAdmin")]
         [Authorize(Roles = "admin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -139,13 +143,6 @@ namespace TimeKeeper.API.Controllers
                 Unit.Teams.Update(team, id);
                 Unit.Save();
 
-                /*int numberOfChanges = Unit.Save();
-
-                if (numberOfChanges == 0)
-                {
-                    Logger.Error($"Team with {id} not found");
-                    return NotFound();
-                }*/
                 Logger.Info($"Changed team with id {id}");
                 return Ok(team.Create());
             }
@@ -164,6 +161,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpDelete("{id}")]
+        //[Authorize(Policy = "IsAdmin")]
         [Authorize(Roles = "admin")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
@@ -176,13 +174,6 @@ namespace TimeKeeper.API.Controllers
                 Unit.Teams.Delete(id);
                 Unit.Save();
 
-                /*int numberOfChanges = Unit.Save();
-                
-                if (numberOfChanges == 0)
-                {
-                    Logger.Error($"Attempt to delete team with id {id}");
-                    return NotFound();
-                }*/
                 Logger.Info($"Deleted team with id {id}");
                 return NoContent();
             }

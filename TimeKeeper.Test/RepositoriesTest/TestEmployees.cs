@@ -8,7 +8,7 @@ using TimeKeeper.Domain.Entities;
 namespace TimeKeeper.Test.RepositoriesTest
 {
     [TestFixture]
-    public class TestEmployees: TestBase
+    public class TestEmployees: TestBaseTestDatabase
     {
         [Test, Order(1)]
         public void GetAllEmployees()
@@ -191,6 +191,7 @@ namespace TimeKeeper.Test.RepositoriesTest
             }
 
             int numberOfChanges = unit.Save();
+            unit.Employees.Delete(id);
 
             //Two child entities and one parent entity will be deleted, making it 3 changes
             Assert.AreEqual(3, numberOfChanges);

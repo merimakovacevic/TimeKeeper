@@ -8,12 +8,12 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Controllers
 {
-    [Authorize(Roles = "admin")]
     [ApiController]
     public class UsersController : BaseController
     {
@@ -41,26 +41,36 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }  
         }
-
-        [AllowAnonymous]
-        [HttpPost]
-        [Route("api/login")]
-        public IActionResult Login([FromBody] User user)
+     
+        /// <summary>
+        /// This method is used for login
+        /// </summary>
+        /// <returns status="200">OK</returns>
+        /// <returns status="404">NotFound</returns>
+        /// <returns status="400">BadRequest</returns>
+        [HttpGet]
+        [Route("login")]
+        [Authorize]
+        public IActionResult Login()
         {
             try
             {
-                User control = Unit.Users.Get(x => x.Username == user.Username && x.Password == user.Password).FirstOrDefault();
-
-                if (control == null) return NotFound();
-                byte[] bytes = Encoding.ASCII.GetBytes($"{control.Username}:{control.Password}");
-                string base64 = Convert.ToBase64String(bytes);
-                return Ok(new
+                if (User.Identity.IsAuthenticated)
                 {
-                    control.Id,
-                    control.Name,
-                    control.Role,
-                    base64
-                });
+                    var accessToken = HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken).Result;
+                    var response = new
+                    {
+                        Id = User.Claims.FirstOrDefault(c => c.Type == "sub").Value.ToString(),
+                        Name = User.Claims.FirstOrDefault(c => c.Type == "given_name").Value.ToString(),
+                        Role = User.Claims.FirstOrDefault(c => c.Type == "role").Value.ToString(),
+                        accessToken //Bearer {accessToken}
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
             catch (Exception ex)
             {
@@ -68,6 +78,10 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        /// <summary>
+        /// This method is used for logout
+        /// </summary>
+        /// <returns></returns>
         [AllowAnonymous]
         [Route("api/logout")]
         [HttpGet]

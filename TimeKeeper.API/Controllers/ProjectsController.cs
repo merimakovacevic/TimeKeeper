@@ -6,34 +6,58 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using TimeKeeper.API.Factory;
+using TimeKeeper.API.Models;
+using TimeKeeper.API.Services;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProjectsController : BaseController
     {
-        public ProjectsController(TimeKeeperContext context) : base(context) { }
+        private PaginationService<Project> _pagination;
+        public ProjectsController(TimeKeeperContext context) : base(context)
+        {
+            _pagination = new PaginationService<Project>();
+        }
 
         /// <summary>
-        /// This method returns all projects
+        /// This method returns all projects rom a selected page, given the page size
         /// </summary>
-        /// <returns>All projects</returns>
+        /// <returns>All projects from a page</returns>
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Get()
+        public IActionResult GetAll(int page = 1, int pageSize = 5)
         {
             try
             {
-                Logger.Info($"Try to fetch all projects");
-                return Ok(Unit.Projects.Get().ToList().Select(x => x.Create()).ToList());
+                Logger.Info($"Try to fetch ${pageSize} projects from page ${page}");
+                Tuple<PaginationModel, List<Project>> projectsPagination;
+                List<Project> query;
+
+                int userId = int.Parse(User.Claims.FirstOrDefault(x => x.Type == "sub").Value.ToString());
+                string role = User.Claims.FirstOrDefault(x => x.Type == "role").Value.ToString();
+
+                if (role == "admin" || role == "lead")
+                {
+                    query = Unit.Projects.Get().ToList();
+                }
+                else
+                {
+                    query = Unit.Projects.Get(x => x.Team.Members.Any(y => y.Employee.Id == userId)).ToList();                    
+                }
+
+                projectsPagination = _pagination.CreatePagination(page, pageSize, query);
+                HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(projectsPagination.Item1));
+                return Ok(projectsPagination.Item2.Select(x => x.Create()).ToList());
+
             }
             catch (Exception ex)
             {
@@ -49,6 +73,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpGet("{id}")]
+        [Authorize(Policy = "IsMemberOnProject")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -58,12 +83,6 @@ namespace TimeKeeper.API.Controllers
             {
                 Logger.Info($"Try to fetch project with id {id}");
                 Project project = Unit.Projects.Get(id);                
-
-                /*if (project == null)
-                {
-                    Logger.Error($"Project with id {id} cannot be found");
-                    return NotFound();
-                }*/
 
                 return Ok(project.Create());                
             }
@@ -80,17 +99,13 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPost]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Post([FromBody] Project project)
         {
             try
             {
-                /*project.Team = Unit.Teams.Get(project.Team.Id);
-                project.Customer = Unit.Customers.Get(project.Customer.Id);
-                project.Status = Unit.ProjectStatuses.Get(project.Status.Id);
-                project.Pricing = Unit.PricingStatuses.Get(project.Pricing.Id);*/
-
                 Unit.Projects.Insert(project);
                 Unit.Save();
 
@@ -112,29 +127,17 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Put(int id, [FromBody] Project project)
         {
             try
             {
-                /*project.Team = Unit.Teams.Get(project.Team.Id);
-                project.Customer = Unit.Customers.Get(project.Customer.Id);
-                project.Status = Unit.ProjectStatuses.Get(project.Status.Id);
-                project.Pricing = Unit.PricingStatuses.Get(project.Pricing.Id);*/
-
                 Logger.Info($"Attempt to update project with id {id}");
                 Unit.Projects.Update(project, id);
 
                 Unit.Save();
-
-                /*int numberOfChanges = Unit.Save();                
-
-                if (numberOfChanges == 0)
-                {
-                    Logger.Error($"Project with id {id} cannot be found");
-                    return NotFound();
-                }*/
 
                 Logger.Info($"Project {project.Name} with id {project.Id} updated");
                 return Ok(project.Create());
@@ -154,6 +157,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -164,15 +168,6 @@ namespace TimeKeeper.API.Controllers
                 Logger.Info($"Attempt to delete project with id {id}");
                 Unit.Projects.Delete(id);
                 Unit.Save();
-
-                /*
-                int numberOfChanges = Unit.Save();                
-
-                if (numberOfChanges == 0)
-                {
-                    Logger.Error($"Project with id {id} cannot be found");
-                    return NotFound();
-                }*/
 
                 Logger.Info($"Project with id {id} deleted");
                 return NoContent();

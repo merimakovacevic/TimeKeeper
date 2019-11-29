@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Models
 {
@@ -9,9 +10,9 @@ namespace TimeKeeper.API.Models
     {
         public TeamTimeTrackingModel()
         {
-            hourTypes = new Dictionary<string, int>();
+            HourTypes = new Dictionary<string, decimal>();
         }
-        public MasterModel Employee { get; set; }
-        public Dictionary<string, int> hourTypes { get; set; }
+        public Employee Employee { get; set; }
+        public Dictionary<string, decimal> HourTypes { get; set; }
     }
 }

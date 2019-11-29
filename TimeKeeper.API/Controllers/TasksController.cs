@@ -12,7 +12,6 @@ using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Controllers
 {
-    [Authorize]
     //Will the route for this Controller require refactoring? Employees/{id}/Calendar/{id}/Tasks?
     [Authorize]
     [Route("api/[controller]")]
@@ -62,12 +61,6 @@ namespace TimeKeeper.API.Controllers
                 Logger.Info($"Try to get task with {id}");
                 var task = Unit.Tasks.Get(id);
 
-                /*if (result == null)
-                {
-                    Logger.Error($"Task with id {id} cannot be found");
-                    return NotFound();
-                }*/
-
                 return Ok(task.Create());
             }
             catch(Exception ex)
@@ -90,9 +83,6 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                //jobDetail.Day = Unit.Calendar.Get(jobDetail.Day.Id);
-                //jobDetail.Project = Unit.Projects.Get(jobDetail.Project.Id);
-
                 Unit.Tasks.Insert(jobDetail);
                 Unit.Save();
 
@@ -122,19 +112,9 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                //jobDetail.Day = Unit.Calendar.Get(jobDetail.Day.Id);
-                //jobDetail.Project = Unit.Projects.Get(jobDetail.Project.Id);
-
                 Unit.Tasks.Update(jobDetail, id);
                 Unit.Save();
-                /*
-                int numberOfChanges = Unit.Save();
 
-                if (numberOfChanges == 0)
-                {
-                    Logger.Error($"Task with {id} not found");
-                    return NotFound();
-                }*/
                 Logger.Info($"Changed task with id {id}");
                 return Ok(jobDetail.Create());
             }
@@ -164,13 +144,6 @@ namespace TimeKeeper.API.Controllers
                 Unit.Tasks.Delete(id);
                 Unit.Save();
 
-                /*int numberOfChanges = Unit.Save();
-
-                if (numberOfChanges == 0)
-                {
-                    Logger.Error($"Task with id {id} not found");
-                    return NotFound();
-                }*/
                 Logger.Info($"Deleted task with id {id}");
                 return NoContent();
             }
