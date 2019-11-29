@@ -5,19 +5,20 @@ import { connect } from "react-redux";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import {
-  Drawer,
-  AppBar,
-  Toolbar,
-  List,
-  CssBaseline,
-  Typography,
-  Divider,
-  IconButton,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem
+	Drawer,
+	AppBar,
+	Toolbar,
+	List,
+	CssBaseline,
+	Typography,
+	Divider,
+	IconButton,
+	ListItem,
+	ListItemIcon,
+	ListItemText,
+	Menu,
+	MenuItem,
+	Switch
 } from "@material-ui/core";
 import styles from "../../styles/NavigationStyles";
 import userManager from "../../utils/userManager";
@@ -39,40 +40,56 @@ import TeamTimeTracking from "./TeamTimeTracking/TeamTimeTracking";
 import TeamsPage from "./TeamsPage/TeamsPage";
 
 class TimeKeeper extends React.Component {
-  state = {
-    database: ["Employees", "Teams", "Customers", "Projects"],
-    reports: [
-      "Personal Report",
-      "Monthly Report",
-      "Annual Report",
-      "Project History",
-      "Dashboard"
-    ],
-    open: false,
-    anchorDbEl: null,
-    anchorSrEl: null,
-    anchorUserEl: null
-  };
+	state = {
+		database: [],
+		reports: [],
+		open: false,
+		anchorDbEl: null,
+		anchorSrEl: null,
+		anchorUserEl: null
+	};
 
-  handleDrawerOpen = () => this.setState({ open: true });
-  handleDrawerClose = () => this.setState({ open: false });
+	componentDidMount() {
+		const { user } = this.props;
+		if (!user) {
+			return this.props.history.replace("/");
+		} else {
+			let role = user.profile.role;
+			if (role === "user") {
+				this.setState({ database: ["Employees", "Projects"] });
+				this.setState({ reports: ["Personal Report", "Monthly Report"] });
+			} else if (role === "admin") {
+				this.setState({ database: ["Employees", "Teams", "Customers"] });
+				this.setState({
+					reports: ["Personal Report", "Monthly Report", "Annual Report", "Project History", "Dashboard"]
+				});
+			} else {
+				this.setState({ database: ["Employees", "Teams", "Projects"] });
+				this.setState({
+					reports: ["Personal Report", "Monthly Report", "Annual Report", "Project History", "Dashboard"]
+				});
+			}
+		}
+	}
 
-  handleDbClick = (event) => this.setState({ anchorDbEl: event.currentTarget });
-  handleSrClick = (event) => this.setState({ anchorSrEl: event.currentTarget });
-  handleUserEl = (event) =>
-    this.setState({ anchorUserEl: event.currentTarget });
+	handleDrawerOpen = () => this.setState({ open: true });
+	handleDrawerClose = () => this.setState({ open: false });
 
-  handleClose = (event) => {
-    this.setState({
-      anchorDbEl: null,
-      anchorSrEl: null,
-      anchorUserEl: null
-    });
-    this.props.history.push(`/app/${event.currentTarget.id.toLowerCase()}`);
-  };
+	handleDbClick = (event) => this.setState({ anchorDbEl: event.currentTarget });
+	handleSrClick = (event) => this.setState({ anchorSrEl: event.currentTarget });
+	handleUserEl = (event) => this.setState({ anchorUserEl: event.currentTarget });
+
+	handleClose = (event) => {
+		this.setState({
+			anchorDbEl: null,
+			anchorSrEl: null,
+			anchorUserEl: null
+		});
+		this.props.history.push(`/app/${event.currentTarget.id.toLowerCase()}`);
+	};
 
 	logout = () => {
-		userManager.removeUser();
+		userManager.signoutRedirect();
 	};
 
 	render() {
@@ -123,7 +140,9 @@ class TimeKeeper extends React.Component {
 										color="inherit"
 										className={classNames(classes.hover, classes.borderRadius)}
 									>
-										<p style={{ fontSize: "1.1rem", paddingRight: ".8rem" }}>{user.profile.name}</p>
+										<p style={{ fontSize: ".9rem", paddingRight: ".8rem" }}>
+											{user.profile.name} ({user.profile.role})
+										</p>
 										<AccountCircleIcon fontSize="large" />
 									</IconButton>
 									<Menu
@@ -246,22 +265,54 @@ class TimeKeeper extends React.Component {
 							<Divider style={{ backgroundColor: "grey" }} />
 						</Drawer>
 						<main className={classes.content}>
-							<div className={classes.toolbar} />
-							<Route path="/app/employees">
-								<EmployeesPage />
-							</Route>
-							{/* <Route path="/app/teams">
-								<TeamsPage />
-							</Route>
-							<Route path="/app/customers">
-								<CustomersPage />
-							</Route>
-							<Route path="/app/projects">
-								<ProjectsPage />
-							</Route>
-							<Route path="/app/team-tracking">
-								<TeamTimeTracking />
-							</Route> */}
+							<div className={classes.toolbar}>
+								<Route exact={true} path="/app">
+									<div
+										style={{
+											position: "absolute",
+											top: "50%",
+											left: "50%",
+											transform: "translate(-50%, -50%)",
+											textAlign: "center"
+										}}
+									>
+										<Typography variant="h3" gutterBottom>
+											Welcome back <b>{user.profile.name}</b>
+										</Typography>
+									</div>
+								</Route>
+								{user.profile.role === "admin" || user.profile.role === "lead" ? (
+									<React.Fragment>
+										<Route exact={true} path="/app/employees">
+											<EmployeesPage />
+										</Route>
+										<Route exact={true} path="/app/customers">
+											<CustomersPage />
+										</Route>
+										<Route exact={true} path="/app/projects">
+											<ProjectsPage />
+										</Route>
+										{/* <Route path="/app/teams">
+									<TeamsPage />
+								</Route> */}
+										{/* <Route path="/app/team-tracking">
+									<TeamTimeTracking />
+								</Route> */}
+									</React.Fragment>
+								) : (
+									<React.Fragment>
+										<Route exact={true} path="/app/employees">
+											<EmployeesPage />
+										</Route>
+										<Route exact={true} path="/app/customers">
+											<CustomersPage />
+										</Route>
+										<Route exact={true} path="/app/projects">
+											<ProjectsPage />
+										</Route>
+									</React.Fragment>
+								)}
+							</div>
 						</main>
 					</div>
 				)}

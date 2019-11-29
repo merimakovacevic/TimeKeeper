@@ -2,7 +2,9 @@ const styles = (theme) => ({
 	root: {
 		width: "90%",
 		margin: "auto",
-		marginTop: theme.spacing(3),
+		marginBottom: "3rem",
+		marginTop: "5rem",
+		// marginTop: theme.spacing(3),
 		overflowX: "hidden"
 	},
 	toolbar: {

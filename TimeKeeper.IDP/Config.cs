@@ -55,7 +55,7 @@ namespace TimeKeeper.IDP
         {
             return new List<ApiResource>
             {
-                new ApiResource("timekeeper", "Time Keeper API"/*, new List<string> { "role" }*/)
+                new ApiResource("timekeeper", "Time Keeper API", new List<string> { "role" })
             };
         }
 
@@ -74,7 +74,7 @@ namespace TimeKeeper.IDP
                     //RedirectUris = { "https://localhost:44350/signin-oidc" },
                     RedirectUris = { "http://localhost:3000/auth-callback" },
                     //PostLogoutRedirectUris = { "https://localhost:44350/signout-callback-oidc" },
-                    PostLogoutRedirectUris = { "http://localhost:3000/" },
+                    PostLogoutRedirectUris = { "http://localhost:3000" },
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,

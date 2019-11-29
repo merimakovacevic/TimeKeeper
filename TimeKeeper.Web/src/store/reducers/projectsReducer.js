@@ -8,7 +8,7 @@ import {
 const initialUserState = {
   data: [],
   loading: false,
-  selectedEmployee: null,
+  selectedProject: null,
   error: null
 };
 
@@ -34,7 +34,7 @@ export const projectsReducer = (state = initialUserState, action) => {
     case PROJECT_SELECTED:
       return {
         ...state,
-        selectedCustomer: action.id
+        selectedProject: action.id
       };
     default:
       return state;

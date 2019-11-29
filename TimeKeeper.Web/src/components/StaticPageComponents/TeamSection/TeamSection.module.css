@@ -4,7 +4,7 @@
     padding: 5rem 0;
     flex-direction: column;
     align-items: center;
-    background-color: rgba(243, 246, 250, 0.7);
+    background-color: rgba(243, 246, 250, 1);
 }
 .TeamSection h1 {
     font-size: 2rem;
