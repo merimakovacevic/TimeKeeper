@@ -8,14 +8,12 @@ export const projectsUrl = "https://localhost:44350/api/projects";
 
 export const apiGetAllRequest = (url, method = "GET") => {
 	const token = store.getState().user.user.access_token;
-	// let user = store.getState().user.user;
 	let headers = new Headers();
 
 	headers = {
 		Accept: "application/json",
 		Authorization: `Bearer ${token}`
 	};
-	// console.log(headers);
 
 	const options = {
 		method,
@@ -31,7 +29,6 @@ export const apiGetOneRequest = (url, id, method = "GET") => {
 	let newUrl = `${url}/${id}`;
 
 	const token = store.getState().user.user.access_token;
-	// let user = store.getState().user.user;
 	let headers = new Headers();
 
 	headers = {
@@ -53,7 +50,6 @@ export const apiPutRequest = (url, id, body, method = "PUT") => {
 	let newUrl = `${url}/${id}`;
 
 	const token = store.getState().user.user.access_token;
-	// let user = store.getState().user.user;
 	let headers = new Headers();
 
 	headers = {
@@ -72,9 +68,9 @@ export const apiPutRequest = (url, id, body, method = "PUT") => {
 		.catch((error) => ({ error }));
 };
 
-export const apiPostRequest = (url, body, method = "PUT") => {
+export const apiPostRequest = (url, body, method = "POST") => {
 	const token = store.getState().user.user.access_token;
-	// let user = store.getState().user.user;
+
 	let headers = new Headers();
 
 	headers = {
@@ -88,7 +84,30 @@ export const apiPostRequest = (url, body, method = "PUT") => {
 	};
 
 	return axios
-		.put(url, body, options)
+		.post(url, body, options)
+		.then((data) => ({ data }))
+		.catch((error) => ({ error }));
+};
+
+export const apiDeleteRequest = (url, id, method = "POST") => {
+	let newUrl = `${url}/${id}`;
+
+	const token = store.getState().user.user.access_token;
+
+	let headers = new Headers();
+
+	headers = {
+		Accept: "application/json",
+		Authorization: `Bearer ${token}`
+	};
+
+	const options = {
+		method,
+		headers
+	};
+
+	return axios
+		.delete(newUrl, options)
 		.then((data) => ({ data }))
 		.catch((error) => ({ error }));
 };

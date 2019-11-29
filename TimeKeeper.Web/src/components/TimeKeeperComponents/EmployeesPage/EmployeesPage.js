@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { fetchEmployees, employeeSelect } from "../../../store/actions/index";
+import { fetchEmployees, employeeSelect, employeeDelete } from "../../../store/actions/index";
 import { withStyles } from "@material-ui/core/styles";
 import {
 	Table,
@@ -24,12 +24,12 @@ import VisibilityIcon from "@material-ui/icons/Visibility";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-import EmployeesModal from "../../../containers/TimeKeeper/EmployeesModal/EmployeesModal";
+import EmployeesModal from "./EmployeesModal/EmployeesModal";
 
 const EmployeesPage = (props) => {
 	const { classes } = props;
 	const { data, loading, error, selected, user, reload } = props;
-	const { fetchEmployees, employeeSelect } = props;
+	const { fetchEmployees, employeeSelect, employeeDelete } = props;
 	let employees = data;
 
 	useEffect(() => {
@@ -71,7 +71,7 @@ const EmployeesPage = (props) => {
 								<Tooltip title="Add">
 									<IconButton
 										aria-label="Add"
-										onClick={() => this.handleOpen(666, false)}
+										onClick={() => employeeSelect(null, "add")}
 										className={classes.hover}
 									>
 										<AddIcon fontSize="large" style={{ fill: "white" }} />
@@ -116,7 +116,11 @@ const EmployeesPage = (props) => {
 											>
 												<EditIcon style={{ fill: "green" }} />
 											</IconButton>
-											<IconButton aria-label="Delete" className={classes.deleteButton}>
+											<IconButton
+												aria-label="Delete"
+												className={classes.deleteButton}
+												onClick={() => employeeDelete(e.id)}
+											>
 												<DeleteIcon color="error" />
 											</IconButton>
 										</CustomTableCell>
@@ -159,4 +163,6 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { fetchEmployees, employeeSelect })(withStyles(styles)(EmployeesPage));
+export default connect(mapStateToProps, { fetchEmployees, employeeSelect, employeeDelete })(
+	withStyles(styles)(EmployeesPage)
+);

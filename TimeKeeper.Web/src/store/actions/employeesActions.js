@@ -9,9 +9,15 @@ import {
 	EMPLOYEE_CANCEL,
 	EMPLOYEE_EDIT_START,
 	EMPLOYEE_EDIT_FAIL,
-	EMPLOYEE_EDIT_SUCCESS
+	EMPLOYEE_EDIT_SUCCESS,
+	EMPLOYEE_ADD_START,
+	EMPLOYEE_ADD_SUCCESS,
+	EMPLOYEE_ADD_FAIL,
+	EMPLOYEE_DELETE_START,
+	EMPLOYEE_DELETE_FAIL,
+	EMPLOYEE_DELETE_SUCCESS
 } from "./actionTypes";
-import { employeesUrl, apiGetAllRequest, apiGetOneRequest, apiPutRequest } from "../../utils/api";
+import { employeesUrl, apiGetAllRequest, apiGetOneRequest, apiPutRequest, apiPostRequest, apiDeleteRequest } from "../../utils/api";
 
 const employeesFetchStart = () => {
 	return {
@@ -83,6 +89,12 @@ export const fetchEmployee = (id) => {
 	};
 };
 
+export const employeeCancel = () => {
+	return {
+		type: EMPLOYEE_CANCEL
+	};
+};
+
 const employeeEditStart = () => {
 	return {
 		type: EMPLOYEE_EDIT_START
@@ -96,16 +108,10 @@ const employeeEditFail = (error) => {
 	};
 };
 
-export const employeeEditCancel = () => {
-	return {
-		type: EMPLOYEE_CANCEL
-	};
-};
-
 const employeeEditSuccess = () => {
 	return {
 		type: EMPLOYEE_EDIT_SUCCESS,
-		reload: 'employeeEditReload'
+		reload: "employeeEditReload"
 	};
 };
 
@@ -115,10 +121,72 @@ export const employeePut = (id, body) => {
 		apiPutRequest(employeesUrl, id, body)
 			.then((res) => {
 				dispatch(employeeEditSuccess());
-				dispatch(employeeEditCancel());
+				dispatch(employeeCancel());
 			})
 			.catch((err) => {
 				dispatch(employeeEditFail(err));
 			});
 	};
 };
+
+const employeeAddStart = () => {
+	return {
+		type: EMPLOYEE_ADD_START
+	};
+};
+
+const employeeAddFail = (error) => {
+	return {
+		type: EMPLOYEE_ADD_FAIL,
+		error
+	};
+};
+
+const employeeAddSuccess = () => {
+	return {
+		type: EMPLOYEE_ADD_SUCCESS,
+		reload: "employeeAddReload"
+	};
+};
+
+export const employeeAdd = (body) => {
+	return (dispatch) => {
+		dispatch(employeeAddStart());
+		apiPostRequest(employeesUrl, body)
+			.then((res) => {
+				dispatch(employeeAddSuccess());
+				dispatch(employeeCancel());
+			})
+			.catch((err) => dispatch(employeeAddFail(err)));
+	};
+};
+
+const employeeDeleteStart = () => {
+	return {
+		type: EMPLOYEE_DELETE_START
+	};
+};
+
+const employeeDeleteFail = (error) => {
+	return {
+		type: EMPLOYEE_DELETE_FAIL,
+		error
+	};
+};
+
+const employeeDeleteSuccess = () => {
+	return {
+		type: EMPLOYEE_DELETE_SUCCESS,
+		reload: "employeeDeleteReload"
+	};
+};
+
+export const employeeDelete =(id) => {
+	return dispatch => {
+		dispatch(employeeDeleteStart())
+		apiDeleteRequest(employeesUrl, id).then(res => {
+			dispatch(employeeDeleteSuccess())
+			dispatch(employeeCancel())
+		}).catch(err => dispatch(employeeDeleteFail(err)))
+	}
+}

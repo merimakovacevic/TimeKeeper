@@ -7,7 +7,13 @@ import {
 	EMPLOYEE_FETCH_SUCCESS,
 	EMPLOYEE_SELECT,
 	EMPLOYEE_CANCEL,
-	EMPLOYEE_EDIT_SUCCESS
+	EMPLOYEE_EDIT_SUCCESS,
+	EMPLOYEE_ADD_START,
+	EMPLOYEE_ADD_FAIL,
+	EMPLOYEE_ADD_SUCCESS,
+	EMPLOYEE_DELETE_FAIL,
+	EMPLOYEE_DELETE_START,
+	EMPLOYEE_DELETE_SUCCESS
 } from "../actions/actionTypes";
 
 const initialUserState = {
@@ -63,6 +69,33 @@ export const employeesReducer = (state = initialUserState, action) => {
 			return {
 				...state,
 				reload: action.reload
+			};
+		case EMPLOYEE_ADD_START:
+			return {
+				...state
+			};
+		case EMPLOYEE_ADD_SUCCESS:
+			return {
+				...state,
+				reload: action.reload
+			};
+		case EMPLOYEE_ADD_FAIL:
+			return {
+				...state
+			};
+		case EMPLOYEE_DELETE_START:
+			return {
+				...state
+			};
+		case EMPLOYEE_DELETE_SUCCESS:
+			return {
+				...state,
+				reload: action.reload
+			};
+		case EMPLOYEE_DELETE_FAIL:
+			return {
+				...state,
+				error: action.error
 			};
 		case EMPLOYEE_CANCEL:
 			return {
