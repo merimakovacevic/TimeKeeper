@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TimeKeeper.API.Models
+namespace TimeKeeper.API.Models.ReportModels
 {
-    public class TotalAnnualOverviewModel
+    public class ProjectAnnualOverviewModel
     {
-        public TotalAnnualOverviewModel()
+        public ProjectAnnualOverviewModel()
         {
             Months = new Dictionary<int, decimal>();
         }
-        public List<ProjectAnnualOverviewModel> Projects { get; set; }
+        public MasterModel Project { get; set; }
         public Dictionary<int, decimal> Months { get; set; }
-        public decimal SumTotal { get; set; }
+        public decimal Total { get; set; }
     }
 }

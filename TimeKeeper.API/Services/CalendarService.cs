@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TimeKeeper.API.Factory;
 using TimeKeeper.API.Models;
+using TimeKeeper.API.Models.ReportModels;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 
