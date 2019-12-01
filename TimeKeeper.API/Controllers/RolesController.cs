@@ -58,11 +58,6 @@ namespace TimeKeeper.API.Controllers
             {
                 Logger.Info($"Try to get roles with {id}");
                 Role role = Unit.Roles.Get(id);
-                /*if (role == null)
-                {
-                    Logger.Error($"Role with id {id} cannot be found");
-                    return NotFound();
-                }*/
 
                 return Ok(role.Create());
             }
@@ -115,13 +110,6 @@ namespace TimeKeeper.API.Controllers
                 Unit.Roles.Update(role, id);
                 Unit.Save();
 
-                /*int numberOfChanges = Unit.Save();
-
-                if (numberOfChanges == 0)
-                {
-                    Logger.Error($"Role with {id} not found");
-                    return NotFound();
-                }*/
                 Logger.Info($"Changed role with id {id}");
                 return Ok(role.Create());
             }
@@ -151,13 +139,6 @@ namespace TimeKeeper.API.Controllers
                 Unit.Roles.Delete(id);
                 Unit.Save();
 
-                /*int numberOfChanges = Unit.Save();
-                
-                if (numberOfChanges == 0)
-                {
-                    Logger.Error($"Attempt to delete role with id {id}");
-                    return NotFound();
-                }*/
                 Logger.Info($"Deleted role with id {id}");
                 return NoContent();
             }

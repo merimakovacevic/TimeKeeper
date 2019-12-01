@@ -41,33 +41,7 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }  
         }
-
-        /*        [AllowAnonymous]
-                [HttpPost]
-                [Route("api/login")]
-                public IActionResult Login([FromBody] User user)
-                {
-                    try
-                    {
-                        User control = Unit.Users.Get(x => x.Username == user.Username && x.Password == user.Password).FirstOrDefault();
-
-                        if (control == null) return NotFound();
-                        byte[] bytes = Encoding.ASCII.GetBytes($"{control.Username}:{control.Password}");
-                        string base64 = Convert.ToBase64String(bytes);
-                        return Ok(new
-                        {
-                            control.Id,
-                            control.Name,
-                            control.Role,
-                            base64
-                        });
-                    }
-                    catch (Exception ex)
-                    {
-                        return HandleException(ex);
-                    }
-                }*/
-
+     
         /// <summary>
         /// This method is used for login
         /// </summary>

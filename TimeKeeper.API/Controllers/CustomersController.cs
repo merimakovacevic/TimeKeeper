@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using TimeKeeper.API.Factory;
+using TimeKeeper.API.Models;
+using TimeKeeper.API.Services;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 
@@ -17,47 +22,62 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class CustomersController : BaseController
     {
-        public CustomersController(TimeKeeperContext context) : base(context) { }
+        private PaginationService<Customer> _pagination;
+        public CustomersController(TimeKeeperContext context) : base(context)
+        {
+            _pagination = new PaginationService<Customer>();
+        }
 
         /// <summary>
-        /// This method returns all customers
+        /// This method returns all customers from a selected page, given the page size
         /// </summary>
-        /// <returns>All customers</returns>
+        /// <returns>All customers from a page</returns>
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Get()
+        public IActionResult GetAll(int page = 1, int pageSize = 5)
         {
             try
             {
+                Logger.Info($"Try to fetch ${pageSize} customers from page ${page}");
+
+                Tuple<PaginationModel, List<Customer>> customersPagination;
+
                 var role = User.Claims.FirstOrDefault(c => c.Type == "role").Value.ToString();
                 if (role == "user") return Unauthorized();
-                var query = Unit.Customers.Get();
+
+                List<Customer> query;
+
                 if (role == "lead")
                 {
-                    var empid = (User.Claims.FirstOrDefault(c => c.Type == "sub").Value.ToString());
+                    var empid = User.Claims.FirstOrDefault(c => c.Type == "sub").Value.ToString();
                     var employee = Unit.Employees.Get(int.Parse(empid));
                     var teams = employee.Members.GroupBy(x => x.Team.Id).Select(y => y.Key).ToList();
                     List<Project> projects = new List<Project>();
+
                     foreach (var team in teams)
                     {
-                        //var awaitedProjects = ;
-
                         projects.AddRange(Unit.Projects.Get(x => x.Team.Id == team));
                     }
-                    //await Unit.Teams.Get().Projects.GroupBy(x => x.Team.Id).Select(y => y.Key).ToList();
-                    List<Customer> customers = new List<Customer>();
+
+                    query = new List<Customer>();
+
                     foreach (var project in projects)
                     {
-                        customers.Add(project.Customer);
+                        query.Add(project.Customer);
                     }
-                    return Ok(customers.Select(x => x.Create()).ToList());
+                }
+                else
+                {
+                    query = Unit.Customers.Get().ToList();
                 }
 
-                Logger.Info($"Try to fetch all customers");
-                return Ok(Unit.Customers.Get().OrderBy(x => x.Name).ToList().Select(x => x.Create()).ToList());
+                customersPagination = _pagination.CreatePagination(page, pageSize, query);
+                HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(customersPagination.Item1));
+                return Ok(customersPagination.Item2.Select(x => x.Create()).ToList());
+                //return Ok(Unit.Customers.Get().OrderBy(x => x.Name).ToList().Select(x => x.Create()).ToList());
             }
             catch(Exception ex)
             {
@@ -106,8 +126,6 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                //customer.Status = Unit.CustomerStatuses.Get(customer.Status.Id);
-
                 Unit.Customers.Insert(customer);
                 Unit.Save();
                 Logger.Info($"Customer {customer.Name} added with id {customer.Id}");
@@ -136,17 +154,9 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                //customer.Status = Unit.CustomerStatuses.Get(customer.Status.Id);
                 Logger.Info($"Attempt to update customer with id {id}");
                 Unit.Customers.Update(customer, id);
                 Unit.Save();
-                /*int numberOfChanges = Unit.Save();                
-
-                if (numberOfChanges == 0)
-                {
-                    Logger.Error($"Customer with id {id} cannot be found");
-                    return NotFound();
-                }*/
 
                 Logger.Info($"Customer {customer.Name} with id {customer.Id} updated");
                 return Ok(customer.Create());
@@ -178,13 +188,6 @@ namespace TimeKeeper.API.Controllers
                 Logger.Info($"Attempt to delete customer with id {id}");
                 Unit.Customers.Delete(id);
                 Unit.Save();
-                /*int numberOfChanges = Unit.Save();
-                
-                if (numberOfChanges == 0)
-                {
-                    Logger.Error($"Customer with id {id} cannot be found");
-                    return NotFound();
-                }*/
 
                 Logger.Info($"Customer with id {id} deleted");
                 return NoContent();
