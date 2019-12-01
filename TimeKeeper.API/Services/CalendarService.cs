@@ -19,6 +19,52 @@ namespace TimeKeeper.API.Services
             unit = _unit;
         }
 
+        public AdminDashboardModel GetAdminDashboardInfo(int year, int month)
+        {
+            //Is the missing entries chart in Admin dashboard referring to missing entries per team or?
+
+            AdminDashboardModel adminDashboardModel = new AdminDashboardModel();
+            //no of employees at current month/year
+            adminDashboardModel.EmployeesCount = GetNumberOfEmployeesForTimePeriod(month, year);
+            //no of projects in a current month/year
+            adminDashboardModel.ProjectsCount = GetNumberOfProjectsForTimePeriod(month, year);
+            //total hours; what is total hours?
+            //adminDashboardModel.BaseTotalHours = GetMonthlyWorkingDays(year, month) * 8;
+            decimal monthlyBaseHours = GetMonthlyWorkingDays(year, month) * 8;
+            adminDashboardModel.TotalHours = monthlyBaseHours * adminDashboardModel.EmployeesCount;
+            adminDashboardModel.TotalWorkingHours = 0;
+
+            List<int> teamIds = unit.Teams.Get().Select(x => x.Id).ToList();
+
+            foreach (int teamId in teamIds)
+            {
+                MasterModel team = unit.Teams.Get(teamId).Master();
+                TeamDashboardModel teamDashboardModel = GetTeamDashboard(teamId, year, month);
+                adminDashboardModel.TeamDashboardModels.Add(teamDashboardModel);
+                adminDashboardModel.TotalWorkingHours += teamDashboardModel.TotalWorkingHours;
+                /*
+                //missing entries by team
+                adminDashboardModel.MissingEntries.Add(new TeamKeyDictionary(team, teamDashboardModel.MissingEntries.Sum(x => x.Value)));
+                //pto hours by team
+                adminDashboardModel.PTOHours.Add(new TeamKeyDictionary(team, teamDashboardModel.PaidTimeOff.Sum(x => x.Value)));
+                //overtime horus by team
+                adminDashboardModel.OvertimeHours.Add(new TeamKeyDictionary(team, teamDashboardModel.Overtime.Sum(x => x.Value)));*/
+            }
+            //what is considered by utilization? :thinkig-face:
+            return adminDashboardModel;
+        }
+
+        public int GetNumberOfEmployeesForTimePeriod(int month, int year)
+        {
+            return unit.Employees.Get(x => x.BeginDate < new DateTime(year, month, DateTime.DaysInMonth(year, month)) //if employees begin date is in required month
+                            && (x.EndDate == null || x.EndDate == new DateTime(1, 1, 1) || x.EndDate > new DateTime(year, month, DateTime.DaysInMonth(year, month)))).Count(); // still works in company, or left company after required month          
+        }
+        public int GetNumberOfProjectsForTimePeriod(int month, int year)
+        {
+            return unit.Projects.Get(x => x.StartDate < new DateTime(year, month, DateTime.DaysInMonth(year, month)) //if project began is in required month
+                            && (x.EndDate == null || x.EndDate == new DateTime(1, 1, 1) || x.EndDate > new DateTime(year, month, DateTime.DaysInMonth(year, month)))).Count(); // project still in progress, or ended after the required month          
+        }
+
         public TeamDashboardModel GetTeamDashboard(int teamId, int year, int month)
         {
 
@@ -34,7 +80,8 @@ namespace TimeKeeper.API.Services
             foreach(EmployeeTimeModel employeeTime in teamDashboard.EmployeeTimes)
             {
                 teamDashboard.TotalHours += employeeTime.TotalHours;
-                teamDashboard.WorkingHours += employeeTime.HourTypes["Workday"];
+                teamDashboard.TotalWorkingHours += employeeTime.HourTypes["Workday"];
+                teamDashboard.TotalMissingEntries += employeeTime.HourTypes["Missing entries"];
             }
 
             return teamDashboard;
@@ -281,7 +328,7 @@ namespace TimeKeeper.API.Services
             return workingDays;
         }
 
-        private decimal GetMonthlyWorkingDays(Employee employee, int year, int month)
+        private int GetMonthlyWorkingDays(Employee employee, int year, int month)
         {
             //this method counts only days until the present day
             int daysInMonth = DateTime.DaysInMonth(year, month);
@@ -425,6 +472,41 @@ namespace TimeKeeper.API.Services
                 }
             return false;
         }
+
+        public List<MonthProjectHistoryModel> GetMonthlyProjectHistory(int projectId, int employeeId)
+        {
+            //We use this object to get month names
+            System.Globalization.DateTimeFormatInfo dateInfo = new System.Globalization.DateTimeFormatInfo();
+
+            List<JobDetail> employeeTasks = unit.Projects.Get().ToList().FirstOrDefault(x => x.Id == projectId).Tasks.ToList()
+                                                         .Where(x => x.Day.Employee.Id == employeeId).ToList();
+
+            List<MonthProjectHistoryModel> monthProjectHistory = new List<MonthProjectHistoryModel>();
+
+            //The same SetYearsColumns is used for model initialisation in GetMonthlyProjectHistory and GetProjectHistory
+            for (int i = 1; i <= 12; i++)
+            {
+                monthProjectHistory.Add(new MonthProjectHistoryModel
+                {
+                    MonthNumber = i,
+                    MonthName = dateInfo.GetMonthName(i),
+                    HoursPerYears = SetYearsColumns(projectId),
+                    TotalHoursPerMonth = 0
+                });    
+            }
+
+            foreach(JobDetail task in employeeTasks)
+            {
+                /*We use the months index number in monthProjectHistory, 
+                 * which will be task.Day.Date.Month - 1, 
+                 * so for instance, january will have the index of 0, february the index of 1*/
+                monthProjectHistory[task.Day.Date.Month - 1].HoursPerYears[task.Day.Date.Year] += task.Hours;
+                monthProjectHistory[task.Day.Date.Month - 1].TotalHoursPerMonth += task.Hours;
+            }            
+
+            return monthProjectHistory;
+        }
+
         public ProjectHistoryModel GetProjectHistoryModel(int projectId)
         {
             ProjectHistoryModel projectHistory = new ProjectHistoryModel();

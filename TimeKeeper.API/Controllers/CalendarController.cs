@@ -13,7 +13,7 @@ using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 namespace TimeKeeper.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CalendarController : BaseController
@@ -203,6 +203,19 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        [HttpGet("admin-dashboard/{year}/{month}")]
+        public IActionResult GetAdminDashboard(int year, int month)
+        {
+            try
+            {
+                return Ok(calendarService.GetAdminDashboardInfo(year, month));
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
         [HttpGet("monthly-overview/{year}/{month}")]
         public IActionResult GetMonthlyOverview(int year, int month)
         {
@@ -231,7 +244,26 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
+
+        [HttpGet("project-history/{projectId}/{employeeId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult GetMonthlyProjectHistory(int projectId, int employeeId)
+        {
+            try
+            {
+                Logger.Info($"Try to get project monthly project history for project with id:{projectId} and employee with id:{employeeId}");
+                return Ok(calendarService.GetMonthlyProjectHistory(projectId, employeeId));
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
         [HttpGet("projects-annual/{year}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public IActionResult AnnualProjectOverview(int year)
         {
             try
