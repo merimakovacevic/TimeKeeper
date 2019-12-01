@@ -41,6 +41,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
+                var user = User;//.Claims.FirstOrDefault(c => c.Type == "role").Value.ToString();
                 Logger.Info($"Try to fetch ${pageSize} employees from page ${page}");
 
                 Tuple <PaginationModel, List<Employee>> employeesPagination = _pagination.CreatePagination(page, pageSize, Unit.Employees.Get());
