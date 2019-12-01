@@ -215,5 +215,33 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
+
+        [HttpGet("project-history/{projectId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult GetProjectHistory(int projectId)
+        {
+            try
+            {
+                Logger.Info($"Try to get project history for project with id:{projectId}");
+                return Ok(calendarService.GetProjectHistoryModel(projectId));
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+        [HttpGet("projects-annual/{year}")]
+        public IActionResult AnnualProjectOverview(int year)
+        {
+            try
+            {
+                return Ok(calendarService.GetTotalAnnualOverview(year));
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
     }
 }

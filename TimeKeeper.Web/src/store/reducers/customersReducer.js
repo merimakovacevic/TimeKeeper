@@ -8,7 +8,7 @@ import {
 const initialUserState = {
   data: [],
   loading: false,
-  selectedEmployee: null,
+  selectedCustomer: null,
   error: null
 };
 

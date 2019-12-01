@@ -5,19 +5,18 @@ using TimeKeeper.DAL;
 
 namespace TimeKeeper.Seed
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-
-            FileInfo fileStatuses = new FileInfo(@"C:\Projects\TimeKeeper\TimeKeeper.Seed\LegacyDatabase\TimeKeeperStatuses.xlsx");
-            FileInfo file = new FileInfo(@"C:\Projects\TimeKeeper\TimeKeeper.Seed\LegacyDatabase\TimeKeeper.xlsx");
+            FileInfo fileStatuses = new FileInfo(@"C:\Projects\Charlie\TimeKeeper.Seed\LegacyDatabase\TimeKeeperStatuses.xlsx");
+            FileInfo file = new FileInfo(@"C:\Projects\Charlie\TimeKeeper.Seed\LegacyDatabase\TimeKeeper.xlsx");
 
             string conString = "User ID=postgres; Password=postgres; Server=localhost; Port=5432; Database=TimeKeeper; Integrated Security=true; Pooling=true;";
 
             UnitOfWork unit = new UnitOfWork(new TimeKeeperContext(conString));
 
-            unit.SeedDatabase(file, fileStatuses);          
+            unit.SeedDatabase(file, fileStatuses);
         }
     }
 }
