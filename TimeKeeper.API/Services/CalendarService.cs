@@ -117,14 +117,12 @@ namespace TimeKeeper.API.Services
                 employeeYearTime.PaidTimeOff += employeeMonthTime.PaidTimeOff;
             }
 
-            List<DayModel> calendar = GetEmployeeCalendar(employeeId, year);
-
             PersonalDashboardModel personalDashboard = new PersonalDashboardModel
             {
                 Employee = employeeYearTime.Employee,
                 TotalHours = GetYearlyWorkingDays(year) * 8,
                 WorkingHours = employeeYearTime.HourTypes["Workday"],
-                BradfordFactor = GetBradfordFactor(calendar)
+                BradfordFactor = GetBradfordFactor(employeeId, year)
             };
 
             return personalDashboard;
@@ -133,7 +131,6 @@ namespace TimeKeeper.API.Services
         public PersonalDashboardModel GetEmployeeMonthDashboard(int employeeId, int year, int month)
         {
             EmployeeTimeModel employeeTime = GetEmployeeMonthReport(employeeId, year, month);
-            List<DayModel> calendar = GetEmployeeCalendar(employeeId, year, month);
             //unit.Employees.Get(employeeId).Calendar.Select(x => x.Create()).ToList();
 
             PersonalDashboardModel personalDashboard = new PersonalDashboardModel
@@ -141,7 +138,7 @@ namespace TimeKeeper.API.Services
                 Employee = employeeTime.Employee,
                 TotalHours = GetMonthlyWorkingDays(year, month) * 8,
                 WorkingHours = employeeTime.HourTypes["Workday"],
-                BradfordFactor = GetBradfordFactor(calendar)
+                BradfordFactor = GetBradfordFactor(employeeId, year)
             };
 
             return personalDashboard;
@@ -274,23 +271,24 @@ namespace TimeKeeper.API.Services
             return true;
         }
 
-        public decimal GetBradfordFactor(List<DayModel> calendar)
-        {   
+        public decimal GetBradfordFactor(int employeeId, int year)
+        {
+            List<DayModel> calendar = GetEmployeeCalendar(employeeId, year);
             //an absence instance are any number of consecutive absence days. 3 consecutive absence days make an instance.
             int absenceInstances = 0;
             int absenceDays = 0;
             calendar = calendar.OrderBy(x => x.Date).ToList();
             
-            //Bradford factor calculates only dates until the rpesent day, because the calendar in argument returns the whole period
-            absenceDays = calendar.Where(x => x.IsAbsence() && x.Date < DateTime.Now).Count();
+            //Bradford factor calculates only dates until the present day, because the calendar in argument returns the whole period
+            absenceDays = calendar.Where(x => x.DayType.Name == "Sick" && x.Date < DateTime.Now).Count();
 
             for (int i = 0; i < calendar.Count; i++)
             {
-                if (calendar[i].IsAbsence() && calendar[i].Date < DateTime.Now)
+                if (calendar[i].DayType.Name == "Sick" && calendar[i].Date < DateTime.Now)
                 {
                     if(i == 0) absenceInstances++;
 
-                    else if(!calendar[i-1].IsAbsence())
+                    else if(calendar[i-1].DayType.Name != "Sick")
                     {
                         absenceInstances++;
                     }
@@ -309,7 +307,6 @@ namespace TimeKeeper.API.Services
 
             return workingDays;
         }
-
 
         private int GetMonthlyWorkingDays(int year, int month)
         {
@@ -445,7 +442,7 @@ namespace TimeKeeper.API.Services
         public Dictionary<int, decimal> SetYearsColumns(int projectId)
         {
             Dictionary<int, decimal> yearColumns = new Dictionary<int, decimal>();
-            List<JobDetail> tasks = unit.Projects.Get().ToList().FirstOrDefault(x => x.Id == projectId).Tasks.ToList();
+            List<JobDetail> tasks = unit.Projects.Get(projectId).Tasks.ToList();
             foreach (JobDetail a in tasks)
             {
                 if (!IsDuplicateYear(yearColumns, a.Day.Date.Year))
@@ -478,7 +475,7 @@ namespace TimeKeeper.API.Services
             //We use this object to get month names
             System.Globalization.DateTimeFormatInfo dateInfo = new System.Globalization.DateTimeFormatInfo();
 
-            List<JobDetail> employeeTasks = unit.Projects.Get().ToList().FirstOrDefault(x => x.Id == projectId).Tasks.ToList()
+            List<JobDetail> employeeTasks = unit.Projects.Get(projectId).Tasks.ToList()
                                                          .Where(x => x.Day.Employee.Id == employeeId).ToList();
 
             List<MonthProjectHistoryModel> monthProjectHistory = new List<MonthProjectHistoryModel>();
@@ -511,7 +508,7 @@ namespace TimeKeeper.API.Services
         {
             ProjectHistoryModel projectHistory = new ProjectHistoryModel();
 
-            List<JobDetail> tasks = unit.Projects.Get().ToList().FirstOrDefault(x => x.Id == projectId).Tasks.ToList();
+            List<JobDetail> tasks = unit.Projects.Get(projectId).Tasks.ToList();
             List<Employee> employees = new List<Employee>();
 
             foreach (JobDetail a in tasks)
