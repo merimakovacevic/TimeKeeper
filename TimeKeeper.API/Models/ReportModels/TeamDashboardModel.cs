@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TimeKeeper.API.Models
+namespace TimeKeeper.API.Models.ReportModels
 {
     public class TeamDashboardModel
     {
@@ -14,7 +14,8 @@ namespace TimeKeeper.API.Models
         public int EmployeesCount { get; set; }
         public int ProjectsCount { get; set; }
         public decimal TotalHours { get; set; }
-        public decimal WorkingHours { get; set; }
+        public decimal TotalWorkingHours { get; set; }
+        public decimal TotalMissingEntries { get; set; }
         public List<EmployeeTimeModel> EmployeeTimes { get; set; }
     }
 }

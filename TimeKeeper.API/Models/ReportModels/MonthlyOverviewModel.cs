@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TimeKeeper.API.Models
+namespace TimeKeeper.API.Models.ReportModels
 {
-    public class EmployeeProjectModel
+    public class MonthlyOverviewModel
     {
-        public EmployeeProjectModel()
+        public MonthlyOverviewModel()
         {
             HoursByProject = new Dictionary<string, decimal>();
         }
-
-        public MasterModel Employee { get; set; }
+        public List<EmployeeProjectModel> EmployeeProjectHours { get; set; }
         public decimal TotalHours { get; set; }
-        public decimal PaidTimeOff { get; set; }
+        public decimal TotalPossibleWorkingHours { get; set; }
+        public int TotalWorkingDays { get; set; }
         public Dictionary<string, decimal> HoursByProject { get; set; }
     }
 }
