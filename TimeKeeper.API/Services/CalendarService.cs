@@ -102,21 +102,21 @@ namespace TimeKeeper.API.Services
         public PersonalDashboardModel GetEmployeeYearDashboard(int employeeId, int year)
         {
             List<DayModel> calendar = GetEmployeeCalendar(employeeId, year);
-            decimal workingHours = calendar.Where(x => x.DayType.Name == "Workday").Sum(x => x.TotalHours);
             decimal totalHours = GetYearlyWorkingDays(year) * 8;
 
-            return CreatePersonalDashboard(employeeId, year, totalHours, workingHours);
+            return CreatePersonalDashboard(employeeId, year, totalHours, calendar);
         }               
         public PersonalDashboardModel GetEmployeeMonthDashboard(int employeeId, int year, int month)
         {
-            List<DayModel> calendar = GetEmployeeCalendar(employeeId, year, month);
-            decimal workingHours = calendar.Where(x => x.DayType.Name == "Workday").Sum(x => x.TotalHours);
+            List<DayModel> calendar = GetEmployeeCalendar(employeeId, year, month);            
             decimal totalHours = GetMonthlyWorkingDays(year, month) * 8;
 
-            return CreatePersonalDashboard(employeeId, year, totalHours, workingHours);
+            return CreatePersonalDashboard(employeeId, year, totalHours, calendar);
         }            
-        private PersonalDashboardModel CreatePersonalDashboard(int employeeId, int year, decimal totalHours, decimal workingHours)
+        private PersonalDashboardModel CreatePersonalDashboard(int employeeId, int year, decimal totalHours, List<DayModel> calendar)
         {
+            decimal workingHours = calendar.Where(x => x.DayType.Name == "Workday").Sum(x => x.TotalHours);
+
             return new PersonalDashboardModel
             {
                 Employee = _unit.Employees.Get(employeeId).Master(),
