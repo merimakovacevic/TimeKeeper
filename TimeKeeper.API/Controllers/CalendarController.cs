@@ -177,7 +177,7 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
-        [HttpGet("personal-dashboard-month/{employeeId}/{year}/{month}")]
+        [HttpGet("personal-dashboard/{employeeId}/{year}/{month}")]
         public IActionResult GetPersonalMonthDashboard(int employeeId, int year, int month)
         {
             try
@@ -190,8 +190,8 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
-        [HttpGet("personal-dashboard-year/{employeeId}/{year}")]
-        public IActionResult GetPersonalYearDashboard(int employeeId, int year, int month)
+        [HttpGet("personal-dashboard/{employeeId}/{year}")]
+        public IActionResult GetPersonalYearDashboard(int employeeId, int year)
         {
             try
             {

@@ -53,7 +53,6 @@ namespace TimeKeeper.API.Services
             //what is considered by utilization? :thinkig-face:
             return adminDashboardModel;
         }
-
         public int GetNumberOfEmployeesForTimePeriod(int month, int year)
         {
             return unit.Employees.Get(x => x.BeginDate < new DateTime(year, month, DateTime.DaysInMonth(year, month)) //if employees begin date is in required month
@@ -64,7 +63,6 @@ namespace TimeKeeper.API.Services
             return unit.Projects.Get(x => x.StartDate < new DateTime(year, month, DateTime.DaysInMonth(year, month)) //if project began is in required month
                             && (x.EndDate == null || x.EndDate == new DateTime(1, 1, 1) || x.EndDate > new DateTime(year, month, DateTime.DaysInMonth(year, month)))).Count(); // project still in progress, or ended after the required month          
         }
-
         public TeamDashboardModel GetTeamDashboard(int teamId, int year, int month)
         {
 
@@ -86,7 +84,6 @@ namespace TimeKeeper.API.Services
 
             return teamDashboard;
         }
-
         public List<EmployeeTimeModel> GetTeamMonthReport(int teamId, int year, int month)
         {
             //Show only team members that were active during this month
@@ -100,7 +97,6 @@ namespace TimeKeeper.API.Services
             }
             return employeeTimeModels;
         }
-
         public PersonalDashboardModel GetEmployeeYearDashboard (int employeeId, int year)
         {
             EmployeeTimeModel employeeYearTime = unit.Employees.Get(employeeId).CreateTimeModel();
@@ -126,8 +122,7 @@ namespace TimeKeeper.API.Services
             };
 
             return personalDashboard;
-        }
-               
+        }               
         public PersonalDashboardModel GetEmployeeMonthDashboard(int employeeId, int year, int month)
         {
             EmployeeTimeModel employeeTime = GetEmployeeMonthReport(employeeId, year, month);
@@ -142,8 +137,7 @@ namespace TimeKeeper.API.Services
             };
 
             return personalDashboard;
-        }
-        
+        }        
         public EmployeeTimeModel GetEmployeeMonthReport(int employeeId, int year, int month)
         {
             //TOTAL HOURS IN DASHBOARD - MONTHLY THEORETICAL WORKING HOURS
@@ -201,7 +195,6 @@ namespace TimeKeeper.API.Services
            
             return employeeReport;
         }
-
         public List<DayModel> GetEmployeeMonth(int empId, int year, int month)
         {
             List<DayModel> calendar = GetEmptyEmployeeCalendar(empId, year, month);
@@ -212,20 +205,17 @@ namespace TimeKeeper.API.Services
                 calendar[d.Date.Day - 1] = d;
             }
             return calendar;
-        }
-        
+        }        
         public List<DayModel> GetEmployeeCalendar(int empId, int year)
         {
             //Add validaiton!
             return unit.Calendar.Get(x => x.Employee.Id == empId && x.Date.Year == year).Select(x => x.Create()).ToList();
         }
-
         public List<DayModel> GetEmployeeCalendar(int empId, int year, int month)
         {
             //Add validaiton!
             return unit.Calendar.Get(x => x.Employee.Id == empId && x.Date.Year == year && x.Date.Month == month).Select(x => x.Create()).ToList();
         }
-
         public List<DayModel> GetEmptyEmployeeCalendar(int empId, int year, int month)
         {
             List<DayModel> calendar = new List<DayModel>();
@@ -257,7 +247,6 @@ namespace TimeKeeper.API.Services
 
             return calendar;
         }
-
         public bool ValidateMonth(int year, int month)
         {
             if (month > 12 || month < 1) return false;
@@ -270,7 +259,6 @@ namespace TimeKeeper.API.Services
             }
             return true;
         }
-
         public decimal GetBradfordFactor(int employeeId, int year)
         {
             List<DayModel> calendar = GetEmployeeCalendar(employeeId, year);
@@ -296,7 +284,6 @@ namespace TimeKeeper.API.Services
             }
             return (decimal)Math.Pow(absenceInstances, 2) * absenceDays;
         }
-
         private int GetYearlyWorkingDays(int year)
         {
             int workingDays = 0;
@@ -307,7 +294,6 @@ namespace TimeKeeper.API.Services
 
             return workingDays;
         }
-
         private int GetMonthlyWorkingDays(int year, int month)
         {
             int daysInMonth = DateTime.DaysInMonth(year, month);
@@ -324,7 +310,6 @@ namespace TimeKeeper.API.Services
 
             return workingDays;
         }
-
         private int GetMonthlyWorkingDays(Employee employee, int year, int month)
         {
             //this method counts only days until the present day
@@ -342,7 +327,6 @@ namespace TimeKeeper.API.Services
 
             return workingDays;
         }
-
         public MonthlyOverviewModel GetMonthlyOverview(int year, int month)
         {
             MonthlyOverviewModel monthlyOverview = new MonthlyOverviewModel();
@@ -387,7 +371,6 @@ namespace TimeKeeper.API.Services
             return monthlyOverview;
 
         }
-
         public bool IsDuplicate(List<EmployeeModel> employees, Employee employee)
         {
             foreach(EmployeeModel emp in employees)
@@ -399,7 +382,6 @@ namespace TimeKeeper.API.Services
             }
             return false;
         }
-
         public bool IsDuplicate(List<Project> projects, Project project)
         {
             foreach (Project proj in projects)
@@ -411,7 +393,6 @@ namespace TimeKeeper.API.Services
             }
             return false;
         }
-
         public EmployeeProjectModel GetEmployeeMonthlyOverview(List<Project> projects, EmployeeModel employee, List<JobDetail> tasks)
         {
             Dictionary<string, decimal> projectColumns = SetMonthlyOverviewColumns(projects);
@@ -428,7 +409,6 @@ namespace TimeKeeper.API.Services
             }
             return employeeProject;
         }
-
         public Dictionary<string, decimal> SetMonthlyOverviewColumns(List<Project> projects)
         {
             Dictionary<string, decimal> projectColumns = new Dictionary<string, decimal>(); 
@@ -469,7 +449,6 @@ namespace TimeKeeper.API.Services
                 }
             return false;
         }
-
         public List<MonthProjectHistoryModel> GetMonthlyProjectHistory(int projectId, int employeeId)
         {
             //We use this object to get month names
@@ -503,7 +482,6 @@ namespace TimeKeeper.API.Services
 
             return monthProjectHistory;
         }
-
         public ProjectHistoryModel GetProjectHistoryModel(int projectId)
         {
             ProjectHistoryModel projectHistory = new ProjectHistoryModel();
