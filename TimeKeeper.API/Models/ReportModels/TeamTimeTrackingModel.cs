@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TimeKeeper.Domain.Entities;
 
-namespace TimeKeeper.API.Models
+namespace TimeKeeper.API.Models.ReportModels
 {
     public class TeamTimeTrackingModel
     {

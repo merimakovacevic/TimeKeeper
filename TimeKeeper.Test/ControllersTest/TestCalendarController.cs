@@ -7,6 +7,7 @@ using System.Text;
 using TimeKeeper.API.Controllers;
 using TimeKeeper.API.Factory;
 using TimeKeeper.API.Models;
+using TimeKeeper.API.Models.ReportModels;
 using TimeKeeper.API.Services;
 using TimeKeeper.Domain.Entities;
 
