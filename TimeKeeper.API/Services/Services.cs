@@ -47,9 +47,8 @@ namespace TimeKeeper.API.Services
             return employeeProjects;
         }
 
-        public static void SetHourTypes(this Dictionary<string, decimal> hourTypes, UnitOfWork unit)
+        public static void SetHourTypes(this Dictionary<string, decimal> hourTypes, List<DayType> dayTypes)
         {
-            List<DayType> dayTypes = unit.DayTypes.Get().ToList();
             foreach (DayType day in dayTypes)
             {
                 hourTypes.Add(day.Name, 0);
