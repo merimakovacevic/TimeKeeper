@@ -23,5 +23,6 @@ namespace TimeKeeper.Utility.Factory
 
             return user;
         }
-    }
+
+    };
 }

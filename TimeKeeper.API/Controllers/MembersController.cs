@@ -19,7 +19,11 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class MembersController : BaseController
     {
-        public MembersController(TimeKeeperContext context) : base(context) { }
+        protected QueryService queryService;
+        public MembersController(TimeKeeperContext context) : base(context)
+        {
+            queryService = new QueryService(Unit);
+        }
 
         /// <summary>
         /// This method returns all members
@@ -44,7 +48,7 @@ namespace TimeKeeper.API.Controllers
                 }
                 else
                 {
-                    return Ok(Unit.GetEmployeeTeamMembers(userId));
+                    return Ok(queryService.GetEmployeeTeamMembers(userId));
                 }
 
             }
