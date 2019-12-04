@@ -11,10 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Services\BasicAuthenticationHandler.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="IdentityModel" Version="4.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
@@ -24,14 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TimeKeeper.BLL\TimeKeeper.BLL.csproj" />
     <ProjectReference Include="..\TimeKeeper.DAL\TimeKeeper.DAL.csproj" />
     <ProjectReference Include="..\TimeKeeper.Domain\TimeKeeper.Domain.csproj" />
+    <ProjectReference Include="..\TimeKeeper.DTO\TimeKeeper.DTO.csproj" />
     <ProjectReference Include="..\TimeKeeper.LOG\TimeKeeper.LOG.csproj" />
     <ProjectReference Include="..\TimeKeeper.Mail\TimeKeeper.Mail.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="BusinessLogic\" />
   </ItemGroup>
 
 </Project>

@@ -9,12 +9,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Newtonsoft.Json;
-using TimeKeeper.API.Factory;
-using TimeKeeper.API.Models;
 using TimeKeeper.API.Services;
+using TimeKeeper.BLL;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.LOG;
+using TimeKeeper.DTO;
+using TimeKeeper.Utility.Factory;
 
 namespace TimeKeeper.API.Controllers
 {

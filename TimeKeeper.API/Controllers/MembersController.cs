@@ -4,13 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TimeKeeper.API.Models;
-using TimeKeeper.API.Factory;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 using Microsoft.Extensions.Logging;
+using TimeKeeper.BLL;
+using TimeKeeper.DTO;
+using TimeKeeper.Utility.Factory;
 using Microsoft.AspNetCore.Authorization;
-using TimeKeeper.API.Services;
 
 namespace TimeKeeper.API.Controllers
 {

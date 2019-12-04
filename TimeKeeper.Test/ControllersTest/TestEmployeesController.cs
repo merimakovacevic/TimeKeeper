@@ -4,8 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using TimeKeeper.API.Controllers;
-using TimeKeeper.API.Models;
 using TimeKeeper.Domain.Entities;
+using TimeKeeper.DTO;
 
 namespace TimeKeeper.Test.ControllersTest
 {
