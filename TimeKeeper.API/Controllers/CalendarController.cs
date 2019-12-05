@@ -144,14 +144,6 @@ namespace TimeKeeper.API.Controllers
             {
                 return HandleException(ex);
             }
-        }
-
-
-        
-        
-
-        
-
-        
+        }     
     }
 }

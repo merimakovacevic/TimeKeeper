@@ -41,7 +41,7 @@ namespace TimeKeeper.BLL
         public List<DayModel> GetEmptyEmployeeCalendar(int employeeId, int year, int month)
         {
             List<DayModel> calendar = new List<DayModel>();
-            if (Validator.ValidateMonth(year, month)) throw new Exception("Invalid data! Check year and month");
+            if (!Validator.ValidateMonth(year, month)) throw new Exception("Invalid data! Check year and month");
 
             DayType future = new DayType { Id = 10, Name = "Future" };
             DayType empty = new DayType { Id = 11, Name = "Empty" };

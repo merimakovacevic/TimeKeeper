@@ -10,7 +10,7 @@ using TimeKeeper.DAL;
 
 namespace TimeKeeper.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DashboardController : BaseController
@@ -40,6 +40,19 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 return Ok(dashboardService.GetEmployeeDashboard(employeeId, year));
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        [HttpGet("team-dashboard/{teamId}/{year}/{month}")]
+        public IActionResult GetTeamDashboard(int teamId, int year, int month)
+        {
+            try
+            {
+                return Ok(dashboardService.GetTeamDashboard(teamId, year, month));
             }
             catch (Exception ex)
             {
