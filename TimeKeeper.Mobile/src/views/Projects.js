@@ -58,6 +58,9 @@ export default class Projects extends Component {
   render() {
     return (
       <SafeAreaView>
+        <Header
+          centerComponent={{ text: "People", style: { color: "#fff" } }}
+        />
         <List data={this.state.data} />
       </SafeAreaView>
     );
