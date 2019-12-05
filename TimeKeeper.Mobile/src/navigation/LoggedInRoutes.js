@@ -1,11 +1,12 @@
 import React from "react";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createStackNavigator } from "react-navigation-stack";
-import { Ionicons, Octicons } from "@expo/vector-icons";
+import { Ionicons, Octicons, AntDesign } from "@expo/vector-icons";
 import Profile from "../views/Profile";
 import Calendar from "../views/Calendar";
 import People from "../views/People";
 import Projects from "../views/Projects";
+import Customers from "../views/Customers";
 
 const StackNavigator = createStackNavigator({
   Profile: {
@@ -16,6 +17,9 @@ const StackNavigator = createStackNavigator({
   },
   Projects: {
     screen: Projects
+  },
+  Customers: {
+    screen: Customers
   }
 });
 
@@ -34,6 +38,14 @@ const LoggedInRoutes = createBottomTabNavigator(
       navigationOptions: {
         tabBarIcon: ({ tintColor }) => (
           <Octicons name="project" size={40} color={tintColor} />
+        )
+      }
+    },
+    Customers: {
+      screen: Customers,
+      navigationOptions: {
+        tabBarIcon: ({ tintColor }) => (
+          <AntDesign name="customers" size={40} color={tintColor} />
         )
       }
     },
