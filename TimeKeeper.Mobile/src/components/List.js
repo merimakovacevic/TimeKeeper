@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { Component } from "react";
 import {
   SafeAreaView,
   TouchableOpacity,
   FlatList,
   StyleSheet,
-  Text, Image
-} from 'react-native';
-import Constants from 'expo-constants';
-import {Item} from './ItemList.js'
+  Text,
+  Image
+} from "react-native";
+import Constants from "expo-constants";
+import { Item } from "./ItemList.js";
 
-
+/* 
 const DATA = [
   {
     id: '1',
@@ -52,80 +53,27 @@ const DATA = [
     description: 'duck_whisperer@gmail.com'
   },
 ];
- 
- 
- 
-export default function App() {
-  const [selected, setSelected] = React.useState(new Map());
- 
-  const onSelect = React.useCallback(
-    id => {
-      const newSelected = new Map(selected);
-      newSelected.set(id, !selected.get(id));
- 
-      setSelected(newSelected);
-    },
-    [selected],
-  );
- 
-  return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        data={DATA}
-        renderItem={({ item }) => (
-          <Item style={styles.item}
-            id={item.id}
-            title={item.title}
-            description = {item.description}
-         
-           selected={!!selected.get(item.id)}
-            onSelect={onSelect}
-        
-         
-          />
-        )}
-        keyExtractor={item => item.id}
-        extraData={selected}
-      />
-    </SafeAreaView>
-  );
+  */
+
+/* export default function App() {
+ */
+
+export default class List extends Component {
+  render() {
+    return (
+      <SafeAreaView>
+        <FlatList
+          data={this.props.data}
+          renderItem={({ item }) => (
+            <Item
+              id={item.id}
+              title={item.title}
+              description={item.description}
+            />
+          )}
+          keyExtractor={(item) => item.id}
+        />
+      </SafeAreaView>
+    );
+  }
 }
- 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: Constants.statusBarHeight,
-  },
-  item: {
-    backgroundColor: 'lightcyan',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    display: 'flex',
-    flexDirection : 'row',
-    justifyContent: 'space-between',
-    marginBottom: 3,
-  height: 100  
-},
-  title: {
-    fontSize: 28,
-    position:"absolute",
-    top:0,
-    left:100,
-    color: 'black'
-  },
-  description:{
-      fontSize: 16,
-      color:'black',
-      position:"absolute",
-      top:60,
-      left:100,
-  },
-  image: {
-      width: 50,
-      height: 50
-  },
- 
-   
- 
-});
