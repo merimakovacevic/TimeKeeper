@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
-using TimeKeeper.Utility.Services;
+using TimeKeeper.Utility.Factory;
 
 namespace TimeKeeper.Seed
 {
