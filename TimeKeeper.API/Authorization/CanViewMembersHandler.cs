@@ -16,9 +16,11 @@ namespace TimeKeeper.API.Authorization
     public class CanViewMembersHandler : AuthorizationHandler<HasAccessToMembers>
     {
         protected UnitOfWork Unit;
+        protected QueryService queryService;
         public CanViewMembersHandler(TimeKeeperContext context)
         {
             Unit = new UnitOfWork(context);
+            queryService = new QueryService(Unit);
         }
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, HasAccessToMembers requirement)
@@ -49,7 +51,7 @@ namespace TimeKeeper.API.Authorization
                 return Task.CompletedTask;
             }
 
-            List<EmployeeModel> teamMembers = Unit.GetEmployeeTeamMembers(int.Parse(context.User.Claims.FirstOrDefault(c => c.Type == "sub").Value));
+            List<EmployeeModel> teamMembers = queryService.GetEmployeeTeamMembers(int.Parse(context.User.Claims.FirstOrDefault(c => c.Type == "sub").Value));
 
             //Each employee can only view his team members (Member entity)
             if (teamMembers.Any(x => x.Id == memberId) && HttpMethods.IsGet(filterContext.HttpContext.Request.Method))

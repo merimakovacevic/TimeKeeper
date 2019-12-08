@@ -1,20 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
-using TimeKeeper.Utility.Factory;
 using TimeKeeper.DTO;
+using TimeKeeper.Utility.Factory;
 
 namespace TimeKeeper.BLL
 {
-    public static class Services
+    public class QueryService
     {
-        public static List<EmployeeModel> GetEmployeeTeamMembers(this UnitOfWork unit, int userId)
+        protected UnitOfWork _unit;
+        public QueryService(UnitOfWork unit)
         {
-            List<Team> userTeams = unit.GetEmployeeTeams(userId);
-                //Teams.Get(x => x.Members.Any(y => y.Employee.Id == userId)).ToList();
+            _unit = unit;
+
+        }
+
+        public List<EmployeeModel> GetEmployeeTeamMembers(int employeeId)
+        {
+            List<Team> userTeams = GetEmployeeTeams(employeeId);
+            //Teams.Get(x => x.Members.Any(y => y.Employee.Id == userId)).ToList();
             HashSet<Employee> employees = new HashSet<Employee>();
             foreach (Team team in userTeams)
             {
@@ -27,54 +34,39 @@ namespace TimeKeeper.BLL
             return employees.Select(x => x.Create()).ToList();
         }
 
-        public static List<Team> GetEmployeeTeams(this UnitOfWork unit, int userId)
+        public List<Team> GetEmployeeTeams(int employeeId)
         {
-            return unit.Teams.Get(x => x.Members.Any(y => y.Employee.Id == userId)).ToList();
+            return _unit.Teams.Get(x => x.Members.Any(y => y.Employee.Id == employeeId)).ToList();
         }
 
-        public static List<Project> GetEmployeeProjects(this UnitOfWork unit, int employeeId)
+        public List<Project> GetEmployeeProjects(int employeeId)
         {
-            List<Team> employeeTeams = GetEmployeeTeams(unit, employeeId);
+            List<Team> employeeTeams = GetEmployeeTeams(employeeId);
             List<Project> employeeProjects = new List<Project>();
 
-            foreach(Team team in employeeTeams)
+            foreach (Team team in employeeTeams)
             {
                 employeeProjects.AddRange(team.Projects);
             }
 
             return employeeProjects;
         }
-
-        public static void SetHourTypes(this Dictionary<string, decimal> hourTypes, List<DayType> dayTypes)
+        public int GetNumberOfEmployeesForTimePeriod(int month, int year)
         {
-            foreach (DayType day in dayTypes)
-            {
-                hourTypes.Add(day.Name, 0);
-            }
-
-            hourTypes.Add("Missing entries", 0);
+            return _unit.Employees.Get(x => x.BeginDate < new DateTime(year, month, DateTime.DaysInMonth(year, month)) //if employees begin date is in required month
+                            && (x.EndDate == null || x.EndDate == new DateTime(1, 1, 1) || x.EndDate > new DateTime(year, month, DateTime.DaysInMonth(year, month)))).Count(); // still works in company, or left company after required month          
         }
-
-        public static bool IsWeekend(this DateTime date)
+        public int GetNumberOfProjectsForTimePeriod(int month, int year)
         {
-            return date.DayOfWeek == DayOfWeek.Sunday || date.DayOfWeek == DayOfWeek.Saturday;
+            return _unit.Projects.Get(x => x.StartDate < new DateTime(year, month, DateTime.DaysInMonth(year, month)) //if project began is in required month
+                            && (x.EndDate == null || x.EndDate == new DateTime(1, 1, 1) || x.EndDate > new DateTime(year, month, DateTime.DaysInMonth(year, month)))).Count(); // project still in progress, or ended after the required month          
         }
-
-        public static bool IsWeekend(this DayModel day)
+        public List<ProjectModel> GetProjectsForTimePeriod(int month, int year)
         {
-            return day.Date.IsWeekend();
+            List<Project> query = _unit.Projects.Get(x => x.StartDate < new DateTime(year, month, DateTime.DaysInMonth(year, month)) //if project began is in required month
+                            && (x.EndDate == null || x.EndDate == new DateTime(1, 1, 1) || x.EndDate > new DateTime(year, month, DateTime.DaysInMonth(year, month)))).ToList();
+            List <ProjectModel> projects = query.Select(x => x.Create()).ToList(); // project still in progress, or ended after the required month    
+            return projects;
         }
-
-
-        public static bool IsAbsence(this DayModel day)
-        {
-            return day.DayType.Name != "Workday";
-        }
-
-        public static bool IsAbsence(this Day day)
-        {
-            return day.DayType.Name != "Workday";
-        }
-
     }
 }

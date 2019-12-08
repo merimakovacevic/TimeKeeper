@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
 namespace TimeKeeper.DTO.ReportModels
 {
     public class EmployeeProjectModel
     {
-        public EmployeeProjectModel()
+        public EmployeeProjectModel(List<int> projects)
         {
-            HoursByProject = new Dictionary<string, decimal>();
+            Hours = new Dictionary<int, decimal>();
+            foreach (int p in projects) Hours.Add(p, 0);
         }
-
         public MasterModel Employee { get; set; }
         public decimal TotalHours { get; set; }
-        public decimal PaidTimeOff { get; set; }
-        public Dictionary<string, decimal> HoursByProject { get; set; }
+        public Dictionary<int, decimal> Hours { get; set; }
     }
 }

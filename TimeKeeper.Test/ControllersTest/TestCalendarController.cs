@@ -66,11 +66,12 @@ namespace TimeKeeper.Test.ControllersTest
             return employeeTimes;
         }
 
+        //a new test needs to be written for Dasbhoard and Reports controllers
         [Test, Order(2)]
         [TestCase(3, 2019, 6)]
         public void GetTeamTimeTracking(int teamId, int year, int month)
         {
-            var controller = new CalendarController(unit.Context);
+            var controller = new ReportsController(unit.Context);
             var response = controller.GetTimeTracking(teamId, year, month) as ObjectResult;
             var value = response.Value as List<EmployeeTimeModel>;
             List<DayType> dayTypes = unit.DayTypes.Get().ToList();

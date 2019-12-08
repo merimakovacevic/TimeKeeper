@@ -14,9 +14,11 @@ namespace TimeKeeper.API.Authorization
     public class CanEditMembersHandler : AuthorizationHandler<HasAccessToMembers>
     {
         protected UnitOfWork Unit;
+        protected QueryService queryService;
         public CanEditMembersHandler(TimeKeeperContext context)
         {
             Unit = new UnitOfWork(context);
+            queryService = new QueryService(Unit);
         }
    
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, HasAccessToMembers requirement)
@@ -40,7 +42,7 @@ namespace TimeKeeper.API.Authorization
                 return Task.CompletedTask;
             }
 
-            List<EmployeeModel> teamMembers = Unit.GetEmployeeTeamMembers(int.Parse(context.User.Claims.FirstOrDefault(c => c.Type == "sub").Value));
+            List<EmployeeModel> teamMembers = queryService.GetEmployeeTeamMembers(int.Parse(context.User.Claims.FirstOrDefault(c => c.Type == "sub").Value));
             string userRole = context.User.Claims.FirstOrDefault(c => c.Type == "role").Value.ToString();
 
             //Each employee can only view his team members (Member entity)
