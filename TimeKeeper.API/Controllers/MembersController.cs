@@ -4,13 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TimeKeeper.API.Models;
-using TimeKeeper.API.Factory;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 using Microsoft.Extensions.Logging;
+using TimeKeeper.BLL;
+using TimeKeeper.DTO;
+using TimeKeeper.Utility.Factory;
 using Microsoft.AspNetCore.Authorization;
-using TimeKeeper.API.Services;
 
 namespace TimeKeeper.API.Controllers
 {
@@ -19,7 +19,11 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class MembersController : BaseController
     {
-        public MembersController(TimeKeeperContext context) : base(context) { }
+        protected QueryService queryService;
+        public MembersController(TimeKeeperContext context) : base(context)
+        {
+            queryService = new QueryService(Unit);
+        }
 
         /// <summary>
         /// This method returns all members
@@ -44,7 +48,7 @@ namespace TimeKeeper.API.Controllers
                 }
                 else
                 {
-                    return Ok(Unit.GetEmployeeTeamMembers(userId));
+                    return Ok(queryService.GetEmployeeTeamMembers(userId));
                 }
 
             }

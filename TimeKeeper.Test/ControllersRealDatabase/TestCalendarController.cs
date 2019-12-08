@@ -3,11 +3,10 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using TimeKeeper.API.Controllers;
-using TimeKeeper.API.Factory;
-using TimeKeeper.API.Models;
-using TimeKeeper.API.Models.ReportModels;
-using TimeKeeper.API.Services;
+using TimeKeeper.BLL;
 using TimeKeeper.Domain.Entities;
+using TimeKeeper.DTO.ReportModels;
+using TimeKeeper.Utility.Factory;
 
 namespace TimeKeeper.Test.ControllersRealDatabase
 {
@@ -19,7 +18,7 @@ namespace TimeKeeper.Test.ControllersRealDatabase
         private List<EmployeeTimeModel> CreateEmployeeTimeModels()
         {
             List<EmployeeTimeModel> employeeTimes = new List<EmployeeTimeModel>();
-
+            List<DayType> dayTypes = unit.DayTypes.Get().ToList();
             //
             //ASSERT EMPLOYEE NR. 1 - id nr 2 - William Brown
             //
@@ -27,7 +26,7 @@ namespace TimeKeeper.Test.ControllersRealDatabase
 
             //This test employee has only 12 work hours in the test database
             EmployeeTimeModel firstEmployee = unit.Employees.Get(firstEmployeeId).CreateTimeModel();
-            firstEmployee.HourTypes.SetHourTypes(unit);
+            firstEmployee.HourTypes.SetHourTypes(dayTypes);
             //SetHourTypes(firstEmployee.HourTypes);
 
             firstEmployee.HourTypes["Workday"] = 120;
@@ -51,7 +50,7 @@ namespace TimeKeeper.Test.ControllersRealDatabase
             //
             int secondEmployeeId = 41;
             EmployeeTimeModel secondEmployee = unit.Employees.Get(secondEmployeeId).CreateTimeModel();
-            secondEmployee.HourTypes.SetHourTypes(unit);
+            secondEmployee.HourTypes.SetHourTypes(dayTypes);
             //SetHourTypes(secondEmployee.HourTypes);
 
             secondEmployee.HourTypes["Workday"] = 215;
@@ -75,12 +74,13 @@ namespace TimeKeeper.Test.ControllersRealDatabase
         }
 
 
+        //a new test needs to be written for Dasbhoard and Reports controllers
         [Test, Order(1)]
         [TestCase(2, 2018, 1)]
         [TestCase(41, 2019, 4)]
         public void GetPersonalReport(int employeeId, int year, int month)
         {
-            var controller = new CalendarController(unit.Context);
+            var controller = new ReportsController(unit.Context);
 
             var response = controller.GetPersonalReport(employeeId, year, month) as ObjectResult;
             var value = response.Value as EmployeeTimeModel;

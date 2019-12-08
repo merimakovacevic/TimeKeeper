@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using TimeKeeper.DAL;
-using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Controllers
 {
