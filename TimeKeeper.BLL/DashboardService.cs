@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TimeKeeper.DAL;
+using TimeKeeper.Domain.Entities;
 using TimeKeeper.DTO;
 using TimeKeeper.DTO.ReportModels;
 using TimeKeeper.Utility.Factory;
@@ -19,54 +20,21 @@ namespace TimeKeeper.BLL
             _queryService = new QueryService(unit);
             _reportService = new ReportService(unit);
         }
-        /*        public AdminDashboardModel GetAdminDashboardInfo(int year, int month)
-                {
-                    //Is the missing entries chart in Admin dashboard referring to missing entries per team or?
-
-                    AdminDashboardModel adminDashboardModel = new AdminDashboardModel();
-                    //no of employees at current month/year
-                    adminDashboardModel.EmployeesCount = _queryService.GetNumberOfEmployeesForTimePeriod(month, year);
-                    //no of projects in a current month/year
-                    adminDashboardModel.ProjectsCount = _queryService.GetNumberOfProjectsForTimePeriod(month, year);
-                    //total hours; what is total hours?
-                    //adminDashboardModel.BaseTotalHours = GetMonthlyWorkingDays(year, month) * 8;
-                    decimal monthlyBaseHours = GetMonthlyWorkingDays(year, month) * 8;
-                    adminDashboardModel.TotalHours = monthlyBaseHours * adminDashboardModel.EmployeesCount;
-                    adminDashboardModel.TotalWorkingHours = 0;
-
-                    List<int> teamIds = _unit.Teams.Get().Select(x => x.Id).ToList();
-
-                    foreach (int teamId in teamIds)
-                    {
-                        MasterModel team = _unit.Teams.Get(teamId).Master();
-                        TeamDashboardModel teamDashboardModel = GetTeamDashboard(teamId, year, month);
-                        adminDashboardModel.TeamDashboardModels.Add(teamDashboardModel);
-                        adminDashboardModel.TotalWorkingHours += teamDashboardModel.TotalWorkingHours;
-                        *//*
-                        //missing entries by team
-                        adminDashboardModel.MissingEntries.Add(new TeamKeyDictionary(team, teamDashboardModel.MissingEntries.Sum(x => x.Value)));
-                        //pto hours by team
-                        adminDashboardModel.PTOHours.Add(new TeamKeyDictionary(team, teamDashboardModel.PaidTimeOff.Sum(x => x.Value)));
-                        //overtime horus by team
-                        adminDashboardModel.OvertimeHours.Add(new TeamKeyDictionary(team, teamDashboardModel.Overtime.Sum(x => x.Value)));*//*
-                    }
-                    //what is considered by utilization? :thinkig-face:
-                    return adminDashboardModel;
-                }*/
 
         public AdminDashboardModel GetAdminDashboardInfo(int year, int month)
         {
             //Is the missing entries chart in Admin dashboard referring to missing entries per team or?
-
             AdminDashboardModel adminDashboard = new AdminDashboardModel();
            
             //no of employees at current month/year
+            //Project and Employees count are already calculated at TeamDashboardLevel
             adminDashboard.EmployeesCount = _queryService.GetNumberOfEmployeesForTimePeriod(month, year);
 
             //projects in a current month/year            
-            List<ProjectModel> projects = _queryService.GetProjectsForTimePeriod(month, year);
+            List<Project> projects = _queryService.GetProjectsForTimePeriod(month, year);
             //Adds all ProjectDashboardModels to adminDashboard
-            adminDashboard.Projects.AddRange(projects.Select(x => GetAdminProjectDashboard(x)).ToList());
+            adminDashboard.Projects.AddRange(projects.Select(x => GetAdminProjectDashboard(x, year, month)).ToList());
+
             adminDashboard.ProjectsCount = adminDashboard.Projects.Count();
 
             //total hours; what is total hours?
@@ -75,25 +43,51 @@ namespace TimeKeeper.BLL
             adminDashboard.TotalHours = monthlyBaseHours * adminDashboard.EmployeesCount;
             adminDashboard.TotalWorkingHours = 0;
 
-            List<int> teamIds = _unit.Teams.Get().Select(x => x.Id).ToList();
+            //We are unable to fetch teams this way because the projects don't tasks in calendar in the database
+            //List<Team> teams = projects.Select(x => x.Team).ToList();
+            //List<MasterModel> teams = _unit.Teams.Get().Select(x => x.Master()).ToList();      
 
-            foreach (int teamId in teamIds)
+            List<int> teams = _unit.Teams.Get().Select(x => x.Id).ToList();
+
+            //This calendar will only be calculated once and passed down 
+            //List<DayModel> calendar = GetEmptyGenericCalendar(year, month);
+
+            foreach (int teamId in teams)
             {
                 MasterModel team = _unit.Teams.Get(teamId).Master();
                 AdminTeamDashboardModel teamDashboardModel = GetAdminTeamDashboard(team, year, month);
                 adminDashboard.Teams.Add(teamDashboardModel);
                 adminDashboard.TotalWorkingHours += teamDashboardModel.WorkingHours;
             }
-            //what is considered by utilization? :thinkig-face:
+
             return adminDashboard;
         }
 
-        public AdminProjectDashboardModel GetAdminProjectDashboard(ProjectModel project)
+        //FINAL IMPLEMENTATION IS NEEDED
+        public decimal GetProjectRevenue(Project project, int year, int month)
+        {
+            switch(project.Pricing.Name)
+            {
+                case "Hourly":
+                    //DATABASE DOESN'T HAVE COHERENT DATA, THIS IS FOR SHOWCASE ONLY - FURTHER IMPLEMENTATION IS NEEDED!!!
+                    return project.Tasks.Sum(x => x.Hours * 15);
+                case "PerCapita":
+                    //DATABASE DOESN'T HAVE COHERENT DATA, THIS IS FOR SHOWCASE ONLY - FURTHER IMPLEMENTATION IS NEEDED!!!
+                    //Only members who have tasks in this month need to be calculated
+                    return project.Team.Members.Sum(x => x.Role.MonthlyPrice);
+                case "Fixed bid":
+                    return project.Amount;
+                default:
+                    return 0;
+            }
+        }
+
+        public AdminProjectDashboardModel GetAdminProjectDashboard(Project project, int year, int month)
         {            
             return new AdminProjectDashboardModel
             {
                 Project = new MasterModel { Id = project.Id, Name = project.Name},
-                Revenue = project.Amount
+                Revenue = GetProjectRevenue(project, year, month)
             };
         }
 

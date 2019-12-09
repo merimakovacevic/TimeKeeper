@@ -34,12 +34,12 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
-        [HttpGet("employee-time-tracking/{employeeId}/{year}/{month}")]
-        public IActionResult GetPersonalReport(int employeeId, int year, int month)
+        [HttpGet("monthly-overview/{year}/{month}")]
+        public IActionResult GetMonthlyOverview(int year, int month)
         {
             try
             {
-                return Ok(reportService.GetEmployeeMonthReport(employeeId, year, month));
+                return Ok(reportService.GetMonthlyOverview(year, month));
             }
             catch (Exception ex)
             {
@@ -47,12 +47,12 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
-        [HttpGet("monthly-overview/{year}/{month}")]
-        public IActionResult GetMonthlyOverview(int year, int month)
+        [HttpGet("monthly-overview-stored/{year}/{month}")]
+        public IActionResult GetStoredMonthlyOverview(int year, int month)
         {
             try
             {
-                return Ok(reportService.GetMonthlyOverview(year, month));
+                return Ok(reportService.GetStored(year, month));
             }
             catch (Exception ex)
             {
@@ -100,6 +100,21 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 return Ok(reportService.GetAnnualOverview(year));
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        [HttpGet("annual-overview-stored/{year}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult StoredAnnualProjectOverview(int year)
+        {
+            try
+            {
+                return Ok(reportService.GetStored(year));
             }
             catch (Exception ex)
             {

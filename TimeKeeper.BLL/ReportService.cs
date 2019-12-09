@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using TimeKeeper.DAL;
@@ -37,7 +40,7 @@ namespace TimeKeeper.BLL
             //TOTAL HOURS IN DASHBOARD - MONTHLY THEORETICAL WORKING HOURS
             Employee employee = _unit.Employees.Get(employeeId);
             EmployeeTimeModel employeeReport = employee.CreateTimeModel();
-            List<DayModel> calendar = GetEmployeeMonth(employeeId, year, month);
+            List<DayModel> calendar = GetEmployeeMonth(employee, year, month);
 
             employeeReport.HourTypes.SetHourTypes(_dayTypes);
 
@@ -126,6 +129,55 @@ namespace TimeKeeper.BLL
             return pmm;
         }
 
+        public MonthlyTimeModel GetStored(int year, int month)
+        {
+            MonthlyTimeModel result = new MonthlyTimeModel();
+
+            var cmd = _unit.Context.Database.GetDbConnection().CreateCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = $"select * from MonthlyReport({year}, {month})";
+            if (cmd.Connection.State == ConnectionState.Closed) cmd.Connection.Open();
+            DbDataReader sql = cmd.ExecuteReader();
+
+            List<MonthlyRawData> rawData = new List<MonthlyRawData>();
+            if(sql.HasRows)
+            {
+                while(sql.Read())
+                {
+                    rawData.Add(new MonthlyRawData
+                    {
+                        EmployeeId = sql.GetInt32(0),
+                        EmployeeName = sql.GetString(1),
+                        ProjectId = sql.GetInt32(2),
+                        ProjectName = sql.GetString(3),
+                        Hours = sql.GetDecimal(4)
+                    });
+                }
+
+                result.Projects = rawData.GroupBy(x => new { x.ProjectId, x.ProjectName })
+                                         .Select(x => new MasterModel { Id = x.Key.ProjectId, Name = x.Key.ProjectName } ).ToList();
+
+                List<int> projectList = result.Projects.Select(x => x.Id).ToList();
+                EmployeeProjectModel epm = new EmployeeProjectModel(projectList) { Employee = new MasterModel { Id = 0 } };
+
+                foreach (MonthlyRawData item in rawData)
+                {
+                    if(item.EmployeeId != epm.Employee.Id)
+                    {
+                        if (epm.Employee.Id != 0) result.Employees.Add(epm);
+                        epm = new EmployeeProjectModel(projectList)
+                        {
+                            Employee = new MasterModel { Id = item.EmployeeId, Name = item.EmployeeName }
+                        };
+                    }
+                    epm.Hours[item.ProjectId] = item.Hours;
+                    epm.TotalHours += item.Hours;
+                }
+                if (epm.Employee.Id != 0) result.Employees.Add(epm);
+            }
+            return result;
+        }
+
         /*
         public MonthlyOverviewModel GetMonthlyOverview(int year, int month)
         {
@@ -189,7 +241,7 @@ namespace TimeKeeper.BLL
             }
             return employeeProject;
         }*/
-        
+
         public List<MonthProjectHistoryModel> GetMonthlyProjectHistory(int projectId, int employeeId)
         {
             //We use this object to get month names
@@ -299,6 +351,53 @@ namespace TimeKeeper.BLL
             result.Add(total);
             return result;
         }
+
+        public List<AnnualTimeModel> GetStored(int year)
+        {
+            List<AnnualTimeModel> result = new List<AnnualTimeModel>();
+            AnnualTimeModel total = new AnnualTimeModel { Project = new MasterModel { Id = 0, Name = "TOTAL" } };
+
+            var cmd = _unit.Context.Database.GetDbConnection().CreateCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = $"select * from AnnualReport({year})";
+            if(cmd.Connection.State == ConnectionState.Closed) cmd.Connection.Open();
+            DbDataReader sql = cmd.ExecuteReader();
+            List<AnnualRawModel> rawData = new List<AnnualRawModel>();
+
+            if(sql.HasRows)
+            {
+                while(sql.Read())
+                {
+                    rawData.Add(new AnnualRawModel
+                    {
+                        Id = sql.GetInt32(0),
+                        Name = sql.GetString(1),
+                        Month = sql.GetInt32(2),
+                        Hours = sql.GetDecimal(3)
+                    });
+                }
+                AnnualTimeModel atm = new AnnualTimeModel { Project = new MasterModel { Id = 0, Name = "TOTAL" } };
+                foreach (AnnualRawModel item in rawData)
+                {
+                    if (atm.Project.Id != item.Id)
+                    {
+                        if (atm.Project.Id != 0) result.Add(atm);
+                        atm = new AnnualTimeModel { Project = new MasterModel { Id = item.Id, Name = item.Name } };
+                        total.Project.Id++;
+                    }
+                    atm.Hours[item.Month - 1] = item.Hours;
+                    atm.Total += item.Hours;
+                    total.Hours[item.Month - 1] += item.Hours;
+                    total.Total += item.Hours;
+                }
+                if (atm.Project.Id != 0) result.Add(atm);
+
+            }
+            result.Add(total);
+            return result;
+        }
+
+
 
         /*
         public ProjectAnnualOverviewModel GetProjectAnnualOverview(int projectId, int year)
