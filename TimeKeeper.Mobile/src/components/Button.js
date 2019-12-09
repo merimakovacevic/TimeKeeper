@@ -6,7 +6,7 @@ import theme from "../assets/Theme";
 export const Button = ({ onPress, children, outline }) => {
 	return (
 		<TouchableOpacity onPress={onPress} style={outline ? styles.outline : styles.button}>
-			<Text style={styles.title}>{children}</Text>
+			{children}
 		</TouchableOpacity>
 	);
 };
@@ -18,10 +18,6 @@ const styles = StyleSheet.create({
 		backgroundColor: theme.COLORS.PRIMARY,
 		borderRadius: 5,
 		justifyContent: "center"
-	},
-	title: {
-		color: theme.COLORS.WHITE,
-		alignSelf: "center"
 	},
 	outline: {
 		width: "100%",
