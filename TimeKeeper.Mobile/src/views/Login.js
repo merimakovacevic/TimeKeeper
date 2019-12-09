@@ -1,4 +1,47 @@
 import React, { Component } from "react";
+import {
+  Modal,
+  Text,
+  View,
+  StyleSheet,
+  TouchableHighlight
+} from "react-native";
+import { Button } from "../components/index";
+import RNModal from "../components/Modal";
+
+export default class Login extends Component {
+  state = {
+    open: false
+  };
+  handleOpen = () => {
+    this.setState({ open: true });
+  };
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text> Login Screen </Text>
+        <Button outline={true} onPress={this.handleOpen}>
+          Open Modal
+        </Button>
+        <RNModal visible={this.state.open} onClose={this.handleClose} />
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "pink"
+  }
+});
+
+/* import React, { Component } from "react";
 import { View, Image, Text } from "react-native";
 import { Button } from "../components";
 import { Input } from "../components";
@@ -16,8 +59,8 @@ class Login extends Component {
 				<Text style={styles.mainTitle}>Login to your account</Text>
 				<Text style={styles.title}> Save time for doing great work.</Text>
 				{/* <Input style={styles.username} name="name" placeholder="Name" autoCompleteType="username" />
-				<Input style={styles.password} name="password" placeholder="Password" autoCompleteType="password" /> */}
-				<Button onPress={this._login}>Login</Button>
+				<Input style={styles.password} name="password" placeholder="Password" autoCompleteType="password" /> */ //}
+/* 			<Button onPress={this._login}>Login</Button>
 			</View>
 		);
 	}
@@ -48,3 +91,4 @@ const styles = {
 };
 
 export default Login;
+  */
