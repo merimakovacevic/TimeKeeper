@@ -7,6 +7,7 @@ import Calendar from "../views/Calendar";
 import People from "../views/People";
 import Projects from "../views/Projects";
 import Customers from "../views/Customers";
+import Agenda from "../views/Agenda";
 
 const StackNavigator = createStackNavigator({
   Profile: {
@@ -20,6 +21,9 @@ const StackNavigator = createStackNavigator({
   },
   Customers: {
     screen: Customers
+  },
+  Agenda: {
+    screen: Agenda
   }
 });
 
@@ -50,6 +54,14 @@ const LoggedInRoutes = createBottomTabNavigator(
       }
     },
     Profile: {
+      screen: StackNavigator,
+      navigationOptions: {
+        tabBarIcon: ({ tintColor }) => (
+          <Ionicons name="ios-person" size={32} color={tintColor} />
+        )
+      }
+    },
+    Agenda: {
       screen: StackNavigator,
       navigationOptions: {
         tabBarIcon: ({ tintColor }) => (
