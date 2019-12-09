@@ -1,12 +1,12 @@
 import React from "react";
-import { Text, TouchableOpacity, StyleSheet, View } from "react-native";
+import { Text, TouchableOpacity, StyleSheet } from "react-native";
 
 import theme from "../assets/Theme";
 
 export const Button = ({ onPress, children, outline }) => {
 	return (
 		<TouchableOpacity onPress={onPress} style={outline ? styles.outline : styles.button}>
-			{children}
+			<Text style={styles.title}>{children}</Text>
 		</TouchableOpacity>
 	);
 };
@@ -19,7 +19,14 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 		justifyContent: "center"
 	},
+<<<<<<< HEAD
 
+=======
+	title: {
+		color: theme.COLORS.WHITE,
+		alignSelf: "center"
+	},
+>>>>>>> mobile/listComponent
 	outline: {
 		width: "100%",
 		height: 60,

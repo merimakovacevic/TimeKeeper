@@ -2,7 +2,8 @@ import axios from "axios";
 
 import { store } from "../index";
 
-export const employeesUrl = "https://localhost:44350/api/employees";
+// export const employeesUrl = "https://localhost:44350/api/employees";
+export const employeesUrl = "http://192.168.60.73/TimeKeeper/api/employees";
 export const customersUrl = "https://localhost:44350/api/customers";
 export const projectsUrl = "https://localhost:44350/api/projects";
 

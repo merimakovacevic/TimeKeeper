@@ -1,72 +1,53 @@
 import React, { Component } from "react";
+import { Text, View } from "react-native";
+
 import List from "../components/List";
 import SafeAreaView from "react-native-safe-area-view";
-import { Header } from "react-native-elements";
 
 const DATA = [
   {
     id: "1",
-    title: "Berina Omerasevic",
+    title: "Project11",
     description: "berkica@gmail.com"
   },
   {
     id: "2",
-    title: "Hamza Crnovrsanin",
+    title: "proroeo",
     description: "hamzic@gmail.com"
   },
   {
     id: "3",
-    title: "Ajdin Zorlak",
+    title: "proororor",
     description: "zoka@gmail.com"
   },
   {
     id: "4",
-    title: "Amina Muzurovic",
+    title: "Amina prprpprpr",
     description: "muzi@gmail.com"
   },
   {
     id: "5",
-    title: "Faris Spica",
+    title: "Faris teteetet",
     description: "spica_u_vodi@gmail.com"
   },
   {
     id: "6",
-    title: "Tajib Smajlovic",
+    title: "Tajib tesatsta",
     description: "tajci_rajif@gmail.com"
   },
   {
     id: "7",
-    title: "Ferhat Avdic",
+    title: "Ferhat Avteeatedic",
     description: "wannabe_rajif@gmail.com"
   },
   {
     id: "9",
-    title: "Amra Rovcanin",
+    title: "AmrTESTRovcanin",
     description: "duck_whisperer@gmail.com"
-  },
-  {
-    id: "11",
-    title: "Berina Omerasevic",
-    description: "berkica@gmail.com"
-  },
-  {
-    id: "21",
-    title: "Hamza Crnovrsanin",
-    description: "hamzic@gmail.com"
-  },
-  {
-    id: "31",
-    title: "Ajdin Zorlak",
-    description: "zoka@gmail.com"
-  },
-  {
-    id: "44",
-    title: "Amina Muzurovic",
-    description: "muzi@gmail.com"
   }
 ];
 
-export default class People extends Component {
+export default class Projects extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -80,7 +61,6 @@ export default class People extends Component {
         <Header
           centerComponent={{ text: "People", style: { color: "#fff" } }}
         />
-
         <List data={this.state.data} />
       </SafeAreaView>
     );
