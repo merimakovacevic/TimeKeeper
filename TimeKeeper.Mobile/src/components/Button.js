@@ -19,14 +19,10 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 		justifyContent: "center"
 	},
-<<<<<<< HEAD
-
-=======
 	title: {
 		color: theme.COLORS.WHITE,
 		alignSelf: "center"
 	},
->>>>>>> mobile/listComponent
 	outline: {
 		width: "100%",
 		height: 60,

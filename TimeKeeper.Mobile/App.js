@@ -24,12 +24,6 @@ export default class App extends Component {
 
 const styles = StyleSheet.create({
 	container: {
-<<<<<<< HEAD
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center"
-=======
 		flex: 1
->>>>>>> mobile/listComponent
 	}
 });
