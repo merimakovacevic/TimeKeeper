@@ -6,11 +6,9 @@ export default class Profile extends Component {
   render() {
     return (
       <View>
-        <RNModal visible>
-          <View>
-            <Text>Modal Content !!!</Text>
-          </View>
-        </RNModal>{" "}
+        <View>
+          <Text>Modal Content !!!</Text>
+        </View>
       </View>
     );
   }
