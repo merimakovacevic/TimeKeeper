@@ -1,0 +1,14 @@
+FROM node:10
+
+# set working directory
+WORKDIR /usr/src/App
+
+COPY package*.json ./
+
+# install and cache app dependencies
+RUN npm install 
+
+COPY ./ ./
+
+# start app
+CMD ["npm", "start"]

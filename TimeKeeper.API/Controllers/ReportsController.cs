@@ -106,5 +106,41 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
+
+        [HttpGet("annual-overview-stored/{year}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult GetStoredAnnual(int year)
+        {
+            try
+            {
+                DateTime start = DateTime.Now;
+                var ar = reportService.GetStored(year);
+                DateTime final = DateTime.Now;
+                return Ok(new {dif=final-start, ar });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        [HttpGet("monthly-overview-stored/{year}/{month}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult GetStoredMonthly(int year, int month)
+        {
+            try
+            {
+                DateTime start = DateTime.Now;
+                var ar = reportService.GetStored(year, month);
+                DateTime final = DateTime.Now;
+                return Ok(new { dif = final - start, ar });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
     }
 }

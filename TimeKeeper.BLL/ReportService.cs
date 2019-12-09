@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using TimeKeeper.DAL;
@@ -124,6 +127,55 @@ namespace TimeKeeper.BLL
             if (epm.Employee.Id != 0) pmm.Employees.Add(epm);
 
             return pmm;
+        }
+
+        public MonthlyTimeModel GetStored(int year, int month)
+        {
+            MonthlyTimeModel result = new MonthlyTimeModel();
+
+            var cmd = _unit.Context.Database.GetDbConnection().CreateCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = $"select * from MonthlyReport({year},{month})";
+            if (cmd.Connection.State == ConnectionState.Closed) cmd.Connection.Open();
+            DbDataReader sql = cmd.ExecuteReader();
+            List<MonthlyRawData> rawData = new List<MonthlyRawData>();
+            if (sql.HasRows)
+            {
+                while (sql.Read())
+                {
+                    rawData.Add(new MonthlyRawData
+                    {
+                        EmpId = sql.GetInt32(0),
+                        EmpName = sql.GetString(1),
+                        ProjId = sql.GetInt32(2),
+                        ProjName = sql.GetString(3),
+                        Hours= sql.GetDecimal(4)
+                    });
+                }
+
+                result.Projects = rawData.GroupBy(x => new { x.ProjId, x.ProjName })
+                                         .Select(x => new MasterModel { Id = x.Key.ProjId, Name = x.Key.ProjName }).ToList();
+
+                List<int> projList = result.Projects.Select(x => x.Id).ToList();
+                EmployeeProjectModel epm = new EmployeeProjectModel(projList) { Employee = new MasterModel { Id = 0 } };
+                foreach(MonthlyRawData item in rawData)
+                {
+                    //is it new employee?
+                    if (item.EmpId != epm.Employee.Id)
+                    {
+                        if (epm.Employee.Id != 0) result.Employees.Add(epm);
+                        epm = new EmployeeProjectModel(projList)
+                        {
+                            Employee = new MasterModel { Id = item.EmpId, Name = item.EmpName }
+                        };
+                    }
+                    epm.Hours[item.ProjId] = item.Hours;
+                    epm.TotalHours += item.Hours;
+                }
+                if (epm.Employee.Id != 0) result.Employees.Add(epm);
+            }
+
+            return result;
         }
 
         /*
@@ -295,6 +347,50 @@ namespace TimeKeeper.BLL
                     total.Project.Id++;
                     result.Add(atm);
                 }
+            }
+            result.Add(total);
+            return result;
+        }
+
+        public List<AnnualTimeModel> GetStored(int year)
+        {
+            List<AnnualTimeModel> result = new List<AnnualTimeModel>();
+            AnnualTimeModel total = new AnnualTimeModel { Project = new MasterModel { Id = 0, Name = "TOTAL" } };
+
+            var cmd = _unit.Context.Database.GetDbConnection().CreateCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = $"select * from AnnualReport({year})";
+            if(cmd.Connection.State==ConnectionState.Closed) cmd.Connection.Open();
+            DbDataReader sql = cmd.ExecuteReader();
+            List<AnnualRawModel> rawData = new List<AnnualRawModel>();
+            if (sql.HasRows)
+            {
+                while (sql.Read())
+                {
+                    rawData.Add(new AnnualRawModel
+                    {
+                        Id = sql.GetInt32(0),
+                        Name = sql.GetString(1),
+                        Month = sql.GetInt32(2),
+                        Hours = sql.GetDecimal(3)
+                    });
+                }
+
+                AnnualTimeModel atm = new AnnualTimeModel { Project = new MasterModel { Id = 0 } };
+                foreach(AnnualRawModel item in rawData)
+                {
+                    if (atm.Project.Id != item.Id)
+                    {
+                        if (atm.Project.Id != 0) result.Add(atm);
+                        atm = new AnnualTimeModel { Project = new MasterModel { Id = item.Id, Name = item.Name } };
+                        total.Project.Id++;
+                    }
+                    atm.Hours[item.Month - 1] = item.Hours;
+                    atm.Total += item.Hours;
+                    total.Hours[item.Month - 1] += item.Hours;
+                    total.Total += item.Hours;
+                }
+                if (atm.Project.Id != 0) result.Add(atm);
             }
             result.Add(total);
             return result;
