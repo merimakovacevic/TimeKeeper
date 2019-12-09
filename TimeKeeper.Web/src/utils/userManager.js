@@ -1,8 +1,8 @@
 import { createUserManager } from "redux-oidc";
 
 const userManagerConfig = {
-	authority: "https://localhost:44300",
-	// authority: "http://192.168.60.73/Identity",
+	//authority: "https://localhost:44300",
+	authority: "http://192.168.60.73/Identity",
 	client_id: "tk2019",
 	redirect_uri: "http://localhost:3000/auth-callback",
 	post_logout_redirect_uri: "http://localhost:3000",
