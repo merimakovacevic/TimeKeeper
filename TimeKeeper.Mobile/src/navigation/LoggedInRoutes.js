@@ -49,7 +49,7 @@ const LoggedInRoutes = createBottomTabNavigator(
       screen: Customers,
       navigationOptions: {
         tabBarIcon: ({ tintColor }) => (
-          <AntDesign name="forward" size={40} color={tintColor} />
+          <AntDesign name="customerservice" size={40} color={tintColor} />
         )
       }
     },
@@ -65,7 +65,7 @@ const LoggedInRoutes = createBottomTabNavigator(
       screen: Agenda,
       navigationOptions: {
         tabBarIcon: ({ tintColor }) => (
-          <AntDesign name="forward" size={40} color={tintColor} />
+          <AntDesign name="calendar" size={40} color={tintColor} />
         )
       }
     }
