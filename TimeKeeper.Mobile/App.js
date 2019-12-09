@@ -10,7 +10,7 @@ const store = configureStore();
 
 export default class App extends Component {
   render() {
-    const RootNavigator = createAppContainer(getRootNavigator(true));
+    const RootNavigator = createAppContainer(getRootNavigator(false));
 
     return (
       <Provider store={store}>
