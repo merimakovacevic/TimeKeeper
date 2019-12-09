@@ -19,10 +19,6 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 		justifyContent: "center"
 	},
-	title: {
-		color: theme.COLORS.WHITE,
-		alignSelf: "center"
-	},
 	outline: {
 		width: "100%",
 		height: 60,
