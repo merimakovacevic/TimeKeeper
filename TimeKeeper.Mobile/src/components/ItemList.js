@@ -1,31 +1,23 @@
 import React from "react";
 import {
-  SafeAreaView,
   TouchableOpacity,
-  FlatList,
   StyleSheet,
   Text,
   Image,
   View
 } from "react-native";
-import Constants from "expo-constants";
 import Icon from "react-native-vector-icons/FontAwesome";
+
+import UserIcon from '../assets/images/user.png'
 
 function Item({ id, title, description, selected, onSelect }) {
   return (
     <TouchableOpacity
-      onPress={() => onSelect(id)}
-      style={[
-        styles.item,
-        { backgroundColor: selected ? "#bae2e3" : "#99bbff" }
-      ]}
+      style={styles.item}
     >
       <Image
         style={styles.image}
-        source={{
-          uri:
-            "https://cdn1.iconfinder.com/data/icons/technology-devices-2/100/Profile-512.png"
-        }}
+        source={UserIcon}
       />
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.description}>{description}</Text>
@@ -38,7 +30,7 @@ function Item({ id, title, description, selected, onSelect }) {
 
 const styles = StyleSheet.create({
   item: {
-    backgroundColor: "lightcyan",
+    backgroundColor: "rgba(0,99,255,0.1)",
     padding: 20,
     marginVertical: 5,
     marginHorizontal: 8,
@@ -51,7 +43,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     position: "absolute",
-    top: 10,
+    top: 5,
     left: 90,
     color: "black"
   },
@@ -59,7 +51,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "black",
     position: "absolute",
-    top: 40,
+    top: 33,
     left: 90
   },
   image: {
@@ -68,7 +60,8 @@ const styles = StyleSheet.create({
     bottom: 10
   },
   moreIcon: {
-    color: "black"
+    color: "#32aedc"
   }
 });
+
 export { Item };

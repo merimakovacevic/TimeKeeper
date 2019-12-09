@@ -1,13 +1,9 @@
 import React, { Component } from "react";
 import {
   SafeAreaView,
-  TouchableOpacity,
-  FlatList,
-  StyleSheet,
-  Text,
-  Image
+  FlatList
 } from "react-native";
-import Constants from "expo-constants";
+
 import { Item } from "./ItemList.js";
 
 export default class List extends Component {
