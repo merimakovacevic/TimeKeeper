@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TimeKeeper.BLL;
+using TimeKeeper.BLL.ReportServices;
 using TimeKeeper.DAL;
 
 namespace TimeKeeper.API.Controllers
@@ -16,9 +17,17 @@ namespace TimeKeeper.API.Controllers
     public class ReportsController : BaseController
     {
         protected ReportService reportService;
+        protected MonthlyOverview monthlyOverview;
+        protected AnnualOverview annualOverview;
+        protected ProjectHistory projectHistory;
+        protected TimeTracking timeTracking;
         public ReportsController(TimeKeeperContext context) : base(context)
         {
             reportService = new ReportService(Unit);
+            monthlyOverview = new MonthlyOverview(Unit);
+            annualOverview = new AnnualOverview(Unit);
+            projectHistory = new ProjectHistory(Unit);
+            timeTracking = new TimeTracking(Unit);
         }
 
         [HttpGet("team-time-tracking/{teamId}/{year}/{month}")]
@@ -26,7 +35,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                return Ok(reportService.GetTeamMonthReport(teamId, year, month));
+                return Ok(timeTracking.GetTeamMonthReport(teamId, year, month));
             }
             catch (Exception ex)
             {
@@ -39,7 +48,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                return Ok(reportService.GetEmployeeMonthReport(employeeId, year, month));
+                return Ok(timeTracking.GetEmployeeMonthReport(employeeId, year, month));
             }
             catch (Exception ex)
             {
@@ -52,7 +61,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                return Ok(reportService.GetMonthlyOverview(year, month));
+                return Ok(monthlyOverview.GetMonthlyOverview(year, month));
             }
             catch (Exception ex)
             {
@@ -68,7 +77,7 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info($"Try to get project history for project with id:{projectId}");
-                return Ok(reportService.GetProjectHistoryModel(projectId));
+                return Ok(projectHistory.GetProjectHistoryModel(projectId));
             }
             catch (Exception ex)
             {
@@ -84,7 +93,7 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info($"Try to get project monthly project history for project with id:{projectId} and employee with id:{employeeId}");
-                return Ok(reportService.GetMonthlyProjectHistory(projectId, employeeId));
+                return Ok(projectHistory.GetMonthlyProjectHistory(projectId, employeeId));
             }
             catch (Exception ex)
             {
@@ -99,7 +108,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                return Ok(reportService.GetAnnualOverview(year));
+                return Ok(annualOverview.GetAnnualOverview(year));
             }
             catch (Exception ex)
             {
@@ -115,7 +124,7 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 DateTime start = DateTime.Now;
-                var ar = reportService.GetStored(year);
+                var ar = annualOverview.GetStored(year);
                 DateTime final = DateTime.Now;
                 return Ok(new {dif=final-start, ar });
             }
@@ -133,7 +142,7 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 DateTime start = DateTime.Now;
-                var ar = reportService.GetStored(year, month);
+                var ar = monthlyOverview.GetStored(year, month);
                 DateTime final = DateTime.Now;
                 return Ok(new { dif = final - start, ar });
             }
