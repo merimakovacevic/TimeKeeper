@@ -1,9 +1,7 @@
 import React, { Component } from "react";
-import List from "../components/List";
-import SafeAreaView from "react-native-safe-area-view";
-import { Text } from "react-native";
-// import { Header } from "react-native-elements";
-import { Icon, Header, Left } from "native-base";
+import { View } from "react-native";
+
+import { TabHeader } from "../components";
 
 const DATA = [
 	{
@@ -76,44 +74,9 @@ export default class People extends Component {
 		};
 	}
 
-	render() {
-		return (
-			<SafeAreaView style={styles.container}>
-				<Header style={styles.head}>
-					<Left>
-						<Icon style={styles.icon} name="ios-menu" onPress={() => this.props.navigation.openDrawer()} />
-					</Left>
-					<Text style={styles.header}>EMPLOYEES</Text>
-				</Header>
+	sideDrawer = () => this.props.navigation.openDrawer();
 
-				<List data={this.state.data} />
-			</SafeAreaView>
-		);
+	render() {
+		return <TabHeader title={"EMPLOYEES"} data={this.state.data} onClick={this.sideDrawer} />;
 	}
 }
-
-const styles = {
-	container: {
-		flex: 1,
-		marginTop: 10
-		//backgroundColor: theme.COLORS.LISTCOLOR,
-	},
-	list: {
-		flex: 1
-		//backgroundColor: theme.COLORS.LISTCOLOR,
-	},
-	header: {
-		fontSize: 30,
-		fontWeight: "bold",
-		marginLeft: -80,
-		//color: theme.COLORS.LISTCOLOR,
-		marginTop: 10
-	},
-	head: {
-		backgroundColor: "white",
-		marginTop: 15
-	},
-	icon: {
-		marginLeft: -65
-	}
-};

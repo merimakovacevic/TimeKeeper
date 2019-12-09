@@ -6,7 +6,7 @@ import theme from "../assets/Theme";
 export const Button = ({ onPress, children, outline }) => {
 	return (
 		<TouchableOpacity onPress={onPress} style={outline ? styles.outline : styles.button}>
-			<Text style={styles.title}>{children}</Text>
+			{children}
 		</TouchableOpacity>
 	);
 };
