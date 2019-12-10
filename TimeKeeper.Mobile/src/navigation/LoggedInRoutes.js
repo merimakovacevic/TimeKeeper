@@ -9,6 +9,8 @@ import Calendar from "../views/Calendar";
 import People from "../views/People";
 import Customers from "../views/Customers";
 import Projects from "../views/Projects";
+import Agenda from "../views/Agenda";
+import Modal from "../components/Modal";
 
 const StackNavigator = createStackNavigator({
 	Profile: {
@@ -28,6 +30,9 @@ const DrawerNavigator = createDrawerNavigator({
 	},
 	Projects: {
 		screen: Projects
+	},
+	Agenda: {
+		screen: Agenda
 	}
 });
 
