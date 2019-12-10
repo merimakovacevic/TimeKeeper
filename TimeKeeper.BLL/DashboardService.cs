@@ -94,7 +94,7 @@ namespace TimeKeeper.BLL
             return new AdminProjectDashboardModel
             {
                 Project = new MasterModel { Id = project.Id, Name = project.Name},
-                Revenue = GetProjectRevenue(project, year, month)
+                Revenue = GetProjectRevenue(project)
             };
         }
 

@@ -7,9 +7,11 @@ namespace TimeKeeper.DTO.ReportModels
 {
     public class EmployeeTimeModel
     {
-        public EmployeeTimeModel()
+        public EmployeeTimeModel(List<string> hourTypes)
         {
             HourTypes = new Dictionary<string, decimal>();
+            foreach (string type in hourTypes) HourTypes.Add(type, 0);
+            HourTypes.Add("Missing entries", 0);
         }
         public MasterModel Employee { get; set; }
         /// <summary>

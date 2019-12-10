@@ -18,15 +18,15 @@ namespace TimeKeeper.Test.ControllersRealDatabase
         private List<EmployeeTimeModel> CreateEmployeeTimeModels()
         {
             List<EmployeeTimeModel> employeeTimes = new List<EmployeeTimeModel>();
-            List<DayType> dayTypes = unit.DayTypes.Get().ToList();
+            List<string> dayTypes = unit.DayTypes.Get().Select(x => x.Name).ToList();
             //
             //ASSERT EMPLOYEE NR. 1 - id nr 2 - William Brown
             //
             int firstEmployeeId = 2;
 
             //This test employee has only 12 work hours in the test database
-            EmployeeTimeModel firstEmployee = unit.Employees.Get(firstEmployeeId).CreateTimeModel();
-            firstEmployee.HourTypes.SetHourTypes(dayTypes);
+            EmployeeTimeModel firstEmployee = new EmployeeTimeModel(dayTypes);
+            firstEmployee.Employee = unit.Employees.Get(firstEmployeeId).Master();
             //SetHourTypes(firstEmployee.HourTypes);
 
             firstEmployee.HourTypes["Workday"] = 120;
@@ -49,8 +49,8 @@ namespace TimeKeeper.Test.ControllersRealDatabase
             //ASSERT EMPLOYEE NR. 2 - Id nr 41 - Laura Parker
             //
             int secondEmployeeId = 41;
-            EmployeeTimeModel secondEmployee = unit.Employees.Get(secondEmployeeId).CreateTimeModel();
-            secondEmployee.HourTypes.SetHourTypes(dayTypes);
+            EmployeeTimeModel secondEmployee = new EmployeeTimeModel(dayTypes);
+            secondEmployee.Employee = unit.Employees.Get(secondEmployeeId).Master();
             //SetHourTypes(secondEmployee.HourTypes);
 
             secondEmployee.HourTypes["Workday"] = 215;

@@ -13,10 +13,10 @@ namespace TimeKeeper.BLL.ReportServices
 {
     public class TimeTracking: CalendarService
     {
-        protected List<DayType> _dayTypes;
+        protected List<string> _dayTypes;
         public TimeTracking(UnitOfWork unit): base(unit)
         {
-            _dayTypes = unit.DayTypes.Get().ToList();
+            _dayTypes = unit.DayTypes.Get().Select(x => x.Name).ToList();
         }
         public List<EmployeeTimeModel> GetTeamMonthReport(int teamId, int year, int month)
         {
@@ -36,28 +36,27 @@ namespace TimeKeeper.BLL.ReportServices
         {
             //TOTAL HOURS IN DASHBOARD - MONTHLY THEORETICAL WORKING HOURS
             Employee employee = _unit.Employees.Get(employeeId);
-            EmployeeTimeModel employeeReport = employee.CreateTimeModel();
+            EmployeeTimeModel employeeReport = new EmployeeTimeModel(_dayTypes);
+            employeeReport.Employee = employee.Master();
+          
             List<DayModel> calendar = GetEmployeeMonth(employee, year, month);
 
-            employeeReport.HourTypes.SetHourTypes(_dayTypes);
             //this is to shorten down the Dictionary name
             Dictionary<string, decimal> hours = employeeReport.HourTypes;
 
             foreach (DayModel day in calendar)
             {
                 if (day.DayType.Name == "Empty") hours["Missing entries"] += 8;
-
-                //the adding operations below will only be performed upon database DayTypes, the in memory types will be omitted
-                if (_dayTypes.FirstOrDefault(x => x.Name == day.DayType.Name) != null)
+                else
                 {
+
                     /*The Get method in the generic Repository throws an exception if the entity isn't found, 
                      * so it is necessary to try to get the daytype from the database.*/
-
                     hours[day.DayType.Name] += day.TotalHours;
                     employeeReport.TotalHours += day.TotalHours;
 
                     //Is it better for this to be in a separate method, considering the application performance?
-                    if(day.IsWorkday()) employeeReport.AddOvertime(day);
+                    if (day.IsWorkday()) employeeReport.AddOvertime(day);
 
                     /*if the total recorded hours for a Workday are less than 8, the difference is added to the missing entries*/
                     /*If tasks are added to weekend day, the day is saved as a workday. In that case, it is not necessary to add
