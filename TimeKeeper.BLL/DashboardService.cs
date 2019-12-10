@@ -7,6 +7,9 @@ using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.DTO;
 using TimeKeeper.DTO.ReportModels;
+using TimeKeeper.DTO.ReportModels.AdminDashboard;
+using TimeKeeper.DTO.ReportModels.PersonalDashboard;
+using TimeKeeper.DTO.ReportModels.TeamDashboard;
 using TimeKeeper.Utility.Factory;
 
 namespace TimeKeeper.BLL
@@ -14,13 +17,11 @@ namespace TimeKeeper.BLL
     public class DashboardService : CalendarService
     {
         protected QueryService _queryService;
-        protected ReportService _reportService;
         protected TimeTracking _timeTracking;
 
         public DashboardService(UnitOfWork unit) : base(unit)
         {
             _queryService = new QueryService(unit);
-            _reportService = new ReportService(unit);
             _timeTracking = new TimeTracking(unit);
         }
 

@@ -9,7 +9,7 @@ using TimeKeeper.Domain.Entities;
 using TimeKeeper.DTO;
 using TimeKeeper.DTO.ReportModels;
 using TimeKeeper.Utility.Factory;
-using TimeKeeper.BLL;
+using TimeKeeper.BLL.Utilities;
 
 namespace TimeKeeper.Test.ControllersTest
 {

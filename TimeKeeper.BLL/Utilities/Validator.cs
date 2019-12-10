@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.DTO;
 
-namespace TimeKeeper.BLL
+namespace TimeKeeper.BLL.Utilities
 {
     public static class Validator
     {
@@ -21,7 +21,6 @@ namespace TimeKeeper.BLL
             }
             return true;
         }
-
         public static bool IsWeekend(this DateTime date)
         {
             return date.DayOfWeek == DayOfWeek.Sunday || date.DayOfWeek == DayOfWeek.Saturday;
@@ -46,7 +45,6 @@ namespace TimeKeeper.BLL
         {
             return day.DayType.Name != "Workday";
         }
-
         public static bool IsDuplicateEmployee(this List<Employee> employees, Employee employee)
         {
             if (employees.Count == 0) return false;

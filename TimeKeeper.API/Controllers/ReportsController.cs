@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TimeKeeper.BLL;
 using TimeKeeper.BLL.ReportServices;
 using TimeKeeper.DAL;
 
@@ -16,14 +15,13 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class ReportsController : BaseController
     {
-        protected ReportService reportService;
+
         protected MonthlyOverview monthlyOverview;
         protected AnnualOverview annualOverview;
         protected ProjectHistory projectHistory;
         protected TimeTracking timeTracking;
         public ReportsController(TimeKeeperContext context) : base(context)
         {
-            reportService = new ReportService(Unit);
             monthlyOverview = new MonthlyOverview(Unit);
             annualOverview = new AnnualOverview(Unit);
             projectHistory = new ProjectHistory(Unit);

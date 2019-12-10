@@ -7,14 +7,16 @@ using System.Linq;
 using System.Text;
 using TimeKeeper.DAL;
 using TimeKeeper.DTO;
-using TimeKeeper.DTO.ReportModels;
+using TimeKeeper.DTO.ReportModels.MonthlyOverview;
+using TimeKeeper.DTO.ReportModels.ProjectHistory;
 
 namespace TimeKeeper.BLL.ReportServices
 {
-    public class MonthlyOverview :BLLBaseService
+    public class MonthlyOverview : BLLBaseService
     {
-        public MonthlyOverview(UnitOfWork unit) : base(unit) { 
-}
+        public MonthlyOverview(UnitOfWork unit) : base(unit) { }
+
+        //THE COLUMN HEADERS AREN'T ORDERED AS THE CORRESPONDING HOURS THAT REPRESENT EACH COLUMN IN INDIVIDUAL ROWS!!!
         public MonthlyTimeModel GetMonthlyOverview(int year, int month)
         {
             MonthlyTimeModel pmm = new MonthlyTimeModel();
