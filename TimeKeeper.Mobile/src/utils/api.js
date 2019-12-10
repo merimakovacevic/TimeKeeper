@@ -2,8 +2,8 @@ import axios from "axios";
 
 import { store } from "../index";
 
-// export const employeesUrl = "https://localhost:44350/api/employees";
-export const employeesUrl = "http://192.168.60.73/TimeKeeper/api/employees";
+export const loginUrl = "http://localhost:63903/api/users";
+export const employeesUrl = "https://localhost:44350/api/employees";
 export const customersUrl = "https://localhost:44350/api/customers";
 export const projectsUrl = "https://localhost:44350/api/projects";
 
@@ -90,7 +90,7 @@ export const apiPostRequest = (url, body, method = "POST") => {
 		.catch((error) => ({ error }));
 };
 
-export const apiDeleteRequest = (url, id, method = "POST") => {
+export const apiDeleteRequest = (url, id, method = "DELETE") => {
 	let newUrl = `${url}/${id}`;
 
 	const token = store.getState().user.user.access_token;

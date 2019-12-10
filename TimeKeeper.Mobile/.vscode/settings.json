@@ -1,0 +1,24 @@
+{
+	"prettier.arrowParens": "always",
+	"editor.formatOnSave": true,
+	// Enable per-language
+	"[html]": {
+		"editor.formatOnSave": false
+	},
+	"editor.wordWrap": "on",
+	"prettier.singleQuote": false,
+
+	"editor.tabSize": 4,
+	/////////////////////////////////
+	"editor.fontFamily": "'Fira Code', 'Operator Mono', 'iA Writer Duospace', 'Source Code Pro', Menlo, Monaco, monospace",
+	"editor.fontLigatures": true,
+	"editor.detectIndentation": true,
+	"editor.renderIndentGuides": false,
+
+	"emmet.includeLanguages": {
+		"javascript": "javascriptreact"
+	},
+	"files.associations": {
+		"*.js": "javascriptreact"
+	}
+}
