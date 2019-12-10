@@ -40,7 +40,6 @@ namespace TimeKeeper.BLL.ReportServices
             List<DayModel> calendar = GetEmployeeMonth(employee, year, month);
 
             employeeReport.HourTypes.SetHourTypes(_dayTypes);
-
             //this is to shorten down the Dictionary name
             Dictionary<string, decimal> hours = employeeReport.HourTypes;
 
@@ -58,7 +57,7 @@ namespace TimeKeeper.BLL.ReportServices
                     employeeReport.TotalHours += day.TotalHours;
 
                     //Is it better for this to be in a separate method, considering the application performance?
-                    if(day.DayType.Name == "Workday") employeeReport.AddOvertime(day);
+                    if(day.IsWorkday()) employeeReport.AddOvertime(day);
 
                     /*if the total recorded hours for a Workday are less than 8, the difference is added to the missing entries*/
                     /*If tasks are added to weekend day, the day is saved as a workday. In that case, it is not necessary to add
@@ -68,7 +67,7 @@ namespace TimeKeeper.BLL.ReportServices
                         hours["Missing entries"] += 8 - day.TotalHours;
                     }
                     //Any additional day types to be added as paid time off? Other (Id = 7)?
-                    if (day.DayType.Name != "Workday")
+                    if (!day.IsWorkday())
                     {
                         employeeReport.PaidTimeOff += day.TotalHours;
                     }

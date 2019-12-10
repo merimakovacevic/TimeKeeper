@@ -43,12 +43,6 @@ namespace TimeKeeper.BLL
 
             adminDashboard.ProjectsCount = adminDashboard.Projects.Count();
 
-            //total hours; what is total hours?
-            //adminDashboardModel.BaseTotalHours = GetMonthlyWorkingDays(year, month) * 8;
-            decimal monthlyBaseHours = GetMonthlyWorkingDays(year, month) * 8;
-            adminDashboard.TotalHours = monthlyBaseHours * adminDashboard.EmployeesCount;
-            adminDashboard.TotalWorkingHours = 0;
-
             //We are unable to fetch teams this way because the projects don't tasks in calendar in the database
             //List<Team> teams = projects.Select(x => x.Team).ToList();
             //List<MasterModel> teams = _unit.Teams.Get().Select(x => x.Master()).ToList();      
@@ -70,13 +64,14 @@ namespace TimeKeeper.BLL
 
                 adminDashboard.Teams.Add(teamDashboardModel);
                 adminDashboard.TotalWorkingHours += teamDashboardModel.WorkingHours;
+                adminDashboard.TotalHours += teamDashboardModel.TotalHours;
             }
 
             return adminDashboard;
         }
 
         //FINAL IMPLEMENTATION IS NEEDED
-        public decimal GetProjectRevenue(Project project, int year, int month)
+        public decimal GetProjectRevenue(Project project)
         {
             switch(project.Pricing.Name)
             {
