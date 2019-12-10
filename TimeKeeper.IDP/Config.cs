@@ -25,7 +25,7 @@ namespace TimeKeeper.IDP
                     {
                         SubjectId = user.Id.ToString(),
                         Username = user.Username,
-                        Password = user.Password,
+                        Password = "$ch00l",
                         Claims = new List<Claim>
                     {
                         new Claim("name", user.Name),

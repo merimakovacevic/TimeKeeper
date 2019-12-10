@@ -21,10 +21,10 @@ namespace TimeKeeper.BLL
         {
             _dayTypes = unit.DayTypes.Get().ToList();
         }
+
         
         //THE COLUMN HEADERS AREN'T ORDERED AS THE CORRESPONDING HOURS THAT REPRESENT EACH COLUMN IN INDIVIDUAL ROWS!!!
        
-
         /*
         public MonthlyOverviewModel GetMonthlyOverview(int year, int month)
         {
@@ -89,8 +89,7 @@ namespace TimeKeeper.BLL
             return employeeProject;
         }*/
         
-        
-        
+
 
         /*
         public ProjectAnnualOverviewModel GetProjectAnnualOverview(int projectId, int year)

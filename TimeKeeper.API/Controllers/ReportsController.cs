@@ -43,19 +43,6 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
-        [HttpGet("employee-time-tracking/{employeeId}/{year}/{month}")]
-        public IActionResult GetPersonalReport(int employeeId, int year, int month)
-        {
-            try
-            {
-                return Ok(timeTracking.GetEmployeeMonthReport(employeeId, year, month));
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
-
         [HttpGet("monthly-overview/{year}/{month}")]
         public IActionResult GetMonthlyOverview(int year, int month)
         {

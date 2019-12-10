@@ -61,12 +61,21 @@ namespace TimeKeeper.BLL
             return _unit.Projects.Get(x => x.StartDate < new DateTime(year, month, DateTime.DaysInMonth(year, month)) //if project began is in required month
                             && (x.EndDate == null || x.EndDate == new DateTime(1, 1, 1) || x.EndDate > new DateTime(year, month, DateTime.DaysInMonth(year, month)))).Count(); // project still in progress, or ended after the required month          
         }
-        public List<ProjectModel> GetProjectsForTimePeriod(int month, int year)
+        public List<ProjectModel> GetProjectModelsForTimePeriod(int month, int year)
         {
-            List<Project> query = _unit.Projects.Get(x => x.StartDate < new DateTime(year, month, DateTime.DaysInMonth(year, month)) //if project began is in required month
-                            && (x.EndDate == null || x.EndDate == new DateTime(1, 1, 1) || x.EndDate > new DateTime(year, month, DateTime.DaysInMonth(year, month)))).ToList();
+            List<Project> query = GetProjectsForTimePeriod(month, year);
             List <ProjectModel> projects = query.Select(x => x.Create()).ToList(); // project still in progress, or ended after the required month    
             return projects;
+        }
+
+        public List<Project> GetProjectsForTimePeriod(int month, int year)
+        {
+            /*List<Project> projects = _unit.Projects.Get(x => x.StartDate < new DateTime(year, month, DateTime.DaysInMonth(year, month)) //if project began is in required month
+                            && (x.EndDate == null || x.EndDate == new DateTime(1, 1, 1) || x.EndDate > new DateTime(year, month, DateTime.DaysInMonth(year, month)))).ToList();*/
+            List<Project> projects = _unit.Projects.Get().ToList();
+            List<Project> projects1 = projects.Where(x => x.StartDate < new DateTime(year, month, DateTime.DaysInMonth(year, month))).ToList();
+            List<Project> projects2 = projects1.Where(x => x.EndDate == null || x.EndDate == new DateTime(1, 1, 1) || x.EndDate > new DateTime(year, month, 1)).ToList();
+            return projects2;
         }
     }
 }
