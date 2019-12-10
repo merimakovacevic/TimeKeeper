@@ -16,22 +16,19 @@ namespace TimeKeeper.BLL
 
         public List<DayModel> GetEmployeeMonth(int employeeId, int year, int month)
         {
-            List<DayModel> calendar = GetEmptyEmployeeCalendar(employeeId, year, month);
             List<DayModel> employeeDays = GetEmployeeCalendar(employeeId, year, month);
-
-            return FillEmployeeCalendar(calendar, employeeDays);
+            return FillEmployeeCalendar(employeeDays, employeeId, year, month);
         }
 
         public List<DayModel> GetEmployeeMonth(Employee employee, int year, int month)
         {
-            List<DayModel> calendar = GetEmptyEmployeeCalendar(employee.Id, year, month);
             List<DayModel> employeeDays = GetEmployeeCalendar(employee, year, month);
-
-            return FillEmployeeCalendar(calendar, employeeDays);
+            return FillEmployeeCalendar(employeeDays, employee.Id, year, month);
         }
 
-        private List<DayModel> FillEmployeeCalendar(List<DayModel> calendar, List<DayModel> employeeDays)
+        private List<DayModel> FillEmployeeCalendar(List<DayModel> employeeDays, int employeeId, int year, int month)
         {
+            List<DayModel> calendar = GetEmptyEmployeeCalendar(employeeId, year, month);
             foreach (var d in employeeDays)
             {
                 calendar[d.Date.Day - 1] = d;
@@ -54,7 +51,7 @@ namespace TimeKeeper.BLL
             //Add validaiton!
             return _unit.Calendar.Get(x => x.Employee.Id == empId && x.Date.Year == year && x.Date.Month == month).Select(x => x.Create()).ToList();
         }
-        /*
+        
         public List<DayModel> GetEmptyEmployeeCalendar(int employeeId, int year, int month)
         {
             List<DayModel> calendar = new List<DayModel>();
@@ -85,8 +82,8 @@ namespace TimeKeeper.BLL
             }
 
             return calendar;
-        }*/
-
+        }
+        /*
         private List<DayModel> GetEmptyEmployeeCalendar(int employeeId, int year, int month)
         {
             List<DayModel> calendar = GetEmptyGenericCalendar(year, month);
@@ -132,7 +129,7 @@ namespace TimeKeeper.BLL
             }
 
             return calendar;
-        }
+        }*/
 
         public int GetYearlyWorkingDays(int year)
         {
