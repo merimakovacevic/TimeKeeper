@@ -9,8 +9,9 @@ import { getRootNavigator } from "./src/navigation/index";
 const store = configureStore();
 
 export default class App extends Component {
-	render() {
-		const RootNavigator = createAppContainer(getRootNavigator(true));
+  render() {
+    const RootNavigator = createAppContainer(getRootNavigator(true));
+
 
 		return (
 			<Provider store={store}>

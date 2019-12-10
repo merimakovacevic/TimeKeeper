@@ -12,15 +12,17 @@ export default class AgendaScreen extends Component {
 
   render() {
     return (
-      <Agenda
-        items={this.state.items}
-        loadItemsForMonth={this.loadItems.bind(this)}
-        // Ovdje dobijemo danasnji dan (getdate ili datetimenow kako vec, pa da default selected bude danas)
-        selected={"2017-05-16"}
-        renderItem={this.renderItem.bind(this)}
-        renderEmptyDate={this.renderEmptyDate.bind(this)}
-        rowHasChanged={this.rowHasChanged.bind(this)}
-      />
+      <View style={styles.container}>
+        <Agenda
+          items={this.state.items}
+          loadItemsForMonth={this.loadItems.bind(this)}
+          // Ovdje dobijemo danasnji dan (getdate ili datetimenow kako vec, pa da default selected bude danas)
+          selected={"2017-05-16"}
+          renderItem={this.renderItem.bind(this)}
+          renderEmptyDate={this.renderEmptyDate.bind(this)}
+          rowHasChanged={this.rowHasChanged.bind(this)}
+        />
+      </View>
     );
   }
 
@@ -77,13 +79,18 @@ export default class AgendaScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: 20,
+    paddingTop: 20
+  },
   item: {
     backgroundColor: "white",
     flex: 1,
     borderRadius: 5,
     padding: 10,
     marginRight: 10,
-    marginTop: 17
+    marginTop: 25
   },
   emptyDate: {
     height: 15,
