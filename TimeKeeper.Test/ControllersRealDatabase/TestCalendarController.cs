@@ -75,7 +75,7 @@ namespace TimeKeeper.Test.ControllersRealDatabase
 
 
         //a new test needs to be written for Dasbhoard and Reports controllers
-        [Test, Order(1)]
+       /* [Test, Order(1)]
         [TestCase(2, 2018, 1)]
         [TestCase(41, 2019, 4)]
         public void GetPersonalReport(int employeeId, int year, int month)
@@ -96,6 +96,6 @@ namespace TimeKeeper.Test.ControllersRealDatabase
             Assert.AreEqual(value.TotalHours, value.HourTypes.Sum(x => x.Value));
             Assert.AreEqual(assertEmployee.Overtime, value.Overtime);
             Assert.AreEqual(assertEmployee.PaidTimeOff, value.PaidTimeOff);          
-        }
+        }*/
     }
 }

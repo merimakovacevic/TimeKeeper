@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.DTO;
 
@@ -21,11 +22,6 @@ namespace TimeKeeper.BLL
             return true;
         }
 
-        public static bool IsDateInPeriod(this Day day, int year, int month)
-        {
-            return day.Date.Year == year && day.Date.Month == month;
-        }
-
         public static bool IsWeekend(this DateTime date)
         {
             return date.DayOfWeek == DayOfWeek.Sunday || date.DayOfWeek == DayOfWeek.Saturday;
@@ -36,6 +32,10 @@ namespace TimeKeeper.BLL
             return day.Date.IsWeekend();
         }
 
+        public static bool IsDateInPeriod(this Day day, int year, int month)
+        {
+            return day.Date.Year == year && day.Date.Month == month;
+        }
 
         public static bool IsAbsence(this DayModel day)
         {

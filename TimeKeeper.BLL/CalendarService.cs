@@ -16,28 +16,47 @@ namespace TimeKeeper.BLL
 
         }                                        
 
-        public List<DayModel> GetEmployeeMonth(int empId, int year, int month)
+        public List<DayModel> GetEmployeeMonth(int employeeId, int year, int month)
         {
-            List<DayModel> calendar = GetEmptyEmployeeCalendar(empId, year, month);
-            List<DayModel> employeeDays = GetEmployeeCalendar(empId, year, month);
+            List<DayModel> calendar = GetEmptyEmployeeCalendar(employeeId, year, month);
+            List<DayModel> employeeDays = GetEmployeeCalendar(employeeId, year, month);
 
+            return FillEmployeeCalendar(calendar, employeeDays);
+        }
+
+        public List<DayModel> GetEmployeeMonth(Employee employee, int year, int month)
+        {
+            List<DayModel> calendar = GetEmptyEmployeeCalendar(employee.Id, year, month);
+            List<DayModel> employeeDays = GetEmployeeCalendar(employee, year, month);
+
+            return FillEmployeeCalendar(calendar, employeeDays);
+        }
+
+        private List<DayModel> FillEmployeeCalendar(List<DayModel> calendar, List<DayModel> employeeDays)
+        {
             foreach (var d in employeeDays)
             {
                 calendar[d.Date.Day - 1] = d;
             }
             return calendar;
-        }     
+        }
 
         public List<DayModel> GetEmployeeCalendar(int employeeId, int year)
         {
             //Add validaiton!
             return _unit.Calendar.Get(x => x.Employee.Id == employeeId && x.Date.Year == year).Select(x => x.Create()).ToList();
         }
+        public List<DayModel> GetEmployeeCalendar(Employee employee, int year, int month)
+        {
+            //Add validaiton!
+            return employee.Calendar.Where(x => x.Date.Year == year && x.Date.Month == month).Select(x => x.Create()).ToList();
+        }
         public List<DayModel> GetEmployeeCalendar(int empId, int year, int month)
         {
             //Add validaiton!
             return _unit.Calendar.Get(x => x.Employee.Id == empId && x.Date.Year == year && x.Date.Month == month).Select(x => x.Create()).ToList();
         }
+        /*
         public List<DayModel> GetEmptyEmployeeCalendar(int employeeId, int year, int month)
         {
             List<DayModel> calendar = new List<DayModel>();
@@ -49,19 +68,66 @@ namespace TimeKeeper.BLL
             DayType na = new DayType { Id = 13, Name = "N/A" };
 
             DateTime day = new DateTime(year, month, 1);
-            Employee emp = _unit.Employees.Get(employeeId);
+            Employee employee = _unit.Employees.Get(employeeId);
             while (day.Month == month)
             {
                 DayModel newDay = new DayModel
                 {
-                    Employee = emp.Master(),
+                    Employee = employee.Master(),
                     Date = day,
                     DayType = empty.Master()
                 };
 
                 if (day.IsWeekend()) newDay.DayType = weekend.Master();
                 if (day > DateTime.Today) newDay.DayType = future.Master();
-                if (day < emp.BeginDate || (emp.EndDate != new DateTime(1, 1, 1) && emp.EndDate != null && day > emp.EndDate)) newDay.DayType = na.Master();
+                if (day < employee.BeginDate || (employee.EndDate != new DateTime(1, 1, 1) && employee.EndDate != null && day > employee.EndDate)) newDay.DayType = na.Master();
+
+                calendar.Add(newDay);
+                day = day.AddDays(1);
+            }
+
+            return calendar;
+        }*/
+
+        private List<DayModel> GetEmptyEmployeeCalendar(int employeeId, int year, int month)
+        {
+            List<DayModel> calendar = GetEmptyGenericCalendar(year, month);
+            Employee employee = _unit.Employees.Get(employeeId);
+            DayType na = new DayType { Id = 13, Name = "N/A" };
+
+            foreach(DayModel day in calendar)
+            {
+                day.Employee = employee.Master();
+                if (day.Date < employee.BeginDate || (employee.EndDate != new DateTime(1, 1, 1) && employee.EndDate != null && day.Date > employee.EndDate)) day.DayType = na.Master();
+            }
+
+            return calendar;
+        }
+
+        protected List<DayModel> GetEmptyGenericCalendar(int year, int month)
+        {
+            List<DayModel> calendar = new List<DayModel>();
+            if (!Validator.ValidateMonth(year, month)) throw new Exception("Invalid data! Check year and month");
+
+            DayType future = new DayType { Id = 10, Name = "Future" };
+            DayType empty = new DayType { Id = 11, Name = "Empty" };
+            DayType weekend = new DayType { Id = 12, Name = "Weekend" };
+            DayType na = new DayType { Id = 13, Name = "N/A" };
+
+            DateTime day = new DateTime(year, month, 1);
+
+            while (day.Month == month)
+            {
+                DayModel newDay = new DayModel
+                {
+                    //The Employee will be added when filling the generic calendar afterwards
+                    Employee = null,
+                    Date = day,
+                    DayType = empty.Master()
+                };
+
+                if (day.IsWeekend()) newDay.DayType = weekend.Master();
+                if (day > DateTime.Today) newDay.DayType = future.Master();
 
                 calendar.Add(newDay);
                 day = day.AddDays(1);

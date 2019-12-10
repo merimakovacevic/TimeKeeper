@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TimeKeeper.BLL;
 using TimeKeeper.DAL;
+using TimeKeeper.DTO.ReportModels;
 
 namespace TimeKeeper.API.Controllers
 {
@@ -65,7 +66,10 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                return Ok(dashboardService.GetAdminDashboardInfo(year, month));
+                DateTime start = DateTime.Now;
+                AdminDashboardModel dashboard = dashboardService.GetAdminDashboardInfo(year, month);
+                DateTime end = DateTime.Now;
+                return Ok(new { (end - start).TotalMilliseconds, dashboard});
             }
             catch (Exception ex)
             {
