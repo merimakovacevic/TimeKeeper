@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TimeKeeper.API.Services;
 using TimeKeeper.DAL;
 using TimeKeeper.LOG;
 
@@ -14,11 +15,14 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class BaseController : ControllerBase
     {
-        protected UnitOfWork Unit;
-        public LoggerService Logger = new LoggerService();
+        protected readonly UnitOfWork Unit;
+        public readonly LoggerService Logger = new LoggerService();
+        protected AccessHandler Access;
+        
         public BaseController(TimeKeeperContext context)
         {
             Unit = new UnitOfWork(context);
+            Access = new AccessHandler(Unit);
         }
 
         [NonAction]

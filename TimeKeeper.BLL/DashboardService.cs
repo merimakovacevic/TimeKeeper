@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TimeKeeper.BLL.ReportServices;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.DTO;
@@ -14,11 +15,13 @@ namespace TimeKeeper.BLL
     {
         protected QueryService _queryService;
         protected ReportService _reportService;
+        protected TimeTracking _timeTracking;
 
         public DashboardService(UnitOfWork unit) : base(unit)
         {
             _queryService = new QueryService(unit);
             _reportService = new ReportService(unit);
+            _timeTracking = new TimeTracking(unit);
         }
 
         public AdminDashboardModel GetAdminDashboardInfo(int year, int month)
@@ -168,7 +171,7 @@ namespace TimeKeeper.BLL
 
         public List<TeamMemberDashboardModel> GetTeamMembersDashboard(int teamId, int year, int month)
         {
-            List<EmployeeTimeModel> employeeTimes = _reportService.GetTeamMonthReport(teamId, year, month);
+            List<EmployeeTimeModel> employeeTimes = _timeTracking.GetTeamMonthReport(teamId, year, month);
             List<TeamMemberDashboardModel> teamMembers = new List<TeamMemberDashboardModel>();
             foreach(EmployeeTimeModel employeeTime in employeeTimes)
             {
