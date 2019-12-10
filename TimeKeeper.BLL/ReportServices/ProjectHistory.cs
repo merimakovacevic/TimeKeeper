@@ -1,10 +1,14 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using TimeKeeper.BLL.Utilities;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
+using TimeKeeper.DTO;
 using TimeKeeper.DTO.ReportModels;
 using TimeKeeper.DTO.ReportModels.ProjectHistory;
 
@@ -96,6 +100,50 @@ namespace TimeKeeper.BLL.ReportServices
                 projectHistory.TotalHoursPerProject += empProjectModel.TotalHoursPerProjectPerEmployee;
             }
             return projectHistory;
+        }
+
+        public ProjectHistoryAnnualModel GetStored(int projectId)
+        {
+            ProjectHistoryAnnualModel result = new ProjectHistoryAnnualModel();
+            var cmd = _unit.Context.Database.GetDbConnection().CreateCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = $"select * from ProjectHistory({projectId})";
+            if (cmd.Connection.State == ConnectionState.Closed) cmd.Connection.Open();
+            DbDataReader sql = cmd.ExecuteReader();
+            List<HistoryRawData> rawData = new List<HistoryRawData>();
+            if (sql.HasRows)
+            {
+                while (sql.Read())
+                {
+                    rawData.Add(new HistoryRawData
+                    {
+                        EmployeeId = sql.GetInt32(0),
+                        EmployeeName = sql.GetString(1),
+                        Hours = sql.GetDecimal(2),
+                        Year = sql.GetInt32(3)
+                    });
+                }
+                HashSet<int> set = new HashSet<int>();
+
+                result.Years = rawData.Select(x => x.Year).Distinct().ToList();
+
+                EmployeeProjectHistory eph = new EmployeeProjectHistory(result.Years) { Employee = new MasterModel { Id = 0 } };
+                foreach(HistoryRawData item in rawData)
+                {
+                    if (item.EmployeeId != eph.Employee.Id)
+                    {
+                        if (eph.Employee.Id != 0) result.Employees.Add(eph);
+                        eph = new EmployeeProjectHistory(result.Years)
+                        {
+                            Employee = new MasterModel { Id = item.EmployeeId, Name = item.EmployeeName }
+                        };
+                    }
+                    eph.TotalYearlyProjectHours[item.Year] = item.Hours;
+                    eph.TotalHoursPerProject += item.Hours;
+                }
+                if (eph.Employee.Id != 0) result.Employees.Add(eph);
+            }
+            return result;
         }
     }
 }

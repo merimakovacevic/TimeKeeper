@@ -6,7 +6,7 @@ namespace TimeKeeper.DTO.ReportModels.ProjectHistory
 {
     public class EmployeeProjectHistory
     {
-        public EmployeeProjectHistory(int[] years)
+        public EmployeeProjectHistory(List<int> years)
         {
             TotalYearlyProjectHours = new Dictionary<int, decimal>();
             foreach (int i in years) TotalYearlyProjectHours.Add(i, 0);
