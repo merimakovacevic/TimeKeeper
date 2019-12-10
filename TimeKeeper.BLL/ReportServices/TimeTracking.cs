@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TimeKeeper.BLL.Utilities;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.DTO;
@@ -36,7 +37,7 @@ namespace TimeKeeper.BLL.ReportServices
             //TOTAL HOURS IN DASHBOARD - MONTHLY THEORETICAL WORKING HOURS
             Employee employee = _unit.Employees.Get(employeeId);
             EmployeeTimeModel employeeReport = employee.CreateTimeModel();
-            List<DayModel> calendar = GetEmployeeMonth(employeeId, year, month);
+            List<DayModel> calendar = GetEmployeeMonth(employee, year, month);
 
             employeeReport.HourTypes.SetHourTypes(_dayTypes);
 

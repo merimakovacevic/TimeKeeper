@@ -6,15 +6,13 @@ using TimeKeeper.Domain.Entities;
 using TimeKeeper.DTO.ReportModels;
 using TimeKeeper.Utility.Factory;
 using TimeKeeper.DTO;
+using TimeKeeper.BLL.Utilities;
 
 namespace TimeKeeper.BLL
 {
     public class CalendarService : BLLBaseService
     {
-        public CalendarService(UnitOfWork unit) : base(unit)
-        {
-
-        }                                        
+        public CalendarService(UnitOfWork unit) : base(unit)  {  }                                        
 
         public List<DayModel> GetEmployeeMonth(int employeeId, int year, int month)
         {

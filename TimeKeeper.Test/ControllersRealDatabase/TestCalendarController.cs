@@ -3,7 +3,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using TimeKeeper.API.Controllers;
-using TimeKeeper.BLL;
+using TimeKeeper.BLL.Utilities;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.DTO.ReportModels;
 using TimeKeeper.Utility.Factory;

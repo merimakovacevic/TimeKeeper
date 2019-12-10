@@ -7,6 +7,9 @@ using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.DTO;
 using TimeKeeper.DTO.ReportModels;
+using TimeKeeper.DTO.ReportModels.AdminDashboard;
+using TimeKeeper.DTO.ReportModels.PersonalDashboard;
+using TimeKeeper.DTO.ReportModels.TeamDashboard;
 using TimeKeeper.Utility.Factory;
 
 namespace TimeKeeper.BLL
@@ -14,20 +17,19 @@ namespace TimeKeeper.BLL
     public class DashboardService : CalendarService
     {
         protected QueryService _queryService;
-        protected ReportService _reportService;
         protected TimeTracking _timeTracking;
 
         public DashboardService(UnitOfWork unit) : base(unit)
         {
             _queryService = new QueryService(unit);
-            _reportService = new ReportService(unit);
             _timeTracking = new TimeTracking(unit);
         }
 
         public AdminDashboardModel GetAdminDashboardInfo(int year, int month)
         {
             //Is the missing entries chart in Admin dashboard referring to missing entries per team or?
-            AdminDashboardModel adminDashboard = new AdminDashboardModel();
+            List<string> roles = _unit.Roles.Get().Select(x => x.Name).ToList();
+            AdminDashboardModel adminDashboard = new AdminDashboardModel(roles);
            
             //no of employees at current month/year
             //Project and Employees count are already calculated at TeamDashboardLevel
@@ -58,7 +60,13 @@ namespace TimeKeeper.BLL
             foreach (int teamId in teams)
             {
                 MasterModel team = _unit.Teams.Get(teamId).Master();
-                AdminTeamDashboardModel teamDashboardModel = GetAdminTeamDashboard(team, year, month);
+                TeamDashboardModel teamDashboard = GetTeamDashboard(teamId, year, month);
+
+                AdminTeamDashboardModel teamDashboardModel = GetAdminTeamDashboard(teamDashboard, team);
+
+                //TOTAL HOURS DON'T ADD UP
+                GetAdminRolesDashboard(adminDashboard.Roles, teamDashboard, team);
+
                 adminDashboard.Teams.Add(teamDashboardModel);
                 adminDashboard.TotalWorkingHours += teamDashboardModel.WorkingHours;
             }
@@ -94,9 +102,8 @@ namespace TimeKeeper.BLL
             };
         }
 
-        public AdminTeamDashboardModel GetAdminTeamDashboard(MasterModel team, int year, int month)
-        {
-            TeamDashboardModel teamDashboard = GetTeamDashboard(team.Id, year, month);
+        public AdminTeamDashboardModel GetAdminTeamDashboard(TeamDashboardModel teamDashboard, MasterModel team)
+        {  
             return new AdminTeamDashboardModel
             {
                 Team = team,
@@ -106,6 +113,16 @@ namespace TimeKeeper.BLL
                 MissingEntries = teamDashboard.TotalMissingEntries,
                 Overtime = teamDashboard.EmployeeTimes.Sum(x => x.Overtime)
             };
+        }
+
+        public void GetAdminRolesDashboard(List<AdminRolesDashboardModel> roles, TeamDashboardModel teamDashboard, MasterModel team)
+        {
+            foreach (TeamMemberDashboardModel member in teamDashboard.EmployeeTimes)
+            {
+                Role role = _unit.Employees.Get(member.Employee.Id).Members.FirstOrDefault(x => x.Team.Id == team.Id).Role;
+                roles.FirstOrDefault(x => x.RoleName == role.Name).TotalHours += member.TotalHours;
+                roles.FirstOrDefault(x => x.RoleName == role.Name).WorkingHours += member.WorkingHours;
+            }
         }
 
         /*

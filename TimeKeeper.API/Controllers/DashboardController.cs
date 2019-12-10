@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TimeKeeper.BLL;
 using TimeKeeper.DAL;
-using TimeKeeper.DTO.ReportModels;
+using TimeKeeper.DTO.ReportModels.AdminDashboard;
 
 namespace TimeKeeper.API.Controllers
 {

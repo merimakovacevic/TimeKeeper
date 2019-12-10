@@ -3,15 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TimeKeeper.DTO.ReportModels
+namespace TimeKeeper.DTO.ReportModels.AdminDashboard
 {
     public class AdminDashboardModel
     {
-        public AdminDashboardModel()
+        public AdminDashboardModel(List<string> roles)
         {
             //TeamDashboardModels = new List<TeamDashboardModel>();
             Teams = new List<AdminTeamDashboardModel>();
             Projects = new List<AdminProjectDashboardModel>();
+            Roles = new List<AdminRolesDashboardModel>();
+            Roles.AddRange(roles.Select(x => new AdminRolesDashboardModel
+            {
+                RoleName = x
+            }));
         }
         public int EmployeesCount { get; set; }
         public int ProjectsCount { get; set; }
@@ -21,5 +26,6 @@ namespace TimeKeeper.DTO.ReportModels
         //public List<TeamDashboardModel> TeamDashboardModels { get; set; }
         public List<AdminTeamDashboardModel> Teams { get; set; }
         public List<AdminProjectDashboardModel> Projects { get; set; }
+        public List<AdminRolesDashboardModel> Roles { get; set; }
     }
 }

@@ -5,9 +5,9 @@ using System.Text;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.DTO;
 
-namespace TimeKeeper.BLL
+namespace TimeKeeper.BLL.Utilities
 {
-    public static class StaticHelper
+    public static class Helper
     {
         public static Dictionary<string, decimal> SetMonthlyOverviewColumns(this List<Project> projects)
         {
