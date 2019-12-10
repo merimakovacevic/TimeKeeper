@@ -6,7 +6,7 @@ namespace TimeKeeper.DTO.ReportModels
 {
     public class TeamMemberDashboardModel
     {
-        public MasterModel Employee { get; set; }
+        public MasterModel Employee { get; set; }   
         public decimal TotalHours { get; set; }
         public decimal WorkingHours { get; set; }
         public decimal Overtime { get; set; }
