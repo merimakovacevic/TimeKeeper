@@ -133,5 +133,16 @@ namespace TimeKeeper.Utility.Factory
                 PaidTimeOff = 0
             };
         }
+
+        public static UserModel Create(this User user)
+        {
+            return new UserModel
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Username = user.Username,
+                Role = user.Role
+            };
+        }
     }
 }

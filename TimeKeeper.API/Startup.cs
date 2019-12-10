@@ -87,12 +87,13 @@ namespace TimeKeeper.API
                 o.AutomaticAuthentication = false;
             });
 
+            services.AddAuthentication("TokenAuthentication")
+                    .AddScheme<AuthenticationSchemeOptions, TokenAuthenticationHandler>("TokenAuthentication", null);
+
             services.AddAuthentication(o =>
             {
                 o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                //o.DefaultScheme = "Cookies";
-                //o.DefaultChallengeScheme = "oidc";
             }).AddJwtBearer(o =>
             {
                 o.Authority = "https://localhost:44300/";
