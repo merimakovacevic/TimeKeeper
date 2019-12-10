@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TimeKeeper.BLL.ReportServices;
+using TimeKeeper.BLL.Utilities;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.DTO;
@@ -171,13 +172,18 @@ namespace TimeKeeper.BLL
         {
             List<DayModel> calendar = GetEmployeeCalendar(employeeId, year);
             decimal totalHours = GetYearlyWorkingDays(year) * 8;
+            //overtime is deducted from total monthly hours
+            totalHours -= calendar.CalculateOvertime();
 
             return CreatePersonalDashboard(employeeId, year, totalHours, calendar);
         }
+
         public PersonalDashboardModel GetEmployeeDashboard(int employeeId, int year, int month)
         {
             List<DayModel> calendar = GetEmployeeCalendar(employeeId, year, month);
             decimal totalHours = GetMonthlyWorkingDays(year, month) * 8;
+            //overtime is deducted from total monthly hours
+            totalHours -= calendar.CalculateOvertime();
 
             return CreatePersonalDashboard(employeeId, year, totalHours, calendar);
         }

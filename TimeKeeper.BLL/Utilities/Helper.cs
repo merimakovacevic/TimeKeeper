@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.DTO;
+using TimeKeeper.DTO.ReportModels;
 
 namespace TimeKeeper.BLL.Utilities
 {
@@ -53,17 +54,40 @@ namespace TimeKeeper.BLL.Utilities
             hourTypes.Add("Missing entries", 0);
         }
 
-        public static void AddOvertime(this decimal overtime, DayModel day)
-        {
-            if (day.DayType.Name == "Workday" && day.TotalHours > 8)
+        public static void AddOvertime(this EmployeeTimeModel employeeTime, DayModel day)
+        {        
+            //Overtime isn't included in the TotalHours calculation
+            if (day.TotalHours > 8)
             {
-                overtime += day.TotalHours - 8;
+                employeeTime.Overtime += day.TotalHours - 8;
+                employeeTime.TotalHours -= day.TotalHours - 8;
             }
             //Any weekend working hours will be added to overtime. Any weekend day that has tasks (working hours), is set to DayType "Workday"
-            if (day.DayType.Name == "Workday" && day.IsWeekend())
+            if (day.IsWeekend())
             {
-                overtime += day.TotalHours;
+                employeeTime.Overtime += day.TotalHours;
+                employeeTime.TotalHours -= day.TotalHours;
             }
+        }
+
+        public static decimal CalculateOvertime(this List<DayModel> calendar)
+        {
+            decimal overtime = 0;
+            List<DayModel> workdays = calendar.Where(x => x.IsWeekend() || x.DayType.Name == "Workday" && x.TotalHours > 8).ToList();
+            foreach(DayModel day in calendar)
+            {
+                if (day.IsWeekend())
+                {
+                    overtime += day.TotalHours;
+
+                }
+                else if(day.IsWorkdayOvertime())
+                {
+                    overtime += day.TotalHours - 8;
+                }
+            }
+
+            return overtime;
         }
     }
 }

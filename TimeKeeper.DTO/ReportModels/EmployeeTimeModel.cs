@@ -12,6 +12,9 @@ namespace TimeKeeper.DTO.ReportModels
             HourTypes = new Dictionary<string, decimal>();
         }
         public MasterModel Employee { get; set; }
+        /// <summary>
+        /// Represents the total hours in a month for an employee, excluded weekends and overtime
+        /// </summary>
         public decimal TotalHours { get; set; }
         public decimal Overtime { get; set; }
         public decimal PaidTimeOff { get; set; }

@@ -58,7 +58,7 @@ namespace TimeKeeper.BLL.ReportServices
                     employeeReport.TotalHours += day.TotalHours;
 
                     //Is it better for this to be in a separate method, considering the application performance?
-                    employeeReport.Overtime.AddOvertime(day);
+                    if(day.DayType.Name == "Workday") employeeReport.AddOvertime(day);
 
                     /*if the total recorded hours for a Workday are less than 8, the difference is added to the missing entries*/
                     /*If tasks are added to weekend day, the day is saved as a workday. In that case, it is not necessary to add
