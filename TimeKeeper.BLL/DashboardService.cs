@@ -93,7 +93,7 @@ namespace TimeKeeper.BLL
             }
         }
 
-        public AdminProjectDashboardModel GetAdminProjectDashboard(Project project, int year, int month)
+        private AdminProjectDashboardModel GetAdminProjectDashboard(Project project, int year, int month)
         {            
             return new AdminProjectDashboardModel
             {
@@ -102,7 +102,7 @@ namespace TimeKeeper.BLL
             };
         }
 
-        public AdminTeamDashboardModel GetAdminTeamDashboard(TeamDashboardModel teamDashboard, MasterModel team)
+        private AdminTeamDashboardModel GetAdminTeamDashboard(TeamDashboardModel teamDashboard, MasterModel team)
         {  
             return new AdminTeamDashboardModel
             {
@@ -115,7 +115,7 @@ namespace TimeKeeper.BLL
             };
         }
 
-        public void GetAdminRolesDashboard(List<AdminRolesDashboardModel> roles, TeamDashboardModel teamDashboard, MasterModel team)
+        private void GetAdminRolesDashboard(List<AdminRolesDashboardModel> roles, TeamDashboardModel teamDashboard, MasterModel team)
         {
             foreach (TeamMemberDashboardModel member in teamDashboard.EmployeeTimes)
             {
@@ -124,29 +124,6 @@ namespace TimeKeeper.BLL
                 roles.FirstOrDefault(x => x.RoleName == role.Name).WorkingHours += member.WorkingHours;
             }
         }
-
-        /*
-        public TeamDashboardModel GetTeamDashboard(int teamId, int year, int month)
-        {
-            //The DashboardService shouldn't really depend on the report service, this should be handled in another way
-            TeamDashboardModel teamDashboard = new TeamDashboardModel
-            {
-                EmployeeTimes = _reportService.GetTeamMonthReport(teamId, year, month)
-            };
-
-            //projects for this month!!!
-            teamDashboard.EmployeesCount = teamDashboard.EmployeeTimes.Count();
-            teamDashboard.ProjectsCount = _unit.Teams.Get(teamId).Projects.Count();
-
-            foreach (EmployeeTimeModel employeeTime in teamDashboard.EmployeeTimes)
-            {
-                teamDashboard.TotalHours += employeeTime.TotalHours;
-                teamDashboard.TotalWorkingHours += employeeTime.HourTypes["Workday"];
-                teamDashboard.TotalMissingEntries += employeeTime.HourTypes["Missing entries"];
-            }
-
-            return teamDashboard;
-        }*/
 
         public TeamDashboardModel GetTeamDashboard(int teamId, int year, int month)
         {
@@ -170,7 +147,7 @@ namespace TimeKeeper.BLL
             return teamDashboard;
         }
 
-        public List<TeamMemberDashboardModel> GetTeamMembersDashboard(int teamId, int year, int month)
+        private List<TeamMemberDashboardModel> GetTeamMembersDashboard(int teamId, int year, int month)
         {
             List<EmployeeTimeModel> employeeTimes = _timeTracking.GetTeamMonthReport(teamId, year, month);
             List<TeamMemberDashboardModel> teamMembers = new List<TeamMemberDashboardModel>();
@@ -189,7 +166,6 @@ namespace TimeKeeper.BLL
 
             return teamMembers;
         }
-
 
         public PersonalDashboardModel GetEmployeeDashboard(int employeeId, int year)
         {
@@ -221,7 +197,7 @@ namespace TimeKeeper.BLL
             };
         }
 
-        public decimal GetBradfordFactor(int employeeId, int year)
+        private decimal GetBradfordFactor(int employeeId, int year)
         {
             List<DayModel> calendar = GetEmployeeCalendar(employeeId, year);
             //an absence instance are any number of consecutive absence days. 3 consecutive absence days make an instance.
