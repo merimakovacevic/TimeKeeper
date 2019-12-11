@@ -1,82 +1,126 @@
 import React, { Component } from "react";
-import { View } from "react-native";
-
-import { TabHeader } from "../components";
+import { SafeAreaView, View, FlatList, Text } from "react-native";
+import List from "../components/List";
+import Constants from "expo-constants";
+import { Icon, Header, Left } from "native-base";
 
 const DATA = [
-	{
-		id: "1",
-		title: "Berina Omerasevic",
-		description: "berkica@gmail.com"
-	},
-	{
-		id: "2",
-		title: "Hamza Crnovrsanin",
-		description: "hamzic@gmail.com"
-	},
-	{
-		id: "3",
-		title: "Ajdin Zorlak",
-		description: "zoka@gmail.com"
-	},
-	{
-		id: "4",
-		title: "Amina Muzurovic",
-		description: "muzi@gmail.com"
-	},
-	{
-		id: "5",
-		title: "Faris Spica",
-		description: "spica_u_vodi@gmail.com"
-	},
-	{
-		id: "6",
-		title: "Tajib Smajlovic",
-		description: "tajci_rajif@gmail.com"
-	},
-	{
-		id: "7",
-		title: "Ferhat Avdic",
-		description: "wannabe_rajif@gmail.com"
-	},
-	{
-		id: "9",
-		title: "Amra Rovcanin",
-		description: "duck_whisperer@gmail.com"
-	},
-	{
-		id: "11",
-		title: "Berina Omerasevic",
-		description: "berkica@gmail.com"
-	},
-	{
-		id: "21",
-		title: "Hamza Crnovrsanin",
-		description: "hamzic@gmail.com"
-	},
-	{
-		id: "31",
-		title: "Ajdin Zorlak",
-		description: "zoka@gmail.com"
-	},
-	{
-		id: "44",
-		title: "Amina Muzurovic",
-		description: "muzi@gmail.com"
-	}
+  {
+    id: "1",
+    title: "Berina Omerasevic",
+    description: "berkica@gmail.com"
+  },
+  {
+    id: "2",
+    title: "Hamza Crnovrsanin",
+    description: "hamzic@gmail.com"
+  },
+  {
+    id: "3",
+    title: "Ajdin Zorlak",
+    description: "zoka@gmail.com"
+  },
+  {
+    id: "4",
+    title: "Amina Muzurovic",
+    description: "muzi@gmail.com"
+  },
+  {
+    id: "5",
+    title: "Faris Spica",
+    description: "spica_u_vodi@gmail.com"
+  },
+  {
+    id: "6",
+    title: "Tajib Smajlovic",
+    description: "tajci_rajif@gmail.com"
+  },
+  {
+    id: "7",
+    title: "Ferhat Avdic",
+    description: "wannabe_rajif@gmail.com"
+  },
+  {
+    id: "9",
+    title: "Amra Rovcanin",
+    description: "duck_whisperer@gmail.com"
+  }
 ];
 
 export default class People extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			data: DATA
-		};
-	}
+  static navigationOptions = {
+    header: null
+  };
+  state = {
+    result: []
+  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: DATA
+    };
+  }
 
-	sideDrawer = () => this.props.navigation.openDrawer();
+  async componentDidMount() {
+    const result = await getNews();
+    this.setState({ result });
+  }
 
-	render() {
-		return <TabHeader title={"EMPLOYEES"} data={this.state.data} onClick={this.sideDrawer} />;
-	}
+  _onSelectUser = (id) => {
+    this.props.navigation.navigate("EmployeeProfile", {
+      id: id,
+      type: "employee"
+    });
+  };
+
+  render() {
+    const { navigate } = this.props.navigation;
+    const { result } = this.state;
+    return (
+      <View style={styles.container}>
+        <Header style={styles.head}>
+          <Left>
+            <Icon
+              style={styles.icon}
+              name="ios-menu"
+              onPress={() => this.props.navigation.openDrawer()}
+            />
+          </Left>
+          <Text style={styles.header}>EMPLOYEES</Text>
+        </Header>
+        <List data={this.state.data} onPress={this._onSelectUser} />
+      </View>
+    );
+  }
 }
+
+const styles = {
+  container: {
+    flex: 1,
+    marginTop: 15
+  },
+  head: {
+    backgroundColor: "white",
+    marginTop: 15,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center"
+  },
+  icon: {
+    marginLeft: 0
+  },
+  button: {
+    height: 40,
+    width: 40,
+    backgroundColor: "#eee",
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  header: {
+    fontSize: 30,
+    fontWeight: "bold",
+    marginRight: 100,
+    marginTop: 5
+  }
+};
