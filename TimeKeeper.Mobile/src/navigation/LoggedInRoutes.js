@@ -9,17 +9,20 @@ import Calendar from "../views/Calendar";
 import People from "../views/People";
 import Customers from "../views/Customers";
 import Projects from "../views/Projects";
+import Agenda from "../views/Agenda";
+import Modal from "../components/Modal";
 
 const StackNavigator = createStackNavigator({
-	Profile: {
-		screen: Profile
-	},
-	Calendar: {
-		screen: Calendar
-	}
+  Profile: {
+    screen: Profile
+  },
+  Calendar: {
+    screen: Calendar
+  }
 });
 
 const DrawerNavigator = createDrawerNavigator({
+
 	People: {
 		screen: People
 	},
@@ -28,27 +31,38 @@ const DrawerNavigator = createDrawerNavigator({
 	},
 	Projects: {
 		screen: Projects
+	},
+	Agenda: {
+		screen: Agenda
 	}
 });
 
 const LoggedInRoutes = createBottomTabNavigator(
-	{
-		People: {
-			screen: DrawerNavigator,
-			navigationOptions: {
-				tabBarIcon: ({ tintColor }) => <Ionicons name="ios-people" size={40} color={tintColor} />
-			}
-		},
-		Profile: {
-			screen: StackNavigator,
-			navigationOptions: {
-				tabBarIcon: ({ tintColor }) => <Ionicons name="ios-person" size={32} color={tintColor} />
-			}
-		}
-	},
-	{
-		tabBarOptions: { showLabel: false, activeTintColor: "#32aedc", inactiveTintColor: "gray" }
-	}
+  {
+    People: {
+      screen: DrawerNavigator,
+      navigationOptions: {
+        tabBarIcon: ({ tintColor }) => (
+          <Ionicons name="ios-people" size={40} color={tintColor} />
+        )
+      }
+    },
+    Profile: {
+      screen: StackNavigator,
+      navigationOptions: {
+        tabBarIcon: ({ tintColor }) => (
+          <Ionicons name="ios-person" size={32} color={tintColor} />
+        )
+      }
+    }
+  },
+  {
+    tabBarOptions: {
+      showLabel: false,
+      activeTintColor: "#32aedc",
+      inactiveTintColor: "gray"
+    }
+  }
 );
 
 export default LoggedInRoutes;

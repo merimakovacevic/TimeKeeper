@@ -10,20 +10,21 @@ const store = configureStore();
 
 export default class App extends Component {
   render() {
-    const RootNavigator = createAppContainer(getRootNavigator(false));
+    const RootNavigator = createAppContainer(getRootNavigator(true));
 
-    return (
-      <Provider store={store}>
-        <SafeAreaView style={styles.container}>
-          <RootNavigator />
-        </SafeAreaView>
-      </Provider>
-    );
-  }
+
+		return (
+			<Provider store={store}>
+				<SafeAreaView style={styles.container}>
+					<RootNavigator />
+				</SafeAreaView>
+			</Provider>
+		);
+	}
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  }
+	container: {
+		flex: 1
+	}
 });
