@@ -7,3 +7,5 @@ export {
 	employeeAdd,
 	employeeDelete
 } from "./employeesActions";
+
+export { auth } from "./authActions";

@@ -1,5 +1,6 @@
 import { AUTH_START, AUTH_SUCCESS, AUTH_FAIL, AUTH_LOGOUT } from "./actionTypes";
 import { loginUrl, apiPostRequest } from "../../utils/api";
+import axios from "axios";
 
 const authStart = () => {
 	return {
@@ -7,10 +8,10 @@ const authStart = () => {
 	};
 };
 
-const authSuccess = (token) => {
+const authSuccess = (user) => {
 	return {
 		type: AUTH_SUCCESS,
-		token
+		user
 	};
 };
 
@@ -23,11 +24,12 @@ const authFail = (error) => {
 
 export const auth = (credentials) => {
 	return (dispatch) => {
-		dispatch(authStart);
-		apiPostRequest(loginUrl, credentials)
+		dispatch(authStart());
+		axios
+			.post(loginUrl, credentials)
 			.then((res) => {
 				console.log(res);
-				dispatch(authSuccess());
+				dispatch(authSuccess(res));
 			})
 			.catch((err) => dispatch(authFail(err)));
 	};

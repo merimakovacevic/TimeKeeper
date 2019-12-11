@@ -14,7 +14,6 @@ export const Input = ({ placeholder, secureTextEntry, onChangeText, name, keyboa
 				name={name}
 				selectionColor="#80cbc4"
 				keyboardType={keyboardType}
-				onChangeText={onChangeText}
 				value={value}
 			/>
 		</View>

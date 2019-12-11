@@ -1,14 +1,14 @@
 import axios from "axios";
 
-import { store } from "../index";
+import { store } from "../../App";
 
-export const loginUrl = "http://localhost:63903/api/users";
+export const loginUrl = "http://192.168.60.73/TimeKeeper/login";
 export const employeesUrl = "https://localhost:44350/api/employees";
 export const customersUrl = "https://localhost:44350/api/customers";
 export const projectsUrl = "https://localhost:44350/api/projects";
 
 export const apiGetAllRequest = (url, method = "GET") => {
-	const token = store.getState().user.user.access_token;
+	const token = store.getState().user;
 	let headers = new Headers();
 
 	headers = {
@@ -29,7 +29,7 @@ export const apiGetAllRequest = (url, method = "GET") => {
 export const apiGetOneRequest = (url, id, method = "GET") => {
 	let newUrl = `${url}/${id}`;
 
-	const token = store.getState().user.user.access_token;
+	const token = store.getState().user;
 	let headers = new Headers();
 
 	headers = {
@@ -50,7 +50,7 @@ export const apiGetOneRequest = (url, id, method = "GET") => {
 export const apiPutRequest = (url, id, body, method = "PUT") => {
 	let newUrl = `${url}/${id}`;
 
-	const token = store.getState().user.user.access_token;
+	const token = store.getState().user;
 	let headers = new Headers();
 
 	headers = {
@@ -70,7 +70,7 @@ export const apiPutRequest = (url, id, body, method = "PUT") => {
 };
 
 export const apiPostRequest = (url, body, method = "POST") => {
-	const token = store.getState().user.user.access_token;
+	const token = store.getState().user;
 
 	let headers = new Headers();
 
@@ -93,7 +93,7 @@ export const apiPostRequest = (url, body, method = "POST") => {
 export const apiDeleteRequest = (url, id, method = "DELETE") => {
 	let newUrl = `${url}/${id}`;
 
-	const token = store.getState().user.user.access_token;
+	const token = store.getState().user;
 
 	let headers = new Headers();
 

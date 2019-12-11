@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, StyleSheet } from "react-native";
 
 import theme from "../assets/Theme";
 
-export const Button = ({ onPress, children, outline }) => {
+const Button = ({ onPress, children, outline }) => {
 	return (
 		<TouchableOpacity onPress={onPress} style={outline ? styles.outline : styles.button}>
 			{children}
@@ -29,3 +29,5 @@ const styles = StyleSheet.create({
 		justifyContent: "center"
 	}
 });
+
+export { Button };
