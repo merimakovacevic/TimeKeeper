@@ -92,6 +92,8 @@ import { createDrawerNavigator } from "react-navigation-drawer";
 import Icon from "react-native-vector-icons/FontAwesome";
 import EmployeeProfile from "../views/EmployeeProfile";
 import { Ionicons } from "@expo/vector-icons";
+import Agenda from "../views/Agenda";
+
 const StackNavigator = createStackNavigator(
   {
     Profile: {
@@ -127,6 +129,9 @@ const DrawerNavigator = createDrawerNavigator({
   },
   PROJECTS: {
     screen: Projects
+  },
+  AGENDA: {
+    screen: Agenda
   }
 });
 
