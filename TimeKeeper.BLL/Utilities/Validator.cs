@@ -30,6 +30,14 @@ namespace TimeKeeper.BLL.Utilities
         {
             return day.Date.IsWeekend();
         }
+        public static bool IsWorkdayOvertime(this DayModel day)
+        {
+            return day.IsWorkday() && day.TotalHours > 8;
+        }
+        public static bool IsWorkday(this DayModel day)
+        {
+            return day.DayType.Name == "Workday";
+        }
 
         public static bool IsDateInPeriod(this Day day, int year, int month)
         {

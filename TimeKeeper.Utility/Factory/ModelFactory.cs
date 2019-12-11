@@ -120,20 +120,6 @@ namespace TimeKeeper.Utility.Factory
                 JobDetails = day.JobDetails.Select(x => x.Create()).ToList()
             };
         }
-
-        public static EmployeeTimeModel CreateTimeModel(this Employee employee)
-        {
-            return new EmployeeTimeModel
-            {
-                Employee = employee.Master(),
-                //already initialized in the constructor
-                //HourTypes = new Dictionary<string, decimal>(),
-                TotalHours = 0,
-                Overtime = 0,
-                PaidTimeOff = 0
-            };
-        }
-
         public static UserModel Create(this User user)
         {
             return new UserModel
