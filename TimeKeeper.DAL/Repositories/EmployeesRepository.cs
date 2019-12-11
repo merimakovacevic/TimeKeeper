@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using TimeKeeper.DAL.Utilities;
 using TimeKeeper.Domain.Entities;
+using TimeKeeper.DTO;
 
 namespace TimeKeeper.DAL.Repositories
 {
@@ -36,6 +37,7 @@ namespace TimeKeeper.DAL.Repositories
             }
             else throw new ArgumentNullException();
         }
+
         public override void Delete(int id)
         {
             Employee old = Get(id);
