@@ -1,18 +1,7 @@
 import React from "react";
-import {
-  SafeAreaView,
-  TouchableOpacity,
-  FlatList,
-  StyleSheet,
-  Text,
-  Image,
-  View
-} from "react-native";
-import Constants from "expo-constants";
-// import theme from '../assets/Theme';
+import { TouchableOpacity, StyleSheet, Text, Image, View } from "react-native";
 import UserIcon from "../assets/images/user.png";
-import { Icon, Header, Left } from "native-base";
-import { Entypo, Feather } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 
 function Item({ id, title, description, selected, onSelect }) {
   return (
@@ -33,7 +22,6 @@ function Item({ id, title, description, selected, onSelect }) {
           </View>
         </View>
         <View style={styles.moreContainer}>
-          {/*  <Icon name="chevron-right" size={20} style={styles.moreIcon} /> */}
           <Feather name="chevron-right" size={30} style={styles.moreIcon} />
         </View>
       </View>

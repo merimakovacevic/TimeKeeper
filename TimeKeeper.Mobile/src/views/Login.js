@@ -54,10 +54,4 @@ const styles = {
   }
 };
 
-// const mapStateToProps = (state) => {
-// 	return {
-// 		loading: state.user.loading
-// 	};
-// };
-
 export default Login;
