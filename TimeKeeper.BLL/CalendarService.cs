@@ -126,7 +126,6 @@ namespace TimeKeeper.BLL
             if (!Validator.ValidateMonth(year, month)) throw new Exception("Invalid data! Check year and month");
                        
             DateTime day = new DateTime(year, month, 1);
-            //Employee employee = _unit.Employees.Get(employeeId);
             while (day.Month == month)
             {
                 DayModel newDay = new DayModel

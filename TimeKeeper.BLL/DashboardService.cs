@@ -33,14 +33,11 @@ namespace TimeKeeper.BLL
             AdminDashboardModel adminDashboard = new AdminDashboardModel(roles);
            
             //no of employees at current month/year
-            //Project and Employees count are already calculated at TeamDashboardLevel
             adminDashboard.EmployeesCount = _queryService.GetNumberOfEmployeesForTimePeriod(month, year);            
 
             //We are unable to fetch teams this way because the projects don't tasks in calendar in the database
-            //List<Team> teams = projects.Select(x => x.Team).ToList();
-            //List<MasterModel> teams = _unit.Teams.Get().Select(x => x.Master()).ToList();      
+            //List<Team> teams = projects.Select(x => x.Team).ToList();      
 
-            //List<int> teams = _unit.Teams.Get().Select(x => x.Id).ToList();
             List<Team> teams = _unit.Teams.Get().ToList();
 
             //projects in a current month/year  
@@ -57,12 +54,11 @@ namespace TimeKeeper.BLL
             foreach (Team team in teams)
             {
                 MasterModel teamModel = team.Master();//_unit.Teams.Get(teamId).Master();
+
+                //This method also calculates the role utilization
                 TeamDashboardModel teamDashboard = GetTeamDashboardForAdmin(team, year, month, adminDashboard.Roles);
 
                 AdminTeamDashboardModel teamDashboardModel = GetAdminTeamDashboard(teamDashboard, teamModel);
-
-                //TOTAL HOURS DON'T ADD UP
-                //GetAdminRolesDashboard(adminDashboard.Roles, teamDashboard, teamModel);
 
                 adminDashboard.Teams.Add(teamDashboardModel);
                 adminDashboard.TotalWorkingHours += teamDashboardModel.WorkingHours;
@@ -79,7 +75,8 @@ namespace TimeKeeper.BLL
             {
                 case "Hourly":
                     //DATABASE DOESN'T HAVE COHERENT DATA, THIS IS FOR SHOWCASE ONLY - FURTHER IMPLEMENTATION IS NEEDED!!!
-                    return project.Tasks.Where(x => x.Day.IsDateInPeriod(year, month)).Sum(x => x.Hours * 15);
+                    //return project.Tasks.Where(x => x.Day.IsDateInPeriod(year, month)).Sum(x => x.Hours * 15);
+                    return project.Team.Members.Sum(x => x.Role.MonthlyPrice);
                 case "PerCapita":
                     //DATABASE DOESN'T HAVE COHERENT DATA, THIS IS FOR SHOWCASE ONLY - FURTHER IMPLEMENTATION IS NEEDED!!!
                     //Only members who have tasks in this month need to be calculated
@@ -90,7 +87,6 @@ namespace TimeKeeper.BLL
                     return 0;
             }
         }
-
         
         private AdminProjectDashboardModel GetAdminProjectDashboard(Project project, int year, int month)
         {            
@@ -114,15 +110,6 @@ namespace TimeKeeper.BLL
             };
         }
 
-        private void GetAdminRolesDashboard(List<AdminRolesDashboardModel> roles, TeamDashboardModel teamDashboard, MasterModel team)
-        {
-            foreach (TeamMemberDashboardModel member in teamDashboard.EmployeeTimes)
-            {
-                roles.FirstOrDefault(x => x.RoleName == member.MemberRole).TotalHours += member.TotalHours;
-                roles.FirstOrDefault(x => x.RoleName == member.MemberRole).WorkingHours += member.WorkingHours;
-            }
-        }
-
         public TeamDashboardModel GetTeamDashboardForAdmin(Team team, int year, int month, List<AdminRolesDashboardModel> roles)
         {
             //The DashboardService shouldn't really depend on the report service, this should be handled in another way
@@ -140,6 +127,8 @@ namespace TimeKeeper.BLL
                 teamDashboard.TotalHours += employeeTime.TotalHours;
                 teamDashboard.TotalWorkingHours += employeeTime.WorkingHours;
                 teamDashboard.TotalMissingEntries += employeeTime.MissingEntries;
+
+                //Role utilization is also calculated here
                 roles.FirstOrDefault(x => x.RoleName == employeeTime.MemberRole).TotalHours += employeeTime.TotalHours;
                 roles.FirstOrDefault(x => x.RoleName == employeeTime.MemberRole).WorkingHours += employeeTime.WorkingHours;
             }

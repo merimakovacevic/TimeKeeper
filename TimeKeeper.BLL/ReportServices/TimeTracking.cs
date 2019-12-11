@@ -41,7 +41,6 @@ namespace TimeKeeper.BLL.ReportServices
         public EmployeeTimeModel GetEmployeeMonthReport(Employee employee, int year, int month)
         {
             //TOTAL HOURS IN DASHBOARD - MONTHLY THEORETICAL WORKING HOURS
-            //Employee employee = _unit.Employees.Get(employeeId);
             EmployeeTimeModel employeeReport = new EmployeeTimeModel(_dayTypes);            
             employeeReport.Employee = employee.Master();
           
