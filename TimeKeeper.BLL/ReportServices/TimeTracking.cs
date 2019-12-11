@@ -47,7 +47,8 @@ namespace TimeKeeper.BLL.ReportServices
             foreach (DayModel day in calendar)
             {
                 if (day.DayType.Name == "Empty") hours["Missing entries"] += 8;
-                else
+
+                if (_dayTypes.FirstOrDefault(x => x == day.DayType.Name) != null)
                 {
 
                     /*The Get method in the generic Repository throws an exception if the entity isn't found, 
