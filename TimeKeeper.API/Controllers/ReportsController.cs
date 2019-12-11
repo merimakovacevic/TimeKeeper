@@ -136,5 +136,23 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
+
+        [HttpGet("project-history-stored/{projectId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult GetStoredProjectHistory(int projectId)
+        {
+            try
+            {
+                DateTime start = DateTime.Now;
+                var ar = projectHistory.GetStored(projectId);
+                DateTime final = DateTime.Now;
+                return Ok(new { dif = final - start, ar });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
     }
 }
