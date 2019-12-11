@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TimeKeeper.DTO.ReportModels
+namespace TimeKeeper.DTO.ReportModels.ProjectHistory
 {
     public class EmployeeProjectModel
     {

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TimeKeeper.DTO.ReportModels.ProjectHistory;
 
-namespace TimeKeeper.DTO.ReportModels
+namespace TimeKeeper.DTO.ReportModels.MonthlyOverview
 {
     public class MonthlyTimeModel
     {

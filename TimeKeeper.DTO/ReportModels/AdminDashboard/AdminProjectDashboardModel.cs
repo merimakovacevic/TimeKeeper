@@ -1,4 +1,4 @@
-﻿namespace TimeKeeper.DTO.ReportModels
+﻿namespace TimeKeeper.DTO.ReportModels.AdminDashboard
 {
     public class AdminProjectDashboardModel
     {

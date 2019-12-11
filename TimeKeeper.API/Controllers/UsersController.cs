@@ -10,88 +10,128 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using TimeKeeper.DAL;
+using TimeKeeper.DAL.Utilities;
+using TimeKeeper.Domain.Entities;
+using TimeKeeper.DTO;
+using TimeKeeper.Utility.Factory;
 
 namespace TimeKeeper.API.Controllers
 {
+    [Authorize(AuthenticationSchemes = "TokenAuthentication")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UsersController : BaseController
     {
         public UsersController(TimeKeeperContext context) : base(context) { }
 
+        [HttpGet("password")]
+        public IActionResult GetUsersAndUpdate()
+        {
+            var query = Unit.Users.Get();
+            foreach (User user in query)
+            {
+                user.Password = user.Username.HashWith(user.Password);
+                Unit.Context.Entry(user).CurrentValues.SetValues(user);
+            }
+            Unit.Save();
+            return Ok();
+        }
+
         [HttpGet]
-        [Route("api/users")]
         public IActionResult Get()
         {
             try
             {
-                var currentUser = HttpContext.User as ClaimsPrincipal;
-                List<string> claims = new List<string>();
-
-                foreach (Claim claim in currentUser.Claims)
-                {
-                    claims.Add(claim.Value);
-                }
-
-                var users = Unit.Users.Get().ToList();
-                return Ok(new { claims, users });
+                var query = Unit.Users.Get();
+                return Ok(query.Select(x => x.Create()).ToList().OrderBy(x => x.Name));
             }
             catch (Exception ex)
             {
-                return HandleException(ex);
-            }  
+                return BadRequest(ex);
+            }
         }
-     
-        /// <summary>
-        /// This method is used for login
-        /// </summary>
-        /// <returns status="200">OK</returns>
-        /// <returns status="404">NotFound</returns>
-        /// <returns status="400">BadRequest</returns>
-        [HttpGet]
-        [Route("login")]
-        [Authorize]
-        public IActionResult Login()
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
         {
             try
             {
-                if (User.Identity.IsAuthenticated)
+                User user = Unit.Users.Get(id);
+                if (user == null)
                 {
-                    var accessToken = HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken).Result;
-                    var response = new
-                    {
-                        Id = User.Claims.FirstOrDefault(c => c.Type == "sub").Value.ToString(),
-                        Name = User.Claims.FirstOrDefault(c => c.Type == "given_name").Value.ToString(),
-                        Role = User.Claims.FirstOrDefault(c => c.Type == "role").Value.ToString(),
-                        accessToken //Bearer {accessToken}
-                    };
-                    return Ok(response);
+                    return NotFound();
                 }
                 else
                 {
-                    return NotFound();
+                    return Ok(user.Create());
                 }
             }
             catch (Exception ex)
             {
-                return HandleException(ex);
+                return BadRequest(ex);
             }
         }
-
-        /// <summary>
-        /// This method is used for logout
-        /// </summary>
-        /// <returns></returns>
-        [AllowAnonymous]
-        [Route("api/logout")]
-        [HttpGet]
-        public async Task Logout()//asynchronous method that doesn't return a value. Task<IActionResult> returns a value
+        [HttpPost]
+        public IActionResult Post([FromBody] User user)
         {
-            if(User.Identity.IsAuthenticated)
+            try
             {
-                await HttpContext.SignOutAsync("Cookies");
-                await HttpContext.SignOutAsync("oidc");
+                Unit.Users.Insert(user);
+                Unit.Save();
+                return Ok(user.Create());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+        [HttpPut("{id}")]
+        public IActionResult Put([FromBody] User user, int id)
+        {
+            try
+            {
+                Unit.Users.Update(user, id);
+                Unit.Save();
+                return Ok(user.Create());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                Unit.Users.Delete(id);
+                Unit.Save();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
             }
         }
 
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("/login")]
+        public IActionResult Login([FromBody] LoginModel model)
+        {
+            try
+            {
+                User user = Access.Check(model.Username, model.Password);
+                if (user != null)
+                {
+                    string token = Access.GetToken(user);
+                    return Ok(new { user = user.Create(), token });
+                }
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
     }
 }
