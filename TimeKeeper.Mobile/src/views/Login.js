@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import { View, Image, Text, KeyboardAvoidingView } from "react-native";
 
 import { auth } from "../redux/actions/index";
-import { Button } from "../components/Button";
-import { Input } from "../components/Input";
+import  Button  from "../components/Button";
+import  Input  from "../components/Input";
 import logo from "../../assets/logo.png";
 
 class Login extends Component {

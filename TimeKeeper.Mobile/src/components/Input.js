@@ -1,19 +1,21 @@
 import React from "react";
 import { View, TextInput } from "react-native";
 
-export const Input = ({ placeholder, secureTextEntry, onChangeText, name, keyboardType, style, value }) => {
+const Input = ({ placeholder, secureTextEntry, onChangeText, name, keyboardType, autoCompleteType, style, value }) => {
 	return (
 		<View style={styles.container}>
 			<TextInput
 				style={[styles.inputBox, style]}
-				underlineColorAndroid="rgba(0,0,0,0)"
+				underlineColorAndroid="rgb(57, 54, 67)"
 				placeholder={placeholder}
-				placeholderTextColor="#80cbc4"
+				placeholderTextColor="rgb(57, 54, 67)"
 				secureTextEntry={secureTextEntry}
 				onChangeText={onChangeText}
 				name={name}
-				selectionColor="#80cbc4"
+				autoCompleteType={autoCompleteType}
+				selectionColor="white"
 				keyboardType={keyboardType}
+				onChangeText={onChangeText}
 				value={value}
 			/>
 		</View>
@@ -23,11 +25,14 @@ export const Input = ({ placeholder, secureTextEntry, onChangeText, name, keyboa
 const styles = {
 	inputBox: {
 		width: 300,
-		backgroundColor: "rgb(63, 66, 71)",
+		backgroundColor: "white",
 		color: "#80cbc4",
 		borderRadius: 20,
 		marginBottom: 10,
+		marginTop: 10,
 		paddingHorizontal: 15,
 		paddingVertical: 10
 	}
 };
+
+export default Input;
