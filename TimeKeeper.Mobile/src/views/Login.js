@@ -13,11 +13,6 @@ class Login extends Component {
 		password: ""
 	};
 
-	authenticate = (credentials) => () => {
-		console.log(credentials);
-		this.props.auth(credentials);
-	};
-
 	render() {
 		let credentials = {
 			username: this.state.username,
@@ -45,7 +40,8 @@ class Login extends Component {
 				</KeyboardAvoidingView>
 				<Button
 					onPress={() => {
-						this.props.auth(credentials);
+						// this.props.auth(credentials);
+						this.props.navigation.navigate("LoggedInRoutes");
 					}}
 				>
 					<Text style={styles.buttonTitle}>Login</Text>

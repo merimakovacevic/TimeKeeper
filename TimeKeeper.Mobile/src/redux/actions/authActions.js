@@ -29,7 +29,7 @@ export const auth = (credentials) => {
 			.post(loginUrl, credentials)
 			.then((res) => {
 				console.log(res);
-				dispatch(authSuccess(res));
+				dispatch(authSuccess(res.data));
 			})
 			.catch((err) => dispatch(authFail(err)));
 	};

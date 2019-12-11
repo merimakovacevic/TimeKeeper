@@ -1,7 +1,10 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { View } from "react-native";
 
-import { TabHeader } from "../components";
+import { fetchEmployees } from "../redux/actions/employeesActions";
+
+import { TabHeader } from "../components/TabHeader";
 
 const DATA = [
 	{
@@ -66,12 +69,16 @@ const DATA = [
 	}
 ];
 
-export default class People extends Component {
+class People extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			data: DATA
 		};
+	}
+
+	componentDidMount() {
+		// console.log(this.props.fetchEmployees());
 	}
 
 	sideDrawer = () => this.props.navigation.openDrawer();
@@ -80,3 +87,5 @@ export default class People extends Component {
 		return <TabHeader title={"EMPLOYEES"} data={this.state.data} onClick={this.sideDrawer} />;
 	}
 }
+
+export default connect(null, { fetchEmployees })(People);

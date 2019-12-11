@@ -8,7 +8,8 @@ export const customersUrl = "https://localhost:44350/api/customers";
 export const projectsUrl = "https://localhost:44350/api/projects";
 
 export const apiGetAllRequest = (url, method = "GET") => {
-	const token = store.getState().user;
+	const token = store.getState().user.user.token;
+	// console.log(token);
 	let headers = new Headers();
 
 	headers = {
