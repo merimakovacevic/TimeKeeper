@@ -12,7 +12,18 @@ namespace TimeKeeper.BLL
 {
     public class CalendarService : BLLBaseService
     {
-        public CalendarService(UnitOfWork unit) : base(unit)  {  }                                        
+        protected MasterModel future;
+        protected MasterModel empty;
+        protected MasterModel weekend;
+        protected MasterModel na;
+
+        public CalendarService(UnitOfWork unit) : base(unit)
+        {
+            future = new MasterModel { Id = 10, Name = "Future" };
+            empty = new MasterModel { Id = 11, Name = "Empty" };
+            weekend = new MasterModel { Id = 12, Name = "Weekend" };
+            na = new MasterModel { Id = 13, Name = "N/A" };
+        }                                        
 
         public List<DayModel> GetEmployeeMonth(int employeeId, int year, int month)
         {
@@ -113,12 +124,7 @@ namespace TimeKeeper.BLL
         {
             List<DayModel> calendar = new List<DayModel>();
             if (!Validator.ValidateMonth(year, month)) throw new Exception("Invalid data! Check year and month");
-
-            DayType future = new DayType { Id = 10, Name = "Future" };
-            DayType empty = new DayType { Id = 11, Name = "Empty" };
-            DayType weekend = new DayType { Id = 12, Name = "Weekend" };
-            DayType na = new DayType { Id = 13, Name = "N/A" };
-
+                       
             DateTime day = new DateTime(year, month, 1);
             //Employee employee = _unit.Employees.Get(employeeId);
             while (day.Month == month)
@@ -127,12 +133,12 @@ namespace TimeKeeper.BLL
                 {
                     Employee = employee.Master(),
                     Date = day,
-                    DayType = empty.Master()
+                    DayType = empty
                 };
 
-                if (day.IsWeekend()) newDay.DayType = weekend.Master();
-                if (day > DateTime.Today) newDay.DayType = future.Master();
-                if (day < employee.BeginDate || (employee.EndDate != new DateTime(1, 1, 1) && employee.EndDate != null && day > employee.EndDate)) newDay.DayType = na.Master();
+                if (day.IsWeekend()) newDay.DayType = weekend;
+                if (day > DateTime.Today) newDay.DayType = future;
+                if (day < employee.BeginDate || (employee.EndDate != new DateTime(1, 1, 1) && employee.EndDate != null && day > employee.EndDate)) newDay.DayType = na;
 
                 calendar.Add(newDay);
                 day = day.AddDays(1);
