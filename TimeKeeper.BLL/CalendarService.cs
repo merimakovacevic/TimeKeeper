@@ -17,18 +17,18 @@ namespace TimeKeeper.BLL
         public List<DayModel> GetEmployeeMonth(int employeeId, int year, int month)
         {
             List<DayModel> employeeDays = GetEmployeeCalendar(employeeId, year, month);
-            return FillEmployeeCalendar(employeeDays, employeeId, year, month);
+            return FillEmployeeCalendar(employeeDays, _unit.Employees.Get(employeeId), year, month);
         }
 
         public List<DayModel> GetEmployeeMonth(Employee employee, int year, int month)
         {
             List<DayModel> employeeDays = GetEmployeeCalendar(employee, year, month);
-            return FillEmployeeCalendar(employeeDays, employee.Id, year, month);
+            return FillEmployeeCalendar(employeeDays, employee, year, month);
         }
 
-        private List<DayModel> FillEmployeeCalendar(List<DayModel> employeeDays, int employeeId, int year, int month)
+        private List<DayModel> FillEmployeeCalendar(List<DayModel> employeeDays, Employee employee, int year, int month)
         {
-            List<DayModel> calendar = GetEmptyEmployeeCalendar(employeeId, year, month);
+            List<DayModel> calendar = GetEmptyEmployeeCalendar(employee, year, month);
             foreach (var d in employeeDays)
             {
                 calendar[d.Date.Day - 1] = d;
@@ -109,7 +109,7 @@ namespace TimeKeeper.BLL
             return calendar;
         }*/
 
-        public List<DayModel> GetEmptyEmployeeCalendar(int employeeId, int year, int month)
+        public List<DayModel> GetEmptyEmployeeCalendar(Employee employee, int year, int month)
         {
             List<DayModel> calendar = new List<DayModel>();
             if (!Validator.ValidateMonth(year, month)) throw new Exception("Invalid data! Check year and month");
@@ -120,7 +120,7 @@ namespace TimeKeeper.BLL
             DayType na = new DayType { Id = 13, Name = "N/A" };
 
             DateTime day = new DateTime(year, month, 1);
-            Employee employee = _unit.Employees.Get(employeeId);
+            //Employee employee = _unit.Employees.Get(employeeId);
             while (day.Month == month)
             {
                 DayModel newDay = new DayModel

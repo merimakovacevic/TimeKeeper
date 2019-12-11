@@ -20,23 +20,29 @@ namespace TimeKeeper.BLL.ReportServices
         }
         public List<EmployeeTimeModel> GetTeamMonthReport(int teamId, int year, int month)
         {
+            return GetTeamMonthReport(_unit.Teams.Get(teamId), year, month);
+        }
+        public List<EmployeeTimeModel> GetTeamMonthReport(Team team, int year, int month)
+        {
             //Show only team members that were active during this month
             //filter total hours > 0?
-            Team team = _unit.Teams.Get(teamId);
+            //Team team = _unit.Teams.Get(teamId);
             List<EmployeeTimeModel> employeeTimeModels = new List<EmployeeTimeModel>();
 
             foreach (Member member in team.Members)
             {
-                employeeTimeModels.Add(GetEmployeeMonthReport(member.Employee.Id, year, month));
+                EmployeeTimeModel employeeTime = GetEmployeeMonthReport(member.Employee, year, month);
+                employeeTime.Role = member.Role.Name;
+                employeeTimeModels.Add(employeeTime);
             }
             return employeeTimeModels;
         }
 
-        public EmployeeTimeModel GetEmployeeMonthReport(int employeeId, int year, int month)
+        public EmployeeTimeModel GetEmployeeMonthReport(Employee employee, int year, int month)
         {
             //TOTAL HOURS IN DASHBOARD - MONTHLY THEORETICAL WORKING HOURS
-            Employee employee = _unit.Employees.Get(employeeId);
-            EmployeeTimeModel employeeReport = new EmployeeTimeModel(_dayTypes);
+            //Employee employee = _unit.Employees.Get(employeeId);
+            EmployeeTimeModel employeeReport = new EmployeeTimeModel(_dayTypes);            
             employeeReport.Employee = employee.Master();
           
             List<DayModel> calendar = GetEmployeeMonth(employee, year, month);
