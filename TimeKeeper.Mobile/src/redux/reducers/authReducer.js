@@ -7,6 +7,7 @@ const initialUserState = {
 };
 
 export const userReducer = (state = initialUserState, action) => {
+	console.log(action.type);
 	switch (action.type) {
 		case AUTH_START:
 			return {
@@ -14,6 +15,7 @@ export const userReducer = (state = initialUserState, action) => {
 				loading: true
 			};
 		case AUTH_SUCCESS:
+			
 			return {
 				...state,
 				user: action.user,

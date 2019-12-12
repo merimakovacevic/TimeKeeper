@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { View, Image, Text, KeyboardAvoidingView } from "react-native";
+import { View, Image, KeyboardAvoidingView, StyleSheet } from "react-native";
 
 import { auth } from "../redux/actions/index";
-import  Button  from "../components/Button";
-import  Input  from "../components/Input";
+import Button from "../components/Button";
+import Input from "../components/Input";
 import logo from "../../assets/logo.png";
 
 class Login extends Component {
@@ -13,73 +13,72 @@ class Login extends Component {
 		password: ""
 	};
 
-	render() {
+	handleUsernameChange = (username) => {
+		this.setState({ username: username });
+	};
+
+	handlePasswordChange = (password) => {
+		this.setState({ password: password });
+	};
+
+	handleLoginPress = () => {
 		let credentials = {
 			username: this.state.username,
 			password: this.state.password
 		};
+
+		this.props.auth(credentials);
+		setTimeout(() => this.props.navigation.navigate("People"), 1000);
+	};
+
+	render() {
 		return (
-			<View style={styles.container}>
-				<Image source={logo} style={styles.logo} />
-				<Text style={styles.mainTitle}>Welome to TimeKeeper</Text>
-				<Text style={styles.title}> Save time for doing great work.</Text>
-				<KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+			<KeyboardAvoidingView style={styles.container} behavior="padding">
+				<Image resizeMode="contain" style={styles.logo} source={logo} />
+
+				<View style={styles.form}>
 					<Input
-						placeholder="username"
-						name="username"
-						onChangeText={(username) => this.setState({ username })}
-						value={this.state.username}
+						value={this.state.email}
+						onChangeText={this.handleUsernameChange}
+						placeholder={"username"}
+						autoCorrect={false}
+						keyboardType="email-address"
+						returnKeyType="next"
 					/>
 					<Input
-						placeholder="password"
-						name="password"
-						secureTextEntry={true}
-						onChangeText={(password) => this.setState({ password })}
+						ref={this.passwordInputRef}
 						value={this.state.password}
+						onChangeText={this.handlePasswordChange}
+						placeholder={"Pass"}
+						secureTextEntry={true}
+						returnKeyType="done"
 					/>
-				</KeyboardAvoidingView>
-				<Button
-					onPress={() => {
-						// this.props.auth(credentials);
-						this.props.navigation.navigate("LoggedInRoutes");
-					}}
-				>
-					<Text style={styles.buttonTitle}>Login</Text>
-				</Button>
-			</View>
+					<Button label={"Login"} onPress={this.handleLoginPress} />
+				</View>
+			</KeyboardAvoidingView>
 		);
 	}
 }
 
-const styles = {
+const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: "white",
-		justifyContent: "flex-start",
-		alignItems: "center",
-		padding: 10,
-		backgroundColor: "rgb(204, 243, 255)"
+		alignItems: "center"
+		//justifyContent: "flex-start"
 	},
 	logo: {
-		marginTop: 100,
-		height: 85,
-		width: 85
-	},
-	mainTitle: {
-		fontFamily: "Roboto",
-		fontSize: 25,
-		fontWeight: "bold",
-		marginTop: 10
-	},
-	title: {
-		marginTop: 10,
-		marginBottom: 30,
-		fontSize: 20
-	},
-	buttonTitle: {
+		flex: 1,
+		width: "35%",
+		resizeMode: "contain",
 		alignSelf: "center"
+	},
+	form: {
+		flex: 1,
+		justifyContent: "center",
+		width: "80%"
 	}
-};
+});
 
 const mapStateToProps = (state) => {
 	return {

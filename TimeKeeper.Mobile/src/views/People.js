@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { View } from "react-native";
+import { View, ActivityIndicator, StyleSheet } from "react-native";
 
 import { fetchEmployees } from "../redux/actions/employeesActions";
 
@@ -78,14 +78,37 @@ class People extends Component {
 	}
 
 	componentDidMount() {
-		// console.log(this.props.fetchEmployees());
+		this.props.fetchEmployees();
 	}
 
 	sideDrawer = () => this.props.navigation.openDrawer();
 
 	render() {
-		return <TabHeader title={"EMPLOYEES"} data={this.state.data} onClick={this.sideDrawer} />;
+		let PeopleRender = () => {
+			if (this.props.loading) {
+				return <ActivityIndicator style={styles.container} size={100} color="#32aedc" />;
+			} else {
+				return <TabHeader title={"EMPLOYEES"} data={this.props.people} onClick={this.sideDrawer} />;
+			}
+		};
+
+		return PeopleRender();
 	}
 }
 
-export default connect(null, { fetchEmployees })(People);
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center"
+	}
+});
+
+const mapStateToProps = (state) => {
+	return {
+		people: state.employees.data,
+		loading: state.employees.loading
+	};
+};
+
+export default connect(mapStateToProps, { fetchEmployees })(People);

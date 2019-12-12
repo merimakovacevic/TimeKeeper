@@ -1,38 +1,36 @@
-import React from "react";
-import { View, TextInput } from "react-native";
+import * as React from "react";
+import { StyleSheet, TextInput } from "react-native";
+import colors from "../assets/Theme";
 
-const Input = ({ placeholder, secureTextEntry, onChangeText, name, keyboardType, autoCompleteType, style, value }) => {
-	return (
-		<View style={styles.container}>
+class FormTextInput extends React.Component {
+	textInputRef = React.createRef();
+
+	focus = () => {
+		if (this.textInputRef.current) {
+			this.textInputRef.current.focus();
+		}
+	};
+
+	render() {
+		const { style, ...otherProps } = this.props;
+		return (
 			<TextInput
-				style={[styles.inputBox, style]}
-				underlineColorAndroid="rgb(57, 54, 67)"
-				placeholder={placeholder}
-				placeholderTextColor="rgb(57, 54, 67)"
-				secureTextEntry={secureTextEntry}
-				onChangeText={onChangeText}
-				name={name}
-				autoCompleteType={autoCompleteType}
-				selectionColor="white"
-				keyboardType={keyboardType}
-				onChangeText={onChangeText}
-				value={value}
+				ref={this.textInputRef}
+				selectionColor={colors.DODGER_BLUE}
+				style={[styles.textInput, style]}
+				{...otherProps}
 			/>
-		</View>
-	);
-};
-
-const styles = {
-	inputBox: {
-		width: 300,
-		backgroundColor: "white",
-		color: "#80cbc4",
-		borderRadius: 20,
-		marginBottom: 10,
-		marginTop: 10,
-		paddingHorizontal: 15,
-		paddingVertical: 10
+		);
 	}
-};
+}
 
-export default Input;
+const styles = StyleSheet.create({
+	textInput: {
+		height: 40,
+		borderColor: colors.SILVER,
+		borderBottomWidth: StyleSheet.hairlineWidth,
+		marginBottom: 20
+	}
+});
+
+export default FormTextInput;

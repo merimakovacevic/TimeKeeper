@@ -9,7 +9,9 @@ export class List extends Component {
 			<SafeAreaView>
 				<FlatList
 					data={this.props.data}
-					renderItem={({ item }) => <Item id={item.id} title={item.title} description={item.description} />}
+					renderItem={({ item }) => (
+						<Item id={item.id} title={`${item.firstName} ${item.lastName}`} description={item.email} />
+					)}
 					keyExtractor={(item) => item.id}
 				/>
 			</SafeAreaView>
