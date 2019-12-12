@@ -12,9 +12,9 @@ export const teamsUrl = "http://192.168.60.73/TimeKeeper/api/mobile/teams";
 //export const projectsUrl = "https://localhost:44350/api/projects";
 
 export const apiGetAllRequest = (url, method = "GET") => {
-	// const token = store.getState().user.user.token;
-	const token =
-		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwibmFtZSI6Ik1pY2hhZWwgSm9uZXMiLCJyb2xlIjoiYWRtaW4iLCJuYmYiOjE1NzYxNDEwNDQsImV4cCI6MTU3Njc0NTg0NCwiaWF0IjoxNTc2MTQxMDQ0fQ.Ke5dtOENkChOiydoAINbqycfltxSHRMW7W-0pd_Y64o";
+	const token = store.getState().user.user.token;
+	// const token =
+	// 	"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwibmFtZSI6Ik1pY2hhZWwgSm9uZXMiLCJyb2xlIjoiYWRtaW4iLCJuYmYiOjE1NzYxNDEwNDQsImV4cCI6MTU3Njc0NTg0NCwiaWF0IjoxNTc2MTQxMDQ0fQ.Ke5dtOENkChOiydoAINbqycfltxSHRMW7W-0pd_Y64o";
 	let headers = new Headers();
 
 	headers = {

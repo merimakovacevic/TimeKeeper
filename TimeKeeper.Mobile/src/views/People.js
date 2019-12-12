@@ -12,14 +12,14 @@ class People extends Component {
 		this.props.fetchEmployees();
 	}
 
-	_onSelectUser = (id) => {
-		this.props.navigation.navigate("EmployeeProfile", {
-			id: id,
-			type: "employee"
-		});
-	};
+  _onSelectUser = (id) => {
+    this.props.navigation.navigate("EmployeeProfile", {
+      id: id,
+      type: "employee"
+    });
+  };
 
-	sideDrawer = () => this.props.navigation.openDrawer();
+  sideDrawer = () => this.props.navigation.openDrawer();
 
 	render() {
 		let PeopleRender = () => {
@@ -46,8 +46,8 @@ class People extends Component {
 			}
 		};
 
-		return PeopleRender();
-	}
+    return PeopleRender();
+  }
 }
 
 const styles = StyleSheet.create({
@@ -87,10 +87,10 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-	return {
-		people: state.employees.data,
-		loading: state.employees.loading
-	};
+  return {
+    people: state.employees.data,
+    loading: state.employees.loading
+  };
 };
 
 export default connect(mapStateToProps, { fetchEmployees })(People);
