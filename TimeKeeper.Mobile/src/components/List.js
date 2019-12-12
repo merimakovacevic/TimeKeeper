@@ -23,15 +23,30 @@ export default function App(props) {
 				<Item
 					style={styles.item}
 					id={item.id}
-					title={item.firstName + " " + item.lastName}
-					description={item.email}
+					title={
+						props.type === "customers" || props.type === "teams"
+							? item.name
+							: props.type === "projects"
+							? item.name
+							: item.firstName + " " + item.lastName
+					}
+					description={
+						props.type === "customers"
+							? item.emailAddress
+							: props.type === "projects"
+							? item.status.name
+							: props.type === "teams"
+							? `${item.members.length} members`
+							: item.email
+					}
 					selected={!!selected.get(item.id)}
 					onSelect={props.onPress}
 					bottomDivider
 					chevron
+					type={props.type}
 				/>
 			)}
-			keyExtractor={(item) => item.id}
+			keyExtractor={(item) => item.id + ""}
 			extraData={selected}
 		/>
 	);

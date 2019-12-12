@@ -4,28 +4,28 @@ import List from "../components/List";
 import Constants from "expo-constants";
 import { Icon, Header, Left } from "native-base";
 
-import { apiGetAllRequest, customersUrl } from "../utils/api";
+import { apiGetAllRequest, teamsUrl } from "../utils/api";
 
-export default class People extends Component {
+export default class Teams extends Component {
 	state = {
 		loading: false,
-		customers: []
+		teams: []
 	};
 
 	componentDidMount() {
 		this.setState({ loading: true });
-		apiGetAllRequest(customersUrl)
+		apiGetAllRequest(teamsUrl)
 			.then((res) => {
 				//console.log("customers");
 				//console.log(res.data.data);
-				this.setState({ customers: res.data.data, loading: false });
+				this.setState({ teams: res.data.data, loading: false });
 			})
 			.catch((err) => console.log(err));
 	}
 
 	render() {
 		//console.log(this.state.customers);
-		let customersRender = () => {
+		let teamsRender = () => {
 			if (this.state.loading) {
 				return <ActivityIndicator style={styles.loader} size={100} color="#32aedc" />;
 			} else {
@@ -39,15 +39,15 @@ export default class People extends Component {
 									onPress={() => this.props.navigation.openDrawer()}
 								/>
 							</Left>
-							<Text style={styles.header}>CUSTOMERS</Text>
+							<Text style={styles.header}>TEAMS</Text>
 						</Header>
-						<List data={this.state.customers} type="customers" onPress={() => console.log("hehe")} />
+						<List data={this.state.teams} type="teams" onPress={() => console.log("hehe")} />
 					</View>
 				);
 			}
 		};
 
-		return customersRender();
+		return teamsRender();
 	}
 }
 
@@ -70,7 +70,7 @@ const styles = {
 		backgroundColor: "white"
 	},
 	icon: {
-		marginLeft: -65
+		marginLeft: -100
 	},
 	loader: {
 		flex: 1,
