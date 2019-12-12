@@ -10,7 +10,6 @@ import Calendar from "../views/Calendar";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import EmployeeProfile from "../views/EmployeeProfile";
 import { Ionicons } from "@expo/vector-icons";
-import Agenda from "../views/Agenda";
 
 const StackNavigator = createStackNavigator(
   {
@@ -48,8 +47,8 @@ const DrawerNavigator = createDrawerNavigator({
   PROJECTS: {
     screen: Projects
   },
-  AGENDA: {
-    screen: Agenda
+  CALENDAR: {
+    screen: Calendar
   }
 });
 

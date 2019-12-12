@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, Image, TouchableOpacity, Button } from "react-native";
 import RNModal from "../components/Modal";
+import DateTimePicker from "react-native-modal-datetime-picker";
+import moment from "moment";
 
 const DATA = [
 	{
@@ -48,20 +50,45 @@ const DATA = [
 
 class EmployeeProfile extends Component {
 	state = {
-		open: false
+		open: false,
+		isDateTimePickerVisible: false,
+		stringDate: null,
+		date: null
 	};
 	handleOpen = () => {
 		this.setState({ open: true });
 	};
+
 	handleClose = () => {
 		this.setState({ open: false });
 	};
+	handleOpenCalendar = () => {
+		this.setState({ open: false });
+		this.props.navigation.navigate("Calendar", {
+			date: this.state.date
+		});
+	};
+	showDateTimePicker = () => {
+		this.setState({ isDateTimePickerVisible: true });
+	};
+	hideDateTimePicker = () => {
+		this.setState({ isDateTimePickerVisible: false });
+	};
+
+	handleDatePicked = (date) => {
+		this.setState({ date: date });
+		console.log("A date picked: ", date);
+		stringDate = JSON.parse(JSON.stringify(moment(date).format("MMM Do YY")));
+		this.setState({ stringDate: stringDate });
+		this.hideDateTimePicker();
+	};
+
 	render() {
 		const id = this.props.navigation.getParam("id", "0");
 		const employeeData = this.props.people.find((e) => e.id === id);
 		return (
 			<View style={styles.container}>
-				{/* <Text style={styles.header}> Employee profile </Text> */}
+				<Text style={styles.header}> Employee profile </Text>
 				<Image style={styles.avatar} source={{ uri: "https://bootdey.com/img/Content/avatar/avatar6.png" }} />
 				<View style={styles.body}>
 					<View style={styles.bodyContent}>
@@ -70,7 +97,23 @@ class EmployeeProfile extends Component {
 						<TouchableOpacity onPress={this.handleOpen} style={styles.buttonContainer}>
 							<Text>Calendar</Text>
 						</TouchableOpacity>
-						<RNModal visible={this.state.open} onClose={this.handleClose} />
+						<RNModal visible={this.state.open} onClose={this.handleClose}>
+							<View>
+								<Button
+									title={!this.state.date ? "Show DatePicker" : "Change date"}
+									onPress={this.showDateTimePicker}
+								/>
+								<DateTimePicker
+									isVisible={this.state.isDateTimePickerVisible}
+									onConfirm={this.handleDatePicked}
+									onCancel={this.hideDateTimePicker}
+								/>
+								<View>
+									{!this.state.date ? null : <Text>Picked date {this.state.stringDate}</Text>}
+								</View>
+								<Button title="Open" onPress={this.handleOpenCalendar} />
+							</View>
+						</RNModal>
 					</View>
 				</View>
 			</View>
