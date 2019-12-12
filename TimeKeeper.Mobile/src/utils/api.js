@@ -11,6 +11,31 @@ export const teamsUrl = "http://192.168.60.73/TimeKeeper/api/mobile/teams";
 //export const customersUrl = "https://localhost:44350/api/customers";
 //export const projectsUrl = "https://localhost:44350/api/projects";
 
+export const getCalendarMonth = async (id, year, month) => {
+	const token = store.getState().user.user.token;
+
+	let headers = new Headers();
+
+	headers = {
+		"Content-Type": "application/json",
+		Authorization: `Bearer ${token}`
+	};
+
+	const options = {
+		headers
+	};
+
+	const result = await axios.get(
+		"http://192.168.60.71/timekeeper/api/mobile/calendar" + "/" + id + "/" + year + "/" + month,
+		options
+	);
+	if (result && result.data) {
+		// console.log(result);
+		return result.data;
+	}
+	return false;
+};
+
 export const apiGetAllRequest = (url, method = "GET") => {
 	const token = store.getState().user.user.token;
 	// const token =

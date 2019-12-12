@@ -1,538 +1,30 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, ActivityIndicator } from "react-native";
 import { Agenda } from "react-native-calendars";
 import moment from "moment";
+import { getCalendarMonth } from "../utils/api";
 
-const DATA = [
-	{
-		dayType: {
-			id: 11,
-			name: "Weekend"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-01T00:00:00",
-		totalHours: 0.0,
-		comment: null,
-		details: []
-	},
-	{
-		dayType: {
-			id: 11,
-			name: "Weekend"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-02T00:00:00",
-		totalHours: 0.0,
-		comment: null,
-		details: []
-	},
-	{
-		dayType: {
-			id: 1,
-			name: "Workday"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-03T00:00:00",
-		totalHours: 8.0,
-		comment: null,
-		details: [
-			{
-				id: 12426,
-				name: "Expire trial organizations"
-			}
-		]
-	},
-	{
-		dayType: {
-			id: 1,
-			name: "Workday"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-04T00:00:00",
-		totalHours: 8.0,
-		comment: null,
-		details: [
-			{
-				id: 11380,
-				name: "Expire trial organizations"
-			}
-		]
-	},
-	{
-		dayType: {
-			id: 1,
-			name: "Workday"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-05T00:00:00",
-		totalHours: 8.0,
-		comment: null,
-		details: [
-			{
-				id: 12091,
-				name: "Expire trial organizations"
-			}
-		]
-	},
-	{
-		dayType: {
-			id: 1,
-			name: "Workday"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-06T00:00:00",
-		totalHours: 8.0,
-		comment: null,
-		details: [
-			{
-				id: 12836,
-				name: "Expire trial organizations"
-			}
-		]
-	},
-	{
-		dayType: {
-			id: 1,
-			name: "Workday"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-07T00:00:00",
-		totalHours: 8.0,
-		comment: null,
-		details: [
-			{
-				id: 11666,
-				name:
-					"Fix bugs (Description on trophy card, Back button on sign up screen, Error on edit button click, Sign out in menu)"
-			}
-		]
-	},
-	{
-		dayType: {
-			id: 11,
-			name: "Weekend"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-08T00:00:00",
-		totalHours: 0.0,
-		comment: null,
-		details: []
-	},
-	{
-		dayType: {
-			id: 11,
-			name: "Weekend"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-09T00:00:00",
-		totalHours: 0.0,
-		comment: null,
-		details: []
-	},
-	{
-		dayType: {
-			id: 1,
-			name: "Workday"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-10T00:00:00",
-		totalHours: 8.0,
-		comment: null,
-		details: [
-			{
-				id: 11560,
-				name: "Expire trial organization"
-			}
-		]
-	},
-	{
-		dayType: {
-			id: 1,
-			name: "Workday"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-11T00:00:00",
-		totalHours: 8.0,
-		comment: null,
-		details: [
-			{
-				id: 12293,
-				name: "Expire trial organization"
-			}
-		]
-	},
-	{
-		dayType: {
-			id: 1,
-			name: "Workday"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-12T00:00:00",
-		totalHours: 8.0,
-		comment: null,
-		details: [
-			{
-				id: 11044,
-				name:
-					"Fix bugs (Description on trophy card, Back button on sign up screen,  Error on edit button click,  Sign out in menu)"
-			}
-		]
-	},
-	{
-		dayType: {
-			id: 1,
-			name: "Workday"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-13T00:00:00",
-		totalHours: 8.0,
-		comment: null,
-		details: [
-			{
-				id: 11664,
-				name:
-					"Fix bugs (Description on trophy card, Back button on sign up screen,  Error on edit button click,  Sign out in menu)"
-			}
-		]
-	},
-	{
-		dayType: {
-			id: 1,
-			name: "Workday"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-14T00:00:00",
-		totalHours: 8.0,
-		comment: null,
-		details: [
-			{
-				id: 12330,
-				name:
-					"Fix bugs (Description on trophy card, Back button on sign up screen,  Error on edit button click,  Sign out in menu)"
-			}
-		]
-	},
-	{
-		dayType: {
-			id: 11,
-			name: "Weekend"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-15T00:00:00",
-		totalHours: 0.0,
-		comment: null,
-		details: []
-	},
-	{
-		dayType: {
-			id: 11,
-			name: "Weekend"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-16T00:00:00",
-		totalHours: 0.0,
-		comment: null,
-		details: []
-	},
-	{
-		dayType: {
-			id: 1,
-			name: "Workday"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-17T00:00:00",
-		totalHours: 8.0,
-		comment: null,
-		details: [
-			{
-				id: 12294,
-				name:
-					"Fix bugs (Description on trophy card, Back button on sign up screen, Error on edit button click, Sign out in menu)"
-			}
-		]
-	},
-	{
-		dayType: {
-			id: 1,
-			name: "Workday"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-18T00:00:00",
-		totalHours: 8.0,
-		comment: null,
-		details: [
-			{
-				id: 11062,
-				name:
-					"Fix bugs (Description on trophy card, Back button on sign up screen, Error on edit button click, Sign out in menu)"
-			}
-		]
-	},
-	{
-		dayType: {
-			id: 1,
-			name: "Workday"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-19T00:00:00",
-		totalHours: 8.0,
-		comment: null,
-		details: [
-			{
-				id: 11855,
-				name: "Change registration process to be automatized , automatically log in user ( re work process)"
-			}
-		]
-	},
-	{
-		dayType: {
-			id: 6,
-			name: "Vacation"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-20T00:00:00",
-		totalHours: 8.0,
-		comment: null,
-		details: []
-	},
-	{
-		dayType: {
-			id: 1,
-			name: "Workday"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-21T00:00:00",
-		totalHours: 8.0,
-		comment: null,
-		details: [
-			{
-				id: 11307,
-				name: "Change registration process to be automatized , automatically log in user ( re work process)"
-			}
-		]
-	},
-	{
-		dayType: {
-			id: 11,
-			name: "Weekend"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-22T00:00:00",
-		totalHours: 0.0,
-		comment: null,
-		details: []
-	},
-	{
-		dayType: {
-			id: 11,
-			name: "Weekend"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-23T00:00:00",
-		totalHours: 0.0,
-		comment: null,
-		details: []
-	},
-	{
-		dayType: {
-			id: 1,
-			name: "Workday"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-24T00:00:00",
-		totalHours: 8.0,
-		comment: null,
-		details: [
-			{
-				id: 11413,
-				name: "Change registration process to be automatized , automatically log in user ( re work process)"
-			}
-		]
-	},
-	{
-		dayType: {
-			id: 1,
-			name: "Workday"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-25T00:00:00",
-		totalHours: 8.0,
-		comment: null,
-		details: [
-			{
-				id: 11946,
-				name: "Change registration process to be automatized , automatically log in user ( re work process)"
-			}
-		]
-	},
-	{
-		dayType: {
-			id: 1,
-			name: "Workday"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-26T00:00:00",
-		totalHours: 8.0,
-		comment: null,
-		details: [
-			{
-				id: 12718,
-				name: "Rename all portable stands to private"
-			}
-		]
-	},
-	{
-		dayType: {
-			id: 1,
-			name: "Workday"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-27T00:00:00",
-		totalHours: 8.0,
-		comment: null,
-		details: [
-			{
-				id: 11362,
-				name: "Forgotten password"
-			}
-		]
-	},
-	{
-		dayType: {
-			id: 1,
-			name: "Workday"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-28T00:00:00",
-		totalHours: 8.0,
-		comment: null,
-		details: [
-			{
-				id: 12049,
-				name: "Change profile picture (spike)"
-			}
-		]
-	},
-	{
-		dayType: {
-			id: 11,
-			name: "Weekend"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-29T00:00:00",
-		totalHours: 0.0,
-		comment: null,
-		details: []
-	},
-	{
-		dayType: {
-			id: 11,
-			name: "Weekend"
-		},
-		employee: {
-			id: 4,
-			name: "David Davis"
-		},
-		date: "2019-06-30T00:00:00",
-		totalHours: 0.0,
-		comment: null,
-		details: []
-	}
-];
 export default class Calendar extends React.Component {
 	state = {
 		date: this.props.navigation.getParam("date", "null"),
-		items: {}
+		id: this.props.navigation.getParam("id", "0"),
+		items: null
 	};
-
-	parseData() {
+	async componentDidMount() {
+		const month = moment(this.state.date).format("MM");
+		const year = moment(this.state.date).format("YYYY");
+		let data = await getCalendarMonth(this.state.id, year, month);
+		if (data !== undefined) {
+			let newData = this.parseData(data);
+			if (data.length > 0) {
+				this.setItems(newData);
+			}
+		}
+	}
+	setItems(data) {
+		this.setState({ items: data });
+	}
+	parseData(DATA) {
 		let items = {};
 		for (let i = 0; i < DATA.length; i++) {
 			let stringDate = moment(DATA[i].date).format("YYYY-MM-DD");
@@ -550,33 +42,35 @@ export default class Calendar extends React.Component {
 		}
 		return items;
 	}
-
 	render() {
-		// console.log("CALENDAR PROPS", this.props);
-		const items = this.parseData();
-		this.parseData();
 		return (
-			<Agenda
-				items={items}
-				loadItemsForMonth={this.loadItems.bind(this)}
-				selected={this.state.date}
-				renderItem={this.renderItem.bind(this)}
-				renderEmptyDate={this.renderEmptyDate.bind(this)}
-				rowHasChanged={this.rowHasChanged.bind(this)}
-				// markingType={'period'}
-				// markedDates={{
-				//    '2017-05-08': {textColor: '#666'},
-				//    '2017-05-09': {textColor: '#666'},
-				//    '2017-05-14': {startingDay: true, endingDay: true, color: 'blue'},
-				//    '2017-05-21': {startingDay: true, color: 'blue'},
-				//    '2017-05-22': {endingDay: true, color: 'gray'},
-				//    '2017-05-24': {startingDay: true, color: 'gray'},
-				//    '2017-05-25': {color: 'gray'},
-				//    '2017-05-26': {endingDay: true, color: 'gray'}}}
-				// monthFormat={'yyyy'}
-				// theme={{calendarBackground: 'red', agendaKnobColor: 'green'}}
-				// renderDay={(day, item) => (<Text>{day ? day.day: 'item'}</Text>)}
-			/>
+			<View style={styles.container}>
+				{this.state.items !== null ? (
+					<Agenda
+						items={this.state.items}
+						// loadItemsForMonth={this.loadItems.bind(this)}
+						selected={this.state.date}
+						renderItem={this.renderItem.bind(this)}
+						renderEmptyDate={this.renderEmptyDate.bind(this)}
+						rowHasChanged={this.rowHasChanged.bind(this)}
+						// markingType={'period'}
+						// markedDates={{
+						//    '2017-05-08': {textColor: '#666'},
+						//    '2017-05-09': {textColor: '#666'},
+						//    '2017-05-14': {startingDay: true, endingDay: true, color: 'blue'},
+						//    '2017-05-21': {startingDay: true, color: 'blue'},
+						//    '2017-05-22': {endingDay: true, color: 'gray'},
+						//    '2017-05-24': {startingDay: true, color: 'gray'},
+						//    '2017-05-25': {color: 'gray'},
+						//    '2017-05-26': {endingDay: true, color: 'gray'}}}
+						// monthFormat={'yyyy'}
+						// theme={{calendarBackground: 'red', agendaKnobColor: 'green'}}
+						// renderDay={(day, item) => (<Text>{day ? day.day: 'item'}</Text>)}
+					/>
+				) : (
+					<ActivityIndicator style={styles.loader} size={80} color="#00ff00" />
+				)}
+			</View>
 		);
 	}
 
@@ -616,11 +110,7 @@ export default class Calendar extends React.Component {
 	}
 
 	renderEmptyDate() {
-		return (
-			<View style={styles.emptyDate}>
-				<Text>This is empty date!</Text>
-			</View>
-		);
+		return <ActivityIndicator style={styles.loader} size={80} color="#00ff00" />;
 	}
 
 	rowHasChanged(r1, r2) {
@@ -634,6 +124,9 @@ export default class Calendar extends React.Component {
 }
 
 const styles = StyleSheet.create({
+	container: {
+		flex: 1
+	},
 	item: {
 		backgroundColor: "white",
 		flex: 1,
@@ -646,5 +139,10 @@ const styles = StyleSheet.create({
 		height: 15,
 		flex: 1,
 		paddingTop: 30
+	},
+	loader: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center"
 	}
 });
