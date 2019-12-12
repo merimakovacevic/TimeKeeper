@@ -556,6 +556,7 @@ export default class Calendar extends React.Component {
   }
 
   render() {
+    console.log("CALENDAR PROPS", this.props);
     const items = this.parseData();
     this.parseData();
     return (

@@ -81,7 +81,7 @@ export default class People extends Component {
               onPress={() => this.props.navigation.openDrawer()}
             />
           </Left>
-          <Text style={styles.header}>EMPLOYEES</Text>
+          <Text style={styles.header}>PROJECTS</Text>
         </Header>
         <List data={this.state.data} onPress={this._onSelectUser} />
       </View>

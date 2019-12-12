@@ -13,14 +13,8 @@ export default class Profile extends Component {
         <View style={styles.body}>
           <View style={styles.bodyContent}>
             <Text style={styles.name}>John Doe</Text>
-            <Text style={styles.info}>UX Designer / Mobile developer</Text>
-            <Text style={styles.description}>Phone: 123456</Text>
-            <Text style={styles.description}>email: asd@asd.com</Text>
-            <Text style={styles.description}>Team: altpha</Text>
-
-            <TouchableOpacity style={styles.buttonContainer}>
-              <Text>Calendar</Text>
-            </TouchableOpacity>
+            <Text style={styles.info}>Administrator</Text>
+            <Text style={styles.description}>email: admin@asd.com</Text>
           </View>
         </View>
       </View>
