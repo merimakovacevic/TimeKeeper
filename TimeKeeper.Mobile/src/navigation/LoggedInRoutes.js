@@ -1,40 +1,56 @@
 import React from "react";
 import { createBottomTabNavigator } from "react-navigation-tabs";
+import {} from "@expo/vector-icons";
 import { createStackNavigator } from "react-navigation-stack";
-import { createDrawerNavigator } from "react-navigation-drawer";
-import { Ionicons } from "@expo/vector-icons";
-
-import Profile from "../views/Profile";
-import Calendar from "../views/Calendar";
 import People from "../views/People";
-import Customers from "../views/Customers";
+import Profile from "../views/Profile";
 import Projects from "../views/Projects";
+import Customers from "../views/Customers.js";
+import Calendar from "../views/Calendar";
+import { createDrawerNavigator } from "react-navigation-drawer";
+import EmployeeProfile from "../views/EmployeeProfile";
+import { Ionicons } from "@expo/vector-icons";
 import Agenda from "../views/Agenda";
-import Modal from "../components/Modal";
 
-const StackNavigator = createStackNavigator({
-  Profile: {
-    screen: Profile
+const StackNavigator = createStackNavigator(
+  {
+    Profile: {
+      screen: Profile
+    },
+    Calendar: {
+      screen: Calendar
+    }
   },
-  Calendar: {
-    screen: Calendar
+  {
+    drawerStyle: {
+      backgroundColor: "#c6cbef",
+      width: 240
+    }
+  }
+);
+
+const StackNavigatorEmployee = createStackNavigator({
+  EMPLOYEES: {
+    screen: People
+  },
+  EmployeeProfile: {
+    screen: EmployeeProfile
   }
 });
 
 const DrawerNavigator = createDrawerNavigator({
-
-	People: {
-		screen: People
-	},
-	Customers: {
-		screen: Customers
-	},
-	Projects: {
-		screen: Projects
-	},
-	Agenda: {
-		screen: Agenda
-	}
+  EMPLOYEES: {
+    screen: StackNavigatorEmployee
+  },
+  CUSTOMERS: {
+    screen: Customers
+  },
+  PROJECTS: {
+    screen: Projects
+  },
+  AGENDA: {
+    screen: Agenda
+  }
 });
 
 const LoggedInRoutes = createBottomTabNavigator(

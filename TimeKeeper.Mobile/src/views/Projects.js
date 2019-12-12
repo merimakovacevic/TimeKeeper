@@ -1,61 +1,113 @@
 import React, { Component } from "react";
-
-import { TabHeader } from "../components/TabHeader";
+import { View, Text } from "react-native";
+import List from "../components/List";
+import Constants from "expo-constants";
+import { Icon, Header, Left } from "native-base";
 
 const DATA = [
-	{
-		id: "1",
-		title: "Project11",
-		description: "berkica@gmail.com"
-	},
-	{
-		id: "2",
-		title: "proroeo",
-		description: "hamzic@gmail.com"
-	},
-	{
-		id: "3",
-		title: "proororor",
-		description: "zoka@gmail.com"
-	},
-	{
-		id: "4",
-		title: "Amina prprpprpr",
-		description: "muzi@gmail.com"
-	},
-	{
-		id: "5",
-		title: "Faris teteetet",
-		description: "spica_u_vodi@gmail.com"
-	},
-	{
-		id: "6",
-		title: "Tajib tesatsta",
-		description: "tajci_rajif@gmail.com"
-	},
-	{
-		id: "7",
-		title: "Ferhat Avteeatedic",
-		description: "wannabe_rajif@gmail.com"
-	},
-	{
-		id: "9",
-		title: "AmrTESTRovcanin",
-		description: "duck_whisperer@gmail.com"
-	}
+  {
+    id: "1",
+    title: "Berina Omerasevic",
+    description: "berkica@gmail.com"
+  },
+  {
+    id: "2",
+    title: "Hamza Crnovrsanin",
+    description: "hamzic@gmail.com"
+  },
+  {
+    id: "3",
+    title: "Ajdin Zorlak",
+    description: "zoka@gmail.com"
+  },
+  {
+    id: "4",
+    title: "Amina Muzurovic",
+    description: "muzi@gmail.com"
+  },
+  {
+    id: "5",
+    title: "Faris Spica",
+    description: "spica_u_vodi@gmail.com"
+  },
+  {
+    id: "6",
+    title: "Tajib Smajlovic",
+    description: "tajci_rajif@gmail.com"
+  },
+  {
+    id: "7",
+    title: "Ferhat Avdic",
+    description: "wannabe_rajif@gmail.com"
+  },
+  {
+    id: "9",
+    title: "Amra Rovcanin",
+    description: "duck_whisperer@gmail.com"
+  }
 ];
 
-export default class Projects extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			data: DATA
-		};
-	}
+export default class People extends Component {
+  static navigationOptions = {
+    header: null
+  };
+  state = {
+    result: []
+  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: DATA
+    };
+  }
 
-	sideDrawer = () => this.props.navigation.openDrawer();
+  _onSelectUser = (id) => {
+    this.props.navigation.navigate("EmployeeProfile", {
+      id: id,
+      type: "employee"
+    });
+  };
 
-	render() {
-		return <TabHeader title="PROJECTS" data={this.state.data} onClick={this.sideDrawer} />;
-	}
+  render() {
+    const { navigate } = this.props.navigation;
+    const { result } = this.state;
+    return (
+      <View style={styles.container}>
+        <Header style={styles.head}>
+          <Left>
+            <Icon
+              style={styles.icon}
+              name="ios-menu"
+              onPress={() => this.props.navigation.openDrawer()}
+            />
+          </Left>
+          <Text style={styles.header}>EMPLOYEES</Text>
+        </Header>
+        <List data={this.state.data} onPress={this._onSelectUser} />
+      </View>
+    );
+  }
 }
+
+const styles = {
+  container: {
+    flex: 1,
+    marginTop: Constants.statusBarHeight
+  },
+  list: {
+    flex: 1
+  },
+  header: {
+    fontSize: 30,
+    fontWeight: "bold",
+    marginLeft: -80,
+    color: "black",
+    marginTop: 10
+  },
+  head: {
+    backgroundColor: "white"
+  },
+  icon: {
+    marginLeft: -65
+  }
+};
