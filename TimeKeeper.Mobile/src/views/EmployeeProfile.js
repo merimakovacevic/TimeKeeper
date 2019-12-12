@@ -1,6 +1,14 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Button
+} from "react-native";
 import RNModal from "../components/Modal";
+import DateTimePicker from "react-native-modal-datetime-picker";
 
 const DATA = [
   {
@@ -77,7 +85,25 @@ export default class EmployeeProfile extends Component {
             >
               <Text>Calendar</Text>
             </TouchableOpacity>
-            <RNModal visible={this.state.open} onClose={this.handleClose} />
+            <RNModal visible={this.state.open} onClose={this.handleClose}>
+              <View>
+                <Button
+                  title={!this.state.date ? "Show DatePicker" : "Change date"}
+                  onPress={this.showDateTimePicker}
+                />
+                <DateTimePicker
+                  isVisible={this.state.isDateTimePickerVisible}
+                  onConfirm={this.handleDatePicked}
+                  onCancel={this.hideDateTimePicker}
+                />
+                <View>
+                  {!this.state.date ? null : (
+                    <Text>Picked date {this.state.stringDate}</Text>
+                  )}
+                </View>
+                <Button title="Open" onPress={this.handleOpenCalendar} />
+              </View>
+            </RNModal>
           </View>
         </View>
       </View>
