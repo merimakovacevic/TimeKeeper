@@ -15,7 +15,6 @@ export const userReducer = (state = initialUserState, action) => {
 				loading: true
 			};
 		case AUTH_SUCCESS:
-			
 			return {
 				...state,
 				user: action.user,
