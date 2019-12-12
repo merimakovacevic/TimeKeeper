@@ -33,34 +33,32 @@ namespace TimeKeeper.BLL
             AdminDashboardModel adminDashboard = new AdminDashboardModel(roles);
            
             //no of employees at current month/year
-            //Project and Employees count are already calculated at TeamDashboardLevel
-            adminDashboard.EmployeesCount = _queryService.GetNumberOfEmployeesForTimePeriod(month, year);
-
-            //projects in a current month/year            
-            List<Project> projects = _queryService.GetProjectsForTimePeriod(month, year);
-            //Adds all ProjectDashboardModels to adminDashboard
-            adminDashboard.Projects.AddRange(projects.Select(x => GetAdminProjectDashboard(x, year, month)).ToList());
-
-            adminDashboard.ProjectsCount = adminDashboard.Projects.Count();
+            adminDashboard.EmployeesCount = _queryService.GetNumberOfEmployeesForTimePeriod(month, year);            
 
             //We are unable to fetch teams this way because the projects don't tasks in calendar in the database
-            //List<Team> teams = projects.Select(x => x.Team).ToList();
-            //List<MasterModel> teams = _unit.Teams.Get().Select(x => x.Master()).ToList();      
+            //List<Team> teams = projects.Select(x => x.Team).ToList();      
 
-            List<int> teams = _unit.Teams.Get().Select(x => x.Id).ToList();
+            List<Team> teams = _unit.Teams.Get().ToList();
 
-            //This calendar will only be calculated once and passed down 
-            //List<DayModel> calendar = GetEmptyGenericCalendar(year, month);
+            //projects in a current month/year  
+            /*Due do inconsistency in database, it is not possible to retrieve projects 
+            for time period and match them with days
+            So all projects will be taken into consideration*/
+            //List<Project> projects = _queryService.GetProjectsForTimePeriod(month, year);    
+            List<Project> projects = teams.SelectMany(x => x.Projects).ToList();//_unit.Projects.Get().ToList();
 
-            foreach (int teamId in teams)
+            //Adds all ProjectDashboardModels to adminDashboard
+            adminDashboard.Projects.AddRange(projects.Select(x => GetAdminProjectDashboard(x, year, month)).ToList());
+            adminDashboard.ProjectsCount = adminDashboard.Projects.Count();
+
+            foreach (Team team in teams)
             {
-                MasterModel team = _unit.Teams.Get(teamId).Master();
-                TeamDashboardModel teamDashboard = GetTeamDashboard(teamId, year, month);
+                MasterModel teamModel = team.Master();//_unit.Teams.Get(teamId).Master();
 
-                AdminTeamDashboardModel teamDashboardModel = GetAdminTeamDashboard(teamDashboard, team);
+                //This method also calculates the role utilization
+                TeamDashboardModel teamDashboard = GetTeamDashboardForAdmin(team, year, month, adminDashboard.Roles);
 
-                //TOTAL HOURS DON'T ADD UP
-                GetAdminRolesDashboard(adminDashboard.Roles, teamDashboard, team);
+                AdminTeamDashboardModel teamDashboardModel = GetAdminTeamDashboard(teamDashboard, teamModel);
 
                 adminDashboard.Teams.Add(teamDashboardModel);
                 adminDashboard.TotalWorkingHours += teamDashboardModel.WorkingHours;
@@ -71,13 +69,14 @@ namespace TimeKeeper.BLL
         }
 
         //FINAL IMPLEMENTATION IS NEEDED
-        public decimal GetProjectRevenue(Project project)
+        public decimal GetProjectRevenue(Project project, int year, int month)
         {
             switch(project.Pricing.Name)
             {
                 case "Hourly":
                     //DATABASE DOESN'T HAVE COHERENT DATA, THIS IS FOR SHOWCASE ONLY - FURTHER IMPLEMENTATION IS NEEDED!!!
-                    return project.Tasks.Sum(x => x.Hours * 15);
+                    //return project.Tasks.Where(x => x.Day.IsDateInPeriod(year, month)).Sum(x => x.Hours * 15);
+                    return project.Team.Members.Sum(x => x.Role.MonthlyPrice);
                 case "PerCapita":
                     //DATABASE DOESN'T HAVE COHERENT DATA, THIS IS FOR SHOWCASE ONLY - FURTHER IMPLEMENTATION IS NEEDED!!!
                     //Only members who have tasks in this month need to be calculated
@@ -88,13 +87,13 @@ namespace TimeKeeper.BLL
                     return 0;
             }
         }
-
+        
         private AdminProjectDashboardModel GetAdminProjectDashboard(Project project, int year, int month)
         {            
             return new AdminProjectDashboardModel
             {
                 Project = new MasterModel { Id = project.Id, Name = project.Name},
-                Revenue = GetProjectRevenue(project)
+                Revenue = GetProjectRevenue(project, year, month)
             };
         }
 
@@ -111,27 +110,48 @@ namespace TimeKeeper.BLL
             };
         }
 
-        private void GetAdminRolesDashboard(List<AdminRolesDashboardModel> roles, TeamDashboardModel teamDashboard, MasterModel team)
-        {
-            foreach (TeamMemberDashboardModel member in teamDashboard.EmployeeTimes)
-            {
-                Role role = _unit.Employees.Get(member.Employee.Id).Members.FirstOrDefault(x => x.Team.Id == team.Id).Role;
-                roles.FirstOrDefault(x => x.RoleName == role.Name).TotalHours += member.TotalHours;
-                roles.FirstOrDefault(x => x.RoleName == role.Name).WorkingHours += member.WorkingHours;
-            }
-        }
-
-        public TeamDashboardModel GetTeamDashboard(int teamId, int year, int month)
+        public TeamDashboardModel GetTeamDashboardForAdmin(Team team, int year, int month, List<AdminRolesDashboardModel> roles)
         {
             //The DashboardService shouldn't really depend on the report service, this should be handled in another way
             TeamDashboardModel teamDashboard = new TeamDashboardModel
             {
-                EmployeeTimes = GetTeamMembersDashboard(teamId, year, month)
+                EmployeeTimes = GetTeamMembersDashboard(team, year, month)
             };
 
             //projects for this month!!!
             teamDashboard.EmployeesCount = teamDashboard.EmployeeTimes.Count();
-            teamDashboard.ProjectsCount = _unit.Teams.Get(teamId).Projects.Count();
+            teamDashboard.ProjectsCount = team.Projects.Count();//_unit.Teams.Get(teamId).Projects.Count();
+
+            foreach (TeamMemberDashboardModel employeeTime in teamDashboard.EmployeeTimes)
+            {
+                teamDashboard.TotalHours += employeeTime.TotalHours;
+                teamDashboard.TotalWorkingHours += employeeTime.WorkingHours;
+                teamDashboard.TotalMissingEntries += employeeTime.MissingEntries;
+
+                //Role utilization is also calculated here
+                roles.FirstOrDefault(x => x.RoleName == employeeTime.MemberRole).TotalHours += employeeTime.TotalHours;
+                roles.FirstOrDefault(x => x.RoleName == employeeTime.MemberRole).WorkingHours += employeeTime.WorkingHours;
+            }
+
+            return teamDashboard;
+        }
+
+        public TeamDashboardModel GetTeamDashboard(int teamId, int year, int month)
+        {
+            return GetTeamDashboard(_unit.Teams.Get(teamId), year, month);
+        }
+
+        public TeamDashboardModel GetTeamDashboard(Team team, int year, int month)
+        {
+            //The DashboardService shouldn't really depend on the report service, this should be handled in another way
+            TeamDashboardModel teamDashboard = new TeamDashboardModel
+            {
+                EmployeeTimes = GetTeamMembersDashboard(team, year, month)
+            };
+
+            //projects for this month!!!
+            teamDashboard.EmployeesCount = teamDashboard.EmployeeTimes.Count();
+            teamDashboard.ProjectsCount = team.Projects.Count();//_unit.Teams.Get(teamId).Projects.Count();
 
             foreach (TeamMemberDashboardModel employeeTime in teamDashboard.EmployeeTimes)
             {
@@ -143,9 +163,9 @@ namespace TimeKeeper.BLL
             return teamDashboard;
         }
 
-        private List<TeamMemberDashboardModel> GetTeamMembersDashboard(int teamId, int year, int month)
+        private List<TeamMemberDashboardModel> GetTeamMembersDashboard(Team team, int year, int month)
         {
-            List<EmployeeTimeModel> employeeTimes = _timeTracking.GetTeamMonthReport(teamId, year, month);
+            List<EmployeeTimeModel> employeeTimes = _timeTracking.GetTeamMonthReport(team, year, month);
             List<TeamMemberDashboardModel> teamMembers = new List<TeamMemberDashboardModel>();
             foreach(EmployeeTimeModel employeeTime in employeeTimes)
             {
@@ -156,7 +176,8 @@ namespace TimeKeeper.BLL
                     Overtime = employeeTime.Overtime,
                     PaidTimeOff = employeeTime.PaidTimeOff,
                     WorkingHours = employeeTime.HourTypes["Workday"],
-                    MissingEntries = employeeTime.HourTypes["Missing entries"]
+                    MissingEntries = employeeTime.HourTypes["Missing entries"],
+                    MemberRole = employeeTime.Role
                 });
             }
 
