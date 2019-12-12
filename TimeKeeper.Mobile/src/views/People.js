@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { SafeAreaView, View, FlatList, Text } from "react-native";
+import { View, Text } from "react-native";
 import List from "../components/List";
-import Constants from "expo-constants";
 import { Icon, Header, Left } from "native-base";
 
 const DATA = [

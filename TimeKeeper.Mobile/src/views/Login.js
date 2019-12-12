@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { View, Image, Text } from "react-native";
 import { Button } from "../components";
-import { Input } from "../components";
-import { List } from "../components";
 import logo from "../../assets/logo.png";
 
 class Login extends Component {

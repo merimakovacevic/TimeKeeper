@@ -1,16 +1,6 @@
 import React, { Component } from "react";
-import {
-  Text,
-  View,
-  Button,
-  StyleSheet,
-  Image,
-  TouchableOpacity
-} from "react-native";
-import { createStackNavigator } from "react-navigation-stack";
-// import Button from '../components/Button'
+import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import RNModal from "../components/Modal";
-import { Calendar, CalendarList, Agenda } from "react-native-calendars";
 
 const DATA = [
   {
@@ -81,7 +71,6 @@ export default class EmployeeProfile extends Component {
             <Text style={styles.description}>
               Email: {employeeData.description}
             </Text>
-            {/*   <Button title="Calendar" onPress={this.handleOpen}></Button> */}
             <TouchableOpacity
               onPress={this.handleOpen}
               style={styles.buttonContainer}
