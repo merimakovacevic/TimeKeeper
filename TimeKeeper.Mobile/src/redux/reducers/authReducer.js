@@ -2,12 +2,12 @@ import { AUTH_START, AUTH_SUCCESS, AUTH_FAIL, AUTH_LOGOUT } from "../actions/act
 
 const initialUserState = {
 	user: null,
-	token: null,
 	loading: true,
 	error: false
 };
 
 export const userReducer = (state = initialUserState, action) => {
+	console.log(action.type);
 	switch (action.type) {
 		case AUTH_START:
 			return {
@@ -17,7 +17,7 @@ export const userReducer = (state = initialUserState, action) => {
 		case AUTH_SUCCESS:
 			return {
 				...state,
-				token: action.token,
+				user: action.user,
 				loading: false
 			};
 		case AUTH_FAIL:

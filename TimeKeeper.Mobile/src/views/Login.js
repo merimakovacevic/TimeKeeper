@@ -1,63 +1,113 @@
 import React, { Component } from "react";
-import { View, Image, Text } from "react-native";
-import { Button } from "../components";
-import { Input } from "../components";
-import { List } from "../components";
+import { connect } from "react-redux";
+import { View, Image, KeyboardAvoidingView, StyleSheet, ActivityIndicator } from "react-native";
+
+import { auth } from "../redux/actions/index";
+import { isLoggedIn } from "../redux/actions/authActions";
+import Button from "../components/Button";
+import Input from "../components/Input";
 import logo from "../../assets/logo.png";
 
 class Login extends Component {
-  _login = () => {
-    console.log("I pressed Login Button");
-  };
+	state = {
+		username: "",
+		password: ""
+	};
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <Image source={logo} style={styles.logo} />
-        <Text style={styles.mainTitle}>Welome to TimeKeeper</Text>
-        <Text style={styles.title}> Save time for doing great work.</Text>
-        <Button onPress={this._login}>
-          <Text style={styles.buttonTitle}>Login</Text>
-        </Button>
-      </View>
-    );
-  }
+	componentDidMount() {
+		this.props.isLoggedIn();
+	}
+
+	handleUsernameChange = (username) => {
+		this.setState({ username: username });
+	};
+
+	handlePasswordChange = (password) => {
+		this.setState({ password: password });
+	};
+
+	handleLoginPress = () => {
+		let credentials = {
+			username: this.state.username,
+			password: this.state.password
+		};
+
+		this.props.auth(credentials);
+		setTimeout(() => this.props.navigation.navigate("People"), 1000);
+	};
+
+	loginRenderHandler = () => {
+		if (this.props.loading) {
+			return <ActivityIndicator style={styles.loader} size={80} color="#00ff00" />;
+		} else {
+			if (this.props.user.token) {
+				return this.props.navigation.navigate("People");
+			} else {
+				return (
+					<KeyboardAvoidingView style={styles.container} behavior="padding">
+						<Image resizeMode="contain" style={styles.logo} source={logo} />
+
+						<View style={styles.form}>
+							<Input
+								value={this.state.email}
+								onChangeText={this.handleUsernameChange}
+								placeholder={"username"}
+								autoCorrect={false}
+								keyboardType="email-address"
+								returnKeyType="next"
+							/>
+							<Input
+								ref={this.passwordInputRef}
+								value={this.state.password}
+								onChangeText={this.handlePasswordChange}
+								placeholder={"Pass"}
+								secureTextEntry={true}
+								returnKeyType="done"
+							/>
+							<Button label={"Login"} onPress={this.handleLoginPress} />
+						</View>
+					</KeyboardAvoidingView>
+				);
+			}
+		}
+	};
+
+	render() {
+		return this.loginRenderHandler();
+	}
 }
 
-const styles = {
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    padding: 10,
-    backgroundColor: "rgb(204, 243, 255)"
-  },
-  logo: {
-    marginTop: 100,
-    height: 85,
-    width: 85
-  },
-  mainTitle: {
-    fontFamily: "Roboto",
-    fontSize: 25,
-    fontWeight: "bold",
-    marginTop: 10
-  },
-  title: {
-    marginTop: 10,
-    marginBottom: 30,
-    fontSize: 20
-  },
-  buttonTitle: {
-    alignSelf: "center"
-  }
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: "white",
+		alignItems: "center"
+
+		//justifyContent: "flex-start"
+	},
+	logo: {
+		flex: 1,
+		width: "35%",
+		resizeMode: "contain",
+		alignSelf: "center"
+	},
+	form: {
+		flex: 1,
+		justifyContent: "center",
+		width: "80%"
+	},
+	loader: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center"
+	}
+});
+
+const mapStateToProps = (state) => {
+	return {
+		loading: state.user.loading,
+		user: state.user.user
+	};
 };
 
-// const mapStateToProps = (state) => {
-// 	return {
-// 		loading: state.user.loading
-// 	};
-// };
-
-export default Login;
+export default connect(mapStateToProps, { auth, isLoggedIn })(Login);

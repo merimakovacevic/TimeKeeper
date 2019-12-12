@@ -6,12 +6,11 @@ import { Provider } from "react-redux";
 import configureStore from "./src/redux/configureStore";
 import { getRootNavigator } from "./src/navigation/index";
 
-const store = configureStore();
+export const store = configureStore();
 
 export default class App extends Component {
-  render() {
-    const RootNavigator = createAppContainer(getRootNavigator(true));
-
+	render() {
+		const RootNavigator = createAppContainer(getRootNavigator(false));
 
 		return (
 			<Provider store={store}>

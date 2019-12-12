@@ -26,6 +26,7 @@ const initialUserState = {
 };
 
 export const employeesReducer = (state = initialUserState, action) => {
+	
 	switch (action.type) {
 		case EMPLOYEES_FETCH_START:
 			return {

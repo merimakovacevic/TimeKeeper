@@ -1,14 +1,30 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet, Text, Image, View } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
-
 import UserIcon from "../assets/images/user.png";
+import CustomerIcon from "../assets/images/customers.png";
+import ProjectsIcon from "../assets/images/projects.png";
+import TeamsIcon from "../assets/images/teams.png";
+import { Feather } from "@expo/vector-icons";
 
-function Item({ id, title, description, selected, onSelect }) {
+function Item({ id, title, description, selected, onSelect, type }) {
 	return (
-		<TouchableOpacity>
+		<TouchableOpacity
+			onPress={() => onSelect(id)}
+			style={[styles.item, { backgroundColor: selected ? "#bae2e3" : "white" }]}
+		>
 			<View style={styles.row}>
-				<Image source={UserIcon} style={styles.pic} />
+				<Image
+					source={
+						type === "customers"
+							? CustomerIcon
+							: type === "projects"
+							? ProjectsIcon
+							: type === "teams"
+							? TeamsIcon
+							: UserIcon
+					}
+					style={styles.pic}
+				/>
 				<View>
 					<View style={styles.nameContainer}>
 						<Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">
@@ -20,7 +36,9 @@ function Item({ id, title, description, selected, onSelect }) {
 					</View>
 				</View>
 				<View style={styles.moreContainer}>
-					<Icon name="chevron-right" size={20} style={styles.moreIcon} />
+					{type === "customers" || type === "projects" || type === "teams" ? null : (
+						<Feather name="chevron-right" size={30} style={styles.moreIcon} />
+					)}
 				</View>
 			</View>
 		</TouchableOpacity>
@@ -66,7 +84,8 @@ const styles = StyleSheet.create({
 		marginLeft: 15
 	},
 	moreIcon: {
-		color: "#32aedc"
+		color: "#32aedc",
+		right: 13
 	}
 });
 

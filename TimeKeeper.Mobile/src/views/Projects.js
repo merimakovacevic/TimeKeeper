@@ -1,61 +1,78 @@
 import React, { Component } from "react";
+import { View, Text, ActivityIndicator } from "react-native";
+import List from "../components/List";
+import Constants from "expo-constants";
+import { Icon, Header, Left } from "native-base";
 
-import { TabHeader } from "../components/TabHeader";
+import { projectsUrl, apiGetAllRequest } from "../utils/api";
 
-const DATA = [
-	{
-		id: "1",
-		title: "Project11",
-		description: "berkica@gmail.com"
-	},
-	{
-		id: "2",
-		title: "proroeo",
-		description: "hamzic@gmail.com"
-	},
-	{
-		id: "3",
-		title: "proororor",
-		description: "zoka@gmail.com"
-	},
-	{
-		id: "4",
-		title: "Amina prprpprpr",
-		description: "muzi@gmail.com"
-	},
-	{
-		id: "5",
-		title: "Faris teteetet",
-		description: "spica_u_vodi@gmail.com"
-	},
-	{
-		id: "6",
-		title: "Tajib tesatsta",
-		description: "tajci_rajif@gmail.com"
-	},
-	{
-		id: "7",
-		title: "Ferhat Avteeatedic",
-		description: "wannabe_rajif@gmail.com"
-	},
-	{
-		id: "9",
-		title: "AmrTESTRovcanin",
-		description: "duck_whisperer@gmail.com"
+export default class People extends Component {
+	state = {
+		loading: false,
+		projects: []
+	};
+
+	componentDidMount() {
+		this.setState({ loading: true });
+		apiGetAllRequest(projectsUrl)
+			.then((res) => {
+				// console.log(res.data.data);
+				this.setState({ projects: res.data.data, loading: false });
+			})
+			.catch((err) => console.log(err));
 	}
-];
-
-export default class Projects extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			data: DATA
-		};
-	}
-
-	sideDrawer = () => this.props.navigation.openDrawer();
 
 	render() {
-		return <TabHeader title="PROJECTS" data={this.state.data} onClick={this.sideDrawer} />;
+		let projectsRender = () => {
+			if (this.state.loading) {
+				return <ActivityIndicator style={styles.loader} size={100} color="#32aedc" />;
+			} else {
+				return (
+					<View style={styles.container}>
+						<Header style={styles.head}>
+							<Left>
+								<Icon
+									style={styles.icon}
+									name="ios-menu"
+									onPress={() => this.props.navigation.openDrawer()}
+								/>
+							</Left>
+							<Text style={styles.header}>PROJECTS</Text>
+						</Header>
+						<List data={this.state.projects} onPress={() => console.log("hehe")} type="projects" />
+					</View>
+				);
+			}
+		};
+
+		return projectsRender();
 	}
 }
+
+const styles = {
+	container: {
+		flex: 1,
+		marginTop: Constants.statusBarHeight
+	},
+	list: {
+		flex: 1
+	},
+	header: {
+		fontSize: 30,
+		fontWeight: "bold",
+		marginLeft: -80,
+		color: "black",
+		marginTop: 10
+	},
+	head: {
+		backgroundColor: "white"
+	},
+	icon: {
+		marginLeft: -85
+	},
+	loader: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center"
+	}
+};

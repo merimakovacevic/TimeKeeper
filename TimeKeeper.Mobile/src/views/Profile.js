@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 
+import { logout } from "../redux/actions/authActions";
+import Button from "../components/Button";
+
 export default class Profile extends Component {
 	render() {
 		return (
@@ -10,14 +13,11 @@ export default class Profile extends Component {
 				<View style={styles.body}>
 					<View style={styles.bodyContent}>
 						<Text style={styles.name}>John Doe</Text>
-						<Text style={styles.info}>UX Designer / Mobile developer</Text>
-						<Text style={styles.description}>Phone: 123456</Text>
-						<Text style={styles.description}>email: asd@asd.com</Text>
-						<Text style={styles.description}>Team: altpha</Text>
-
-						<TouchableOpacity style={styles.buttonContainer}>
-							<Text>Calendat</Text>
-						</TouchableOpacity>
+						<Text style={styles.info}>Administrator</Text>
+						<Text style={styles.description}>email: admin@asd.com</Text>
+					</View>
+					<View style={styles.buttonContainer}>
+						<Button label="Logout" onPress={() => logout()} />
 					</View>
 				</View>
 			</View>
@@ -71,14 +71,6 @@ const styles = StyleSheet.create({
 		textAlign: "center"
 	},
 	buttonContainer: {
-		marginTop: 10,
-		height: 45,
-		flexDirection: "row",
-		justifyContent: "center",
-		alignItems: "center",
-		marginBottom: 20,
-		width: 250,
-		borderRadius: 30,
-		backgroundColor: "#00BFFF"
+		marginTop: 100
 	}
 });

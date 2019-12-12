@@ -1,68 +1,83 @@
 import React from "react";
 import { createBottomTabNavigator } from "react-navigation-tabs";
+import {} from "@expo/vector-icons";
 import { createStackNavigator } from "react-navigation-stack";
+import People from "../views/People";
+import Profile from "../views/Profile";
+import Projects from "../views/Projects";
+import Teams from "../views/Teams";
+import Customers from "../views/Customers.js";
+import Calendar from "../views/Calendar";
 import { createDrawerNavigator } from "react-navigation-drawer";
+import EmployeeProfile from "../views/EmployeeProfile";
 import { Ionicons } from "@expo/vector-icons";
 
-import Profile from "../views/Profile";
-import Calendar from "../views/Calendar";
-import People from "../views/People";
-import Customers from "../views/Customers";
-import Projects from "../views/Projects";
-import Agenda from "../views/Agenda";
-import Modal from "../components/Modal";
+const StackNavigator = createStackNavigator(
+	{
+		Profile: {
+			screen: Profile
+		},
+		Calendar: {
+			screen: Calendar
+		}
+	},
+	{
+		drawerStyle: {
+			backgroundColor: "#c6cbef",
+			width: 240
+		}
+	}
+);
 
-const StackNavigator = createStackNavigator({
-  Profile: {
-    screen: Profile
-  },
-  Calendar: {
-    screen: Calendar
-  }
+const StackNavigatorEmployee = createStackNavigator({
+	EMPLOYEES: {
+		screen: People
+	},
+	EmployeeProfile: {
+		screen: EmployeeProfile
+	}
 });
 
 const DrawerNavigator = createDrawerNavigator({
-
-	People: {
-		screen: People
+	EMPLOYEES: {
+		screen: StackNavigatorEmployee
 	},
-	Customers: {
+	CUSTOMERS: {
 		screen: Customers
 	},
-	Projects: {
+	PROJECTS: {
 		screen: Projects
 	},
-	Agenda: {
-		screen: Agenda
+	// CALENDAR: {
+	// 	screen: Calendar
+	// },
+	TEAMS: {
+		screen: Teams
 	}
 });
 
 const LoggedInRoutes = createBottomTabNavigator(
-  {
-    People: {
-      screen: DrawerNavigator,
-      navigationOptions: {
-        tabBarIcon: ({ tintColor }) => (
-          <Ionicons name="ios-people" size={40} color={tintColor} />
-        )
-      }
-    },
-    Profile: {
-      screen: StackNavigator,
-      navigationOptions: {
-        tabBarIcon: ({ tintColor }) => (
-          <Ionicons name="ios-person" size={32} color={tintColor} />
-        )
-      }
-    }
-  },
-  {
-    tabBarOptions: {
-      showLabel: false,
-      activeTintColor: "#32aedc",
-      inactiveTintColor: "gray"
-    }
-  }
+	{
+		People: {
+			screen: DrawerNavigator,
+			navigationOptions: {
+				tabBarIcon: ({ tintColor }) => <Ionicons name="ios-people" size={40} color={tintColor} />
+			}
+		},
+		Profile: {
+			screen: StackNavigator,
+			navigationOptions: {
+				tabBarIcon: ({ tintColor }) => <Ionicons name="ios-person" size={32} color={tintColor} />
+			}
+		}
+	},
+	{
+		tabBarOptions: {
+			showLabel: false,
+			activeTintColor: "#32aedc",
+			inactiveTintColor: "gray"
+		}
+	}
 );
 
 export default LoggedInRoutes;

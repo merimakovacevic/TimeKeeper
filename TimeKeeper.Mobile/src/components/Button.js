@@ -1,31 +1,35 @@
-import React from "react";
-import { Text, TouchableOpacity, StyleSheet } from "react-native";
+import * as React from "react";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import colors from "../assets/Theme";
 
-import theme from "../assets/Theme";
-
-export const Button = ({ onPress, children, outline }) => {
-	return (
-		<TouchableOpacity onPress={onPress} style={outline ? styles.outline : styles.button}>
-			{children}
-		</TouchableOpacity>
-	);
-};
+class Button extends React.Component {
+	render() {
+		const { label, onPress } = this.props;
+		return (
+			<TouchableOpacity style={styles.container} onPress={onPress}>
+				<Text style={styles.text}>{label}</Text>
+			</TouchableOpacity>
+		);
+	}
+}
 
 const styles = StyleSheet.create({
-	button: {
-		height: 60,
+	container: {
 		width: "100%",
-		backgroundColor: theme.COLORS.PRIMARY,
-		borderRadius: 5,
-		justifyContent: "center"
+		alignItems: "center",
+		justifyContent: "center",
+		backgroundColor: colors.DODGER_BLUE,
+		marginBottom: 12,
+		paddingVertical: 12,
+		borderRadius: 4,
+		borderWidth: StyleSheet.hairlineWidth,
+		borderColor: "rgba(255,255,255,0.7)"
 	},
-	outline: {
-		width: "100%",
-		height: 60,
-		backgroundColor: theme.COLORS.TRANSPARENT,
-		borderRadius: 5,
-		borderColor: theme.COLORS.DEFAULT,
-		borderWidth: 1,
-		justifyContent: "center"
+	text: {
+		color: colors.WHITE,
+		textAlign: "center",
+		height: 20
 	}
 });
+
+export default Button;
