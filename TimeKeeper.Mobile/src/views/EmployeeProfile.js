@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import RNModal from "../components/Modal";
 import DateTimePicker from "react-native-modal-datetime-picker";
+import moment from "moment";
 
 const DATA = [
   {
@@ -55,14 +56,39 @@ const DATA = [
 
 export default class EmployeeProfile extends Component {
   state = {
-    open: false
+    open: false,
+    isDateTimePickerVisible: false,
+    stringDate: null,
+    date: null
   };
   handleOpen = () => {
     this.setState({ open: true });
   };
+
   handleClose = () => {
     this.setState({ open: false });
   };
+  handleOpenCalendar = () => {
+    this.setState({ open: false });
+    this.props.navigation.navigate("Calendar", {
+      date: this.state.date
+    });
+  };
+  showDateTimePicker = () => {
+    this.setState({ isDateTimePickerVisible: true });
+  };
+  hideDateTimePicker = () => {
+    this.setState({ isDateTimePickerVisible: false });
+  };
+
+  handleDatePicked = (date) => {
+    this.setState({ date: date });
+    console.log("A date picked: ", date);
+    stringDate = JSON.parse(JSON.stringify(moment(date).format("MMM Do YY")));
+    this.setState({ stringDate: stringDate });
+    this.hideDateTimePicker();
+  };
+
   render() {
     const id = this.props.navigation.getParam("id", "0");
     const employeeData = DATA.find((e) => e.id === id);

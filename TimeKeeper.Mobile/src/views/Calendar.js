@@ -555,40 +555,6 @@ export default class Calendar extends React.Component {
     return items;
   }
 
-  state = {
-    open: false,
-    isDateTimePickerVisible: false,
-    stringDate: null,
-    date: null
-  };
-  handleOpen = () => {
-    this.setState({ open: true });
-  };
-
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-  handleOpenCalendar = () => {
-    this.setState({ open: false });
-    this.props.navigation.navigate("Calendar", {
-      date: this.state.date
-    });
-  };
-  showDateTimePicker = () => {
-    this.setState({ isDateTimePickerVisible: true });
-  };
-  hideDateTimePicker = () => {
-    this.setState({ isDateTimePickerVisible: false });
-  };
-
-  handleDatePicked = (date) => {
-    this.setState({ date: date });
-    console.log("A date picked: ", date);
-    stringDate = JSON.parse(JSON.stringify(moment(date).format("MMM Do YY")));
-    this.setState({ stringDate: stringDate });
-    this.hideDateTimePicker();
-  };
-
   render() {
     const items = this.parseData();
     this.parseData();
