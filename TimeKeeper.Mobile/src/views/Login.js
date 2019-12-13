@@ -9,6 +9,10 @@ import Input from "../components/Input";
 import logo from "../../assets/logo.png";
 
 class Login extends Component {
+	static navigationOptions = {
+		header: null
+	};
+
 	state = {
 		username: "",
 		password: ""
@@ -37,10 +41,12 @@ class Login extends Component {
 	};
 
 	loginRenderHandler = () => {
+		// console.log(this.props.user);
 		if (this.props.loading) {
 			return <ActivityIndicator style={styles.loader} size={80} color="#00ff00" />;
 		} else {
-			if (this.props.user.token) {
+			console.log(this.props.user);
+			if (this.props.user.token !== undefined) {
 				return this.props.navigation.navigate("People");
 			} else {
 				return (
@@ -51,7 +57,7 @@ class Login extends Component {
 							<Input
 								value={this.state.email}
 								onChangeText={this.handleUsernameChange}
-								placeholder={"username"}
+								placeholder={"Username"}
 								autoCorrect={false}
 								keyboardType="email-address"
 								returnKeyType="next"
@@ -60,7 +66,7 @@ class Login extends Component {
 								ref={this.passwordInputRef}
 								value={this.state.password}
 								onChangeText={this.handlePasswordChange}
-								placeholder={"Pass"}
+								placeholder={"Password"}
 								secureTextEntry={true}
 								returnKeyType="done"
 							/>
@@ -93,8 +99,9 @@ const styles = StyleSheet.create({
 	},
 	form: {
 		flex: 1,
-		justifyContent: "center",
-		width: "80%"
+		//justifyContent: "center",
+		width: "80%",
+		marginBottom: 25
 	},
 	loader: {
 		flex: 1,
