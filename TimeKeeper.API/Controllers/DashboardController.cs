@@ -11,7 +11,7 @@ using TimeKeeper.DTO.ReportModels.AdminDashboard;
 
 namespace TimeKeeper.API.Controllers
 {
-    //[Authorize]
+    [Authorize(AuthenticationSchemes = "TokenAuthentication")]
     [Route("api/[controller]")]
     [ApiController]
     public class DashboardController : BaseController
@@ -22,7 +22,7 @@ namespace TimeKeeper.API.Controllers
             dashboardService = new DashboardService(Unit);
         }
 
-        [HttpGet("personal-dashboard/{employeeId}/{year}/{month}")]
+        [HttpGet("personal/{employeeId}/{year}/{month}")]
         public IActionResult GetPersonalMonthDashboard(int employeeId, int year, int month)
         {
             try
@@ -35,7 +35,7 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
-        [HttpGet("personal-dashboard/{employeeId}/{year}")]
+        [HttpGet("personal/{employeeId}/{year}")]
         public IActionResult GetPersonalYearDashboard(int employeeId, int year)
         {
             try
@@ -48,7 +48,7 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
-        [HttpGet("team-dashboard/{teamId}/{year}/{month}")]
+        [HttpGet("team/{teamId}/{year}/{month}")]
         public IActionResult GetTeamDashboard(int teamId, int year, int month)
         {
             try
@@ -61,7 +61,7 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
-        [HttpGet("admin-dashboard/{year}/{month}")]
+        [HttpGet("admin/{year}/{month}")]
         public IActionResult GetAdminDashboard(int year, int month)
         {
             try
