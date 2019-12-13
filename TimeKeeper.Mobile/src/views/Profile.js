@@ -23,7 +23,8 @@ class Profile extends Component {
 							onPress={() => {
 								logoutToken();
 								this.props.logout();
-								setTimeout(() => this.props.navigation.navigate("Login"), 2500);
+								//setTimeout(() => this.props.navigation.navigate("Login"), 2500);
+								this.props.navigation.navigate("Login");
 							}}
 						/>
 					</View>
