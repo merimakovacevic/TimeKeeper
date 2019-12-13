@@ -13,8 +13,7 @@ using TimeKeeper.Utility.Factory;
 
 namespace TimeKeeper.API.Controllers
 {
-    //Will the route for this Controller require refactoring? Employees/{id}/Calendar/{id}/Tasks?
-    [Authorize]
+    [Authorize(AuthenticationSchemes = "TokenAuthentication")]
     [Route("api/[controller]")]
     [ApiController]
     public class TasksController : BaseController
