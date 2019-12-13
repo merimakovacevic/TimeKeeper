@@ -7,12 +7,19 @@ const initialUserState = {
 };
 
 export const userReducer = (state = initialUserState, action) => {
-	console.log(action.type);
+	//console.log(action.type);
 	switch (action.type) {
 		case AUTH_START:
 			return {
 				...state,
 				loading: true
+			};
+		case AUTH_FAIL:
+			return {
+				...state,
+				user: {
+					token: undefined
+				}
 			};
 		case AUTH_SUCCESS:
 			return {

@@ -27,7 +27,13 @@ export const _retrieveData = async () => {
 	}
 };
 
-export const logout = async () => {
+export const logout = () => {
+	return {
+		type: AUTH_FAIL
+	};
+};
+
+export const logoutToken = async () => {
 	console.log("remove");
 	await AsyncStorage.removeItem("@MySuperStore:key");
 };
@@ -72,10 +78,16 @@ export const isLoggedIn = () => {
 		dispatch(authStart());
 		_retrieveData()
 			.then((res) => {
-				let user = {
-					token: res
-				};
-				dispatch(authSuccess(user));
+				//console.log(res);
+				if (res == "undefined") {
+					//console.log(res);
+					dispatch(authFail("error"));
+				} else {
+					let user = {
+						token: res
+					};
+					dispatch(authSuccess(user));
+				}
 			})
 			.catch((err) => console.log("error"));
 	};

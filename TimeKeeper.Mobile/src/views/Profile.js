@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { connect } from "react-redux";
 
-import { logout } from "../redux/actions/authActions";
+import { logout, logoutToken } from "../redux/actions/authActions";
 import Button from "../components/Button";
 
-export default class Profile extends Component {
+class Profile extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
@@ -17,7 +18,14 @@ export default class Profile extends Component {
 						<Text style={styles.description}>email: admin@asd.com</Text>
 					</View>
 					<View style={styles.buttonContainer}>
-						<Button label="Logout" onPress={() => logout()} />
+						<Button
+							label="Logout"
+							onPress={() => {
+								logoutToken();
+								this.props.logout();
+								setTimeout(() => this.props.navigation.navigate("Login"), 2500);
+							}}
+						/>
 					</View>
 				</View>
 			</View>
@@ -74,3 +82,5 @@ const styles = StyleSheet.create({
 		marginTop: 100
 	}
 });
+
+export default connect(null, { logout })(Profile);
