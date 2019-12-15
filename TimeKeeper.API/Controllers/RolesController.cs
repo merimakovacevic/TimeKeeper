@@ -29,6 +29,7 @@ namespace TimeKeeper.API.Controllers
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "IsAdmin")]
         public IActionResult Get()
         {
             try
@@ -53,6 +54,7 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
+        [Authorize(Policy = "IsAdmin")]
         public IActionResult Get(int id)
         {
             try
@@ -78,6 +80,7 @@ namespace TimeKeeper.API.Controllers
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "IsAdmin")]
         public IActionResult Post([FromBody] Role role)
         {
             try
@@ -104,6 +107,7 @@ namespace TimeKeeper.API.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "IsAdmin")]
         public IActionResult Put(int id, [FromBody] Role role)
         {
             try
@@ -132,6 +136,7 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
+        [Authorize(Policy = "IsAdmin")]
         public IActionResult Delete(int id)
         {
             try

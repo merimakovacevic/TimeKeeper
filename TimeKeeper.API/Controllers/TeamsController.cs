@@ -39,6 +39,7 @@ namespace TimeKeeper.API.Controllers
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "AdminLeadOrMember")]
         public IActionResult GetAll(int page = 1, int pageSize = 5)
         {
             try
@@ -50,13 +51,13 @@ namespace TimeKeeper.API.Controllers
                 Tuple<PaginationModel, List<Team>> teamsPagination;
                 List<Team> query;
 
-                if(userRole == "admin")
+                if(userRole == "user" || userRole == "lead")
                 {
-                    query = Unit.Teams.Get().ToList();                    
+                    query = Unit.Teams.Get(x => x.Members.Any(y => y.Employee.Id == userId)).ToList();                    
                 }
                 else
                 {
-                    query = Unit.Teams.Get(x => x.Members.Any(y => y.Employee.Id == userId)).ToList();
+                    query = Unit.Teams.Get().ToList();
                 }
 
                 teamsPagination = _pagination.CreatePagination(page, pageSize, query);
@@ -78,16 +79,25 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpGet("{id}")]
-        [Authorize(Policy = "IsMemberInTeam")]
+        [Authorize(Policy = "AdminLeadOrMember")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Get(int id)
         {
             try {
+                int userId = int.Parse(GetUserClaim("sub"));
+                string userRole = GetUserClaim("role");
 
                 Logger.Info($"Try to get team with {id}");
                 Team team = Unit.Teams.Get(id);
-
+                if (team == null)
+                {
+                    return NotFound($"Requested resource with {id} does not exist");
+                }
+                if (userRole == "user" || (userRole == "lead" && !team.Members.Any(x => x.Employee.Id == userId)))
+                {
+                    return Unauthorized();
+                }
                 return Ok(team.Create());
 
             }
@@ -106,7 +116,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="400">Bad request</response>
         [HttpPost]
         //[Authorize(Policy = "IsAdmin")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Post([FromBody] Team team)
@@ -133,7 +143,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
-        //[Authorize(Policy = "IsAdmin")]
+        [Authorize(Policy = "IsAdmin")]
         [Authorize(Roles = "admin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]

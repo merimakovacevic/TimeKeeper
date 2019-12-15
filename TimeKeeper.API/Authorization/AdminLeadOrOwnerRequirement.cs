@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace TimeKeeper.API.Authorization
 {
-    public class HasAccessToCustomer : IAuthorizationRequirement
+    public class AdminLeadOrOwnerRequirement : IAuthorizationRequirement
     {
+        public AdminLeadOrOwnerRequirement()
+        {
+
+        }
     }
 }

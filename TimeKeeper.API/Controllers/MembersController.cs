@@ -11,6 +11,7 @@ using TimeKeeper.BLL;
 using TimeKeeper.DTO;
 using TimeKeeper.Utility.Factory;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
 
 namespace TimeKeeper.API.Controllers
 {
@@ -20,9 +21,11 @@ namespace TimeKeeper.API.Controllers
     public class MembersController : BaseController
     {
         protected QueryService queryService;
+        private PaginationService<Member> _pagination;
         public MembersController(TimeKeeperContext context) : base(context)
         {
             queryService = new QueryService(Unit);
+            _pagination = new PaginationService<Member>();
         }
 
         /// <summary>
@@ -34,23 +37,28 @@ namespace TimeKeeper.API.Controllers
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Get()
+        [Authorize(Policy = "AdminLeadOrMember")]
+        public IActionResult Get(int page = 1, int pageSize = 10)
         {
             try
             {
                 int userId = int.Parse(GetUserClaim("sub"));
                 string userRole = GetUserClaim("role");
 
-                if (userRole == "admin")
+                Tuple<PaginationModel, List<Member>> membersPagination;
+                List<Member> query;
+
+                if (userRole == "user")
                 {
-                    Logger.Info("Try to get all members");
-                    return Ok(Unit.Members.Get().ToList().Select(x => x.Create()).ToList());
+                   query = Unit.Members.Get(x => x.Team.Members.Any(y => y.Employee.Id == userId)).ToList();
                 }
                 else
                 {
-                    return Ok(queryService.GetEmployeeTeamMembers(userId));
+                   query = queryService.GetTeamMembers(userId);
                 }
-
+                membersPagination = _pagination.CreatePagination(page, pageSize, query);
+                HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(membersPagination));
+                return Ok(membersPagination.Item2.Select(x => x.Create()).ToList());
             }
             catch(Exception ex)
             {
@@ -67,16 +75,27 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpGet("{id}")]
-        [Authorize(Policy = "IsMember")]
+        [Authorize(Policy = "AdminLeadOrMember")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Get(int id)
         {
             try
             {
+                int userId = int.Parse(GetUserClaim("sub"));
+                string userRole = GetUserClaim("role");
+
                 Logger.Info($"Try to get member with {id}");
                 Member member = Unit.Members.Get(id);
-
+                if (member == null)
+                {
+                    return NotFound($"Requested resource with {id} does not exist");
+                }
+                if (userRole == "user" && !member.Team.Members.Any(x => x.Employee.Id == userId))
+                {
+                    return Unauthorized();
+                }
+                else
                 return Ok(member.Create());
             }
             catch(Exception ex)
@@ -93,13 +112,21 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPost]
-        [Authorize(Policy = "IsMember")]
+        [Authorize(Policy = "AdminOrLeader")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Post([FromBody] Member member)
         {
             try
             {
+                int userId = int.Parse(GetUserClaim("sub"));
+                string userRole = GetUserClaim("role");
+
+                Logger.Info("Trying to post new member");
+                if (userRole == "lead" && !member.Team.Members.Any(x => x.Employee.Id == userId))
+                {
+                    return Unauthorized();
+                }
                 Unit.Members.Insert(member);
                 Unit.Save();
                 Logger.Info($"Member {member.Employee.FirstName} added with id {member.Id}");
@@ -120,7 +147,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
-        [Authorize(Policy = "IsMember")]
+        [Authorize(Policy = "AdminOrLeader")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Put(int id, [FromBody] Member member)
@@ -149,7 +176,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpDelete("{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Policy = "AdminOrLeader")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
