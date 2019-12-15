@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TimeKeeper.API.Controllers;
-using TimeKeeper.API.Factory;
-using TimeKeeper.API.Models;
-using TimeKeeper.API.Models.ReportModels;
-using TimeKeeper.API.Services;
 using TimeKeeper.Domain.Entities;
+using TimeKeeper.DTO;
+using TimeKeeper.DTO.ReportModels;
+using TimeKeeper.Utility.Factory;
+using TimeKeeper.BLL.Utilities;
 
 namespace TimeKeeper.Test.ControllersTest
 {
@@ -51,7 +51,7 @@ namespace TimeKeeper.Test.ControllersTest
 
             foreach (EmployeeTimeModel employeeTime in employeeTimes)
             {                
-                employeeTime.HourTypes.SetHourTypes(unit);
+                employeeTime.HourTypes.SetHourTypes(dayTypes);
                 //SetHourTypes(employeeTime.HourTypes);
                 employeeTime.TotalHours = 160;
             }
@@ -66,17 +66,19 @@ namespace TimeKeeper.Test.ControllersTest
             return employeeTimes;
         }
 
+        //a new test needs to be written for Dasbhoard and Reports controllers
         [Test, Order(2)]
         [TestCase(3, 2019, 6)]
         public void GetTeamTimeTracking(int teamId, int year, int month)
         {
-            var controller = new CalendarController(unit.Context);
+            var controller = new ReportsController(unit.Context);
             var response = controller.GetTimeTracking(teamId, year, month) as ObjectResult;
             var value = response.Value as List<EmployeeTimeModel>;
+            List<DayType> dayTypes = unit.DayTypes.Get().ToList();
 
             //this dictionary is only used for iteration through it's keys
             Dictionary<string, decimal> hourTypes = new Dictionary<string, decimal>();
-            hourTypes.SetHourTypes(unit);
+            hourTypes.SetHourTypes(dayTypes);
             //SetHourTypes(hourTypes);
 
             List<EmployeeTimeModel> employeeTimes = CreateTeamReport(teamId);

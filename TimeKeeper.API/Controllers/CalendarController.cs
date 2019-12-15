@@ -1,19 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using TimeKeeper.API.Factory;
-using TimeKeeper.API.Models;
-using TimeKeeper.API.Services;
+using TimeKeeper.BLL;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
+using TimeKeeper.Utility.Factory;
+
 namespace TimeKeeper.API.Controllers
 {
-    [Authorize]
+    [Authorize(AuthenticationSchemes = "TokenAuthentication")]
     [Route("api/[controller]")]
     [ApiController]
     public class CalendarController : BaseController
@@ -149,131 +144,6 @@ namespace TimeKeeper.API.Controllers
             {
                 return HandleException(ex);
             }
-        }
-
-
-        [HttpGet("team-time-tracking/{teamId}/{year}/{month}")]
-        public IActionResult GetTimeTracking(int teamId, int year, int month)
-        {
-            try
-            {
-                return Ok(calendarService.GetTeamMonthReport(teamId, year, month));
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
-        [HttpGet("employee-time-tracking/{employeeId}/{year}/{month}")]
-        public IActionResult GetPersonalReport(int employeeId, int year, int month)
-        {
-            try
-            {
-                return Ok(calendarService.GetEmployeeMonthReport(employeeId, year, month));
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
-
-        [HttpGet("personal-dashboard/{employeeId}/{year}/{month}")]
-        public IActionResult GetPersonalMonthDashboard(int employeeId, int year, int month)
-        {
-            try
-            {
-                return Ok(calendarService.GetEmployeeMonthDashboard(employeeId, year, month));
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
-
-        [HttpGet("personal-dashboard/{employeeId}/{year}")]
-        public IActionResult GetPersonalYearDashboard(int employeeId, int year)
-        {
-            try
-            {
-                return Ok(calendarService.GetEmployeeYearDashboard(employeeId, year));
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
-
-        [HttpGet("admin-dashboard/{year}/{month}")]
-        public IActionResult GetAdminDashboard(int year, int month)
-        {
-            try
-            {
-                return Ok(calendarService.GetAdminDashboardInfo(year, month));
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
-
-        [HttpGet("monthly-overview/{year}/{month}")]
-        public IActionResult GetMonthlyOverview(int year, int month)
-        {
-            try
-            {
-                return Ok(calendarService.GetMonthlyOverview(year, month));
-            }
-            catch(Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
-
-        [HttpGet("project-history/{projectId}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        public IActionResult GetProjectHistory(int projectId)
-        {
-            try
-            {
-                Logger.Info($"Try to get project history for project with id:{projectId}");
-                return Ok(calendarService.GetProjectHistoryModel(projectId));
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
-
-        [HttpGet("project-history/{projectId}/{employeeId}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        public IActionResult GetMonthlyProjectHistory(int projectId, int employeeId)
-        {
-            try
-            {
-                Logger.Info($"Try to get project monthly project history for project with id:{projectId} and employee with id:{employeeId}");
-                return Ok(calendarService.GetMonthlyProjectHistory(projectId, employeeId));
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
-
-        [HttpGet("projects-annual/{year}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        public IActionResult AnnualProjectOverview(int year)
-        {
-            try
-            {
-                return Ok(calendarService.GetTotalAnnualOverview(year));
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
+        }     
     }
 }

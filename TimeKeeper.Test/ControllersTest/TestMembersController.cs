@@ -7,10 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using TimeKeeper.API.Controllers;
-using TimeKeeper.API.Factory;
-using TimeKeeper.API.Models;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
+using TimeKeeper.DTO;
 
 namespace TimeKeeper.Test.ControllersTest
 {

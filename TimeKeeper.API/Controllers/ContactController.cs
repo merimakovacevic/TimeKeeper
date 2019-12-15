@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TimeKeeper.API.Models;
-using TimeKeeper.API.Services;
 using TimeKeeper.LOG;
 using TimeKeeper.Mail.Services;
-
+using TimeKeeper.BLL;
+using TimeKeeper.DTO;
+using TimeKeeper.Utility.Factory;
 
 namespace TimeKeeper.API.Controllers
 {

@@ -20,7 +20,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TimeKeeper.API\TimeKeeper.API.csproj" />
+    <ProjectReference Include="..\TimeKeeper.BLL\TimeKeeper.BLL.csproj" />
     <ProjectReference Include="..\TimeKeeper.DAL\TimeKeeper.DAL.csproj" />
+    <ProjectReference Include="..\TimeKeeper.DTO\TimeKeeper.DTO.csproj" />
     <ProjectReference Include="..\TimeKeeper.Seed\TimeKeeper.Seed.csproj" />
   </ItemGroup>
 

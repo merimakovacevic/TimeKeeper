@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TimeKeeper.Domain.Entities;
-using TimeKeeper.Utility.Services;
+using TimeKeeper.Utility.Factory;
 
 namespace TimeKeeper.Test.RepositoriesTest
 {
