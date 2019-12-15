@@ -10,7 +10,7 @@ using TimeKeeper.DAL;
 
 namespace TimeKeeper.API.Controllers
 {
-    [Authorize(AuthenticationSchemes = "TokenAuthentication")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ReportsController : BaseController
@@ -33,7 +33,10 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                return Ok(timeTracking.GetTeamMonthReport(teamId, year, month));
+                DateTime start = DateTime.Now;
+                var ar = timeTracking.GetTeamMonthReport(teamId, year, month);
+                DateTime final = DateTime.Now;
+                return Ok(new { dif = final - start, ar });
             }
             catch (Exception ex)
             {
@@ -46,7 +49,10 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                return Ok(monthlyOverview.GetMonthlyOverview(year, month));
+                DateTime start = DateTime.Now;
+                var ar = monthlyOverview.GetMonthlyOverview(year, month);
+                DateTime final = DateTime.Now;
+                return Ok(new { dif = final - start, ar });
             }
             catch (Exception ex)
             {
@@ -62,7 +68,10 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info($"Try to get project history for project with id:{projectId}");
-                return Ok(projectHistory.GetProjectHistoryModel(projectId));
+                DateTime start = DateTime.Now;
+                var ar = projectHistory.GetProjectHistoryModel(projectId);
+                DateTime final = DateTime.Now;
+                return Ok(new { dif = final - start, ar });
             }
             catch (Exception ex)
             {
@@ -78,7 +87,10 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info($"Try to get project monthly project history for project with id:{projectId} and employee with id:{employeeId}");
-                return Ok(projectHistory.GetMonthlyProjectHistory(projectId, employeeId));
+                DateTime start = DateTime.Now;
+                var ar = projectHistory.GetMonthlyProjectHistory(projectId, employeeId);
+                DateTime final = DateTime.Now;
+                return Ok(new { dif = final - start, ar });
             }
             catch (Exception ex)
             {
@@ -93,7 +105,10 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                return Ok(annualOverview.GetAnnualOverview(year));
+                DateTime start = DateTime.Now;
+                var ar = annualOverview.GetAnnualOverview(year);
+                DateTime final = DateTime.Now;
+                return Ok(new { dif = final - start, ar });
             }
             catch (Exception ex)
             {
@@ -148,6 +163,21 @@ namespace TimeKeeper.API.Controllers
                 var ar = projectHistory.GetStored(projectId);
                 DateTime final = DateTime.Now;
                 return Ok(new { dif = final - start, ar });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        [HttpGet("employee-month/{employeeId}/{year}/{month}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult GetEmployeeReport(int employeeId, int year, int month)
+        {
+            try
+            {
+                return Ok(timeTracking.GetEmployeeMonthReport(Unit.Employees.Get(employeeId), year, month));
             }
             catch (Exception ex)
             {

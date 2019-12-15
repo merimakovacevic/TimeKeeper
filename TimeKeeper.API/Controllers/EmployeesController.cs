@@ -85,7 +85,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPost]
-        // [Authorize(Roles = "admin")]
+        [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Post([FromBody] Employee employee)
@@ -119,7 +119,6 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
-        [Authorize(Policy = "IsEmployee")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Put(int id, [FromBody] Employee employee)
@@ -127,11 +126,18 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info($"Attempt to update employee with id {id}");
+                int userId = int.Parse(GetUserClaim("sub"));
+                string userRole = GetUserClaim("role");
+
+                if (userRole != "admin" || employee.Id != userId)
+                {
+                    return Unauthorized();
+                }
                 Unit.Employees.Update(employee, id);
                 Unit.Save();
-
                 Logger.Info($"Employee {employee.FirstName} {employee.LastName} with id {employee.Id} updated");
                 return Ok(employee.Create());
+
             }
             catch (Exception ex)
             {
@@ -148,7 +154,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "admin")]
+        [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]

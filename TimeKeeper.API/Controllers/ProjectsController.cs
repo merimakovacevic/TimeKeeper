@@ -34,6 +34,7 @@ namespace TimeKeeper.API.Controllers
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "AdminOrLeader")]
         public IActionResult GetAll(int page = 1, int pageSize = 5)
         {
             try
@@ -42,16 +43,16 @@ namespace TimeKeeper.API.Controllers
                 Tuple<PaginationModel, List<Project>> projectsPagination;
                 List<Project> query;
 
-                int userId = int.Parse(User.Claims.FirstOrDefault(x => x.Type == "sub").Value.ToString());
-                string role = User.Claims.FirstOrDefault(x => x.Type == "role").Value.ToString();
+                int userId = int.Parse(GetUserClaim("sub"));
+                string userRole = GetUserClaim("role");
 
-                if (role == "admin" || role == "lead")
+                if (userRole == "lead")
                 {
-                    query = Unit.Projects.Get().ToList();
+                    query = Unit.Projects.Get(x => x.Team.Members.Any(y => y.Employee.Id == userId)).ToList();
                 }
                 else
                 {
-                    query = Unit.Projects.Get(x => x.Team.Members.Any(y => y.Employee.Id == userId)).ToList();                    
+                    query = Unit.Projects.Get().ToList();                    
                 }
 
                 projectsPagination = _pagination.CreatePagination(page, pageSize, query);
@@ -73,7 +74,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpGet("{id}")]
-        [Authorize(Policy = "IsMemberOnProject")]
+        [Authorize(Policy = "AdminOrLeader")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -81,10 +82,19 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
+                int userId = int.Parse(GetUserClaim("sub"));
+                string userRole = GetUserClaim("role");
                 Logger.Info($"Try to fetch project with id {id}");
-                Project project = Unit.Projects.Get(id);                
-
-                return Ok(project.Create());                
+                Project project = Unit.Projects.Get(id);
+                if (project == null)
+                {
+                    return NotFound($"Requested resource with {id} does not exist");
+                }
+                if (userRole == "lead" && !project.Team.Members.Any(x => x.Employee.Id == userId))
+                {
+                    return Unauthorized();
+                }
+                return Ok(project.Create());      
             }
             catch (Exception ex)
             {
@@ -99,7 +109,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPost]
-        [Authorize(Roles = "admin")]
+        [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Post([FromBody] Project project)
@@ -127,7 +137,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Put(int id, [FromBody] Project project)
@@ -157,7 +167,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpDelete("{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]

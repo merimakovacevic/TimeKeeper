@@ -34,6 +34,21 @@ namespace TimeKeeper.BLL
             return employees.Select(x => x.Create()).ToList();
         }
 
+        public List<Member> GetTeamMembers(int employeeId)
+        {
+            List<Team> userTeams = GetEmployeeTeams(employeeId);
+            //Teams.Get(x => x.Members.Any(y => y.Employee.Id == userId)).ToList();
+            HashSet<Member> employees = new HashSet<Member>();
+            foreach (Team team in userTeams)
+            {
+                foreach (Member member in team.Members)
+                {
+                    employees.Add(member);
+                }
+            }
+            return employees.ToList();
+        }
+
         public List<Team> GetEmployeeTeams(int employeeId)
         {
             return _unit.Teams.Get(x => x.Members.Any(y => y.Employee.Id == employeeId)).ToList();
