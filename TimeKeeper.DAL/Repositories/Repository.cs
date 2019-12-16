@@ -49,7 +49,7 @@ namespace TimeKeeper.DAL.Repositories
             Entity old = Get(id);
             ValidateUpdate(entity, id);
             _context.Entry(old).CurrentValues.SetValues(entity);
-            old.Relate(entity);
+            old.Update(entity);
         }
 
         public void Delete(Entity entity) => _dbSet.Remove(entity);

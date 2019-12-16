@@ -9,15 +9,9 @@ namespace TimeKeeper.DAL.Repositories
     {
         public TasksRepository(TimeKeeperContext context) : base(context) { }
 
-        private void Build(JobDetail jobDetail)
-        {
-            jobDetail.Day = _context.Calendar.Find(jobDetail.Day.Id);
-            jobDetail.Project = _context.Projects.Find(jobDetail.Project.Id);
-        }
-
         public override void Insert(JobDetail jobDetail)
         {
-            Build(jobDetail);
+            jobDetail.Build(_context);
             base.Insert(jobDetail);
         }
 
@@ -28,10 +22,9 @@ namespace TimeKeeper.DAL.Repositories
 
             if (old != null)
             {
-                Build(jobDetail);
+                jobDetail.Build(_context);
                 _context.Entry(old).CurrentValues.SetValues(jobDetail);
-                old.Day = jobDetail.Day;
-                old.Project = jobDetail.Project;
+                old.Update(jobDetail);
             }
         }
     }

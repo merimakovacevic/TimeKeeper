@@ -14,7 +14,7 @@ namespace TimeKeeper.DAL.Repositories
         {
             Team old = Get(id);
 
-            if (old.Projects.Count != 0 || old.Members.Count != 0)
+            if (!old.CanDelete())
             {
                 Services.ThrowChildrenPresentException();
             }

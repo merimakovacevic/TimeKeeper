@@ -10,14 +10,9 @@ namespace TimeKeeper.DAL.Repositories
     {
         public CustomersRepository(TimeKeeperContext context) : base(context) { }
 
-        private void Build(Customer customer)
-        {
-            customer.Status = _context.CustomerStatuses.Find(customer.Status.Id);
-        }
-
         public override void Insert(Customer customer)
         {
-            Build(customer);
+            customer.Build(_context);
             base.Insert(customer);
         }
 
@@ -28,10 +23,9 @@ namespace TimeKeeper.DAL.Repositories
 
             if (old != null)
             {
-                Build(customer);                
+                customer.Build(_context);              
                 _context.Entry(old).CurrentValues.SetValues(customer);
-                old.Status = customer.Status;
-                old.HomeAddress = customer.HomeAddress;
+                old.Update(customer);
             }
         }
 
@@ -39,7 +33,7 @@ namespace TimeKeeper.DAL.Repositories
         {
             Customer old = Get(id);
 
-            if (old.Projects.Count != 0)
+            if (!old.CanDelete())
             {
                 Services.ThrowChildrenPresentException();
             }
