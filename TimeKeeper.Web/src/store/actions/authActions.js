@@ -32,8 +32,7 @@ export const auth = (credentials) => {
 		dispatch(authStart());
 		login(loginUrl, credentials)
 			.then((res) => {
-				console.log(res);
-				dispatch(authSuccess(res.data));
+				dispatch(authSuccess(res.data.data));
 			})
 			.catch((err) => dispatch(authFail(err)));
 	};

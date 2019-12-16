@@ -30,7 +30,7 @@ const login = (props) => {
 			}}
 			validationSchema={LoginSchema}
 			onSubmit={(values) => {
-				console.log(values);
+				auth(values);
 			}}
 		>
 			{({ errors, touched }) =>
@@ -99,4 +99,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps)(login);
+export default connect(mapStateToProps, { auth })(login);

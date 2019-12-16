@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { store } from "../index";
 
-export const loginUrl = "";
+export const loginUrl = "http://localhost:8000/login";
 // export const employeesUrl = "https://localhost:44321/api/employees";
 export const employeesUrl = "http://192.168.60.73/TimeKeeper/api/employees";
 export const customersUrl = "http://192.168.60.73/TimeKeeper/api/customers";
@@ -17,8 +17,8 @@ export const login = (url, credentials) => {
 };
 
 export const apiGetAllRequest = (url, method = "GET") => {
-	const token = store.getState().user.access_token;
-	console.log(token);
+	const token = store.getState().user.user.access_token;
+	
 	let headers = new Headers();
 
 	headers = {

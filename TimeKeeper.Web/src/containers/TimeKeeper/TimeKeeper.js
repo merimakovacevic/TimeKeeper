@@ -54,7 +54,7 @@ class TimeKeeper extends React.Component {
 		if (!user) {
 			return this.props.history.replace("/");
 		} else {
-			let role = user.profile.role;
+			let role = user.user.role;
 			if (role === "user") {
 				this.setState({ database: ["Employees", "Projects"] });
 				this.setState({ reports: ["Personal Report", "Monthly Report"] });
@@ -94,6 +94,7 @@ class TimeKeeper extends React.Component {
 
 	render() {
 		const { classes, theme, user } = this.props;
+		console.log(user);
 		const { open, anchorDbEl, anchorSrEl, anchorUserEl, reports, database } = this.state;
 		const { handleDrawerOpen, handleDrawerClose, handleSrClick, handleDbClick, handleClose, handleUserEl } = this;
 
@@ -141,7 +142,7 @@ class TimeKeeper extends React.Component {
 										className={classNames(classes.hover, classes.borderRadius)}
 									>
 										<p style={{ fontSize: ".9rem", paddingRight: ".8rem" }}>
-											{user.profile.name} ({user.profile.role})
+											{user.user.name} ({user.user.role})
 										</p>
 										<AccountCircleIcon fontSize="large" />
 									</IconButton>
@@ -277,11 +278,11 @@ class TimeKeeper extends React.Component {
 										}}
 									>
 										<Typography variant="h3" gutterBottom>
-											Welcome back <b>{user.profile.name}</b>
+											Welcome back <b>{user.name}</b>
 										</Typography>
 									</div>
 								</Route>
-								{user.profile.role === "admin" || user.profile.role === "lead" ? (
+								{user.user.role === "admin" || user.user.role === "lead" ? (
 									<React.Fragment>
 										<Route exact={true} path="/app/employees">
 											<EmployeesPage />

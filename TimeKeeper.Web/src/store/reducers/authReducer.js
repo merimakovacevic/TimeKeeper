@@ -2,7 +2,7 @@ import { AUTH_START, AUTH_SUCCESS, AUTH_FAIL, AUTH_LOGOUT } from "../actions/act
 
 const initialUserState = {
 	user: null,
-	loading: true,
+	loading: false,
 	error: false
 };
 
