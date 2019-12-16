@@ -59,7 +59,7 @@ class TimeKeeper extends React.Component {
 				this.setState({ database: ["Employees", "Projects"] });
 				this.setState({ reports: ["Personal Report", "Monthly Report"] });
 			} else if (role === "admin") {
-				this.setState({ database: ["Employees", "Teams", "Customers", "Teams"] });
+				this.setState({ database: ["Employees", "Projects", "Customers", "Teams"] });
 				this.setState({
 					reports: ["Personal Report", "Monthly Report", "Annual Report", "Project History", "Dashboard"]
 				});

@@ -1,3 +1,4 @@
+export { auth } from "./authActions";
 export {
 	fetchEmployees,
 	employeeSelect,

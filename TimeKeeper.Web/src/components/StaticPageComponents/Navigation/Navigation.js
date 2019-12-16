@@ -20,10 +20,10 @@ const navigation = (props) => (
 			variant="contained"
 			color="primary"
 			className={classes.Button}
-			// onClick={props.clicked}
-			onClick={() => {
-				userManager.signinRedirect();
-			}}
+			onClick={props.clicked}
+			// onClick={() => {
+			// 	// userManager.signinRedirect();
+			// }}
 		>
 			LOGIN
 		</Button>
