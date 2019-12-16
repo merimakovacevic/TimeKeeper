@@ -61,6 +61,7 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("admin/{year}/{month}")]
         public IActionResult GetAdminDashboard(int year, int month)
         {

@@ -14,7 +14,6 @@ namespace TimeKeeper.DTO.ReportModels
             HourTypes.Add("Missing entries", 0);
         }
         public MasterModel Employee { get; set; }
-        public string Role { get; set; }
         /// <summary>
         /// Represents the total hours in a month for an employee, excluded weekends and overtime
         /// </summary>
