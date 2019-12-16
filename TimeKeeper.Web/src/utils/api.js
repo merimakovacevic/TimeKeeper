@@ -4,7 +4,7 @@ import { store } from "../index";
 
 export const loginUrl = "http://localhost:8000/login";
 // export const employeesUrl = "https://localhost:44321/api/employees";
-export const employeesUrl = "http://192.168.60.73/TimeKeeper/api/employees";
+export const employeesUrl = "http://localhost:8000/api/employees";
 export const customersUrl = "http://192.168.60.73/TimeKeeper/api/customers";
 //export const customersUrl = "https://localhost:44321/api/customers";
 export const projectsUrl = "https://localhost:44321/api/projects";
@@ -17,8 +17,8 @@ export const login = (url, credentials) => {
 };
 
 export const apiGetAllRequest = (url, method = "GET") => {
-	const token = store.getState().user.user.access_token;
-	
+	const token = store.getState().user.token;
+
 	let headers = new Headers();
 
 	headers = {
@@ -39,7 +39,7 @@ export const apiGetAllRequest = (url, method = "GET") => {
 export const apiGetOneRequest = (url, id, method = "GET") => {
 	let newUrl = `${url}/${id}`;
 
-	const token = store.getState().user.user.access_token;
+	const token = store.getState().user.token;
 	let headers = new Headers();
 
 	headers = {
@@ -60,7 +60,7 @@ export const apiGetOneRequest = (url, id, method = "GET") => {
 export const apiPutRequest = (url, id, body, method = "PUT") => {
 	let newUrl = `${url}/${id}`;
 
-	const token = store.getState().user.user.access_token;
+	const token = store.getState().user.token;
 	let headers = new Headers();
 
 	headers = {
@@ -80,7 +80,7 @@ export const apiPutRequest = (url, id, body, method = "PUT") => {
 };
 
 export const apiPostRequest = (url, body, method = "POST") => {
-	const token = store.getState().user.user.access_token;
+	const token = store.getState().user.token;
 
 	let headers = new Headers();
 
@@ -103,7 +103,7 @@ export const apiPostRequest = (url, body, method = "POST") => {
 export const apiDeleteRequest = (url, id, method = "POST") => {
 	let newUrl = `${url}/${id}`;
 
-	const token = store.getState().user.user.access_token;
+	const token = store.getState().user.token;
 
 	let headers = new Headers();
 

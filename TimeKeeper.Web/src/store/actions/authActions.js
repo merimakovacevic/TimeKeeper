@@ -7,6 +7,24 @@ export const logout = () => {
 	};
 };
 
+const saveUser = (user) => localStorage.setItem("user", user);
+const getUser = () => localStorage.getItem("user");
+const removeUser = () => localStorage.removeItem("user");
+
+export const authCheckState = () => {
+	return (dispatch) => {
+		const user = JSON.parse(getUser());
+
+		if (user) {
+			dispatch(authSuccess(user));
+		} else {
+			// console.log("Implementiraj logout metodu!!!");
+			dispatch(logout());
+			removeUser();
+		}
+	};
+};
+
 const authStart = () => {
 	return {
 		type: AUTH_START
@@ -33,6 +51,7 @@ export const auth = (credentials) => {
 		login(loginUrl, credentials)
 			.then((res) => {
 				dispatch(authSuccess(res.data.data));
+				saveUser(JSON.stringify(res.data.data));
 			})
 			.catch((err) => dispatch(authFail(err)));
 	};

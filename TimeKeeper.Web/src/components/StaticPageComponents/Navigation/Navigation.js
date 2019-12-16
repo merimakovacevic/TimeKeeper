@@ -1,7 +1,6 @@
 import React from "react";
 
 import { Button } from "@material-ui/core";
-import userManager from "../../../utils/userManager";
 
 import classes from "./Navigation.module.css";
 import Logo from "../Logo/Logo";

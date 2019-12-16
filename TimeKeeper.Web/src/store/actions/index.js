@@ -1,4 +1,4 @@
-export { auth } from "./authActions";
+export { auth, authCheckState, logout } from "./authActions";
 export {
 	fetchEmployees,
 	employeeSelect,

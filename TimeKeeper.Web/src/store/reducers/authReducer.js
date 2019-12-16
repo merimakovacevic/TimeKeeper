@@ -2,6 +2,7 @@ import { AUTH_START, AUTH_SUCCESS, AUTH_FAIL, AUTH_LOGOUT } from "../actions/act
 
 const initialUserState = {
 	user: null,
+	token: null,
 	loading: false,
 	error: false
 };
@@ -17,7 +18,8 @@ export const userReducer = (state = initialUserState, action) => {
 		case AUTH_SUCCESS:
 			return {
 				...state,
-				user: action.user,
+				user: action.user.user,
+				token: action.user.token,
 				loading: false
 			};
 		case AUTH_FAIL:
@@ -25,6 +27,12 @@ export const userReducer = (state = initialUserState, action) => {
 				...state,
 				error: action.error,
 				loading: false
+			};
+		case AUTH_LOGOUT:
+			return {
+				...state,
+				user: null,
+				token: null
 			};
 		default:
 			return state;

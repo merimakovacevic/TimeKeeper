@@ -2,10 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
-import { OidcProvider } from "redux-oidc";
 
 import configureStore from "./store/configureStore";
-import userManager from "./utils/userManager";
 
 import "./index.css";
 import App from "./App";
@@ -15,11 +13,9 @@ export const store = configureStore();
 
 ReactDOM.render(
 	<Provider store={store}>
-		<OidcProvider store={store} userManager={userManager}>
-			<BrowserRouter>
-				<App />
-			</BrowserRouter>
-		</OidcProvider>
+		<BrowserRouter>
+			<App />
+		</BrowserRouter>
 	</Provider>,
 	document.getElementById("root")
 );

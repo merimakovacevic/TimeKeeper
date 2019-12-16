@@ -66,7 +66,7 @@ const EmployeesPage = (props) => {
 							</Typography>
 						</div>
 
-						{user.profile.role === "admin" ? (
+						{user.role === "admin" ? (
 							<div>
 								<Tooltip title="Add">
 									<IconButton
@@ -107,7 +107,7 @@ const EmployeesPage = (props) => {
 									<CustomTableCell>{e.email}</CustomTableCell>
 									<CustomTableCell>{e.phone}</CustomTableCell>
 
-									{user.profile.role === "admin" ? (
+									{user.role === "admin" ? (
 										<CustomTableCell align="center">
 											<IconButton
 												aria-label="Edit"

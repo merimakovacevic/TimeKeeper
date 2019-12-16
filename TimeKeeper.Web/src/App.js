@@ -2,25 +2,27 @@ import React from "react";
 import { connect } from "react-redux";
 import { Switch, Route, withRouter } from "react-router-dom";
 
+import { authCheckState } from "./store/actions/index";
 import StaticPage from "./containers/StaticPage/StaticPage";
 import TimeKeeper from "./containers/TimeKeeper/TimeKeeper";
 // import Callback from "./components/StaticPageComponents/Login/LoginCallback";
 
 class App extends React.Component {
 	componentDidMount() {
+		this.props.authCheckState();
 		this.handleLogin();
 	}
 
 	componentDidUpdate(prevProps) {
-		if (prevProps.user !== this.props.user) {
+		if (prevProps.token !== this.props.token) {
 			this.handleLogin();
 		}
 	}
 
 	handleLogin = () => {
-		const { user, history } = this.props;
+		const { token, history } = this.props;
 
-		if (user) {
+		if (token) {
 			history.push("/app");
 		} else {
 			history.push("/");
@@ -28,7 +30,6 @@ class App extends React.Component {
 	};
 
 	render() {
-		// console.log(this.props.user);
 		return (
 			<Switch>
 				{/* <Route exact path="/auth-callback" component={Callback} /> */}
@@ -41,8 +42,8 @@ class App extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		user: state.user.user
+		token: state.user.token
 	};
 };
 
-export default connect(mapStateToProps)(withRouter(App));
+export default connect(mapStateToProps, { authCheckState })(withRouter(App));
