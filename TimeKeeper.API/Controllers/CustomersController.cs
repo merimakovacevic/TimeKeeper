@@ -38,6 +38,7 @@ namespace TimeKeeper.API.Controllers
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [Authorize(Policy = "IsAdmin")]
         public IActionResult GetAll(int page = 1, int pageSize = 5)
         {
             try
@@ -46,12 +47,12 @@ namespace TimeKeeper.API.Controllers
 
                 Tuple<PaginationModel, List<Customer>> customersPagination;
 
-                var role = User.Claims.FirstOrDefault(c => c.Type == "role").Value.ToString();
-                if (role == "user") return Unauthorized();
+                string userRole = GetUserClaim("role");
+                if (userRole == "user") return Unauthorized();
 
                 List<Customer> query;
 
-                if (role == "lead")
+                if (userRole == "lead")
                 {
                     var empid = User.Claims.FirstOrDefault(c => c.Type == "sub").Value.ToString();
                     var employee = Unit.Employees.Get(int.Parse(empid));
@@ -94,7 +95,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpGet("{id}")]
-        [Authorize(Policy = "HasAccessToCustomer")]
+        [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Get(int id)
@@ -120,7 +121,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPost]
-        [Authorize (Roles = "admin")]
+        [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Post([FromBody] Customer customer)
@@ -148,7 +149,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public IActionResult Put(int id, [FromBody] Customer customer)
@@ -178,7 +179,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpDelete("{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]

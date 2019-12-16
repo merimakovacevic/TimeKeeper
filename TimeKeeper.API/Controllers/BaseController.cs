@@ -11,7 +11,7 @@ using TimeKeeper.LOG;
 
 namespace TimeKeeper.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     public class BaseController : ControllerBase
     {

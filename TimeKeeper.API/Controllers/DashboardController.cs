@@ -11,7 +11,7 @@ using TimeKeeper.DTO.ReportModels.AdminDashboard;
 
 namespace TimeKeeper.API.Controllers
 {
-    [Authorize(AuthenticationSchemes = "TokenAuthentication")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DashboardController : BaseController
