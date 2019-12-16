@@ -8,12 +8,11 @@ import thunk from "redux-thunk";
 // import userManager from "../utils/userManager";
 // const oidcMiddleware = createOidcMiddleware(userManager);
 
-import { employeesReducer, customersReducer, projectsReducer } from "./reducers/index";
-
+import { employeesReducer, customersReducer, projectsReducer, userReducer } from "./reducers/index";
 
 const rootReducer = combineReducers({
 	employees: employeesReducer,
-	//user: oidcReducer,
+	user: userReducer,
 	customers: customersReducer,
 	projects: projectsReducer
 });
