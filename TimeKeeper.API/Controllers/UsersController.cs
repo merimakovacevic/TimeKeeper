@@ -22,7 +22,9 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class UsersController : BaseController
     {
-        public UsersController(TimeKeeperContext context) : base(context) { }
+        public UsersController(TimeKeeperContext context) : base(context)
+        {
+        }
 
         [HttpGet("password")]
         public IActionResult GetUsersAndUpdate()
@@ -50,6 +52,7 @@ namespace TimeKeeper.API.Controllers
                 return BadRequest(ex);
             }
         }
+
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
@@ -70,6 +73,7 @@ namespace TimeKeeper.API.Controllers
                 return BadRequest(ex);
             }
         }
+
         [HttpPost]
         public IActionResult Post([FromBody] User user)
         {
@@ -84,6 +88,7 @@ namespace TimeKeeper.API.Controllers
                 return BadRequest(ex);
             }
         }
+
         [HttpPut("{id}")]
         public IActionResult Put([FromBody] User user, int id)
         {
@@ -98,6 +103,7 @@ namespace TimeKeeper.API.Controllers
                 return BadRequest(ex);
             }
         }
+
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

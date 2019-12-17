@@ -129,15 +129,17 @@ namespace TimeKeeper.API.Controllers
                 int userId = int.Parse(GetUserClaim("sub"));
                 string userRole = GetUserClaim("role");
 
-                if (userRole != "admin" || employee.Id != userId)
+                if (userRole == "admin" || employee.Id == userId)
+                {
+                    Unit.Employees.Update(employee, id);
+                    Unit.Save();
+                    Logger.Info($"Employee {employee.FirstName} {employee.LastName} with id {employee.Id} updated");
+                    return Ok(employee.Create());
+                }
+                else
                 {
                     return Unauthorized();
                 }
-                Unit.Employees.Update(employee, id);
-                Unit.Save();
-                Logger.Info($"Employee {employee.FirstName} {employee.LastName} with id {employee.Id} updated");
-                return Ok(employee.Create());
-
             }
             catch (Exception ex)
             {
