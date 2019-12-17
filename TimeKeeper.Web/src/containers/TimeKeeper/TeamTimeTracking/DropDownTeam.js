@@ -1,117 +1,107 @@
-// import React from "react";
-// import ReactDOM from "react-dom";
-// import PropTypes from "prop-types";
-// import { withStyles } from "@material-ui/core/styles";
-// import Input from "@material-ui/core/Input";
-// import OutlinedInput from "@material-ui/core/OutlinedInput";
-// import FilledInput from "@material-ui/core/FilledInput";
-// import InputLabel from "@material-ui/core/InputLabel";
-// import MenuItem from "@material-ui/core/MenuItem";
-// import FormHelperText from "@material-ui/core/FormHelperText";
-// import FormControl from "@material-ui/core/FormControl";
-// import Select from "@material-ui/core/Select";
-// import axios from "axios";
-// import classNames from "classnames";
-// import config from "../../../config";
+import { connect } from "react-redux";
+import {
+  fetchDropDownTeam,
+  dropdownTeamSelect
+} from "../../../store/actions/index";
+import { withStyles } from "@material-ui/core/styles";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import React, { useEffect, useState } from "react";
 
-// const styles = theme => ({
-//   root: {
-//     display: "flex",
-//     flexWrap: "wrap"
-//   },
-//   formControl: {
-//     margin: theme.spacing.unit,
-//     minWidth: 120
-//   },
-//   selectEmpty: {
-//     marginTop: theme.spacing.unit * 2
-//   }
-// });
-// let counter = 0;
-// function createData(name) {
-//   counter += 1;
-//   return {
-//     id: counter,
-//     name
-//   };
-// }
+const styles = (theme) => ({
+  root: {
+    display: "flex",
+    flexWrap: "wrap"
+  },
+  formControl: {
+    margin: theme.spacing.unit,
+    minWidth: 120
+  },
+  selectEmpty: {
+    marginTop: theme.spacing.unit * 2
+  }
+});
+let counter = 0;
+function createData(name) {
+  counter += 1;
+  return {
+    id: counter,
+    name
+  };
+}
 
-// class DropDown extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       labelWidth: 0,
-//       teams: [],
-//       selectedId: null
-//     };
-//     this.onClickDrop = this.onClickDrop.bind(this);
-//   }
-//   componentDidMount() {
-//     axios(`${config.apiUrl}teams`, {
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: config.token
-//       }
-//     })
-//       .then(res => {
-//         console.log(res);
-//         this.setState({ teams: res.data });
+const DropDownTeam = (props) => {
+  const { classes } = props;
+  const { fetchDropDownTeam } = props;
+  const { dropdownTeamSelect } = props;
+  const { data, selected, reload } = props;
+  const [teams, setTeams] = useState([]);
 
-//         /*  let fetchedData = res.data.map(r => createData(r.name));
-//         this.setState({ teams: fetchedData, loading: false }); */
-//       })
-//       .catch(error => console.log(error.response));
-//   }
+  // let teams = [];
+  let selectedTeam = null;
 
-//   handleChange = event => {
-//     this.setState({ [event.target.name]: event.target.value });
-//   };
+  useEffect(() => {
+    fetchDropDownTeam();
+    setTeams(data);
+    console.log("ovo je data", data);
+    console.log("ovo je teams aaa teams  ", teams);
+  }, [reload]);
 
-//   /* onClickV = () => {
-//     // var lang = this.dropdown.value;đž
-//     var teamName = "sakkasd";
-//     this.props.onClickDrop(teamName);
-//   }; */
+  /*  handleChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
+ */
+  /* onClickV = () => {
+      var lang = this.dropdown.value;đž
+     var teamName = "sakkasd";
+     this.props.onClickDrop(teamName);
+   }; */
+  /* 
+  onClickDrop = (name) => (event) => {
+    var value = event.target.value;
+ */
+  /*   this.setState({
+    selectedId: value
+  });
+  this.props.onClickDrop(value);
+  console.log(this.state.selectedId);
+}; */
 
-//   onClickDrop = name => event => {
-//     var value = event.target.value;
+  return (
+    <form className={classes.root} autoComplete="off">
+      <FormControl className={classes.formControl}>
+        <InputLabel htmlFor="age-simple">Team</InputLabel>
+        <Select
+          name="selectOptions"
+          //onChange={this.onClickDrop("selectOptions")}
+          /*   onClick={() => this.props.onClickDrop(this.state.selectedId)} */
+          inputProps={{}}
+        >
+          {/* <MenuItem value={this.state.teams}>
+               <em>None</em>
+             </MenuItem> */}
+          {teams.map((team) => (
+            <MenuItem key={team.id} value={team.id}>
+              {team.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </form>
+  );
+};
 
-//     this.setState({
-//       selectedId: value
-//     });
-//     this.props.onClickDrop(value);
-//     console.log(this.state.selectedId);
-//   };
+const mapStateToProps = (state) => {
+  return {
+    data: state.teams.data,
+    selected: state.selectedTeam,
+    reload: state.teams.reload
+  };
+};
 
-//   render() {
-//     const { classes } = this.props;
-//     let teams = this.state.teams;
-//     return (
-//       <form className={classes.root} autoComplete="off">
-//         <FormControl className={classes.formControl}>
-//           <InputLabel htmlFor="age-simple">Team</InputLabel>
-//           <Select
-//             name="selectOptions"
-//             onChange={this.onClickDrop("selectOptions")}
-//             /*   onClick={() => this.props.onClickDrop(this.state.selectedId)} */
-//             inputProps={{}}
-//           >
-//             {/* <MenuItem value={this.state.teams}>
-//               <em>None</em>
-//             </MenuItem> */}
-//             {this.state.teams.map(team => (
-//               <MenuItem key={team.id} value={team.id}>
-//                 {team.name}
-//               </MenuItem>
-//             ))}
-//           </Select>
-//         </FormControl>
-//       </form>
-//     );
-//   }
-// }
-
-// DropDown.propTypes = {
-//   classes: PropTypes.object.isRequired
-// };
-// export default withStyles(styles)(DropDown);
+export default connect(mapStateToProps, {
+  fetchDropDownTeam,
+  dropdownTeamSelect
+})(withStyles(styles)(DropDownTeam));
