@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TimeKeeper.BLL.ReportServices;
 using TimeKeeper.DAL;
+using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Controllers
 {
@@ -178,6 +179,23 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 return Ok(timeTracking.GetEmployeeMonthReport(Unit.Employees.Get(employeeId), year, month));
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        [HttpGet("missing-entries/{employeeid}/{year}/{month}")]
+        public IActionResult GetMissingEntries(int employeeId, int year, int month)
+        {
+            try
+            {
+                DateTime start = DateTime.Now;
+                Employee employee = Unit.Employees.Get(employeeId);
+                var ar = timeTracking.GetEmployeeMissingEntries(employee, year, month);
+                DateTime final = DateTime.Now;
+                return Ok(new { dif = final - start, ar });
             }
             catch (Exception ex)
             {
