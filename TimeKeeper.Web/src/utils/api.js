@@ -10,7 +10,7 @@ export const customersUrl = "http://192.168.60.73/TimeKeeper/api/customers";
 export const projectsUrl = "http://localhost:44321/api/projects";
 export const dropDownTeamsUrl = "http://localhost:8000/api/teams";
 export const teamTrackingUrl =
-  "http://localhost:44350/api/calendar/team-time-tracking";
+  "http://localhost:8000/api/reports/team-time-tracking";
 
 export const login = (url, credentials) => {
   return axios
@@ -35,6 +35,28 @@ export const apiGetAllRequest = (url, method = "GET") => {
   };
 
   return axios(url, options)
+    .then((data) => ({ data }))
+    .catch((error) => ({ error }));
+};
+
+export const apiGetTeamTracking = (url, team, year, month, method = "GET") => {
+  let newUrl = `${url}/${team}/${year}/${month}`;
+
+  const token = store.getState().user.token;
+
+  let headers = new Headers();
+
+  headers = {
+    Accept: "application/json",
+    Authorization: `Bearer ${token}`
+  };
+
+  const options = {
+    method,
+    headers
+  };
+
+  return axios(newUrl, options)
     .then((data) => ({ data }))
     .catch((error) => ({ error }));
 };

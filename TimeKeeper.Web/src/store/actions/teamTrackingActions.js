@@ -3,7 +3,7 @@ import {
   TEAMTRACKING_FETCH_SUCCESS,
   TEAMTRACKING_FETCH_FAIL
 } from "./actionTypes";
-import { teamTrackingUrl, apiGetAllRequest } from "../../utils/api";
+import { teamTrackingUrl, apiGetTeamTracking } from "../../utils/api";
 
 const teamTrackingFetchStart = () => {
   return {
@@ -25,14 +25,17 @@ const teamTrackingFetchFail = (error) => {
   };
 };
 
-export const fetchTeamTracking = () => {
+export const fetchTeamTracking = (team, year, month) => {
   return (dispatch) => {
     dispatch(teamTrackingFetchStart());
-    apiGetAllRequest(teamTrackingUrl)
+    apiGetTeamTracking(teamTrackingUrl, team, year, month)
       .then((res) => {
-        console.log(res);
+        console.log(res.data.data, "fetchTeamTracking res");
         dispatch(teamTrackingFetchSuccess(res.data.data));
       })
-      .catch((err) => dispatch(teamTrackingFetchFail(err)));
+      .catch((err) => {
+        console.log(err, "fetchTeamTracking err");
+        dispatch(teamTrackingFetchFail(err));
+      });
   };
 };

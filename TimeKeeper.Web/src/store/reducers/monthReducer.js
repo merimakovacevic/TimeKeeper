@@ -1,7 +1,7 @@
 import { DROPDOWNMONTH_SELECT } from "../actions/actionTypes";
 
 const initialUserState = {
-  selectedMonth: null
+  selectedMonth: 1
 };
 
 export const monthReducer = (state = initialUserState, action) => {

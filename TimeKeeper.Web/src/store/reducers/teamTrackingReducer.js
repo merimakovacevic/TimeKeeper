@@ -7,7 +7,8 @@ import {
 const initialUserState = {
   data: [],
   loading: false,
-  error: null
+  error: null,
+  reload: false
 };
 
 export const teamTrackingReducer = (state = initialUserState, action) => {
@@ -18,10 +19,12 @@ export const teamTrackingReducer = (state = initialUserState, action) => {
         loading: true
       };
     case TEAMTRACKING_FETCH_SUCCESS:
+      // console.log(action.data, "action.data");
       return {
         ...state,
-        data: action.data,
-        loading: false
+        data: action.data.ar,
+        loading: false,
+        reload: action.reload
       };
     case TEAMTRACKING_FETCH_FAIL:
       return {

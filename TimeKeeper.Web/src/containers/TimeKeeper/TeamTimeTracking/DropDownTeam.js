@@ -39,14 +39,9 @@ const DropDownTeam = (props) => {
   const { data, selected, reload } = props;
   const [teams, setTeams] = useState([]);
 
-  // let teams = [];
-  let selectedTeam = null;
-
   useEffect(() => {
     fetchDropDownTeam();
     setTeams(data);
-    console.log("ovo je data", data);
-    console.log("ovo je teams aaa teams  ", teams);
   }, [reload]);
 
   /*  handleChange = (event) => {

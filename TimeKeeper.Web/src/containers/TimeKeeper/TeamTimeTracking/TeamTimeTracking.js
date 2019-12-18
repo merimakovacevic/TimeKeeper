@@ -8,8 +8,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Tooltip,
-  IconButton,
   Button,
   CircularProgress,
   Backdrop,
@@ -24,23 +22,14 @@ import { fetchTeamTracking } from "../../../store/actions/index";
 
 const TeamTimeTracking = (props) => {
   const { classes } = props;
-  const {
-    data,
-    loading,
-    error,
-    selected,
-    user,
-    reload,
-    fetchTeamTracking
-  } = props;
-  // const { fetchEmployees, employeeSelect, employeeDelete } = props;
-  const { year, month, team } = props;
-  let teams = data;
+  const { data, loading, error, teams, year, month, fetchTeamTracking } = props;
+
+  // let teamTracking = [];
 
   useEffect(() => {
-    fetchTeamTracking();
-    teams = data;
-  }, [reload]);
+    fetchTeamTracking(teams.selectedTeam, year, month);
+    // teamTracking = data.data;
+  }, [teams.selectedTeam, year, month]);
 
   return (
     <React.Fragment>
@@ -81,6 +70,14 @@ const TeamTimeTracking = (props) => {
               <DropDownYear></DropDownYear>
               <DropDownMonth></DropDownMonth>
               <DropDownTeam></DropDownTeam>
+              <Button
+                onClick={() => {
+                  console.log("PROPS", props);
+                  fetchTeamTracking(teams.selectedTeam, year, month);
+                }}
+              >
+                FETCH THEM
+              </Button>
             </div>
           </Toolbar>
           <Table className={classes.table}>
@@ -116,9 +113,9 @@ const TeamTimeTracking = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {/*     {teams.map((r, i) => (
+              {data.data.map((r, i) => (
                 <TableRow key={r.id}>
-                  <CustomTableCell>{i + 1}</CustomTableCell>
+                  {/* <CustomTableCell>{i + 1}</CustomTableCell> */}
                   <CustomTableCell>{r.employee.name}</CustomTableCell>
                   <CustomTableCell>{r.hourTypes.Workday}</CustomTableCell>
                   <CustomTableCell>{r.hourTypes.Busines}</CustomTableCell>
@@ -127,7 +124,7 @@ const TeamTimeTracking = (props) => {
                   <CustomTableCell>{r.hourTypes.Sick}</CustomTableCell>
                   <CustomTableCell>{r.hourTypes.Other}</CustomTableCell>
                 </TableRow>
-              ))} */}
+              ))}
             </TableBody>
           </Table>
         </Paper>
@@ -149,7 +146,11 @@ const CustomTableCell = withStyles((theme) => ({
 
 const mapStateToProps = (state) => {
   return {
-    data: state.teams.data
+    user: state.user.user,
+    data: state.teamTracking,
+    teams: state.teams,
+    year: state.year.selected,
+    month: state.month.selectedMonth
     /*  loading: state.employees.loading, 
     error: state.employees.error,
     selected: state.employees.selected,

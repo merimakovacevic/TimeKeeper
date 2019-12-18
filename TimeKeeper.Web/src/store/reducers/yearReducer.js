@@ -1,7 +1,7 @@
 import { DROPDOWNYEAR_SELECT } from "../actions/actionTypes";
 
 const initialUserState = {
-  selected: null
+  selected: 2019
 };
 
 export const yearReducer = (state = initialUserState, action) => {

@@ -9,7 +9,7 @@ const initialUserState = {
   data: [],
   loading: false,
   error: null,
-  selectedTeam: null,
+  selectedTeam: 1,
   reload: false
 };
 
