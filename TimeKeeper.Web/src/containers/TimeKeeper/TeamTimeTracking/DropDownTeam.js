@@ -59,8 +59,7 @@ const DropDownTeam = (props) => {
      this.props.onClickDrop(teamName);
    }; */
   /* 
-  onClickDrop = (name) => (event) => {
-    var value = event.target.value;
+  
  */
   /*   this.setState({
     selectedId: value
@@ -77,6 +76,7 @@ const DropDownTeam = (props) => {
           name="selectOptions"
           //onChange={this.onClickDrop("selectOptions")}
           /*   onClick={() => this.props.onClickDrop(this.state.selectedId)} */
+          onChange={(e) => dropdownTeamSelect(e.target.value)}
           inputProps={{}}
         >
           {/* <MenuItem value={this.state.teams}>

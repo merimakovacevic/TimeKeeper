@@ -32,7 +32,7 @@ function createData(name) {
 const DropDownMonth = (props) => {
   const { classes } = props;
 
-  const { data } = props;
+  const { data, monthSelect } = props;
   let selectedMonth = null;
   return (
     <form className={classes.root} autoComplete="off">
@@ -41,6 +41,7 @@ const DropDownMonth = (props) => {
         <Select
           name="selectOptions"
           //   onChange={this.onClickDrop("selectOptions")}
+          onChange={(e) => monthSelect(e.target.value)}
           inputProps={{
             name: "age",
             id: "age-simple"

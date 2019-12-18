@@ -1,7 +1,7 @@
 import { DROPDOWNYEAR_SELECT } from "../actions/actionTypes";
 
 const initialUserState = {
-  selectedYear: null
+  selected: null
 };
 
 export const yearReducer = (state = initialUserState, action) => {
@@ -9,7 +9,7 @@ export const yearReducer = (state = initialUserState, action) => {
     case DROPDOWNYEAR_SELECT:
       return {
         ...state,
-        selectedYear: action.id
+        selected: action.id
       };
     default:
       return state;

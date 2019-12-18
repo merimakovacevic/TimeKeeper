@@ -40,7 +40,7 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "AdminLeadOrMember")]
-        public IActionResult GetAll(int page = 1, int pageSize = 5)
+        public IActionResult GetAll(int page = 1, int pageSize = 10)
         {
             try
             {

@@ -30,17 +30,24 @@ function createData(name) {
 }
 
 const DropDownYear = (props) => {
-  const { classes } = props;
+  const { classes, yearSelect, selected } = props;
 
   const { data } = props;
   let selectedYear = null;
+
+  /*  const checkValue = (e) => {
+    console.log(e.target.value);
+    // this.props.selected = e.target.value;
+  }; */
+
   return (
     <form className={classes.root} autoComplete="off">
       <FormControl className={classes.formControl}>
         <InputLabel htmlFor="age-simple">Year</InputLabel>
         <Select
           name="selectOptions"
-          //   onChange={this.onClickDrop("selectOptions")}
+          onChange={(e) => yearSelect(e.target.value)}
+          //   onChange={(e) => checkValue(e)}
           inputProps={{
             name: "age",
             id: "age-simple"
@@ -63,7 +70,8 @@ const DropDownYear = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    data: state.selectedYear
+    data: state.selectedYear,
+    selected: state.selectedYear
   };
 };
 

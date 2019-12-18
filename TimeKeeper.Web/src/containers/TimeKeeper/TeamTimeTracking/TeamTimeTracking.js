@@ -24,8 +24,17 @@ import { fetchTeamTracking } from "../../../store/actions/index";
 
 const TeamTimeTracking = (props) => {
   const { classes } = props;
-  const { data, loading, error, selected, user, reload } = props;
+  const {
+    data,
+    loading,
+    error,
+    selected,
+    user,
+    reload,
+    fetchTeamTracking
+  } = props;
   // const { fetchEmployees, employeeSelect, employeeDelete } = props;
+  const { year, month, team } = props;
   let teams = data;
 
   useEffect(() => {
