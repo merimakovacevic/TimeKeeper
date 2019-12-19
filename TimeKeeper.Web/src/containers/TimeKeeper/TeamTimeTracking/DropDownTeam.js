@@ -44,39 +44,15 @@ const DropDownTeam = (props) => {
     setTeams(data);
   }, [reload]);
 
-  /*  handleChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
- */
-  /* onClickV = () => {
-      var lang = this.dropdown.value;đž
-     var teamName = "sakkasd";
-     this.props.onClickDrop(teamName);
-   }; */
-  /* 
-  
- */
-  /*   this.setState({
-    selectedId: value
-  });
-  this.props.onClickDrop(value);
-  console.log(this.state.selectedId);
-}; */
-
   return (
     <form className={classes.root} autoComplete="off">
       <FormControl className={classes.formControl}>
         <InputLabel htmlFor="age-simple">Team</InputLabel>
         <Select
           name="selectOptions"
-          //onChange={this.onClickDrop("selectOptions")}
-          /*   onClick={() => this.props.onClickDrop(this.state.selectedId)} */
           onChange={(e) => dropdownTeamSelect(e.target.value)}
           inputProps={{}}
         >
-          {/* <MenuItem value={this.state.teams}>
-               <em>None</em>
-             </MenuItem> */}
           {teams.map((team) => (
             <MenuItem key={team.id} value={team.id}>
               {team.name}

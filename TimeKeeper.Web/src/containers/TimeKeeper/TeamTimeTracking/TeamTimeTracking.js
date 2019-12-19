@@ -24,11 +24,8 @@ const TeamTimeTracking = (props) => {
   const { classes } = props;
   const { data, loading, error, teams, year, month, fetchTeamTracking } = props;
 
-  // let teamTracking = [];
-
   useEffect(() => {
     fetchTeamTracking(teams.selectedTeam, year, month);
-    // teamTracking = data.data;
   }, [teams.selectedTeam, year, month]);
 
   return (
@@ -115,7 +112,6 @@ const TeamTimeTracking = (props) => {
             <TableBody>
               {data.data.map((r, i) => (
                 <TableRow key={r.id}>
-                  {/* <CustomTableCell>{i + 1}</CustomTableCell> */}
                   <CustomTableCell>{r.employee.name}</CustomTableCell>
                   <CustomTableCell>{r.hourTypes.Workday}</CustomTableCell>
                   <CustomTableCell>{r.hourTypes.Busines}</CustomTableCell>
@@ -151,17 +147,9 @@ const mapStateToProps = (state) => {
     teams: state.teams,
     year: state.year.selected,
     month: state.month.selectedMonth
-    /*  loading: state.employees.loading, 
-    error: state.employees.error,
-    selected: state.employees.selected,
-    user: state.user.user,
-    reload: state.employees.reload */
   };
 };
 
 export default connect(mapStateToProps, {
-  // fetchEmployees,
-  //employeeSelect,
-  //employeeDelete
   fetchTeamTracking
 })(withStyles(styles)(TeamTimeTracking));

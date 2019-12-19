@@ -32,7 +32,6 @@ export const fetchDropDownTeam = () => {
     dispatch(dropdownTeamFetchStart());
     apiGetAllRequest(dropDownTeamsUrl)
       .then((res) => {
-        //    console.log(res, "teams res");
         dispatch(dropdownTeamFetchSuccess(res.data.data));
       })
       .catch((err) => dispatch(dropdownTeamFetchFail(err)));

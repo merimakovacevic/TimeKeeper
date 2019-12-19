@@ -30,15 +30,8 @@ function createData(name) {
 }
 
 const DropDownYear = (props) => {
-  const { classes, yearSelect, selected } = props;
+  const { classes, yearSelect } = props;
 
-  const { data } = props;
-  let selectedYear = null;
-
-  /*  const checkValue = (e) => {
-    console.log(e.target.value);
-    // this.props.selected = e.target.value;
-  }; */
 
   return (
     <form className={classes.root} autoComplete="off">

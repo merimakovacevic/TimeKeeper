@@ -33,14 +33,12 @@ const DropDownMonth = (props) => {
   const { classes } = props;
 
   const { data, monthSelect } = props;
-  let selectedMonth = null;
   return (
     <form className={classes.root} autoComplete="off">
       <FormControl className={classes.formControl}>
         <InputLabel htmlFor="age-simple">Month</InputLabel>
         <Select
           name="selectOptions"
-          //   onChange={this.onClickDrop("selectOptions")}
           onChange={(e) => monthSelect(e.target.value)}
           inputProps={{
             name: "age",
@@ -92,11 +90,6 @@ const DropDownMonth = (props) => {
 const mapStateToProps = (state) => {
   return {
     data: state.selectedMonth
-    /*  loading: state.employees.loading, 
-    error: state.employees.error,
-    selected: state.employees.selected,
-    user: state.user.user,
-    reload: state.employees.reload */
   };
 };
 
