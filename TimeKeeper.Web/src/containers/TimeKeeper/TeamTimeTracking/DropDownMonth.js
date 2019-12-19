@@ -21,6 +21,9 @@ const styles = (theme) => ({
   },
   whiteColor: {
     color: "white"
+  },
+  label: {
+    color: "white"
   }
 });
 
@@ -31,7 +34,7 @@ const DropDownMonth = (props) => {
   return (
     <form className={classes.root} autoComplete="off">
       <FormControl className={classes.formControl}>
-        <InputLabel shrink htmlFor="circle">
+        <InputLabel shrink htmlFor="circle" className={classes.label}>
           Month
         </InputLabel>{" "}
         <Select
