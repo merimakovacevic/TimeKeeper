@@ -17,34 +17,29 @@ const styles = (theme) => ({
     minWidth: 120
   },
   selectEmpty: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing(2)
+  },
+  whiteColor: {
+    color: "white"
   }
 });
-let counter = 0;
-function createData(name) {
-  counter += 1;
-  return {
-    id: counter,
-    name
-  };
-}
 
 const DropDownYear = (props) => {
   const { classes, yearSelect } = props;
 
-
   return (
     <form className={classes.root} autoComplete="off">
       <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="age-simple">Year</InputLabel>
+        <InputLabel shrink htmlFor="circle">
+          Year
+        </InputLabel>
         <Select
-          name="selectOptions"
-          onChange={(e) => yearSelect(e.target.value)}
-          //   onChange={(e) => checkValue(e)}
-          inputProps={{
-            name: "age",
-            id: "age-simple"
+          classes={{
+            icon: classes.whiteColor
           }}
+          className={classes.background}
+          onChange={(e) => yearSelect(e.target.value)}
+          inputProps={{}}
         >
           <MenuItem key={2019} value={2019}>
             {"2019"}

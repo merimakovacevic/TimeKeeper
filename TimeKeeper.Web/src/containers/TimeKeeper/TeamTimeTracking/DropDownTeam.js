@@ -20,23 +20,18 @@ const styles = (theme) => ({
     minWidth: 120
   },
   selectEmpty: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing(2)
+  },
+  whiteColor: {
+    color: "white"
   }
 });
-let counter = 0;
-function createData(name) {
-  counter += 1;
-  return {
-    id: counter,
-    name
-  };
-}
 
 const DropDownTeam = (props) => {
   const { classes } = props;
   const { fetchDropDownTeam } = props;
   const { dropdownTeamSelect } = props;
-  const { data, selected, reload } = props;
+  const { data, reload } = props;
   const [teams, setTeams] = useState([]);
 
   useEffect(() => {
@@ -47,9 +42,13 @@ const DropDownTeam = (props) => {
   return (
     <form className={classes.root} autoComplete="off">
       <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="age-simple">Team</InputLabel>
+        <InputLabel shrink htmlFor="circle">
+          Team
+        </InputLabel>
         <Select
-          name="selectOptions"
+          classes={{
+            icon: classes.whiteColor
+          }}
           onChange={(e) => dropdownTeamSelect(e.target.value)}
           inputProps={{}}
         >

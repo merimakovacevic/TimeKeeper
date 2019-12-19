@@ -17,33 +17,29 @@ const styles = (theme) => ({
     minWidth: 120
   },
   selectEmpty: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing(2)
+  },
+  whiteColor: {
+    color: "white"
   }
 });
-let counter = 0;
-function createData(name) {
-  counter += 1;
-  return {
-    id: counter,
-    name
-  };
-}
 
 const DropDownMonth = (props) => {
   const { classes } = props;
 
-  const { data, monthSelect } = props;
+  const { monthSelect } = props;
   return (
     <form className={classes.root} autoComplete="off">
       <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="age-simple">Month</InputLabel>
+        <InputLabel shrink htmlFor="circle">
+          Month
+        </InputLabel>{" "}
         <Select
-          name="selectOptions"
-          onChange={(e) => monthSelect(e.target.value)}
-          inputProps={{
-            name: "age",
-            id: "age-simple"
+          classes={{
+            icon: classes.whiteColor
           }}
+          onChange={(e) => monthSelect(e.target.value)}
+          inputProps={{}}
         >
           <MenuItem key={1} value={1}>
             {"January"}

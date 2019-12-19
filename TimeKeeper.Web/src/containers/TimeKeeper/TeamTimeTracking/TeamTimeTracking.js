@@ -56,25 +56,13 @@ const TeamTimeTracking = (props) => {
       ) : (
         <Paper className={classes.root}>
           <Toolbar className={classes.toolbar}>
-            <div>
-              <Typography
-                variant="h4"
-                id="tableTitle"
-                style={{ color: "white" }}
-              >
-                Team Time Tracking
-              </Typography>
+            <Typography variant="h4" id="tableTitle" style={{ color: "white" }}>
+              Team Time Tracking
+            </Typography>
+            <div className={classes.selectors}>
               <DropDownYear></DropDownYear>
               <DropDownMonth></DropDownMonth>
               <DropDownTeam></DropDownTeam>
-              <Button
-                onClick={() => {
-                  console.log("PROPS", props);
-                  fetchTeamTracking(teams.selectedTeam, year, month);
-                }}
-              >
-                FETCH THEM
-              </Button>
             </div>
           </Toolbar>
           <Table className={classes.table}>
