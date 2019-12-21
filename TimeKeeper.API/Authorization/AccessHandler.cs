@@ -49,7 +49,7 @@ namespace TimeKeeper.API.Services
             var token = handler.ReadJwtToken(parameter).Payload.ToArray();
             var claims = new[]
             {
-                new Claim("id", token.FirstOrDefault(c => c.Key == "sub").Value.ToString()),
+                new Claim("sub", token.FirstOrDefault(c => c.Key == "sub").Value.ToString()),
                 new Claim("name", token.FirstOrDefault(c => c.Key == "name").Value.ToString()),
                 new Claim("role", token.FirstOrDefault(c => c.Key == "role").Value.ToString()),
             };

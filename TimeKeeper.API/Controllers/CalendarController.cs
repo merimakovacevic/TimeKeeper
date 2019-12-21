@@ -9,7 +9,7 @@ using TimeKeeper.Utility.Factory;
 
 namespace TimeKeeper.API.Controllers
 {
-    [Authorize(AuthenticationSchemes = "TokenAuthentication")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CalendarController : BaseController

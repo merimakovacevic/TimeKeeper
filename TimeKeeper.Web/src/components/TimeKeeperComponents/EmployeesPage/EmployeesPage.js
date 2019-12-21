@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { fetchEmployees, employeeSelect, employeeDelete } from "../../../store/actions/index";
 import { withStyles } from "@material-ui/core/styles";
@@ -15,7 +15,8 @@ import {
 	CircularProgress,
 	Backdrop,
 	Toolbar,
-	Typography
+	Typography,
+	TextField
 } from "@material-ui/core";
 import styles from "../../../styles/EmployeesPageStyles";
 
@@ -30,12 +31,69 @@ const EmployeesPage = (props) => {
 	const { classes } = props;
 	const { data, loading, error, selected, user, reload } = props;
 	const { fetchEmployees, employeeSelect, employeeDelete } = props;
+	const [searchEmployees, setSearchedEmp] = useState([]);
+	const [search, setSearch] = useState("");
+
 	let employees = data;
 
 	useEffect(() => {
 		fetchEmployees();
 		employees = data;
 	}, [reload]);
+
+	const handleSearchInput = (event) => {
+		setSearch(event.target.value);
+		searchMessages();
+		// console.log(event.target.value);
+	};
+
+	const searchMessages = () => {
+		const regex = new RegExp(search, "gi");
+		const searchResults = employees.reduce((accumulator, event) => {
+			if ((event.firstName && event.firstName.match(regex)) || (event.lastName && event.lastName.match(regex))) {
+				accumulator.push(event);
+			}
+			return accumulator;
+		}, []);
+
+		setSearchedEmp(searchResults);
+	};
+
+	const AllEmployees = (employees) =>
+		employees.map((e, i) => (
+			<TableRow key={e.id}>
+				<CustomTableCell>{i + 1}</CustomTableCell>
+				<CustomTableCell>{e.firstName}</CustomTableCell>
+				<CustomTableCell>{e.lastName}</CustomTableCell>
+				<CustomTableCell>{e.email}</CustomTableCell>
+				<CustomTableCell>{e.phone}</CustomTableCell>
+
+				{user.role === "admin" ? (
+					<CustomTableCell align="center">
+						<IconButton
+							aria-label="Edit"
+							className={classes.editButton}
+							onClick={() => employeeSelect(e.id, "edit")}
+						>
+							<EditIcon style={{ fill: "green" }} />
+						</IconButton>
+						<IconButton
+							aria-label="Delete"
+							className={classes.deleteButton}
+							onClick={() => employeeDelete(e.id)}
+						>
+							<DeleteIcon color="error" />
+						</IconButton>
+					</CustomTableCell>
+				) : (
+					<CustomTableCell align="center">
+						<IconButton aria-label="View" onClick={() => employeeSelect(e.id, "view")}>
+							<VisibilityIcon />
+						</IconButton>
+					</CustomTableCell>
+				)}
+			</TableRow>
+		));
 
 	return (
 		<React.Fragment>
@@ -66,7 +124,9 @@ const EmployeesPage = (props) => {
 							</Typography>
 						</div>
 
-						{user.profile.role === "admin" ? (
+						<TextField id="standard-basic" label="Standard" onChange={handleSearchInput} />
+
+						{user.role === "admin" ? (
 							<div>
 								<Tooltip title="Add">
 									<IconButton
@@ -98,42 +158,7 @@ const EmployeesPage = (props) => {
 								</CustomTableCell>
 							</TableRow>
 						</TableHead>
-						<TableBody>
-							{employees.map((e, i) => (
-								<TableRow key={e.id}>
-									<CustomTableCell>{i + 1}</CustomTableCell>
-									<CustomTableCell>{e.firstName}</CustomTableCell>
-									<CustomTableCell>{e.lastName}</CustomTableCell>
-									<CustomTableCell>{e.email}</CustomTableCell>
-									<CustomTableCell>{e.phone}</CustomTableCell>
-
-									{user.profile.role === "admin" ? (
-										<CustomTableCell align="center">
-											<IconButton
-												aria-label="Edit"
-												className={classes.editButton}
-												onClick={() => employeeSelect(e.id, "edit")}
-											>
-												<EditIcon style={{ fill: "green" }} />
-											</IconButton>
-											<IconButton
-												aria-label="Delete"
-												className={classes.deleteButton}
-												onClick={() => employeeDelete(e.id)}
-											>
-												<DeleteIcon color="error" />
-											</IconButton>
-										</CustomTableCell>
-									) : (
-										<CustomTableCell align="center">
-											<IconButton aria-label="View" onClick={() => employeeSelect(e.id, "view")}>
-												<VisibilityIcon />
-											</IconButton>
-										</CustomTableCell>
-									)}
-								</TableRow>
-							))}
-						</TableBody>
+						<TableBody>{search === "" ? AllEmployees(employees) : AllEmployees(searchEmployees)}</TableBody>
 					</Table>
 				</Paper>
 			)}

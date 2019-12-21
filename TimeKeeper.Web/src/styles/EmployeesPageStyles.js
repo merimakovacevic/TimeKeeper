@@ -55,6 +55,12 @@ const styles = (theme) => ({
 		"&:hover": {
 			backgroundColor: "rgba(0,153,0,.1) !important"
 		}
+	},
+	search: {
+		"& > *": {
+			margin: theme.spacing(1),
+			width: 200
+		}
 	}
 });
 

@@ -17,7 +17,6 @@ const styles = (theme) => ({
 		minWidth: 700
 	},
 	button: {
-		color: "white",
 		fontSize: "1.2rem",
 		padding: 0,
 		color: "#A3A6B4"
