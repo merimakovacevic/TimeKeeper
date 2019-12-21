@@ -35,7 +35,7 @@ namespace TimeKeeper.DAL.Repositories
         {
             Employee old = Get(id);
 
-            if (old.CanDelete())
+            if (!old.CanDelete())
             {
                 Services.ThrowChildrenPresentException();
             }

@@ -19,6 +19,11 @@ namespace TimeKeeper.API.Authorization
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, AdminLeadOrOwnerRequirement requirement)
         {
             var filterContext = context.Resource as AuthorizationFilterContext;
+            if (context.User.Claims.Count() == 0)
+            {
+                context.Fail();
+                return Task.CompletedTask;
+            }
             if (filterContext == null)
             {
                 context.Fail();

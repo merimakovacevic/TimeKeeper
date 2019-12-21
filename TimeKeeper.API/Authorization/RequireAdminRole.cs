@@ -20,6 +20,11 @@ namespace TimeKeeper.API.Authorization
         {
 
             var filterContext = context.Resource as AuthorizationFilterContext;
+            if (context.User.Claims.Count() == 0)
+            {
+                context.Fail();
+                return Task.CompletedTask;
+            }
             if (filterContext == null)
             {
                 context.Fail();
