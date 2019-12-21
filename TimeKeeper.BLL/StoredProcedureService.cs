@@ -61,6 +61,13 @@ namespace TimeKeeper.BLL
                     cmd.Connection.Close();
                     return rawData as List<Entity>;
                 }
+                if (typeof(Entity) == typeof(AdminRolesRawModel))
+                {
+                    List<AdminRolesRawModel> rawData = new List<AdminRolesRawModel>();
+                    while (sql.Read()) rawData.Add(CreateAdminRolesRawModel(sql));
+                    cmd.Connection.Close();
+                    return rawData as List<Entity>;
+                }
             }
 
             return null;
@@ -68,21 +75,25 @@ namespace TimeKeeper.BLL
         
         public AdminRawModel CreateAdminRawModel(DbDataReader sql)
         {
-
             return new AdminRawModel
             {
                 EmployeeId = sql.GetInt32(0),
                 RoleId = sql.GetInt32(1),
                 RoleName = sql.GetString(2),
-                TeamId = sql.GetInt32(3),
-                ProjectId = sql.GetInt32(4),
-                WorkingHours = sql.GetDecimal(5)
+                RoleHourlyPrice = sql.GetDecimal(3),
+                RoleMonthlyPrice = sql.GetDecimal(4),
+                TeamId = sql.GetInt32(5),
+                ProjectId = sql.GetInt32(6),
+                ProjectName = sql.GetString(7),
+                ProjectAmount = sql.GetDecimal(8),
+                ProjectPricingId = sql.GetInt32(9),
+                ProjectPricingName = sql.GetString(10),
+                WorkingHours = sql.GetDecimal(11)
             };
         }
 
         public AdminRawPTOModel CreateAdminRawPTOModel(DbDataReader sql)
         {
-
             return new AdminRawPTOModel
             {
                 TeamId = sql.GetInt32(0),
@@ -111,5 +122,18 @@ namespace TimeKeeper.BLL
                 Value = sql.GetDecimal(2)
             };
         }
+
+        public AdminRolesRawModel CreateAdminRolesRawModel(DbDataReader sql)
+        {
+            return new AdminRolesRawModel
+            {
+                EmployeeId = sql.GetInt32(0),
+                RoleId = sql.GetInt32(1),
+                RoleName = sql.GetString(2),
+                WorkingHours = sql.GetDecimal(3)
+            };
+        }
+
+
     }
 }

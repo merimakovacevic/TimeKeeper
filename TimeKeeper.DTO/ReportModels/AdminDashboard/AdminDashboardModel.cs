@@ -9,15 +9,10 @@ namespace TimeKeeper.DTO.ReportModels.AdminDashboard
     {
         public AdminDashboardModel()
         {
-            //TeamDashboardModels = new List<TeamDashboardModel>();
             PaidTimeOff = new List<AdminRawPTOModel>();
             Teams = new List<AdminTeamDashboardModel>();
             Projects = new List<AdminProjectDashboardModel>();
             Roles = new List<AdminRolesDashboardModel>();
-            /*Roles.AddRange(roles.Select(x => new AdminRolesDashboardModel
-            {
-                RoleName = x
-            }));*/
         }
         public int EmployeesCount { get; set; }
         public int ProjectsCount { get; set; }
