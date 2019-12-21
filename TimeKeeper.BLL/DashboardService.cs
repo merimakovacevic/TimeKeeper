@@ -42,6 +42,7 @@ namespace TimeKeeper.BLL
             adminDashboard.TotalHours = adminDashboard.EmployeesCount * baseHours;
             adminDashboard.TotalWorkingHours = rawData.Sum(x => x.WorkingHours);
             adminDashboard.PaidTimeOff = _storedProcedures.GetStoredProcedure<AdminRawPTOModel>("AdminPTOHours", new int[] { year, month });
+            adminDashboard.Overtime = _storedProcedures.GetStoredProcedure<AdminOvertimeModel>("AdminOvertimeHours", new int[] { year, month });
             adminDashboard.Projects = GetAdminProjectModels(rawData);
             adminDashboard.Roles = GetRoleUtilization(rawData, baseHours);
 
@@ -52,6 +53,8 @@ namespace TimeKeeper.BLL
             }
 
             adminDashboard.MissingEntries = adminDashboard.TotalHours - employeeHours.Sum(x => x.SumOfHours);
+
+           
             
             /*List<Team> teams = _unit.Teams.Get().ToList();           
 
