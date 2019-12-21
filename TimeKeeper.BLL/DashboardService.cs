@@ -52,25 +52,7 @@ namespace TimeKeeper.BLL
                 throw new Exception("EmployeesCount and total number of employees in missing entries calculation don't match");
             }
 
-            adminDashboard.MissingEntries = adminDashboard.TotalHours - employeeHours.Sum(x => x.SumOfHours);
-
-           
-            
-            /*List<Team> teams = _unit.Teams.Get().ToList();           
-
-            foreach (Team team in teams)
-            {
-                MasterModel teamModel = team.Master();//_unit.Teams.Get(teamId).Master();
-
-                //This method also calculates the role utilization
-                TeamDashboardModel teamDashboard = GetTeamDashboardForAdmin(team, year, month);
-
-                AdminTeamDashboardModel teamDashboardModel = GetAdminTeamDashboard(teamDashboard, teamModel);
-
-                adminDashboard.Teams.Add(teamDashboardModel);
-                //adminDashboard.TotalWorkingHours += teamDashboardModel.WorkingHours;
-                //adminDashboard.TotalHours += teamDashboardModel.TotalHours;
-            }*/
+            adminDashboard.MissingEntries = adminDashboard.TotalHours - employeeHours.Sum(x => x.SumOfHours);         
 
             return adminDashboard;
         }
