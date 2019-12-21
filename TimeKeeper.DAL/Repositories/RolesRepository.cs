@@ -14,7 +14,7 @@ namespace TimeKeeper.DAL.Repositories
         {
             Role old = Get(id);
 
-            if (old.Members.Count != 0)
+            if (old.CanDelete())
             {
                 Services.ThrowChildrenPresentException();
             }

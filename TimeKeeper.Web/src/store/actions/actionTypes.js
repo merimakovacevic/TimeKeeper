@@ -1,4 +1,8 @@
-// Login actions
+// Auth actions
+export const AUTH_START = "AUTH_START";
+export const AUTH_SUCCESS = "AUTH_SUCCESS";
+export const AUTH_FAIL = "AUTH_FAIL";
+export const AUTH_LOGOUT = "AUTH_LOGOUT";
 
 // Employees actions
 export const EMPLOYEES_FETCH_START = "EMPLOYEES_FETCH_START";
@@ -19,7 +23,6 @@ export const EMPLOYEE_CANCEL = "EMPLOYEE_CANCEL";
 export const EMPLOYEE_DELETE_START = "EMPLOYEE_DELETE_START";
 export const EMPLOYEE_DELETE_SUCCESS = "EMPLOYEE_DELETE_SUCCESS";
 export const EMPLOYEE_DELETE_FAIL = "EMPLOYEE_DELETE_FAIL";
-
 
 // Customers
 export const CUSTOMERS_FETCH_START = "CUSTOMERS_FETCH_START";

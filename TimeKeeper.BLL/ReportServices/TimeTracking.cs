@@ -83,5 +83,20 @@ namespace TimeKeeper.BLL.ReportServices
 
             return employeeReport;
         }
+
+        public EmployeeMissingEntries GetEmployeeMissingEntries(Employee employee, int year, int month)
+        {
+            EmployeeMissingEntries employeeMissing = new EmployeeMissingEntries();
+            employeeMissing.Employee = employee.Master();
+            employeeMissing.MissingEntries = 0;
+
+            List<DayModel> calendar = GetEmployeeMonth(employee, year, month);
+
+            foreach (DayModel day in calendar)
+            {
+                if (day.DayType.Name == "Empty") employeeMissing.MissingEntries += 8;
+            }
+            return employeeMissing;
+        }
     }
 }

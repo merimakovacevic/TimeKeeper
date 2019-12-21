@@ -11,14 +11,14 @@ using TimeKeeper.LOG;
 
 namespace TimeKeeper.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     public class BaseController : ControllerBase
     {
         protected readonly UnitOfWork Unit;
         public readonly LoggerService Logger = new LoggerService();
         protected AccessHandler Access;
-        
+
         public BaseController(TimeKeeperContext context)
         {
             Unit = new UnitOfWork(context);
@@ -28,17 +28,16 @@ namespace TimeKeeper.API.Controllers
         [NonAction]
         public IActionResult HandleException(Exception exception)
         {
-            
             if (exception is ArgumentException)
             {
                 Logger.Error(exception.Message);
                 return NotFound(exception.Message);
-            }                
+            }
             else
             {
                 Logger.Fatal(exception);
                 return BadRequest(exception);
-            }            
+            }
         }
 
         [NonAction]
