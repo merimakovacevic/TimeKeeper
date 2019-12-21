@@ -11,7 +11,6 @@ namespace TimeKeeper.DTO.ReportModels.AdminDashboard
         public string RoleName { get; set; }
         public decimal RoleHourlyPrice { get; set; }
         public decimal RoleMonthlyPrice { get; set; }
-        public int TeamId { get; set; }
         public int ProjectId { get; set; }
         public string ProjectName { get; set; }
         public decimal ProjectAmount { get; set; }

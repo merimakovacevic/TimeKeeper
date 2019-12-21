@@ -20,12 +20,17 @@ namespace TimeKeeper.BLL
             _unit = unit;
             _sqlFactory = new SQLFactory();
         }
+
+        private DbCommand CreateDbConnection(string procedureName, int[] args)
+        {
+
+        }
+
         public List<Entity> GetStoredProcedure<Entity>(string procedureName, int[] args)
         {
             var arguments = string.Join(", ", args);
             var cmd = _unit.Context.Database.GetDbConnection().CreateCommand();
             cmd.CommandType = CommandType.Text;
-            //cmd.CommandText = $"select * from {procedureName}({args})";
             cmd.CommandText = $"select * from {procedureName}({arguments})";
             if (cmd.Connection.State == ConnectionState.Closed) cmd.Connection.Open();
             DbDataReader sql = cmd.ExecuteReader();
@@ -68,6 +73,14 @@ namespace TimeKeeper.BLL
                     cmd.Connection.Close();
                     return rawData as List<Entity>;
                 }
+                if (typeof(Entity) == typeof(AdminEmployeeHoursModel))
+                {
+                    List<AdminEmployeeHoursModel> rawData = new List<AdminEmployeeHoursModel>();
+                    while (sql.Read()) rawData.Add(CreateAdminEmployeeHoursModel(sql));
+                    cmd.Connection.Close();
+                    return rawData as List<Entity>;
+                }
+
             }
 
             return null;
@@ -82,13 +95,12 @@ namespace TimeKeeper.BLL
                 RoleName = sql.GetString(2),
                 RoleHourlyPrice = sql.GetDecimal(3),
                 RoleMonthlyPrice = sql.GetDecimal(4),
-                TeamId = sql.GetInt32(5),
-                ProjectId = sql.GetInt32(6),
-                ProjectName = sql.GetString(7),
-                ProjectAmount = sql.GetDecimal(8),
-                ProjectPricingId = sql.GetInt32(9),
-                ProjectPricingName = sql.GetString(10),
-                WorkingHours = sql.GetDecimal(11)
+                ProjectId = sql.GetInt32(5),
+                ProjectName = sql.GetString(6),
+                ProjectAmount = sql.GetDecimal(7),
+                ProjectPricingId = sql.GetInt32(8),
+                ProjectPricingName = sql.GetString(9),
+                WorkingHours = sql.GetDecimal(10)
             };
         }
 
@@ -134,6 +146,14 @@ namespace TimeKeeper.BLL
             };
         }
 
+        public AdminEmployeeHoursModel CreateAdminEmployeeHoursModel(DbDataReader sql)
+        {
+            return new AdminEmployeeHoursModel
+            {
+                EmployeeId = sql.GetInt32(0),
+                SumOfHours = sql.GetDecimal(1)
+            };
+        }
 
     }
 }

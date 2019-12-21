@@ -16,10 +16,9 @@ namespace TimeKeeper.DTO.ReportModels.AdminDashboard
         }
         public int EmployeesCount { get; set; }
         public int ProjectsCount { get; set; }
-        //public decimal BaseTotalHours { get; set; }
         public decimal TotalHours { get; set; }
         public decimal TotalWorkingHours { get; set; }
-        //public List<TeamDashboardModel> TeamDashboardModels { get; set; }
+        public decimal MissingEntries { get; set; }
         public List<AdminRawPTOModel> PaidTimeOff { get; set; }
         public List<AdminTeamDashboardModel> Teams { get; set; }
         public List<AdminProjectDashboardModel> Projects { get; set; }

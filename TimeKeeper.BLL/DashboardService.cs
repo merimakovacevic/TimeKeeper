@@ -45,7 +45,15 @@ namespace TimeKeeper.BLL
             adminDashboard.Projects = GetAdminProjectModels(rawData);
             adminDashboard.Roles = GetRoleUtilization(rawData, baseHours);
 
-            List<Team> teams = _unit.Teams.Get().ToList();           
+            List<AdminEmployeeHoursModel> employeeHours = _storedProcedures.GetStoredProcedure<AdminEmployeeHoursModel>("EmployeeDayTypeHours", new int[] { year, month });
+            if(employeeHours.Count() != adminDashboard.EmployeesCount)
+            {
+                throw new Exception("EmployeesCount and total number of employees in missing entries calculation don't match");
+            }
+
+            adminDashboard.MissingEntries = adminDashboard.TotalHours - employeeHours.Sum(x => x.SumOfHours);
+            
+            /*List<Team> teams = _unit.Teams.Get().ToList();           
 
             foreach (Team team in teams)
             {
@@ -59,7 +67,7 @@ namespace TimeKeeper.BLL
                 adminDashboard.Teams.Add(teamDashboardModel);
                 //adminDashboard.TotalWorkingHours += teamDashboardModel.WorkingHours;
                 //adminDashboard.TotalHours += teamDashboardModel.TotalHours;
-            }
+            }*/
 
             return adminDashboard;
         }
