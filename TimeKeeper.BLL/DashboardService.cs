@@ -42,24 +42,17 @@ namespace TimeKeeper.BLL
             adminDashboard.TotalHours = adminDashboard.EmployeesCount * baseHours;
             adminDashboard.TotalWorkingHours = rawData.Sum(x => x.WorkingHours);
             adminDashboard.PaidTimeOff = _storedProcedures.GetStoredProcedure<AdminRawPTOModel>("AdminPTOHours", new int[] { year, month });
+            adminDashboard.Overtime = _storedProcedures.GetStoredProcedure<AdminOvertimeModel>("AdminOvertimeHours", new int[] { year, month });
             adminDashboard.Projects = GetAdminProjectModels(rawData);
             adminDashboard.Roles = GetRoleUtilization(rawData, baseHours);
 
-            List<Team> teams = _unit.Teams.Get().ToList();           
-
-            foreach (Team team in teams)
+            List<AdminEmployeeHoursModel> employeeHours = _storedProcedures.GetStoredProcedure<AdminEmployeeHoursModel>("EmployeeDayTypeHours", new int[] { year, month });
+            if(employeeHours.Count() != adminDashboard.EmployeesCount)
             {
-                MasterModel teamModel = team.Master();//_unit.Teams.Get(teamId).Master();
-
-                //This method also calculates the role utilization
-                TeamDashboardModel teamDashboard = GetTeamDashboardForAdmin(team, year, month);
-
-                AdminTeamDashboardModel teamDashboardModel = GetAdminTeamDashboard(teamDashboard, teamModel);
-
-                adminDashboard.Teams.Add(teamDashboardModel);
-                //adminDashboard.TotalWorkingHours += teamDashboardModel.WorkingHours;
-                //adminDashboard.TotalHours += teamDashboardModel.TotalHours;
+                throw new Exception("EmployeesCount and total number of employees in missing entries calculation don't match");
             }
+
+            adminDashboard.MissingEntries = adminDashboard.TotalHours - employeeHours.Sum(x => x.SumOfHours);         
 
             return adminDashboard;
         }
