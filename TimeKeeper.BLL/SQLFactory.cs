@@ -17,6 +17,7 @@ namespace TimeKeeper.BLL
             if (typeof(Entity) == typeof(AdminRolesRawModel)) return CreateAdminRolesRawModel(sql) as List<Entity>;
             if (typeof(Entity) == typeof(AdminEmployeeHoursModel)) return CreateEmployeeHoursModel(sql) as List<Entity>;
             if (typeof(Entity) == typeof(AdminOvertimeModel)) return CreateAdminOvertimeModel(sql) as List<Entity>;
+            if (typeof(Entity) == typeof(EmployeeHoursRawModel)) return CreateEmployeeHoursRawModel(sql) as List<Entity>;
 
             else return null;
         }        
@@ -125,5 +126,27 @@ namespace TimeKeeper.BLL
             }
             return rawData;
         }
+
+        public List<EmployeeHoursRawModel> CreateEmployeeHoursRawModel(DbDataReader sql)
+        {
+            List<EmployeeHoursRawModel> rawData = new List<EmployeeHoursRawModel>();
+            while (sql.Read())
+            {
+                rawData.Add(new EmployeeHoursRawModel
+                {
+                    TeamId = sql.GetInt32(0),
+                    EmployeeId = sql.GetInt32(1),
+                    EmployeeName = sql.GetString(2) + " " + sql.GetString(3),
+                    DayTypeId = sql.GetInt32(4),
+                    DayTypeName = sql.GetString(5),
+                    DayTypeHours = sql.GetDecimal(6),
+                    Overtime = sql.GetDecimal(7)
+                });
+            }
+            return rawData;
+        }
+
+
+        EmployeeHoursRawModel
     }
 }
