@@ -8,6 +8,8 @@ namespace TimeKeeper.DTO.ReportModels.AdminDashboard
     {
         public int EmployeeId { get; set; }
         public int RoleId { get; set; }
+        public int TeamId { get; set; }
+        public string TeamName { get; set; }
         public string RoleName { get; set; }
         public decimal RoleHourlyPrice { get; set; }
         public decimal RoleMonthlyPrice { get; set; }
