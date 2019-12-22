@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TimeKeeper.DTO.ReportModels.AdminDashboard
+namespace TimeKeeper.DTO.ReportModels.CompanyDashboard
 {
-    public class AdminOvertimeModel
+    public class CompanyOvertimeModel
     {
         public int EmployeeId { get; set; }
-        public string  EmployeeName { get; set; }
+        public string EmployeeName { get; set; }
         public decimal OvertimeHours { get; set; }
     }
 }

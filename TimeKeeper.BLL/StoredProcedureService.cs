@@ -6,7 +6,6 @@ using System.Data.Common;
 using System.Text;
 using TimeKeeper.DAL;
 using TimeKeeper.DTO.ReportModels;
-using TimeKeeper.DTO.ReportModels.AdminDashboard;
 using TimeKeeper.DTO.ReportModels.AnnualOverview;
 
 namespace TimeKeeper.BLL
@@ -38,7 +37,7 @@ namespace TimeKeeper.BLL
             DbDataReader sql = cmd.ExecuteReader();
             if (sql.HasRows) return _sqlFactory.BuildSQL<Entity>(sql);
 
-            return null;
+            return new List<Entity>();
         }
     }
 }

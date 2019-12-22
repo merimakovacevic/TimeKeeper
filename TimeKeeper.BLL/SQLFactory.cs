@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Text;
-using TimeKeeper.DTO.ReportModels.AdminDashboard;
 using TimeKeeper.DTO.ReportModels.AnnualOverview;
+using TimeKeeper.DTO.ReportModels.CompanyDashboard;
 
 namespace TimeKeeper.BLL
 {
@@ -11,23 +11,21 @@ namespace TimeKeeper.BLL
     {
         public List<Entity> BuildSQL<Entity>(DbDataReader sql)
         {
-            if (typeof(Entity) == typeof(AdminRawModel)) return CreateAdminRawModel(sql) as List<Entity>;
-            if (typeof(Entity) == typeof(AdminRawPTOModel)) return CreateAdminRawPTOModel(sql) as List<Entity>;
+            if (typeof(Entity) == typeof(CompanyDashboardRawModel)) return CreateCompanyRawModel(sql) as List<Entity>;
             if (typeof(Entity) == typeof(AnnualRawModel)) return CreateAnnualRawModel(sql) as List<Entity>;
-            if (typeof(Entity) == typeof(AdminRolesRawModel)) return CreateAdminRolesRawModel(sql) as List<Entity>;
-            if (typeof(Entity) == typeof(AdminEmployeeHoursModel)) return CreateEmployeeHoursModel(sql) as List<Entity>;
-            if (typeof(Entity) == typeof(AdminOvertimeModel)) return CreateAdminOvertimeModel(sql) as List<Entity>;
-            if (typeof(Entity) == typeof(EmployeeHoursRawModel)) return CreateEmployeeHoursRawModel(sql) as List<Entity>;
+            if (typeof(Entity) == typeof(CompanyRolesRawModel)) return CreateCompanyRoles(sql) as List<Entity>;
+            if (typeof(Entity) == typeof(CompanyOvertimeModel)) return CreateCompanyOvertime(sql) as List<Entity>;
+            if (typeof(Entity) == typeof(CompanyEmployeeHoursModel)) return CreateEmployeeHours(sql) as List<Entity>;
 
             else return null;
         }        
 
-        public List<AdminRawModel> CreateAdminRawModel(DbDataReader sql)
+        private List<CompanyDashboardRawModel> CreateCompanyRawModel(DbDataReader sql)
         {
-            List<AdminRawModel> rawData = new List<AdminRawModel>();
+            List<CompanyDashboardRawModel> rawData = new List<CompanyDashboardRawModel>();
             while (sql.Read())
             {
-                rawData.Add(new AdminRawModel
+                rawData.Add(new CompanyDashboardRawModel
                 {
                     EmployeeId = sql.GetInt32(0),
                     TeamId = sql.GetInt32(1),
@@ -47,22 +45,7 @@ namespace TimeKeeper.BLL
             return rawData;
         }
 
-        public List<AdminRawPTOModel> CreateAdminRawPTOModel(DbDataReader sql)
-        {
-            List<AdminRawPTOModel> rawData = new List<AdminRawPTOModel>();
-            while (sql.Read())
-            {
-                rawData.Add(new AdminRawPTOModel
-                {
-                    TeamId = sql.GetInt32(0),
-                    Team = sql.GetString(1),
-                    PaidTimeOff = sql.GetDecimal(2)
-                });
-            }
-            return rawData;
-        }
-
-        public List<AnnualRawModel> CreateAnnualRawModel(DbDataReader sql)
+        private List<AnnualRawModel> CreateAnnualRawModel(DbDataReader sql)
         {
             List<AnnualRawModel> rawData = new List<AnnualRawModel>();
             while (sql.Read())
@@ -78,12 +61,12 @@ namespace TimeKeeper.BLL
             return rawData;            
         }
 
-        public List<AdminRolesRawModel> CreateAdminRolesRawModel(DbDataReader sql)
+        private List<CompanyRolesRawModel> CreateCompanyRoles(DbDataReader sql)
         {
-            List<AdminRolesRawModel> rawData = new List<AdminRolesRawModel>();
+            List<CompanyRolesRawModel> rawData = new List<CompanyRolesRawModel>();
             while (sql.Read())
             {
-                rawData.Add(new AdminRolesRawModel
+                rawData.Add(new CompanyRolesRawModel
                 {
                     EmployeeId = sql.GetInt32(0),
                     RoleId = sql.GetInt32(1),
@@ -94,12 +77,12 @@ namespace TimeKeeper.BLL
             return rawData;
         }
 
-        public List<AdminOvertimeModel> CreateAdminOvertimeModel(DbDataReader sql)
+        private List<CompanyOvertimeModel> CreateCompanyOvertime(DbDataReader sql)
         {
-            List<AdminOvertimeModel> rawData = new List<AdminOvertimeModel>();
+            List<CompanyOvertimeModel> rawData = new List<CompanyOvertimeModel>();
             while (sql.Read())
             {
-                rawData.Add(new AdminOvertimeModel
+                rawData.Add(new CompanyOvertimeModel
                 {
                     EmployeeId = sql.GetInt32(0),
                     EmployeeName = sql.GetString(1) + sql.GetString(2),
@@ -108,31 +91,13 @@ namespace TimeKeeper.BLL
             }
             return rawData;
         }
-
-        public List<AdminEmployeeHoursModel> CreateEmployeeHoursModel(DbDataReader sql)
+               
+        private List<CompanyEmployeeHoursModel> CreateEmployeeHours(DbDataReader sql)
         {
-            List<AdminEmployeeHoursModel> rawData = new List<AdminEmployeeHoursModel>();
+            List<CompanyEmployeeHoursModel> rawData = new List<CompanyEmployeeHoursModel>();
             while (sql.Read())
             {
-                rawData.Add(new AdminEmployeeHoursModel
-                {
-                    TeamId = sql.GetInt32(0),
-                    EmployeeId = sql.GetInt32(1),
-                    EmployeeName = sql.GetString(2) + " " + sql.GetString(3),
-                    DayTypeId = sql.GetInt32(4),
-                    DayTypeName = sql.GetString(5),
-                    DayTypeHours = sql.GetDecimal(6)
-                });
-            }
-            return rawData;
-        }
-
-        public List<EmployeeHoursRawModel> CreateEmployeeHoursRawModel(DbDataReader sql)
-        {
-            List<EmployeeHoursRawModel> rawData = new List<EmployeeHoursRawModel>();
-            while (sql.Read())
-            {
-                rawData.Add(new EmployeeHoursRawModel
+                rawData.Add(new CompanyEmployeeHoursModel
                 {
                     TeamId = sql.GetInt32(0),
                     EmployeeId = sql.GetInt32(1),

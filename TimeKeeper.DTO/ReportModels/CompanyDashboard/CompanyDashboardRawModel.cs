@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TimeKeeper.DTO.ReportModels.AdminDashboard
+namespace TimeKeeper.DTO.ReportModels.CompanyDashboard
 {
-    public class AdminRawModel
+    public class CompanyDashboardRawModel
     {
         public int EmployeeId { get; set; }
         public int RoleId { get; set; }
