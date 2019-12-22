@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using TimeKeeper.DAL.Repositories;
 using TimeKeeper.Domain.Entities;
 
@@ -55,6 +56,8 @@ namespace TimeKeeper.DAL
 
 
         public int Save() => _context.SaveChanges();
+
+        public async Task<int> SaveAsync() { return await _context.SaveChangesAsync(); }
 
         public void Dispose()
         {

@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.DAL
@@ -74,6 +76,16 @@ namespace TimeKeeper.DAL
                 entry.CurrentValues["Deleted"] = true;
             }
             return base.SaveChanges();
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken token = default)
+        {
+            foreach (var entry in ChangeTracker.Entries().Where(x => x.State == EntityState.Deleted && x.Entity is BaseClass))
+            {
+                entry.State = EntityState.Modified;
+                entry.CurrentValues["Deleted"] = true;
+            }
+            return await base.SaveChangesAsync(token);
         }
     }
 }
