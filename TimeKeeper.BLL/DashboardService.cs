@@ -38,6 +38,7 @@ namespace TimeKeeper.BLL
             decimal baseHours = GetMonthlyWorkingDays(year, month) * 8;
             List<AdminRawModel> rawData = _storedProcedures.GetStoredProcedure<AdminRawModel>("CompanyWorkingHoursData", new int[] { year, month });
             List<EmployeeHoursRawModel> employeeHours = _storedProcedures.GetStoredProcedure<EmployeeHoursRawModel>("EmployeeHoursAndOvertime", new int[] { year, month });
+            List<AdminOvertimeModel> overtime = _storedProcedures.GetStoredProcedure<AdminOvertimeModel>("CompanyOvertimeHours", new int[] { year, month });
             //List<AdminEmployeeHoursModel> employeeHours = _storedProcedures.GetStoredProcedure<AdminEmployeeHoursModel>("EmployeeHoursByDayType", new int[] { year, month });
 
             List<MasterModel> activeTeams = new List<MasterModel>();
@@ -54,23 +55,35 @@ namespace TimeKeeper.BLL
             adminDashboard.ProjectsCount = rawData.GroupBy(x => x.ProjectId).Count();
             adminDashboard.TotalHours = adminDashboard.EmployeesCount * baseHours;
             adminDashboard.TotalWorkingHours = rawData.Sum(x => x.WorkingHours);
-            //adminDashboard.PaidTimeOff = _storedProcedures.GetStoredProcedure<AdminRawPTOModel>("AdminPTOHours", new int[] { year, month });
-            //adminDashboard.Overtime = _storedProcedures.GetStoredProcedure<AdminOvertimeModel>("AdminOvertimeHours", new int[] { year, month });
             adminDashboard.Projects = GetAdminProjectModels(rawData);
             adminDashboard.Roles = GetRoleUtilization(rawData, baseHours);
-            adminDashboard.MissingEntries = GetCompanyMissingEntries(employeeHours, adminDashboard.Teams);
-            adminDashboard.Teams = GetCompanyTeamModels(employeeHours, activeTeams, year, month);
-            //adminDashboard.MissingEntries = adminDashboard.TotalHours - employeeHours.Sum(x => x.DayTypeHours);         
+            adminDashboard.Teams = GetCompanyTeamModels(rawData, employeeHours, activeTeams, overtime);
+            adminDashboard.MissingEntries = GetCompanyMissingEntries(employeeHours, adminDashboard.Teams, baseHours, overtime);        
 
             return adminDashboard;
         }
 
-        private List<AdminMissingEntriesModel> GetCompanyMissingEntries(List<EmployeeHoursRawModel> employeeHours, List<CompanyTeamModel> teams)
+        private decimal EmployeeRatioInTeam(List<AdminRawModel> rawData, int teamId, int employeeId)
         {
-            throw new NotImplementedException();
+            decimal empTeamWorkingHours = rawData.Where(x => x.EmployeeId == employeeId && x.TeamId == teamId).Sum(x => x.WorkingHours);
+            decimal empWorkingHours = rawData.Where(x => x.EmployeeId == employeeId).Sum(x => x.WorkingHours);
+            return empTeamWorkingHours / empWorkingHours;
         }
 
-        private List<CompanyTeamModel> GetCompanyTeamModels(List<EmployeeHoursRawModel> employeeHours, List<MasterModel> activeTeams, int year, int month)
+        private List<AdminMissingEntriesModel> GetCompanyMissingEntries(List<EmployeeHoursRawModel> employeeHours, List<CompanyTeamModel> teams, decimal baseHours, List<AdminOvertimeModel> overtime)
+        {
+            List<AdminMissingEntriesModel> missingEntries = employeeHours.GroupBy(x => new { x.EmployeeId, x.EmployeeName })
+                                                                         .Select(x => new AdminMissingEntriesModel
+                                                                         {
+                                                                             EmployeeId = x.Key.EmployeeId,
+                                                                             EmployeeName = x.Key.EmployeeName,
+                                                                             MissingEntriesHours = baseHours - x.Sum(y => y.DayTypeHours) + overtime.Where(y => y.EmployeeId == x.Key.EmployeeId).Sum(y => y.OvertimeHours)
+                                                                         }).ToList();
+
+            return missingEntries;
+        }
+
+        private List<CompanyTeamModel> GetCompanyTeamModels(List<AdminRawModel> rawData, List<EmployeeHoursRawModel> employeeHours, List<MasterModel> activeTeams, List<AdminOvertimeModel> overtime)
         {
             List<CompanyTeamModel> teams = new List<CompanyTeamModel>();
             teams.AddRange(activeTeams.Select(x => new CompanyTeamModel
@@ -81,38 +94,72 @@ namespace TimeKeeper.BLL
                 PaidTimeOff = 0
             }).OrderBy(x => x.TeamId).ToList());
 
-            GetCompanyPaidTimeOff(teams, employeeHours);
-            GetCompanyOvertime(teams, employeeHours, year, month);
+            List<AdminOvertimeModel> overtimeNotNull = overtime.Where(x => x.OvertimeHours > 0).ToList();
+            List<EmployeeHoursRawModel> paidTimeOff = employeeHours.Where(x => x.DayTypeName != "Workday").ToList();
+            List<EmployeeHoursRawModel> workDays = employeeHours.Where(x => x.DayTypeName == "Workday").ToList();
+
+
+            foreach (EmployeeHoursRawModel row in workDays)
+            {
+                if (overtimeNotNull.FirstOrDefault(x => x.EmployeeId == row.EmployeeId) != null)
+                {
+                    GetCompanyOvertime(teams, rawData, overtimeNotNull, row.TeamId, row.EmployeeId);
+                }
+
+                if (paidTimeOff.FirstOrDefault(x => x.EmployeeId == row.EmployeeId) != null)
+                {
+                    GetCompanyPaidTimeOff(teams, rawData, paidTimeOff, row.TeamId, row.EmployeeId);
+                }
+            }
 
             return teams;
         }
-
-
-        private void GetCompanyOvertime(List<CompanyTeamModel> teams, List<EmployeeHoursRawModel> employeeHours, int year, int month)
+        private void GetCompanyOvertime(List<CompanyTeamModel> teams, List<AdminRawModel> rawData, List<AdminOvertimeModel> overtime, int teamId, int employeeId)
         {
-            List<EmployeeHoursRawModel> overtime = employeeHours.Where(x => x.Overtime != 0).ToList();
-
-            foreach (EmployeeHoursRawModel employee in overtime)
-            {
-                teams.FirstOrDefault(x => x.TeamId == employee.TeamId).Overtime += employee.Overtime;
-            }            
+           decimal empOvertime = overtime.Where(x => x.EmployeeId == employeeId).Sum(x => x.OvertimeHours);
+           teams.FirstOrDefault(x => x.TeamId == teamId).Overtime += empOvertime * EmployeeRatioInTeam(rawData, teamId, employeeId);                 
         }
 
-        private void GetCompanyPaidTimeOff(List<CompanyTeamModel> teams, List<EmployeeHoursRawModel> employeeHours)
+        private void GetCompanyOvertime(List<CompanyTeamModel> teams, List<AdminRawModel> rawData, List<AdminOvertimeModel> overtime)
+        {
+            
+            List<AdminOvertimeModel> overtimeNotNull = overtime.Where(x => x.OvertimeHours > 0).ToList();
+
+            foreach (AdminRawModel row in rawData)
+            {
+                 if (overtimeNotNull.FirstOrDefault(x => x.EmployeeId == row.EmployeeId) != null)
+                 {
+                     decimal empOvertime = overtimeNotNull.FirstOrDefault(x => x.EmployeeId == row.EmployeeId).OvertimeHours;
+                     /*decimal empTeamWorkingHours = rawData.Where(x => x.EmployeeId == row.EmployeeId
+                                                 && x.TeamId == row.TeamId).Sum(x => x.WorkingHours);
+                     decimal empWorkingHours = rawData.Where(x => x.EmployeeId == row.EmployeeId)
+                                                 .Sum(x => x.WorkingHours);*/
+                     teams.FirstOrDefault(x => x.TeamId == row.TeamId).Overtime += empOvertime * EmployeeRatioInTeam(rawData, row.TeamId, row.EmployeeId);
+                 }             
+            }
+        }
+
+        private void GetCompanyPaidTimeOff(List<CompanyTeamModel> teams, List<AdminRawModel> rawData, List<EmployeeHoursRawModel> paidTimeOff, int teamId, int employeeId)
+        {
+            decimal empPaidTimeOff = paidTimeOff.Where(x => x.EmployeeId == employeeId).Sum(x => x.DayTypeHours);
+            decimal empRatio = EmployeeRatioInTeam(rawData, teamId, employeeId);
+            teams.FirstOrDefault(x => x.TeamId == teamId).PaidTimeOff += empPaidTimeOff * empRatio;         
+        }
+
+        private void GetCompanyPaidTimeOff(List<CompanyTeamModel> teams, List<AdminRawModel> rawData, List<EmployeeHoursRawModel> employeeHours)
         {
 
             List<EmployeeHoursRawModel> paidTimeOff = employeeHours.Where(x => x.DayTypeName != "Workday").ToList();
             List<EmployeeHoursRawModel> workDays = employeeHours.Where(x => x.DayTypeName == "Workday").OrderBy(x => x.EmployeeId).ToList();
 
-
             foreach (EmployeeHoursRawModel row in workDays)
             {
                 if (paidTimeOff.FirstOrDefault(x => x.EmployeeId == row.EmployeeId) != null)
                 {
-                    decimal employeeSum = workDays.Where(x => x.EmployeeId == row.EmployeeId).Sum(x => x.DayTypeHours);
-                    decimal employeeTeamSum = workDays.Where(x => x.EmployeeId == row.EmployeeId && x.TeamId == row.TeamId).Sum(x => x.DayTypeHours);
-                    teams.FirstOrDefault(x => x.TeamId == row.TeamId).PaidTimeOff += (employeeSum / employeeTeamSum) *
-                                                                                    paidTimeOff.FirstOrDefault(x => x.EmployeeId == row.EmployeeId).DayTypeHours;
+                    /*decimal employeeSum = workDays.Where(x => x.EmployeeId == row.EmployeeId).Sum(x => x.DayTypeHours);
+                    decimal employeeTeamSum = workDays.Where(x => x.EmployeeId == row.EmployeeId && x.TeamId == row.TeamId).Sum(x => x.DayTypeHours);*/
+                    teams.FirstOrDefault(x => x.TeamId == row.TeamId).PaidTimeOff += paidTimeOff.FirstOrDefault(x => x.EmployeeId == row.EmployeeId).DayTypeHours
+                                                                                     * EmployeeRatioInTeam(rawData, row.TeamId, row.EmployeeId);
                 }
             }
         }

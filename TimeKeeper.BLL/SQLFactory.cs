@@ -101,9 +101,9 @@ namespace TimeKeeper.BLL
             {
                 rawData.Add(new AdminOvertimeModel
                 {
-                    TeamId = sql.GetInt32(0),
-                    TeamName = sql.GetString(1),
-                    OvertimeHours = sql.GetDecimal(2)
+                    EmployeeId = sql.GetInt32(0),
+                    EmployeeName = sql.GetString(1) + sql.GetString(2),
+                    OvertimeHours = sql.GetDecimal(3)
                 });
             }
             return rawData;
@@ -139,14 +139,11 @@ namespace TimeKeeper.BLL
                     EmployeeName = sql.GetString(2) + " " + sql.GetString(3),
                     DayTypeId = sql.GetInt32(4),
                     DayTypeName = sql.GetString(5),
-                    DayTypeHours = sql.GetDecimal(6),
-                    Overtime = sql.GetDecimal(7)
+                    DayTypeHours = sql.GetDecimal(6)
                 });
             }
             return rawData;
         }
 
-
-        EmployeeHoursRawModel
     }
 }

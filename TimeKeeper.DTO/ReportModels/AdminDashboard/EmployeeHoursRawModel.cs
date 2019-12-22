@@ -12,6 +12,5 @@ namespace TimeKeeper.DTO.ReportModels.AdminDashboard
         public int DayTypeId { get; set; }
         public string DayTypeName { get; set; }
         public decimal DayTypeHours { get; set; }
-        public decimal Overtime { get; set; }
     }
 }
