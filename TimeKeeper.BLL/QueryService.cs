@@ -92,5 +92,6 @@ namespace TimeKeeper.BLL
             List<Project> projects2 = projects1.Where(x => x.EndDate == null || x.EndDate == new DateTime(1, 1, 1) || x.EndDate > new DateTime(year, month, 1)).ToList();
             return projects2;
         }
+
     }
 }

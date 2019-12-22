@@ -65,9 +65,7 @@ namespace TimeKeeper.BLL.ReportServices
 
             foreach (Member member in team.Members)
             {
-                EmployeeTimeModel employeeTime = GetEmployeeMonthReport(member.Employee, year, month);
-                employeeTime.Role = member.Role.Name;
-                employeeTimeModels.Add(employeeTime);
+                employeeTimeModels.Add(GetEmployeeMonthReport(member.Employee, year, month));
             }
             return employeeTimeModels;
         }
