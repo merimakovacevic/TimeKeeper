@@ -35,7 +35,7 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "AdminOrLeader")]
-        public IActionResult GetAll(int page = 1, int pageSize = 5)
+        public async Task<IActionResult> GetAll(int page = 1, int pageSize = 5)
         {
             try
             {
@@ -48,11 +48,13 @@ namespace TimeKeeper.API.Controllers
 
                 if (userRole == "lead")
                 {
-                    query = Unit.Projects.Get(x => x.Team.Members.Any(y => y.Employee.Id == userId)).ToList();
+                    var task = await Unit.Projects.GetAsync(x => x.Team.Members.Any(y => y.Employee.Id == userId));
+                    query = task.ToList();
                 }
                 else
                 {
-                    query = Unit.Projects.Get().ToList();                    
+                    var task = await Unit.Projects.GetAsync();
+                    query = task.ToList();                    
                 }
 
                 projectsPagination = _pagination.CreatePagination(page, pageSize, query);
@@ -78,14 +80,14 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
                 int userId = int.Parse(GetUserClaim("sub"));
                 string userRole = GetUserClaim("role");
                 Logger.Info($"Try to fetch project with id {id}");
-                Project project = Unit.Projects.Get(id);
+                Project project = await Unit.Projects.GetAsync(id);
                 if (project == null)
                 {
                     return NotFound($"Requested resource with {id} does not exist");
@@ -112,12 +114,12 @@ namespace TimeKeeper.API.Controllers
         [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Post([FromBody] Project project)
+        public async Task<IActionResult> Post([FromBody] Project project)
         {
             try
             {
                 Unit.Projects.Insert(project);
-                Unit.Save();
+                Unit.SaveAsync();
 
                 Logger.Info($"Project {project.Name} added with id {project.Id}");
                 return Ok(project.Create());

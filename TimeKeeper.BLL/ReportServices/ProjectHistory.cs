@@ -110,6 +110,7 @@ namespace TimeKeeper.BLL.ReportServices
             cmd.CommandText = $"select * from ProjectHistory({projectId})";
             if (cmd.Connection.State == ConnectionState.Closed) cmd.Connection.Open();
             DbDataReader sql = cmd.ExecuteReader();
+            
             List<HistoryRawData> rawData = new List<HistoryRawData>();
             if (sql.HasRows)
             {
@@ -127,8 +128,10 @@ namespace TimeKeeper.BLL.ReportServices
 
                 result.Years = rawData.Select(x => x.Year).Distinct().ToList();
 
+                EmployeeProjectHistory total = new EmployeeProjectHistory(result.Years) { Employee = new MasterModel { Id = 0, Name = "TOTAL" } };
                 EmployeeProjectHistory eph = new EmployeeProjectHistory(result.Years) { Employee = new MasterModel { Id = 0 } };
-                foreach(HistoryRawData item in rawData)
+                
+                foreach (HistoryRawData item in rawData)
                 {
                     if (item.EmployeeId != eph.Employee.Id)
                     {
@@ -140,9 +143,13 @@ namespace TimeKeeper.BLL.ReportServices
                     }
                     eph.TotalYearlyProjectHours[item.Year] = item.Hours;
                     eph.TotalHoursPerProject += item.Hours;
+                    total.TotalYearlyProjectHours[item.Year] += item.Hours;
+                    total.TotalHoursPerProject += item.Hours;
                 }
                 if (eph.Employee.Id != 0) result.Employees.Add(eph);
+                result.Employees.Add(total);
             }
+            
             return result;
         }
     }

@@ -7,6 +7,9 @@ using TimeKeeper.DTO.ReportModels;
 using TimeKeeper.Utility.Factory;
 using TimeKeeper.DTO;
 using TimeKeeper.BLL.Utilities;
+using System.Data.Common;
+using System.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace TimeKeeper.BLL
 {
@@ -238,6 +241,26 @@ namespace TimeKeeper.BLL
             }
 
             return workingDays;
-        }   
+        }
+        
+        //public List<DayModel> GetEmployeeCalendar(Employee employee, int year, int month, int team)
+        //{
+        //    //Add validaiton!
+        //    int em
+        //    var cmd = _unit.Context.Database.GetDbConnection().CreateCommand();
+        //    cmd.CommandType = CommandType.Text;
+        //    cmd.CommandText = $"select * from TeamTimeEmployee({team},{year},{month})";
+        //    if (cmd.Connection.State == ConnectionState.Closed) cmd.Connection.Open();
+        //    DbDataReader sql = cmd.ExecuteReader();
+        //    List<TeamTimeRawModel> rawData = new List<TeamTimeRawModel>();
+        //    if (sql.HasRows)
+        //    {
+        //        while (sql.Read())
+        //        {
+        //            rawData.Add();
+        //        }
+        //    }
+        //}
+        
     }
 }

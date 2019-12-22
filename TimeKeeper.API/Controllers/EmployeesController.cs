@@ -35,20 +35,45 @@ namespace TimeKeeper.API.Controllers
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult GetAll(int page = 1, int pageSize = 100)
+        public async Task<IActionResult> GetAll(int page = 1, int pageSize = 100)
         {
             try
             {
-                Logger.Info($"Try to fetch ${pageSize} employees from page ${page}");
+            //    Logger.Info($"Try to fetch ${pageSize} employees from page ${page}");
 
-                Tuple<PaginationModel, List<Employee>> employeesPagination = _pagination.CreatePagination(page, pageSize, Unit.Employees.Get());
+            //    Tuple<PaginationModel, List<Employee>> employeesPagination = _pagination.CreatePagination(page, pageSize, Unit.Employees.Get());
 
-                HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(employeesPagination.Item1));
-                return Ok(employeesPagination.Item2.ToList().Select(x => x.Create()).ToList());
+            //    HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(employeesPagination.Item1));
+            //    return Ok(employeesPagination.Item2.ToList().Select(x => x.Create()).ToList());
+
+                DateTime start = DateTime.Now;
+                var task = await Unit.Employees.GetAsync();
+                var query = task.ToList().Select(x => x.Create()).ToList();
+                DateTime final = DateTime.Now;
+                return Ok(new { dif = final - start, query });
             }
             catch (Exception ex)
             {
                 return HandleException(ex);
+            }
+        }
+
+        [HttpGet("async")]
+        public async Task<IActionResult> GetAsync()
+        {
+            try
+            {
+                //var query = await Unit.Employees.GetAsync();
+                //return Ok(query.Select(x => x.Create()).ToList());
+                DateTime start = DateTime.Now;
+                var query = await Unit.Employees.GetAsync();
+                var result = query.Select(x => x.Create()).ToList();
+                DateTime final = DateTime.Now;
+                return Ok(new { dif = final - start, result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
             }
         }
 
@@ -63,12 +88,12 @@ namespace TimeKeeper.API.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
                 Logger.Info($"Try to fetch employee with id {id}");
-                Employee employee = Unit.Employees.Get(id);
+                Employee employee = await Unit.Employees.GetAsync(id);
                 return Ok(employee.Create());
             }
             catch (Exception ex)
@@ -88,18 +113,18 @@ namespace TimeKeeper.API.Controllers
         [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Post([FromBody] Employee employee)
+        public async Task<IActionResult> Post([FromBody] Employee employee)
         {
             try
             {
-                Unit.Employees.Insert(employee);
+                await Unit.Employees.InsertAsync(employee);
                 Unit.Save();
 
                 //User insertion is coupled to employee insertion
                 User user = employee.CreateUser();
 
                 Unit.Users.Insert(user);
-                Unit.Save();
+                await Unit.SaveAsync();
 
                 Logger.Info($"Employee {employee.FirstName} {employee.LastName} added with id {employee.Id}");
                 return Ok(employee.Create());
@@ -121,7 +146,7 @@ namespace TimeKeeper.API.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Put(int id, [FromBody] Employee employee)
+        public async Task<IActionResult> Put(int id, [FromBody] Employee employee)
         {
             try
             {
@@ -132,7 +157,7 @@ namespace TimeKeeper.API.Controllers
                 if (userRole == "admin" || employee.Id == userId)
                 {
                     Unit.Employees.Update(employee, id);
-                    Unit.Save();
+                    await Unit.SaveAsync();
                     Logger.Info($"Employee {employee.FirstName} {employee.LastName} with id {employee.Id} updated");
                     return Ok(employee.Create());
                 }
@@ -160,13 +185,13 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
                 Logger.Info($"Attempt to delete employee with id {id}");
-                Unit.Employees.Delete(id);
-                Unit.Save();
+                Unit.Employees.DeleteAsync(id);
+                await Unit.SaveAsync();
 
                 Logger.Info($"Employee with id {id} deleted");
                 return NoContent();

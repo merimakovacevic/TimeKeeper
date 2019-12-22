@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using TimeKeeper.BLL.Utilities;
@@ -18,6 +21,37 @@ namespace TimeKeeper.BLL.ReportServices
         {
             _dayTypes = unit.DayTypes.Get().Select(x => x.Name).ToList();
         }
+        /*
+        public List<EmployeeTimeModel> GetStored(int teamId, int year, int month)
+        {
+            List<EmployeeTimeModel> result = new List<EmployeeTimeModel>();
+
+            var cmd = _unit.Context.Database.GetDbConnection().CreateCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = $"select * from TeamEmployees({teamId},{year},{month})";
+            if (cmd.Connection.State == ConnectionState.Closed) cmd.Connection.Open();
+            DbDataReader sql = cmd.ExecuteReader();
+            List<TeamTimeRawModel> rawData = new List<TeamTimeRawModel>();
+            List<EmployeeTimeModel> employeeTimeModels = new List<EmployeeTimeModel>();
+            List<int> empList = new List<int>();
+            if (sql.HasRows)
+            {
+                while (sql.Read())
+                {
+                    empList.Add(sql.GetInt32(0));
+                }
+                foreach(int item in empList)
+                {
+                    Employee emp = _unit.Employees.Get(item);
+                    EmployeeTimeModel employeeTime = GetEmployeeMonthReport(emp, year, month);
+                   // employeeTime.Role = member.Role.Name;
+                    employeeTimeModels.Add(employeeTime);
+                }
+
+            }
+            return employeeTimeModels;
+        }
+        */
         public List<EmployeeTimeModel> GetTeamMonthReport(int teamId, int year, int month)
         {
             return GetTeamMonthReport(_unit.Teams.Get(teamId), year, month);
@@ -99,6 +133,20 @@ namespace TimeKeeper.BLL.ReportServices
                 if (day.DayType.Name == "Empty") employeeMissing.MissingEntries += 8;
             }
             return employeeMissing;
+        }
+
+        public TeamMissingEntries GetTeamMissingEntries(Team team, int year, int month)
+        {
+            TeamMissingEntries teamMissing = new TeamMissingEntries();
+            teamMissing.Team = team.Master();
+            teamMissing.Hours = 0;
+
+            foreach(Member member in team.Members)
+            {
+                EmployeeMissingEntries employeeMissing = GetEmployeeMissingEntries(member.Employee, year, month);
+                teamMissing.Hours += employeeMissing.MissingEntries;
+            }
+            return teamMissing;
         }
     }
 }

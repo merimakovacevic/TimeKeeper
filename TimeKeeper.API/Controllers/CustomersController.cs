@@ -39,7 +39,7 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "IsAdmin")]
-        public IActionResult GetAll(int page = 1, int pageSize = 5)
+        public async Task<IActionResult> GetAll(int page = 1, int pageSize = 5)
         {
             try
             {
@@ -54,8 +54,8 @@ namespace TimeKeeper.API.Controllers
 
                 if (userRole == "lead")
                 {
-                    var empid = User.Claims.FirstOrDefault(c => c.Type == "sub").Value.ToString();
-                    var employee = Unit.Employees.Get(int.Parse(empid));
+                    var empid = int.Parse(GetUserClaim("sub"));
+                    var employee =await  Unit.Employees.GetAsync(empid);
                     var teams = employee.Members.GroupBy(x => x.Team.Id).Select(y => y.Key).ToList();
                     List<Project> projects = new List<Project>();
 
@@ -73,7 +73,8 @@ namespace TimeKeeper.API.Controllers
                 }
                 else
                 {
-                    query = Unit.Customers.Get().ToList();
+                    var task = await Unit.Customers.GetAsync();
+                    query = task.ToList();
                 }
 
                 customersPagination = _pagination.CreatePagination(page, pageSize, query);
@@ -98,12 +99,12 @@ namespace TimeKeeper.API.Controllers
         [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
                 Logger.Info($"Try to fetch customer with id {id}");
-                Customer customer = Unit.Customers.Get(id);
+                Customer customer = await Unit.Customers.GetAsync(id);
 
                 return Ok(customer.Create());                
             }
@@ -124,12 +125,12 @@ namespace TimeKeeper.API.Controllers
         [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Post([FromBody] Customer customer)
+        public async Task<IActionResult> Post([FromBody] Customer customer)
         {
             try
             {
-                Unit.Customers.Insert(customer);
-                Unit.Save();
+                Unit.Customers.InsertAsync(customer);
+                await Unit.SaveAsync();
                 Logger.Info($"Customer {customer.Name} added with id {customer.Id}");
                 return Ok(customer.Create());
             }
@@ -152,13 +153,13 @@ namespace TimeKeeper.API.Controllers
         [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Put(int id, [FromBody] Customer customer)
+        public async Task<IActionResult> Put(int id, [FromBody] Customer customer)
         {
             try
             {
                 Logger.Info($"Attempt to update customer with id {id}");
-                Unit.Customers.Update(customer, id);
-                Unit.Save();
+                await Unit.Customers.UpdateAsync(customer, id);
+                await Unit.SaveAsync();
 
                 Logger.Info($"Customer {customer.Name} with id {customer.Id} updated");
                 return Ok(customer.Create());
@@ -183,13 +184,13 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
                 Logger.Info($"Attempt to delete customer with id {id}");
-                Unit.Customers.Delete(id);
-                Unit.Save();
+                Unit.Customers.DeleteAsync(id);
+                Unit.SaveAsync();
 
                 Logger.Info($"Customer with id {id} deleted");
                 return NoContent();
