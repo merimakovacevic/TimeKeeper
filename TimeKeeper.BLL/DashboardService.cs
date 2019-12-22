@@ -94,15 +94,18 @@ namespace TimeKeeper.BLL
             List<CompanyEmployeeHoursModel> workDays = employeeHours.Where(x => x.DayTypeName == "Workday").ToList();
 
             foreach (CompanyEmployeeHoursModel row in workDays)
-            {    
-                if (overtimeNotNull.FirstOrDefault(x => x.EmployeeId == row.EmployeeId) != null)
+            {
+                if (row.TeamId != 0)
                 {
-                    GetCompanyOvertime(teams, workDays, overtimeNotNull, row.TeamId, row.EmployeeId);
-                }
+                    if (overtimeNotNull.FirstOrDefault(x => x.EmployeeId == row.EmployeeId) != null)
+                    {
+                        GetCompanyOvertime(teams, workDays, overtimeNotNull, row.TeamId, row.EmployeeId);
+                    }
 
-                if (paidTimeOff.FirstOrDefault(x => x.EmployeeId == row.EmployeeId) != null)
-                {
-                    GetCompanyPaidTimeOff(teams, workDays, paidTimeOff, row.TeamId, row.EmployeeId);
+                    if (paidTimeOff.FirstOrDefault(x => x.EmployeeId == row.EmployeeId) != null)
+                    {
+                        GetCompanyPaidTimeOff(teams, workDays, paidTimeOff, row.TeamId, row.EmployeeId);
+                    }
                 }
             }
 
