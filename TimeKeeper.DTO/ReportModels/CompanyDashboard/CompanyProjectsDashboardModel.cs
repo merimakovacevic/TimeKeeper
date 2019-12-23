@@ -1,6 +1,6 @@
-﻿namespace TimeKeeper.DTO.ReportModels.AdminDashboard
+﻿namespace TimeKeeper.DTO.ReportModels.CompanyDashboard
 {
-    public class AdminProjectDashboardModel
+    public class CompanyProjectsDashboardModel
     {
         public MasterModel Project { get; set; }
         public decimal Revenue { get; set; }
