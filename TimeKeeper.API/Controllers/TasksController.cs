@@ -40,29 +40,11 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info($"Try to fetch ${pageSize} projects from page ${page}");
-                Tuple<PaginationModel, List<JobDetail>> tasksPagination;
-                List<JobDetail> query;
+                List<JobDetail> query = await GetAuthorizedTasks();
 
-                int userId = int.Parse(GetUserClaim("sub"));
-                string userRole = GetUserClaim("role");
-
-                if (userRole == "lead")
-                {
-                    var task = await Unit.Tasks.GetAsync(x => x.Project.Team.Members.Any(y => y.Employee.Id == userId));
-                    query = task.ToList();
-                }
-                else if (userRole == "user")
-                {
-                    var task = await Unit.Tasks.GetAsync(x => x.Day.Employee.Id == userId);
-                    query = task.ToList();
-                }
-                else
-                {
-                    var task = await Unit.Tasks.GetAsync();
-                    query = task.ToList();
-                }
-
+                Tuple<PaginationModel, List<JobDetail>> tasksPagination;                              
                 tasksPagination = _pagination.CreatePagination(page, pageSize, query);
+
                 HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(tasksPagination.Item1));
                 return Ok(tasksPagination.Item2.Select(x => x.Create()).ToList());
             }
@@ -88,20 +70,10 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                int userId = int.Parse(GetUserClaim("sub"));
-                string userRole = GetUserClaim("role");
-
                 Logger.Info($"Try to get task with {id}");
-                var task = await Unit.Tasks.GetAsync(id);
-                if (task == null)
-                {
-                    return NotFound($"Requested resource with {id} does not exist");
-                }
-                if ((userRole == "lead" && !(task.Project.Team.Members.Any(x => x.Employee.Id == userId))) ||
-                    (userRole == "user" && !(task.Day.Employee.Id == userId)))
-                {
-                    return Unauthorized();
-                }
+                JobDetail task = await Unit.Tasks.GetAsync(id);
+
+                if (!CanAccessTask(task)) return Unauthorized();
                 return Ok(task.Create());
             }
             catch(Exception ex)
@@ -125,16 +97,13 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                int userId = int.Parse(GetUserClaim("sub"));
-                string userRole = GetUserClaim("role");
 
-                Logger.Info($"Task for employee {jobDetail.Day.Employee.FullName}, day {jobDetail.Day.Date} added with id {jobDetail.Id}");
-                if (userRole == "lead" && !jobDetail.Project.Team.Members.Any(x => x.Employee.Id == userId) ||
-                    userRole == "user" && !(jobDetail.Day.Employee.Id == userId))
-                {
-                    return Unauthorized();
-                }
-                Unit.Tasks.InsertAsync(jobDetail);
+                if (!CanAccessTask(jobDetail)) return Unauthorized();
+                //This line will result in an null object reference exception, we cannot access properties of jobDetail.Day because they are null
+                //Logger.Info($"Task for employee {jobDetail.Day.Employee.FullName}, day {jobDetail.Day.Date} added with id {jobDetail.Id}");
+                Logger.Info($"Task with id {jobDetail.Id} was added");
+
+                await Unit.Tasks.InsertAsync(jobDetail);
                 await Unit.SaveAsync();
                 return Ok(jobDetail.Create());
             }
@@ -162,16 +131,10 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                int userId = int.Parse(GetUserClaim("sub"));
-                string userRole = GetUserClaim("role");
+                if (!CanAccessTask(jobDetail)) return Unauthorized();
+                Logger.Info($"Modified task with id {id}");
 
-                Logger.Info($"Changed task with id {id}");
-                if (userRole == "lead" && !jobDetail.Project.Team.Members.Any(x => x.Employee.Id == userId) ||
-                    userRole == "user" && !(jobDetail.Day.Employee.Id == userId))
-                {
-                    return Unauthorized();
-                }
-                Unit.Tasks.UpdateAsync(jobDetail, id);
+                await Unit.Tasks.UpdateAsync(jobDetail, id);
                 await Unit.SaveAsync();
                 return Ok(jobDetail.Create());
             }
@@ -199,7 +162,7 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info($"Attempt to delete task with id {id}");
-                Unit.Tasks.DeleteAsync(id);
+                await Unit.Tasks.DeleteAsync(id);
                 await Unit.SaveAsync();
 
                 Logger.Info($"Deleted task with id {id}");
@@ -210,5 +173,49 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
+
+        [NonAction]
+        private bool CanAccessTask(JobDetail newTask)
+        {
+            int userId = int.Parse(GetUserClaim("sub"));
+            string userRole = GetUserClaim("role");
+            Project project = Unit.Projects.Get(newTask.Project.Id);
+            Day day = Unit.Calendar.Get(newTask.Day.Id);
+
+            if (userRole == "lead" && !project.Team.Members.Any(x => x.Employee.Id == userId) ||
+                userRole == "user" && !(day.Employee.Id == userId))
+            {
+               return false;
+            }
+
+            return true;
+        }
+
+        [NonAction]
+        private async Task<List<JobDetail>> GetAuthorizedTasks()
+        {
+            List<JobDetail> query;
+            int userId = int.Parse(GetUserClaim("sub"));
+            string userRole = GetUserClaim("role");
+
+            if (userRole == "lead")
+            {
+                var task = await Unit.Tasks.GetAsync(x => x.Project.Team.Members.Any(y => y.Employee.Id == userId));
+                query = task.ToList();
+            }
+            else if (userRole == "user")
+            {
+                var task = await Unit.Tasks.GetAsync(x => x.Day.Employee.Id == userId);
+                query = task.ToList();
+            }
+            else
+            {
+                var task = await Unit.Tasks.GetAsync();
+                query = task.ToList();
+            }
+
+            return query;
+        }
+
     }
 }

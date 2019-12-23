@@ -88,8 +88,8 @@ namespace TimeKeeper.Utility.Factory
             return new JobDetailModel
             {
                 Id = jobDetail.Id,
-                //Description = jobDetail.Description,
-                //Day = jobDetail.Day.Master(),
+                Description = jobDetail.Description,
+                Day = jobDetail.Day.Master(),
                 Project = jobDetail.Project.Master(),
                 Hours = jobDetail.Hours
             };
