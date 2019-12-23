@@ -11,7 +11,6 @@ using TimeKeeper.BLL;
 using TimeKeeper.DTO;
 using TimeKeeper.Utility.Factory;
 using Newtonsoft.Json;
-using TimeKeeper.API.Authorization.ResourceAccessServices;
 
 namespace TimeKeeper.API.Controllers
 {
@@ -21,11 +20,9 @@ namespace TimeKeeper.API.Controllers
     public class TasksController : BaseController
     {
         private PaginationService<JobDetail> _pagination;
-        private ResourceAccessService _resourceAccess;
         public TasksController(TimeKeeperContext context) : base(context)
         {
             _pagination = new PaginationService<JobDetail>();
-            _resourceAccess = new ResourceAccessService(Unit);
         }
 
         /// <summary>
@@ -165,7 +162,7 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info($"Attempt to delete task with id {id}");
-                Unit.Tasks.DeleteAsync(id);
+                await Unit.Tasks.DeleteAsync(id);
                 await Unit.SaveAsync();
 
                 Logger.Info($"Deleted task with id {id}");
@@ -198,7 +195,6 @@ namespace TimeKeeper.API.Controllers
         private async Task<List<JobDetail>> GetAuthorizedTasks()
         {
             List<JobDetail> query;
-
             int userId = int.Parse(GetUserClaim("sub"));
             string userRole = GetUserClaim("role");
 
