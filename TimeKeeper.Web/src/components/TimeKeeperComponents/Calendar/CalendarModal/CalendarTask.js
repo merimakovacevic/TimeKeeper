@@ -1,9 +1,14 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
+import { connect } from "react-redux";
 import { Grid, Select, MenuItem, TextField, Input, IconButton } from "@material-ui/core";
 import { Formik, Form, Field } from "formik";
 
+import { tasksUrl, apiPutRequest } from "../../../../utils/api";
+import { editTask } from "../../../../store/actions/index";
+
 import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
 import TodayIcon from "@material-ui/icons/Today";
 
 import moment from "moment";
@@ -24,82 +29,88 @@ const CustomeTextFieldComponent = (props) => <TextField {...props} />;
 
 const CustomInputComponent = (props) => <Input {...props} fullWidth />;
 
-const CalendarTask = (props) => (
-	<Formik
-		initialValues={{
-			hours: 0,
-			projects: 1,
-			description: ""
-		}}
-		onSubmit={(values) => {
-			console.log(values);
-		}}
-	>
-		<Form>
-			<Grid container alignItems="center" className="mb-1-5">
-				<span>{moment(props.calendarMonth[props.day - 1].date).format("YYYY-MM-DD")}</span>
-				<TodayIcon />
-			</Grid>
+function CalendarTask(props) {
+	return (
+		<Formik
+			enableReinitialize
+			onSubmit={(values) => {
+				if (props.data) {
+					let data = {
+						id: props.data.id,
+						day: {
+							id: props.day.id
+						},
+						project: {
+							id: values.project
+						},
+						description: values.description,
+						hours: values.hours
+					};
 
-			<Fragment>
-				<Grid container spacing={4} alignItems="center">
-					<Grid item xs={3}>
-						<Grid>
+					props.editTask(props.data.id, data);
+				}
+			}}
+			initialValues={{
+				hours: props.data ? props.data.hours : "",
+				project: props.data ? props.data.project.id : 1,
+				description: props.data ? props.data.description : ""
+			}}
+		>
+			<Form>
+				<Grid container alignItems="center" className="mb-1-5">
+					<span>{moment(props.day.date).format("YYYY-MM-DD")}</span>
+
+					<TodayIcon />
+				</Grid>
+				<Fragment>
+					<Grid container spacing={4} alignItems="center">
+						<Grid item xs={3}>
+							<Grid>
+								<Field
+									name={"project"}
+									id={"project-select-"}
+									label="Project"
+									data={props.projects}
+									as={CustomSelectComponent}
+								/>
+							</Grid>
+							<Grid
+								item
+								style={{
+									padding: "1rem 0"
+								}}
+							>
+								<Field as={CustomInputComponent} name={"hours"} placeholder="Hours Worked" />
+							</Grid>
+						</Grid>
+						<Grid item xs={8}>
 							<Field
-								name={"projects"}
-								id={"project-select-"}
-								label="Project"
-								data={props.projects}
-								as={CustomSelectComponent}
-								// value={1}
-								// value={x.selectedProject}
+								as={CustomeTextFieldComponent}
+								name={"description"}
+								label="Description"
+								multiline={true}
+								rows={2}
+								variant="outlined"
+								fullWidth
 							/>
 						</Grid>
-						<Grid
-							item
-							style={{
-								padding: "1rem 0"
-							}}
-						>
-							<Field as={CustomInputComponent} name={"hours"} placeholder="Hours Worked" />
+						<Grid item xs={1} className="text-right">
+							<Grid>
+								<IconButton
+									className="align-adjust-margin"
+									aria-label="delete-working-hours"
+									color="primary"
+									type="submit"
+								>
+									{props.data ? <EditIcon /> : <AddIcon />}
+								</IconButton>
+							</Grid>
 						</Grid>
 					</Grid>
-					<Grid item xs={8}>
-						<Field
-							as={CustomeTextFieldComponent}
-							name={"description"}
-							label="Description"
-							multiline={true}
-							rows={2}
-							variant="outlined"
-							fullWidth
-						/>
-					</Grid>
-					<Grid item xs={1} className="text-right">
-						<Grid>
-							<IconButton
-								className="align-adjust-margin"
-								aria-label="delete-working-hours"
-								color="primary"
-								type="submit"
-							>
-								<AddIcon />
-							</IconButton>
-						</Grid>
-						{/* <Grid>
-                    <IconButton
-                        className="align-adjust-margin"
-                        aria-label="delete-working-hours"
-                        color="secondary"
-                    >
-                        <DeleteIcon />
-                    </IconButton>
-                </Grid> */}
-					</Grid>
-				</Grid>
-			</Fragment>
-		</Form>
-	</Formik>
-);
+				</Fragment>
+			</Form>
+		</Formik>
+	);
+}
 
-export default CalendarTask;
+export default connect(null, { editTask })(CalendarTask);

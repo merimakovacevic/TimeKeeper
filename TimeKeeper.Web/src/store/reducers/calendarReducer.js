@@ -1,4 +1,10 @@
-import { LOAD_CALENDAR_MONTH, LOAD_CALENDAR_MONTH_SUCCESS, LOAD_CALENDAR_MONTH_FAIL } from "../actions/actionTypes";
+import {
+	LOAD_CALENDAR_MONTH,
+	LOAD_CALENDAR_MONTH_SUCCESS,
+	LOAD_CALENDAR_MONTH_FAIL,
+	TASK_EDITED_SUCCESS,
+	TASK_EDITED_FAIL
+} from "../actions/actionTypes";
 
 const initialCalendarState = {
 	data: [],
@@ -18,6 +24,15 @@ export const calendarReducer = (state = initialCalendarState, action) => {
 				...state,
 				data: action.data,
 				loading: false
+			};
+		case TASK_EDITED_SUCCESS:
+			return {
+				...state
+			};
+		case TASK_EDITED_FAIL:
+			return {
+				...state,
+				error: action.error
 			};
 		default:
 			return state;

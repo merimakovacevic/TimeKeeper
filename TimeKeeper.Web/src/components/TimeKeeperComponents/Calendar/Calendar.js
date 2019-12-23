@@ -75,7 +75,7 @@ function CalendarDisplay(props) {
 							a11yProps={a11yProps}
 							calendarMonth={props.calendarMonth}
 							projects={projects}
-							day={day}
+							day={props.calendarMonth[day - 1]}
 						/>
 					</div>
 				) : (

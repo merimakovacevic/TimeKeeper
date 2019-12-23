@@ -37,17 +37,25 @@ const CalendarModal = (props) => (
 					</AppBar>
 					<Paper>
 						<TabPanel value={props.selectedTab} index={0}>
+							{props.day.jobDetails.length > 0
+								? props.day.jobDetails.map((x) => {
+										
+										return (
+											<CalendarTask
+												day={props.day}
+												data={x}
+												projects={props.projects}
+												
+											/>
+										);
+								  })
+								: null}
 							<CalendarTask
 								calendarMonth={props.calendarMonth}
 								day={props.day}
 								projects={props.projects}
 							/>
 							<Divider style={{ width: "100%", margin: "1rem 0" }} />
-							<CalendarTask
-								calendarMonth={props.calendarMonth}
-								day={props.day}
-								projects={props.projects}
-							/>
 						</TabPanel>
 					</Paper>
 					<Paper elevation={4}>
