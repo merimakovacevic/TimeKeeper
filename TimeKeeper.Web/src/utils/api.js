@@ -5,9 +5,9 @@ import { store } from "../index";
 export const loginUrl = "http://localhost:8000/login";
 // export const employeesUrl = "https://localhost:44321/api/employees";
 export const employeesUrl = "http://localhost:8000/api/employees";
-export const customersUrl = "http://192.168.60.73/TimeKeeper/api/customers";
+export const customersUrl = "http://localhost:8000/api/customers";
 //export const customersUrl = "https://localhost:44321/api/customers";
-export const projectsUrl = "http://localhost:44321/api/projects";
+export const projectsUrl = "http://localhost:8000/api/projects";
 export const dropDownTeamsUrl = "http://localhost:8000/api/teams";
 export const teamTrackingUrl =
   "http://localhost:8000/api/reports/team-time-tracking";

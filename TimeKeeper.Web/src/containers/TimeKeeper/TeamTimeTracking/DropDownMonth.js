@@ -38,6 +38,7 @@ const DropDownMonth = (props) => {
           Month
         </InputLabel>{" "}
         <Select
+          defaultValue={1}
           classes={{
             icon: classes.whiteColor
           }}

@@ -37,6 +37,7 @@ const DropDownYear = (props) => {
           Year
         </InputLabel>
         <Select
+          defaultValue={2019}
           classes={{
             icon: classes.whiteColor
           }}
