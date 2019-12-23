@@ -88,6 +88,8 @@ namespace TimeKeeper.BLL.ReportServices
                                          .Select(x => new MasterModel { Id = x.Key.ProjId, Name = x.Key.ProjName }).ToList();
 
                 List<int> projList = result.Projects.Select(x => x.Id).ToList();
+                EmployeeProjectModel total = new EmployeeProjectModel(projList) { Employee = new MasterModel { Id = 0, Name="TOTAL" } };
+                total.TotalHours = 0;
                 EmployeeProjectModel epm = new EmployeeProjectModel(projList) { Employee = new MasterModel { Id = 0 } };
                 foreach (MonthlyRawData item in rawData)
                 {
@@ -102,8 +104,11 @@ namespace TimeKeeper.BLL.ReportServices
                     }
                     epm.Hours[item.ProjId] = item.Hours;
                     epm.TotalHours += item.Hours;
+                    total.Hours[item.ProjId] += item.Hours;
+                    total.TotalHours += item.Hours;
                 }
                 if (epm.Employee.Id != 0) result.Employees.Add(epm);
+                result.Employees.Add(total);
             }
 
             return result;
