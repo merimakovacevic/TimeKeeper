@@ -8,12 +8,34 @@ export const employeesUrl = "http://localhost:8000/api/employees";
 export const customersUrl = "http://192.168.60.73/TimeKeeper/api/customers";
 //export const customersUrl = "https://localhost:44321/api/customers";
 export const projectsUrl = "https://localhost:44321/api/projects";
+export const calendarUrl = "http://localhost:8000/api/calendar";
 
 export const login = (url, credentials) => {
 	return axios
 		.post(url, credentials)
 		.then((data) => ({ data }))
 		.catch((error) => ({ error }));
+};
+
+export const getCalendar = (id, year, month) => {
+	let newUrl = `${calendarUrl}/${id}/${year}/${month}`;
+
+	const token = store.getState().user.token;
+
+	let headers = new Headers();
+
+	headers = {
+		Accept: "application/json",
+		Authorization: `Bearer ${token}`
+	};
+
+	const options = {
+		headers
+	};
+
+	return axios(newUrl, options)
+		.then((data) => ({ data }))
+		.catch((err) => ({ err }));
 };
 
 export const apiGetAllRequest = (url, method = "GET") => {
