@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TimeKeeper.BLL;
 using TimeKeeper.DAL;
-using TimeKeeper.DTO.ReportModels.AdminDashboard;
+using TimeKeeper.DTO.ReportModels.CompanyDashboard;
 
 namespace TimeKeeper.API.Controllers
 {
@@ -60,14 +60,14 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
-
-        [HttpGet("admin/{year}/{month}")]
-        public IActionResult GetAdminDashboard(int year, int month)
+        
+        [HttpGet("company/{year}/{month}")]
+        public IActionResult GetCompanyDashboard(int year, int month)
         {
             try
             {
                 DateTime start = DateTime.Now;
-                AdminDashboardModel dashboard = dashboardService.GetAdminDashboardInfo(year, month);
+                CompanyDashboardModel dashboard = dashboardService.GetCompanyDashboard(year, month);
                 DateTime end = DateTime.Now;
                 return Ok(new { (end - start).TotalMilliseconds, dashboard});
             }

@@ -40,7 +40,11 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "AdminLeadOrMember")]
+<<<<<<< HEAD
         public IActionResult GetAll(int page = 1, int pageSize = 10)
+=======
+        public async Task<IActionResult> GetAll(int page = 1, int pageSize = 5)
+>>>>>>> dev
         {
             try
             {
@@ -53,11 +57,13 @@ namespace TimeKeeper.API.Controllers
 
                 if(userRole == "user" || userRole == "lead")
                 {
-                    query = Unit.Teams.Get(x => x.Members.Any(y => y.Employee.Id == userId)).ToList();                    
+                    var task = await Unit.Teams.GetAsync(x => x.Members.Any(y => y.Employee.Id == userId));
+                    query = task.ToList();                    
                 }
                 else
                 {
-                    query = Unit.Teams.Get().ToList();
+                    var task = await Unit.Teams.GetAsync();
+                    query = task.ToList();
                 }
 
                 teamsPagination = _pagination.CreatePagination(page, pageSize, query);
@@ -82,14 +88,14 @@ namespace TimeKeeper.API.Controllers
         [Authorize(Policy = "AdminLeadOrMember")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             try {
                 int userId = int.Parse(GetUserClaim("sub"));
                 string userRole = GetUserClaim("role");
 
                 Logger.Info($"Try to get team with {id}");
-                Team team = Unit.Teams.Get(id);
+                Team team = await Unit.Teams.GetAsync(id);
                 if (team == null)
                 {
                     return NotFound($"Requested resource with {id} does not exist");
@@ -119,12 +125,12 @@ namespace TimeKeeper.API.Controllers
         [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Post([FromBody] Team team)
+        public async Task<IActionResult> Post([FromBody] Team team)
         {
             try
             {
-                Unit.Teams.Insert(team);
-                Unit.Save();
+                Unit.Teams.InsertAsync(team);
+                await Unit.SaveAsync();
                 Logger.Info($"Team {team.Name} added with id {team.Id}");
                 return Ok(team.Create());
             }
@@ -147,12 +153,12 @@ namespace TimeKeeper.API.Controllers
         [Authorize(Roles = "admin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Put(int id, [FromBody] Team team)
+        public async Task<IActionResult> Put(int id, [FromBody] Team team)
         {
             try
             {
-                Unit.Teams.Update(team, id);
-                Unit.Save();
+                Unit.Teams.UpdateAsync(team, id);
+                await Unit.SaveAsync();
 
                 Logger.Info($"Changed team with id {id}");
                 return Ok(team.Create());
@@ -177,13 +183,13 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
                 Logger.Info($"Attempt to delete team with id {id}");
-                Unit.Teams.Delete(id);
-                Unit.Save();
+                Unit.Teams.DeleteAsync(id);
+                await Unit.SaveAsync();
 
                 Logger.Info($"Deleted team with id {id}");
                 return NoContent();

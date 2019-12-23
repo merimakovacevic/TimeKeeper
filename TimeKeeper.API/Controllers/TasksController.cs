@@ -35,7 +35,7 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "AdminLeadOrMember")]
-        public IActionResult Get(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> Get(int page = 1, int pageSize = 10)
         {
             try
             {
@@ -48,15 +48,18 @@ namespace TimeKeeper.API.Controllers
 
                 if (userRole == "lead")
                 {
-                    query = Unit.Tasks.Get(x => x.Project.Team.Members.Any(y => y.Employee.Id == userId)).ToList();
+                    var task = await Unit.Tasks.GetAsync(x => x.Project.Team.Members.Any(y => y.Employee.Id == userId));
+                    query = task.ToList();
                 }
                 else if (userRole == "user")
                 {
-                    query = Unit.Tasks.Get(x => x.Day.Employee.Id == userId).ToList();
+                    var task = await Unit.Tasks.GetAsync(x => x.Day.Employee.Id == userId);
+                    query = task.ToList();
                 }
                 else
                 {
-                    query = Unit.Tasks.Get().ToList();
+                    var task = await Unit.Tasks.GetAsync();
+                    query = task.ToList();
                 }
 
                 tasksPagination = _pagination.CreatePagination(page, pageSize, query);
@@ -81,7 +84,7 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [Authorize(Policy = "AdminLeadOrMember")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
@@ -89,7 +92,7 @@ namespace TimeKeeper.API.Controllers
                 string userRole = GetUserClaim("role");
 
                 Logger.Info($"Try to get task with {id}");
-                var task = Unit.Tasks.Get(id);
+                var task = await Unit.Tasks.GetAsync(id);
                 if (task == null)
                 {
                     return NotFound($"Requested resource with {id} does not exist");
@@ -118,7 +121,7 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "AdminLeadOrOwner")]
-        public IActionResult Post([FromBody] JobDetail jobDetail)
+        public async Task<IActionResult> Post([FromBody] JobDetail jobDetail)
         {
             try
             {
@@ -131,8 +134,8 @@ namespace TimeKeeper.API.Controllers
                 {
                     return Unauthorized();
                 }
-                Unit.Tasks.Insert(jobDetail);
-                Unit.Save();
+                Unit.Tasks.InsertAsync(jobDetail);
+                await Unit.SaveAsync();
                 return Ok(jobDetail.Create());
             }
             catch (Exception ex)
@@ -155,7 +158,7 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "AdminLeadOrOwner")]
-        public IActionResult Put(int id, [FromBody] JobDetail jobDetail)
+        public async Task<IActionResult> Put(int id, [FromBody] JobDetail jobDetail)
         {
             try
             {
@@ -168,8 +171,8 @@ namespace TimeKeeper.API.Controllers
                 {
                     return Unauthorized();
                 }
-                Unit.Tasks.Update(jobDetail, id);
-                Unit.Save();
+                Unit.Tasks.UpdateAsync(jobDetail, id);
+                await Unit.SaveAsync();
                 return Ok(jobDetail.Create());
             }
             catch (Exception ex)
@@ -191,13 +194,13 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [Authorize(Policy = "IsAdmin")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
                 Logger.Info($"Attempt to delete task with id {id}");
-                Unit.Tasks.Delete(id);
-                Unit.Save();
+                Unit.Tasks.DeleteAsync(id);
+                await Unit.SaveAsync();
 
                 Logger.Info($"Deleted task with id {id}");
                 return NoContent();
