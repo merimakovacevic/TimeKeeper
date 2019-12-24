@@ -38,7 +38,7 @@ namespace TimeKeeper.Seed
                 unit.Save();
 
                 //User insertion is binded to employee insertion
-                User user = employee.CreateUserAndHash();
+                User user = employee.CreateUser();
 
                 unit.Users.Insert(user);
                 unit.Save();
