@@ -31,6 +31,7 @@ import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
 import { logout } from "../../store/actions/index";
+import Calendar from "../../components/TimeKeeperComponents/Calendar/Calendar";
 import EmployeesPage from "../../components/TimeKeeperComponents/EmployeesPage/EmployeesPage";
 import CustomersPage from "../../components/TimeKeeperComponents/CustomersPage/CustomersPage";
 import ProjectsPage from "../../components/TimeKeeperComponents/ProjectsPage/ProjectsPage";
@@ -259,9 +260,10 @@ class TimeKeeper extends React.Component {
 							<Divider style={{ backgroundColor: "grey" }} />
 						</Drawer>
 						<main className={classes.content}>
-							<div className={classes.toolbar}>
+							{/* <div className={classes.toolbar}> */}
+							<div style={{ margin: "10rem 10rem" }}>
 								<Route exact={true} path="/app">
-									<div
+									{/* <div
 										style={{
 											position: "absolute",
 											top: "50%",
@@ -273,7 +275,8 @@ class TimeKeeper extends React.Component {
 										<Typography variant="h3" gutterBottom>
 											Welcome back <b>{user.name}</b>
 										</Typography>
-									</div>
+									</div> */}
+									<Calendar />
 								</Route>
 								{user.role === "admin" || user.role === "lead" ? (
 									<React.Fragment>

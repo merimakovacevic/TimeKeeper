@@ -16,10 +16,12 @@ namespace TimeKeeper.API.Controllers
     public class CalendarController : BaseController
     {
         protected CalendarService calendarService;
+
         public CalendarController(TimeKeeperContext context) : base(context)
         {
             calendarService = new CalendarService(Unit);
         }
+
         /// <summary>
         /// This method returns monthly calendar for an employee
         /// </summary>
@@ -43,6 +45,7 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
+
         /// <summary>
         /// This method returns day with specified id
         /// </summary>
@@ -63,13 +66,13 @@ namespace TimeKeeper.API.Controllers
                 string userRole = GetUserClaim("role");
 
                 Logger.Info($"Try to get day with {id}");
-                Day day =  Unit.Calendar.Get(id);
+                Day day = Unit.Calendar.Get(id);
                 if (day == null)
                 {
                     // make extension method and implement it
                     return NotFound($"Requested resource with {id} does not exist");
                 }
-                if (userRole == "lead" && !day.JobDetails.Any(x => x.Project.Team.Members.Any(y => y.Employee.Id == userId)) ||
+                if (userRole == "admin" && !day.JobDetails.Any(x => x.Project.Team.Members.Any(y => y.Employee.Id == userId)) ||
                     userRole == "user" && !day.JobDetails.Any(x => x.Project.Team.Members.Any(y => y.Employee.Id == userId)))
                 {
                     return Unauthorized();
@@ -81,6 +84,7 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
+
         /// <summary>
         /// This method inserts a new day
         /// </summary>
@@ -100,7 +104,14 @@ namespace TimeKeeper.API.Controllers
 
                 Logger.Info("Try to insert new day");
 
-                if (userRole != "admin" || !(day.Employee.Id == userId))
+                if (userRole == "admin" || (day.Employee.Id == userId))
+                {
+                    Unit.Calendar.Insert(day);
+                    Unit.Save();
+                    Logger.Info($"Day {day.Date} added with id {day.Id}");
+                    return Ok(day.Create());
+                }
+                else
                 {
                     return Unauthorized();
                 }
@@ -114,6 +125,7 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
+
         /// <summary>
         /// This method updates data for day with specified id
         /// </summary>
@@ -147,6 +159,7 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
+
         /// <summary>
         /// This method deletes day with specified id
         /// </summary>
@@ -175,6 +188,6 @@ namespace TimeKeeper.API.Controllers
             {
                 return HandleException(ex);
             }
-        }     
+        }
     }
 }

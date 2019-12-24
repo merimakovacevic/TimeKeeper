@@ -38,6 +38,7 @@ const EmployeesPage = (props) => {
 
 	useEffect(() => {
 		fetchEmployees();
+		setSearch("");
 		employees = data;
 	}, [reload]);
 
