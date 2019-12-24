@@ -71,7 +71,7 @@ namespace TimeKeeper.Seed
             return "user";
         }
 
-        public static User CreateUserAndHash(this Employee employee)
+        public static User CreateUser(this Employee employee)
         {
             User user = new User
             {
