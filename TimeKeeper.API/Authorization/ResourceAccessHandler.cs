@@ -130,5 +130,22 @@ namespace TimeKeeper.API.Authorization
 
             return query;
         }
+
+        public bool CanGetMember(UserRoleModel userClaims, Member member)
+        {
+            if (userClaims.Role == "user" && !member.Team.Members.Any(x => x.Employee.Id == userClaims.UserId))
+            {
+                return false;
+            }
+            return true;
+        }
+        public bool CanPostMember(UserRoleModel userClaims, Member member)
+        {
+            if (userClaims.Role == "lead" && !member.Team.Members.Any(x => x.Employee.Id == userClaims.UserId))
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

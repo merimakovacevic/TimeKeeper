@@ -71,20 +71,10 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                int userId = int.Parse(GetUserClaim("sub"));
-                string userRole = GetUserClaim("role");
-
                 Logger.Info($"Try to get member with {id}");
                 Member member = await Unit.Members.GetAsync(id);
-                if (member == null)
-                {
-                    return NotFound($"Requested resource with {id} does not exist");
-                }
-                if (userRole == "user" && !member.Team.Members.Any(x => x.Employee.Id == userId))
-                {
-                    return Unauthorized();
-                }
-                else
+
+                if (!resourceAccess.CanGetMember(GetUserClaims(), member)) return Unauthorized();                
                 return Ok(member.Create());
             }
             catch(Exception ex)
@@ -108,15 +98,9 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                int userId = int.Parse(GetUserClaim("sub"));
-                string userRole = GetUserClaim("role");
-
                 Logger.Info("Trying to post new member");
-                if (userRole == "lead" && !member.Team.Members.Any(x => x.Employee.Id == userId))
-                {
-                    return Unauthorized();
-                }
-                Unit.Members.InsertAsync(member);
+                if (!resourceAccess.CanPostMember(GetUserClaims(), member)) return Unauthorized();
+                await Unit.Members.InsertAsync(member);
                 await Unit.SaveAsync();
                 Logger.Info($"Member {member.Employee.FirstName} added with id {member.Id}");
                 return Ok(member.Create());
@@ -143,7 +127,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Unit.Members.UpdateAsync(member, id);
+                await Unit.Members.UpdateAsync(member, id);
                 await Unit.SaveAsync();
 
                 Logger.Info($"Changed member with id {id}");
