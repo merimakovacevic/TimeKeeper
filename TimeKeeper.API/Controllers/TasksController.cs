@@ -20,6 +20,7 @@ namespace TimeKeeper.API.Controllers
     public class TasksController : BaseController
     {
         private PaginationService<JobDetail> _pagination;
+
         public TasksController(TimeKeeperContext context) : base(context)
         {
             _pagination = new PaginationService<JobDetail>();
@@ -48,11 +49,12 @@ namespace TimeKeeper.API.Controllers
                 HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(tasksPagination.Item1));
                 return Ok(tasksPagination.Item2.Select(x => x.Create()).ToList());
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return HandleException(ex);
             }
         }
+
         /// <summary>
         /// This method returns a task with specified id
         /// </summary>
@@ -76,7 +78,7 @@ namespace TimeKeeper.API.Controllers
                 if (!CanAccessTask(task)) return Unauthorized();
                 return Ok(task.Create());
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return HandleException(ex);
             }
