@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using TimeKeeper.DAL.Utilities;
 using TimeKeeper.Domain.Entities;
+using TimeKeeper.Utility.Factory;
 
 namespace TimeKeeper.Seed
 {
@@ -62,6 +64,18 @@ namespace TimeKeeper.Seed
             return words[1];
         }
 
+        public static User CreateUserAndHash(this Employee employee)
+        {
+            User user = new User
+            {
+                Id = employee.Id,
+                Name = employee.FullName,
+                Username = employee.MakeUsername(),
+                Password = employee.MakeUsername().HashWith("$ch00l"),
+                Role = "user"
+            };
+            return user;
+        }
 
     }
 }

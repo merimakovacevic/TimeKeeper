@@ -2,18 +2,18 @@ import axios from "axios";
 
 import { store } from "../index";
 
-export const loginUrl = "http://localhost:57166/login";
+export const loginUrl = "http://localhost:8000/login";
 // export const employeesUrl = "https://localhost:44321/api/employees";
-export const employeesUrl = "http://localhost:57166/api/employees";
-export const customersUrl = "http://localhost:57166/api/customers";
+export const employeesUrl = "http://localhost:8000/api/employees";
+export const customersUrl = "http://localhost:8000/api/customers";
 //export const customersUrl = "https://localhost:44321/api/customers";
-// export const calendarUrl = "http://localhost:57166/api/calendar";
-export const calendarUrl = "http://localhost:57166/api/calendar";
-export const tasksUrl = "http://localhost:57166/api/tasks";
-export const projectsUrl = "http://localhost:57166/api/projects";
-export const dropDownTeamsUrl = "http://localhost:57166/api/teams";
+// export const calendarUrl = "http://localhost:8000/api/calendar";
+export const calendarUrl = "http://localhost:8000/api/calendar";
+export const tasksUrl = "http://localhost:8000/api/tasks";
+export const projectsUrl = "http://localhost:8000/api/projects";
+export const dropDownTeamsUrl = "http://localhost:8000/api/teams";
 export const teamTrackingUrl =
-  "http://localhost:57166/api/reports/team-time-tracking";
+  "http://localhost:8000/api/reports/team-time-tracking";
 
 export const login = (url, credentials) => {
   return axios

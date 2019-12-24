@@ -18,7 +18,7 @@ function CalendarDisplay(props) {
   const [selectedTab, setSelectedTab] = useState(0);
 
   useEffect(() => {
-    apiGetAllRequest("http://localhost:57166/api/projects").then((res) => {
+    apiGetAllRequest("http://localhost:8000/api/projects").then((res) => {
       setProjects(res.data.data);
     });
 
