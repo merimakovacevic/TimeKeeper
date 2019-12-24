@@ -42,21 +42,9 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                int userId = int.Parse(GetUserClaim("sub"));
-                string userRole = GetUserClaim("role");
-
                 Tuple<PaginationModel, List<Member>> membersPagination;
-                List<Member> query;
+                List<Member> query = await resourceAccess.GetAuthorizedMembers(GetUserClaims());
 
-                if (userRole == "user")
-                {
-                    var task = await Unit.Members.GetAsync(x => x.Team.Members.Any(y => y.Employee.Id == userId));
-                    query = task.ToList();
-                }
-                else
-                {
-                   query = queryService.GetTeamMembers(userId);
-                }
                 membersPagination = _pagination.CreatePagination(page, pageSize, query);
                 HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(membersPagination));
                 return Ok(membersPagination.Item2.Select(x => x.Create()).ToList());

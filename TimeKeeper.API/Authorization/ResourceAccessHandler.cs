@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TimeKeeper.BLL;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.DTO;
@@ -11,6 +12,7 @@ namespace TimeKeeper.API.Authorization
     public class ResouceAccessHandler
     {
         private UnitOfWork _unit;
+        private QueryService queryService;
         public ResouceAccessHandler(UnitOfWork unit)
         {
             _unit = unit;
@@ -109,5 +111,24 @@ namespace TimeKeeper.API.Authorization
             return false;            
         }
 
+        public async Task<List<Member>> GetAuthorizedMembers(UserRoleModel _userClaims)
+        {
+            List<Member> query;
+
+            
+            if (_userClaims.Role == "user")
+            {
+                //Gets team memebers?
+                var task = await _unit.Members.GetAsync(x => x.Team.Members.Any(y => y.Employee.Id == _userClaims.UserId));
+                query = task.ToList();
+            }
+            else
+            {
+                //also gets team members?
+                query = queryService.GetTeamMembers(_userClaims.UserId);
+            }
+
+            return query;
+        }
     }
 }
