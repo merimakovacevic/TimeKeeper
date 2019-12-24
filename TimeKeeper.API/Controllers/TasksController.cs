@@ -11,6 +11,7 @@ using TimeKeeper.BLL;
 using TimeKeeper.DTO;
 using TimeKeeper.Utility.Factory;
 using Newtonsoft.Json;
+using TimeKeeper.API.Authorization;
 
 namespace TimeKeeper.API.Controllers
 {
@@ -41,7 +42,8 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info($"Try to fetch ${pageSize} projects from page ${page}");
-                List<JobDetail> query = await GetAuthorizedTasks();
+                //List<JobDetail> query = await GetAuthorizedTasks();
+                List<JobDetail> query = await resourceAccess.GetAuthorizedTasks(GetUserClaims());
 
                 Tuple<PaginationModel, List<JobDetail>> tasksPagination;                              
                 tasksPagination = _pagination.CreatePagination(page, pageSize, query);
@@ -75,7 +77,7 @@ namespace TimeKeeper.API.Controllers
                 Logger.Info($"Try to get task with {id}");
                 JobDetail task = await Unit.Tasks.GetAsync(id);
 
-                if (!CanAccessTask(task)) return Unauthorized();
+                if (!resourceAccess.CanAccessTask(GetUserClaims(), task)) return Unauthorized();
                 return Ok(task.Create());
             }
             catch (Exception ex)
@@ -100,7 +102,7 @@ namespace TimeKeeper.API.Controllers
             try
             {
 
-                if (!CanAccessTask(jobDetail)) return Unauthorized();
+                if (!resourceAccess.CanAccessTask(GetUserClaims(), jobDetail)) return Unauthorized();
                 //This line will result in an null object reference exception, we cannot access properties of jobDetail.Day because they are null
                 //Logger.Info($"Task for employee {jobDetail.Day.Employee.FullName}, day {jobDetail.Day.Date} added with id {jobDetail.Id}");
                 Logger.Info($"Task with id {jobDetail.Id} was added");
@@ -133,7 +135,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                if (!CanAccessTask(jobDetail)) return Unauthorized();
+                if (!resourceAccess.CanAccessTask(GetUserClaims(), jobDetail)) return Unauthorized();
                 Logger.Info($"Modified task with id {id}");
 
                 await Unit.Tasks.UpdateAsync(jobDetail, id);
@@ -175,7 +177,7 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
-
+        /*
         [NonAction]
         private bool CanAccessTask(JobDetail newTask)
         {
@@ -217,7 +219,7 @@ namespace TimeKeeper.API.Controllers
             }
 
             return query;
-        }
+        }*/
 
     }
 }
