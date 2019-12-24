@@ -144,14 +144,14 @@ namespace TimeKeeper.API.Controllers
         [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Put(int id, [FromBody] Project project)
+        public async Task<IActionResult> Put(int id, [FromBody] Project project)
         {
             try
             {
                 Logger.Info($"Attempt to update project with id {id}");
-                Unit.Projects.Update(project, id);
+                await Unit.Projects.UpdateAsync(project, id);
 
-                Unit.Save();
+                await Unit.SaveAsync();
 
                 Logger.Info($"Project {project.Name} with id {project.Id} updated");
                 return Ok(project.Create());
@@ -175,13 +175,13 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
                 Logger.Info($"Attempt to delete project with id {id}");
-                Unit.Projects.Delete(id);
-                Unit.Save();
+                await Unit.Projects.DeleteAsync(id);
+                await Unit.SaveAsync();
 
                 Logger.Info($"Project with id {id} deleted");
                 return NoContent();

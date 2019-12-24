@@ -104,21 +104,15 @@ namespace TimeKeeper.API.Controllers
 
                 Logger.Info("Try to insert new day");
 
-                if (userRole == "admin" || (day.Employee.Id == userId))
-                {
-                    Unit.Calendar.Insert(day);
-                    Unit.Save();
-                    Logger.Info($"Day {day.Date} added with id {day.Id}");
-                    return Ok(day.Create());
-                }
-                else
+                if (userRole != "admin" && !(day.Employee.Id == userId))
                 {
                     return Unauthorized();
                 }
-                Unit.Calendar.InsertAsync(day);
+                await Unit.Calendar.InsertAsync(day);
                 await Unit.SaveAsync();
                 Logger.Info($"Day {day.Date} added with id {day.Id}");
-                return Ok(day.Create());
+                Day createdDay = Unit.Calendar.Get(day.Id);
+                return Ok(createdDay.Create());
             }
             catch (Exception ex)
             {
