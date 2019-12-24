@@ -29,27 +29,7 @@ namespace TimeKeeper.API.Authorization
             return true;
         }
 
-        public bool CanGetDay(UserRoleModel _userClaims, Day day)
-        {
-            if (_userClaims.Role == "lead" && !day.JobDetails.Any(x => x.Project.Team.Members.Any(y => y.Employee.Id == _userClaims.UserId)) ||
-                    _userClaims.Role == "user" && !day.JobDetails.Any(x => x.Project.Team.Members.Any(y => y.Employee.Id == _userClaims.UserId)))
-            {
-                return false;
-            }
-
-            return true;
-        }
-        public bool CanModifyDay(UserRoleModel _userClaims, Day newDay)
-        {
-            Day day = _unit.Calendar.Get(newDay.Id);
-            if (_userClaims.Role != "admin" && !(day.Employee.Id == _userClaims.UserId))
-            {
-                return false;
-            }
-            return true;
-        }
-
-    public async Task<List<JobDetail>> GetAuthorizedTasks(UserRoleModel _userClaims)
+        public async Task<List<JobDetail>> GetAuthorizedTasks(UserRoleModel _userClaims)
         {
             List<JobDetail> query;
 
@@ -71,5 +51,57 @@ namespace TimeKeeper.API.Authorization
 
             return query;
         }
+
+        public bool CanGetDay(UserRoleModel _userClaims, Day day)
+        {
+            if (_userClaims.Role == "lead" && !day.JobDetails.Any(x => x.Project.Team.Members.Any(y => y.Employee.Id == _userClaims.UserId)) ||
+                    _userClaims.Role == "user" && !day.JobDetails.Any(x => x.Project.Team.Members.Any(y => y.Employee.Id == _userClaims.UserId)))
+            {
+                return false;
+            }
+
+            return true;
+        }
+        public bool CanModifyDay(UserRoleModel _userClaims, Day newDay)
+        {
+            Day day = _unit.Calendar.Get(newDay.Id);
+            if (_userClaims.Role != "admin" && !(day.Employee.Id == _userClaims.UserId))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<List<Customer>> GetAuthorizedCustomers(UserRoleModel _userClaims)
+        {
+            List<Customer> query;
+
+            if (_userClaims.Role == "lead")
+            {
+                var employee = await _unit.Employees.GetAsync(_userClaims.UserId);
+                var teams = employee.Members.GroupBy(x => x.Team.Id).Select(y => y.Key).ToList();
+                List<Project> projects = new List<Project>();
+
+                foreach (var team in teams)
+                {
+                    projects.AddRange(_unit.Projects.Get(x => x.Team.Id == team));
+                }
+
+                query = new List<Customer>();
+
+                foreach (var project in projects)
+                {
+                    query.Add(project.Customer);
+                }
+            }
+            else
+            {
+                var task = await _unit.Customers.GetAsync();
+                query = task.ToList();
+            }
+
+            return query;
+        }
+
     }
 }
