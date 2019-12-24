@@ -2,6 +2,7 @@ import { AUTH_START, AUTH_SUCCESS, AUTH_FAIL, AUTH_LOGOUT } from "./actionTypes"
 import { loginUrl, login } from "../../utils/api";
 
 export const logout = () => {
+	removeUser();
 	return {
 		type: AUTH_LOGOUT
 	};

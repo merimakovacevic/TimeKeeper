@@ -20,6 +20,7 @@ namespace TimeKeeper.API.Controllers
     public class ProjectsController : BaseController
     {
         private PaginationService<Project> _pagination;
+
         public ProjectsController(TimeKeeperContext context) : base(context)
         {
             _pagination = new PaginationService<Project>();
@@ -35,7 +36,7 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [Authorize(Policy = "AdminOrLeader")]
-        public async Task<IActionResult> GetAll(int page = 1, int pageSize = 5)
+        public async Task<IActionResult> GetAll(int page = 1, int pageSize = 10)
         {
             try
             {
@@ -54,19 +55,19 @@ namespace TimeKeeper.API.Controllers
                 else
                 {
                     var task = await Unit.Projects.GetAsync();
-                    query = task.ToList();                    
+                    query = task.ToList();
                 }
 
                 projectsPagination = _pagination.CreatePagination(page, pageSize, query);
                 HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(projectsPagination.Item1));
                 return Ok(projectsPagination.Item2.Select(x => x.Create()).ToList());
-
             }
             catch (Exception ex)
             {
                 return HandleException(ex);
             }
         }
+
         /// <summary>
         /// This method returns project with specified id
         /// </summary>
@@ -96,13 +97,14 @@ namespace TimeKeeper.API.Controllers
                 {
                     return Unauthorized();
                 }
-                return Ok(project.Create());      
+                return Ok(project.Create());
             }
             catch (Exception ex)
             {
                 return HandleException(ex);
             }
         }
+
         /// <summary>
         /// This method inserts a new project
         /// </summary>
@@ -142,14 +144,14 @@ namespace TimeKeeper.API.Controllers
         [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Put(int id, [FromBody] Project project)
+        public async Task<IActionResult> Put(int id, [FromBody] Project project)
         {
             try
             {
                 Logger.Info($"Attempt to update project with id {id}");
-                Unit.Projects.Update(project, id);
+                await Unit.Projects.UpdateAsync(project, id);
 
-                Unit.Save();
+                await Unit.SaveAsync();
 
                 Logger.Info($"Project {project.Name} with id {project.Id} updated");
                 return Ok(project.Create());
@@ -173,13 +175,13 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
                 Logger.Info($"Attempt to delete project with id {id}");
-                Unit.Projects.Delete(id);
-                Unit.Save();
+                await Unit.Projects.DeleteAsync(id);
+                await Unit.SaveAsync();
 
                 Logger.Info($"Project with id {id} deleted");
                 return NoContent();

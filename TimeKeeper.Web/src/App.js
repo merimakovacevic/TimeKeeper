@@ -11,6 +11,8 @@ class App extends React.Component {
 	componentDidMount() {
 		this.props.authCheckState();
 		this.handleLogin();
+
+		// console.log("DID MOUNT");
 	}
 
 	componentDidUpdate(prevProps) {
