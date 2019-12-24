@@ -6,7 +6,7 @@ import moment from "moment";
 
 import CalendarModal from "./CalendarModal/CalendarModal";
 import { apiGetAllRequest } from "../../../utils/api";
-import { loadCalendar } from "../../../store/actions";
+import { loadCalendar, rldCal } from "../../../store/actions";
 
 function CalendarDisplay(props) {
 	const [date, setDate] = useState(new Date(2019, 5, 6, 10, 33, 30, 0));
@@ -17,13 +17,14 @@ function CalendarDisplay(props) {
 	const [projects, setProjects] = useState([]);
 	const [selectedTab, setSelectedTab] = useState(0);
 
+	// console.log(props.reload);
+
 	useEffect(() => {
 		apiGetAllRequest("http://localhost:8000/api/projects").then((res) => {
-			
 			setProjects(res.data.data);
 		});
 
-		props.loadCalendar(employeeId, year, month)
+		props.loadCalendar(employeeId, year, month);
 		if (props.calendarMonth) {
 			const selectedYear = moment(date).format("YYYY");
 			const selectedMonth = moment(date).format("MM");
@@ -33,7 +34,8 @@ function CalendarDisplay(props) {
 			setMonth(selectedMonth);
 			setDay(selectedDay);
 		}
-	}, []);
+		props.rldCal(false);
+	}, [props.reload]);
 	const handleSelectedTab = (event, newValue) => {
 		setSelectedTab(newValue);
 	};
@@ -91,8 +93,9 @@ const mapStateToProps = (state) => {
 	return {
 		loading: state.calendarMonth.loading,
 		calendarMonth: state.calendarMonth.data.data,
-		user: state.user
+		user: state.user,
+		reload: state.calendarMonth.reload
 	};
 };
 
-export default connect(mapStateToProps, { loadCalendar })(withRouter(CalendarDisplay));
+export default connect(mapStateToProps, { loadCalendar, rldCal })(withRouter(CalendarDisplay));

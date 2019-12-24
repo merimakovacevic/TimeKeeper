@@ -1,5 +1,20 @@
 import React, { Fragment } from "react";
-import { Container, Grid, AppBar, Tabs, Tab, Paper, Divider, Box, Typography } from "@material-ui/core";
+import {
+	Container,
+	Grid,
+	AppBar,
+	Tabs,
+	Tab,
+	Paper,
+	Divider,
+	Box,
+	Typography,
+	IconButton,
+	MenuItem,
+	Select
+} from "@material-ui/core";
+import { Formik, Field, Form } from "formik";
+import AddIcon from "@material-ui/icons/Add";
 
 import CalendarTask from "./CalendarTask";
 
@@ -18,6 +33,20 @@ function TabPanel(props) {
 		</Typography>
 	);
 }
+
+const CustomeSelectDayTypes = (props) => {
+	return (
+		<Select fullWidth {...props}>
+			<MenuItem value={1}>Workday</MenuItem>
+			<MenuItem value={2}>Holiday</MenuItem>
+			<MenuItem value={3}>Busines</MenuItem>
+			<MenuItem value={4}>Religious</MenuItem>
+			<MenuItem value={5}>Sick</MenuItem>
+			<MenuItem value={6}>Vacation</MenuItem>
+			<MenuItem value={7}>Other</MenuItem>
+		</Select>
+	);
+};
 
 const CalendarModal = (props) => (
 	<Fragment>
@@ -53,7 +82,21 @@ const CalendarModal = (props) => (
 					</Paper>
 					<Paper elevation={4}>
 						<TabPanel value={props.selectedTab} index={1}>
-							Item Two
+							<Formik
+								initialValues={{
+									dayType: 1
+								}}
+								onSubmit={() => {
+									console.log("submited");
+								}}
+							>
+								<Form>
+									<Field name="dayType" as={CustomeSelectDayTypes}></Field>
+									<IconButton color="primary" type="submit">
+										<AddIcon />
+									</IconButton>
+								</Form>
+							</Formik>
 						</TabPanel>
 					</Paper>
 				</Grid>
