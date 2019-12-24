@@ -19,10 +19,11 @@ function CalendarDisplay(props) {
 
 	useEffect(() => {
 		apiGetAllRequest("http://localhost:8000/api/projects").then((res) => {
+			
 			setProjects(res.data.data);
 		});
 
-		props.loadCalendar(employeeId, year, month);
+		props.loadCalendar(employeeId, year, month)
 		if (props.calendarMonth) {
 			const selectedYear = moment(date).format("YYYY");
 			const selectedMonth = moment(date).format("MM");

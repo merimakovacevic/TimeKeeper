@@ -39,15 +39,8 @@ const CalendarModal = (props) => (
 						<TabPanel value={props.selectedTab} index={0}>
 							{props.day.jobDetails.length > 0
 								? props.day.jobDetails.map((x) => {
-										
-										return (
-											<CalendarTask
-												day={props.day}
-												data={x}
-												projects={props.projects}
-												
-											/>
-										);
+										// console.log(x);
+										return <CalendarTask day={props.day} data={x} projects={props.projects} />;
 								  })
 								: null}
 							<CalendarTask

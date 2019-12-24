@@ -9,8 +9,8 @@ export const customersUrl = "http://192.168.60.73/TimeKeeper/api/customers";
 //export const customersUrl = "https://localhost:44321/api/customers";
 export const projectsUrl = "https://localhost:44321/api/projects";
 // export const calendarUrl = "http://localhost:8000/api/calendar";
-export const calendarUrl = "http://192.168.60.73/TimeKeeper/api/calendar";
-export const tasksUrl = "http://192.168.60.73/TimeKeeper/api/tasks";
+export const calendarUrl = "http://localhost:8000/api/calendar";
+export const tasksUrl = "http://localhost:8000/api/tasks";
 
 export const login = (url, credentials) => {
 	return axios

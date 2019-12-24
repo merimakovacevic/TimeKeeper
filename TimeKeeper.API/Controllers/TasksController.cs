@@ -20,6 +20,7 @@ namespace TimeKeeper.API.Controllers
     public class TasksController : BaseController
     {
         private PaginationService<JobDetail> _pagination;
+
         public TasksController(TimeKeeperContext context) : base(context)
         {
             _pagination = new PaginationService<JobDetail>();
@@ -66,11 +67,12 @@ namespace TimeKeeper.API.Controllers
                 HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(tasksPagination.Item1));
                 return Ok(tasksPagination.Item2.Select(x => x.Create()).ToList());
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return HandleException(ex);
             }
         }
+
         /// <summary>
         /// This method returns a task with specified id
         /// </summary>
@@ -104,7 +106,7 @@ namespace TimeKeeper.API.Controllers
                 }
                 return Ok(task.Create());
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return HandleException(ex);
             }
@@ -128,7 +130,7 @@ namespace TimeKeeper.API.Controllers
                 int userId = int.Parse(GetUserClaim("sub"));
                 string userRole = GetUserClaim("role");
 
-                Logger.Info($"Task for employee {jobDetail.Day.Employee.FullName}, day {jobDetail.Day.Date} added with id {jobDetail.Id}");
+                //Logger.Info($"Task for employee {jobDetail.Day.Employee.FullName}, day {jobDetail.Day.Date} added with id {jobDetail.Id}");
                 if (userRole == "lead" && !jobDetail.Project.Team.Members.Any(x => x.Employee.Id == userId) ||
                     userRole == "user" && !(jobDetail.Day.Employee.Id == userId))
                 {

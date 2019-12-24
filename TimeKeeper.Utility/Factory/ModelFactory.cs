@@ -22,6 +22,7 @@ namespace TimeKeeper.Utility.Factory
                 Projects = team.Projects.Select(x => x.Master()).ToList()
             };
         }
+
         public static EmployeeModel Create(this Employee employee)
         {
             return new EmployeeModel
@@ -39,9 +40,10 @@ namespace TimeKeeper.Utility.Factory
                 EndDate = employee.EndDate,
                 Status = employee.Status.Master(),
                 Members = employee.Members.Select(x => x.Master("role")).ToList(),
-                Calendar = employee.Calendar.Select(x=>x.Master()).ToList()
+                Calendar = employee.Calendar.Select(x => x.Master()).ToList()
             };
         }
+
         public static CustomerModel Create(this Customer customer)
         {
             return new CustomerModel
@@ -55,6 +57,7 @@ namespace TimeKeeper.Utility.Factory
                 Projects = customer.Projects.Select(x => x.Master()).ToList()
             };
         }
+
         public static ProjectModel Create(this Project project)
         {
             return new ProjectModel
@@ -71,6 +74,7 @@ namespace TimeKeeper.Utility.Factory
                 Tasks = project.Tasks.Select(x => x.Master()).ToList()
             };
         }
+
         public static RoleModel Create(this Role role)
         {
             return new RoleModel
@@ -88,8 +92,8 @@ namespace TimeKeeper.Utility.Factory
             return new JobDetailModel
             {
                 Id = jobDetail.Id,
-                //Description = jobDetail.Description,
-                //Day = jobDetail.Day.Master(),
+                Description = jobDetail.Description,
+                Day = jobDetail.Day.Master(),
                 Project = jobDetail.Project.Master(),
                 Hours = jobDetail.Hours
             };
@@ -103,7 +107,7 @@ namespace TimeKeeper.Utility.Factory
                 Team = member.Team.Master(),
                 Employee = member.Employee.Master(),
                 Role = member.Role.Master(),
-                Status=member.Status.Master(),
+                Status = member.Status.Master(),
                 HoursWeekly = member.HoursWeekly
             };
         }
@@ -120,6 +124,7 @@ namespace TimeKeeper.Utility.Factory
                 JobDetails = day.JobDetails.Select(x => x.Create()).ToList()
             };
         }
+
         public static UserModel Create(this User user)
         {
             return new UserModel

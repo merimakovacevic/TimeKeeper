@@ -26,7 +26,7 @@ export const editTask = (id, body) => {
 	return (dispatch) => {
 		apiPutRequest(tasksUrl, id, body)
 			.then((res) => {
-				// console.log(res);
+				console.log(res);
 				dispatch({ type: TASK_EDITED_SUCCESS });
 			})
 			.catch((err) => {
