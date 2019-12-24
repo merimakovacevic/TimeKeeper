@@ -103,5 +103,11 @@ namespace TimeKeeper.API.Authorization
             return query;
         }
 
+        public bool CanModifyEmployee(UserRoleModel _userClaims, Employee employee)
+        {
+            if (_userClaims.Role == "admin" || employee.Id == _userClaims.UserId) return true;
+            return false;            
+        }
+
     }
 }
