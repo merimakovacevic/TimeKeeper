@@ -174,5 +174,30 @@ namespace TimeKeeper.API.Authorization
             return true;
         }
 
+        public async Task<List<Team>> GetAuthorizedTeams(UserRoleModel userClaims)
+        {
+            List<Team> query = new List<Team>();
+            if (userClaims.Role == "user" || userClaims.Role == "lead")
+            {
+                var task = await _unit.Teams.GetAsync(x => x.Members.Any(y => y.Employee.Id == userClaims.UserId));
+                query = task.ToList();
+            }
+            else
+            {
+                var task = await _unit.Teams.GetAsync();
+                query = task.ToList();
+            }
+
+            return query;
+        }
+        public bool CanGetTeam(UserRoleModel userClaims, Team team)
+        {
+            if (userClaims.Role == "user" || (userClaims.Role == "lead" && !team.Members.Any(x => x.Employee.Id == userClaims.UserId)))
+            {
+                return false;
+            }
+            return true;
+        }
+
     }
 }

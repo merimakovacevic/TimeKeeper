@@ -78,7 +78,7 @@ namespace TimeKeeper.Seed
                 Id = employee.Id,
                 Name = employee.FullName,
                 Username = employee.MakeUsername(),
-                Password = employee.MakeUsername().HashWith("$ch00l"),
+                Password = "$ch00l",//employee.MakeUsername().HashWith("$ch00l"),
                 Role = employee.SelectRole()
             };
 
