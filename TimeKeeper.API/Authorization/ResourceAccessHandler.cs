@@ -148,5 +148,31 @@ namespace TimeKeeper.API.Authorization
             }
             return true;
         }
+        public async Task<List<Project>> GetAuthorizedProjects(UserRoleModel userClaims)
+        {
+            List<Project> query = new List<Project>();
+
+            if (userClaims.Role == "lead")
+            {
+                var task = await _unit.Projects.GetAsync(x => x.Team.Members.Any(y => y.Employee.Id == userClaims.UserId));
+                query = task.ToList();
+            }
+            else
+            {
+                var task = await _unit.Projects.GetAsync();
+                query = task.ToList();
+            }
+
+            return query;
+        }
+        public bool CanGetProject(UserRoleModel userClaims, Project project)
+        {
+            if (userClaims.Role == "lead" && !project.Team.Members.Any(x => x.Employee.Id == userClaims.UserId))
+            {
+                return false;
+            }
+            return true;
+        }
+
     }
 }
