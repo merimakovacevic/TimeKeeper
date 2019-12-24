@@ -141,7 +141,8 @@ namespace TimeKeeper.API.Authorization
         }
         public bool CanPostMember(UserRoleModel userClaims, Member member)
         {
-            if (userClaims.Role == "lead" && !member.Team.Members.Any(x => x.Employee.Id == userClaims.UserId))
+            Team team = _unit.Teams.Get(member.Team.Id);
+            if (userClaims.Role == "lead" && !team.Members.Any(x => x.Employee.Id == userClaims.UserId))
             {
                 return false;
             }
