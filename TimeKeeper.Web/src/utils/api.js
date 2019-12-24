@@ -7,6 +7,9 @@ export const loginUrl = "http://localhost:8000/login";
 export const employeesUrl = "http://localhost:8000/api/employees";
 export const customersUrl = "http://localhost:8000/api/customers";
 //export const customersUrl = "https://localhost:44321/api/customers";
+// export const calendarUrl = "http://localhost:8000/api/calendar";
+export const calendarUrl = "http://localhost:8000/api/calendar";
+export const tasksUrl = "http://localhost:8000/api/tasks";
 export const projectsUrl = "http://localhost:8000/api/projects";
 export const dropDownTeamsUrl = "http://localhost:8000/api/teams";
 export const teamTrackingUrl =
@@ -17,6 +20,27 @@ export const login = (url, credentials) => {
     .post(url, credentials)
     .then((data) => ({ data }))
     .catch((error) => ({ error }));
+};
+
+export const getCalendar = (id, year, month) => {
+	let newUrl = `${calendarUrl}/${id}/${year}/${month}`;
+
+	const token = store.getState().user.token;
+
+	let headers = new Headers();
+
+	headers = {
+		Accept: "application/json",
+		Authorization: `Bearer ${token}`
+	};
+
+	const options = {
+		headers
+	};
+
+	return axios(newUrl, options)
+		.then((data) => ({ data }))
+		.catch((err) => ({ err }));
 };
 
 export const apiGetAllRequest = (url, method = "GET") => {
@@ -88,10 +112,11 @@ export const apiPutRequest = (url, id, body, method = "PUT") => {
   const token = store.getState().user.token;
   let headers = new Headers();
 
-  headers = {
-    Accept: "application/json",
-    Authorization: `Bearer ${token}`
-  };
+	headers = {
+		Accept: "application/json",
+		"Content-Type": "application/json",
+		Authorization: `Bearer ${token}`
+	};
 
   const options = {
     method,

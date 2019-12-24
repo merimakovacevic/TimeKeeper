@@ -22,6 +22,7 @@ namespace TimeKeeper.API.Controllers
         {
             calendarService = new CalendarService(Unit);
         }
+
         /// <summary>
         /// This method returns monthly calendar for an employee
         /// </summary>
@@ -45,6 +46,7 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
+
         /// <summary>
         /// This method returns day with specified id
         /// </summary>
@@ -72,6 +74,7 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
+
         /// <summary>
         /// This method inserts a new day
         /// </summary>
@@ -91,13 +94,15 @@ namespace TimeKeeper.API.Controllers
                 Unit.Calendar.InsertAsync(day);
                 await Unit.SaveAsync();
                 Logger.Info($"Day {day.Date} added with id {day.Id}");
-                return Ok(day.Create());
+                Day createdDay = Unit.Calendar.Get(day.Id);
+                return Ok(createdDay.Create());
             }
             catch (Exception ex)
             {
                 return HandleException(ex);
             }
         }
+
         /// <summary>
         /// This method updates data for day with specified id
         /// </summary>
@@ -124,6 +129,7 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
+
         /// <summary>
         /// This method deletes day with specified id
         /// </summary>
@@ -152,6 +158,6 @@ namespace TimeKeeper.API.Controllers
             {
                 return HandleException(ex);
             }
-        }     
+        }
     }
 }
