@@ -71,58 +71,6 @@ namespace TimeKeeper.BLL
             return _unit.Calendar.Get(x => x.Employee.Id == empId && x.Date.Year == year && x.Date.Month == month).Select(x => x.Create()).ToList();
         }
 
-        /*
-        public List<DayModel> GetFilledEmployeeCalendar(List<DayModel> employeeDays, Employee employee, int year, int month)
-        {
-            List<DayModel> calendar = new List<DayModel>();
-            if (!Validator.ValidateMonth(year, month)) throw new Exception("Invalid data! Check year and month");
-
-            DayType future = new DayType { Id = 10, Name = "Future" };
-            DayType empty = new DayType { Id = 11, Name = "Empty" };
-            DayType weekend = new DayType { Id = 12, Name = "Weekend" };
-            DayType na = new DayType { Id = 13, Name = "N/A" };
-
-            DateTime day = new DateTime(year, month, 1);
-            int daysInMonth = DateTime.DaysInMonth(year, month);
-
-            for (int i = 0; i < employeeDays.Count; i++)
-            {
-                int current = employeeDays[i].Date.Day;
-                if (i < employeeDays.Count - 1 && current == employeeDays[i + 1].Date.Day - 1) break;
-
-                for (int y = day.Day; y <= daysInMonth; y++)
-                {
-                    if (day.Day == current)
-                    {
-                        if(current < daysInMonth)
-                        {
-                            day = day.AddDays(1);
-                        }
-                        calendar.Add(employeeDays[i]);
-                        break;
-                    }
-                    else
-                    {
-                        DayModel newDay = new DayModel
-                        {
-                            Employee = employee.Master(),
-                            Date = day,
-                            DayType = empty.Master()
-                        };
-
-                        if (day.IsWeekend()) newDay.DayType = weekend.Master();
-                        if (day > DateTime.Today) newDay.DayType = future.Master();
-                        if (day < employee.BeginDate || (employee.EndDate != new DateTime(1, 1, 1) && employee.EndDate != null && day > employee.EndDate)) newDay.DayType = na.Master();
-
-                        calendar.Add(newDay);
-                        day = day.AddDays(1);
-                    }
-                }
-            }
-
-            return calendar;
-        }*/
-
         public List<DayModel> GetEmptyEmployeeCalendar(Employee employee, int year, int month)
         {
             List<DayModel> calendar = new List<DayModel>();
@@ -148,55 +96,6 @@ namespace TimeKeeper.BLL
 
             return calendar;
         }
-
-
-        /*
-        private List<DayModel> GetEmptyEmployeeCalendar(int employeeId, int year, int month)
-        {
-            List<DayModel> calendar = GetEmptyGenericCalendar(year, month);
-            Employee employee = _unit.Employees.Get(employeeId);
-            DayType na = new DayType { Id = 13, Name = "N/A" };
-
-            foreach(DayModel day in calendar)
-            {
-                day.Employee = employee.Master();
-                if (day.Date < employee.BeginDate || (employee.EndDate != new DateTime(1, 1, 1) && employee.EndDate != null && day.Date > employee.EndDate)) day.DayType = na.Master();
-            }
-
-            return calendar;
-        }
-
-        protected List<DayModel> GetEmptyGenericCalendar(int year, int month)
-        {
-            List<DayModel> calendar = new List<DayModel>();
-            if (!Validator.ValidateMonth(year, month)) throw new Exception("Invalid data! Check year and month");
-
-            DayType future = new DayType { Id = 10, Name = "Future" };
-            DayType empty = new DayType { Id = 11, Name = "Empty" };
-            DayType weekend = new DayType { Id = 12, Name = "Weekend" };
-            DayType na = new DayType { Id = 13, Name = "N/A" };
-
-            DateTime day = new DateTime(year, month, 1);
-
-            while (day.Month == month)
-            {
-                DayModel newDay = new DayModel
-                {
-                    //The Employee will be added when filling the generic calendar afterwards
-                    Employee = null,
-                    Date = day,
-                    DayType = empty.Master()
-                };
-
-                if (day.IsWeekend()) newDay.DayType = weekend.Master();
-                if (day > DateTime.Today) newDay.DayType = future.Master();
-
-                calendar.Add(newDay);
-                day = day.AddDays(1);
-            }
-
-            return calendar;
-        }*/
 
         public int GetYearlyWorkingDays(int year)
         {
@@ -242,7 +141,33 @@ namespace TimeKeeper.BLL
 
             return workingDays;
         }
-        
+
+        public decimal GetBradfordFactor(int employeeId, int year)
+        {
+            List<DayModel> calendar = GetEmployeeCalendar(employeeId, year);
+            //an absence instance are any number of consecutive absence days. 3 consecutive absence days make an instance.
+            int absenceInstances = 0;
+            int absenceDays = 0;
+            calendar = calendar.OrderBy(x => x.Date).ToList();
+
+            //Bradford factor calculates only dates until the present day, because the calendar in argument returns the whole period
+            absenceDays = calendar.Where(x => x.DayType.Name == "Sick" && x.Date < DateTime.Now).Count();
+
+            for (int i = 0; i < calendar.Count; i++)
+            {
+                if (calendar[i].DayType.Name == "Sick" && calendar[i].Date < DateTime.Now)
+                {
+                    if (i == 0) absenceInstances++;
+
+                    else if (calendar[i - 1].DayType.Name != "Sick")
+                    {
+                        absenceInstances++;
+                    }
+                }
+            }
+            return (decimal)Math.Pow(absenceInstances, 2) * absenceDays;
+        }
+
         //public List<DayModel> GetEmployeeCalendar(Employee employee, int year, int month, int team)
         //{
         //    //Add validaiton!
@@ -261,6 +186,6 @@ namespace TimeKeeper.BLL
         //        }
         //    }
         //}
-        
+
     }
 }
