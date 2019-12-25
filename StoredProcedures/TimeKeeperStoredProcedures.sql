@@ -109,25 +109,25 @@ language sql;
 create or replace function workingMonthly(empId int,y int, m int)
 returns decimal
 as
-'select sum(t."Hours")::decimal as workingMonthly
+'select coalesce(sum(t."Hours"), 0)::decimal as workingMonthly
 from "Employees" as e
     join "Calendar" as c on c."EmployeeId"=e."Id"
     join "Tasks" as t on t."DayId"=c."Id"
 where
 extract(year from c."Date") = y
     and extract(month from c."Date") = m
-    and e."Id"=empId'
+    and e."Id"= empId'
 language sql;
 
 create or replace function workingYearly(empId int,y int)
 returns decimal
 as
-'select sum(t."Hours")::decimal as workingYearly
+'select coalesce(sum(t."Hours"), 0)::decimal as workingYearly
 from "Employees" as e
     join "Calendar" as c on c."EmployeeId"=e."Id"
     join "Tasks" as t on t."DayId"=c."Id"
 where extract(year from c."Date") = y
-      and e."Id"=empId'
+      and e."Id"= empId'
 language sql;
 
 create or replace function sickMonthly(empId int, y int, m int)
