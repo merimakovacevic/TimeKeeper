@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TimeKeeper.BLL;
+using TimeKeeper.BLL.DashboardServices;
 using TimeKeeper.DAL;
 using TimeKeeper.DTO.ReportModels.CompanyDashboard;
 
@@ -16,10 +17,14 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class DashboardController : BaseController
     {
-        protected DashboardService dashboardService;
+        protected PersonalDashboard personalDashboard;
+        protected TeamDashboard teamDashboard;
+        protected CompanyDashboard companyDashboard;
         public DashboardController(TimeKeeperContext context) : base(context)
         {
-            dashboardService = new DashboardService(Unit);
+            personalDashboard = new PersonalDashboard(Unit);
+            teamDashboard = new TeamDashboard(Unit);
+            companyDashboard = new CompanyDashboard(Unit);
         }
 
         [HttpGet("personal/{employeeId}/{year}/{month}")]
@@ -27,7 +32,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                return Ok(dashboardService.GetEmployeeDashboard(employeeId, year, month));
+                return Ok(personalDashboard.GetPersonalDashboardStored(employeeId, year, month));
             }
             catch (Exception ex)
             {
@@ -35,39 +40,39 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
-        [HttpGet("personal/{employeeId}/{year}")]
-        public IActionResult GetPersonalYearDashboard(int employeeId, int year)
-        {
-            try
-            {
-                return Ok(dashboardService.GetEmployeeDashboard(employeeId, year));
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
+        //[HttpGet("personal/{employeeId}/{year}")]
+        //public IActionResult GetPersonalYearDashboard(int employeeId, int year)
+        //{
+        //    try
+        //    {
+        //        return Ok(dashboardService.GetEmployeeDashboard(employeeId, year));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return HandleException(ex);
+        //    }
+        //}
 
         [HttpGet("team/{teamId}/{year}/{month}")]
         public IActionResult GetTeamDashboard(int teamId, int year, int month)
         {
             try
             {
-                return Ok(dashboardService.GetTeamDashboard(teamId, year, month));
+                return Ok(teamDashboard.GetTeamDashboardStored(teamId, year, month));
             }
             catch (Exception ex)
             {
                 return HandleException(ex);
             }
         }
-        
+
         [HttpGet("company/{year}/{month}")]
         public IActionResult GetCompanyDashboard(int year, int month)
         {
             try
             {
                 DateTime start = DateTime.Now;
-                CompanyDashboardModel dashboard = dashboardService.GetCompanyDashboard(year, month);
+                CompanyDashboardModel dashboard = companyDashboard.GetCompanyDashboard(year, month);
                 DateTime end = DateTime.Now;
                 return Ok(new { (end - start).TotalMilliseconds, dashboard});
             }

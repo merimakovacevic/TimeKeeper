@@ -16,6 +16,7 @@ namespace TimeKeeper.DAL
             if (typeof(T) == typeof(Day)) await BuildRelations(entity as Day, context);
             if (typeof(T) == typeof(JobDetail)) await BuildRelations(entity as JobDetail, context);
             if (typeof(T) == typeof(Customer)) await BuildRelations(entity as Customer, context);
+            if (typeof(T) == typeof(Employee)) await BuildRelations(entity as Employee, context);
             if (typeof(T) == typeof(User)) BuildPassword(entity as User);
         }
 
@@ -36,6 +37,12 @@ namespace TimeKeeper.DAL
             entity.Customer = await context.Customers.FindAsync(entity.Customer.Id);
             entity.Status = await context.ProjectStatuses.FindAsync(entity.Status.Id);
             entity.Pricing = await context.PricingStatuses.FindAsync(entity.Pricing.Id);
+        }
+
+        private static async Task BuildRelations(Employee entity, TimeKeeperContext context)
+        {
+            entity.Position = await context.EmployeePositions.FindAsync(entity.Position.Id);
+            entity.Status = await context.EmploymentStatuses.FindAsync(entity.Status.Id);
         }
 
         private static async Task BuildRelations(Member entity, TimeKeeperContext context)
