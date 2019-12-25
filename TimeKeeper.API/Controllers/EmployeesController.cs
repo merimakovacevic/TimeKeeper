@@ -148,20 +148,13 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info($"Attempt to update employee with id {id}");
-                int userId = int.Parse(GetUserClaim("sub"));
-                string userRole = GetUserClaim("role");
+                if (!resourceAccess.CanModifyEmployee(GetUserClaims(), employee)) return Unauthorized();
 
-                if (userRole == "admin" || employee.Id == userId)
-                {
-                    Unit.Employees.Update(employee, id);
-                    await Unit.SaveAsync();
-                    Logger.Info($"Employee {employee.FirstName} {employee.LastName} with id {employee.Id} updated");
-                    return Ok(employee.Create());
-                }
-                else
-                {
-                    return Unauthorized();
-                }
+                Unit.Employees.Update(employee, id);
+                await Unit.SaveAsync();
+                Logger.Info($"Employee {employee.FirstName} {employee.LastName} with id {employee.Id} updated");
+                return Ok(employee.Create());
+
             }
             catch (Exception ex)
             {

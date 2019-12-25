@@ -6,17 +6,18 @@ using System.Text;
 using TimeKeeper.API.Controllers;
 using TimeKeeper.DTO;
 using TimeKeeper.Domain.Entities;
+using System.Threading.Tasks;
 
 namespace TimeKeeper.Test.ControllersTest
 {
     public class TestTasksController : TestBaseTestDatabase
     {
         [Test, Order(1)]
-        public void GetAllTasks()
+        public async Task GetAllTasks()
         {
             var controller = new TasksController(unit.Context);
 
-            var response = controller.Get() as ObjectResult;
+            var response =await controller.Get() as ObjectResult;
             var value = response.Value as List<JobDetailModel>;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -27,11 +28,11 @@ namespace TimeKeeper.Test.ControllersTest
         [TestCase(2, "iOS Sprint 20")]
         [TestCase(4, "Sprint 23 web testing")]
         [TestCase(5, "TS")]
-        public void GetTaskById(int id, string description)
+        public async Task GetTaskById(int id, string description)
         {
             var controller = new TasksController(unit.Context);
 
-            var response = controller.Get(id) as ObjectResult;
+            var response = await controller.Get(id) as ObjectResult;
             var value = response.Value as JobDetailModel;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -39,18 +40,18 @@ namespace TimeKeeper.Test.ControllersTest
         }
 
         [Test, Order(2)]
-        public void GetTaskByWrongId()
+        public async Task GetTaskByWrongId()
         {
             int id = 140; //Task with id 140 doesn't exist in the test database
             var controller = new TasksController(unit.Context);
 
-            var response = controller.Get(id) as ObjectResult;
+            var response = await controller.Get(id) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }
 
         [Test, Order(3)]
-        public void InsertTask()
+        public async Task InsertTask()
         {
             var controller = new TasksController(unit.Context);
 
@@ -60,7 +61,7 @@ namespace TimeKeeper.Test.ControllersTest
                 Project = unit.Projects.Get(1)
             };
 
-            var response = controller.Post(task) as ObjectResult;
+            var response = await controller.Post(task) as ObjectResult;
             var value = response.Value as JobDetailModel;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -68,7 +69,7 @@ namespace TimeKeeper.Test.ControllersTest
         }
 
         [Test, Order(4)]
-        public void ChangeTaskHours()
+        public async Task ChangeTaskHours()
         {
             var controller = new TasksController(unit.Context);
             int id = 3;//Try to change the task with id 3
@@ -81,7 +82,7 @@ namespace TimeKeeper.Test.ControllersTest
                 Hours = 7
             };
 
-            var response = controller.Put(id, task) as ObjectResult;
+            var response = await controller.Put(id, task) as ObjectResult;
             var value = response.Value as JobDetailModel;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -89,7 +90,7 @@ namespace TimeKeeper.Test.ControllersTest
         }
 
         [Test, Order(5)]
-        public void ChangeTaskWithWrongId()
+        public async Task ChangeTaskWithWrongId()
         {
             var controller = new TasksController(unit.Context);
             int id = 140;//Try to change the task with id (doesn't exist)
@@ -102,30 +103,30 @@ namespace TimeKeeper.Test.ControllersTest
                 Hours = 7
             };
 
-            var response = controller.Put(id, task) as ObjectResult;
+            var response = await controller.Put(id, task) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }
 
         [Test, Order(6)]
-        public void DeleteTask()
+        public async Task DeleteTask()
         {
             var controller = new TasksController(unit.Context);
             int id = 3;//Try to delete the task with id 3
 
-            var response = controller.Delete(id) as StatusCodeResult;
+            var response = await controller.Delete(id) as StatusCodeResult;
 
             Assert.AreEqual(204, response.StatusCode);
 
         }
 
         [Test, Order(7)]
-        public void DeleteTaskWithWrongId()
+        public async Task DeleteTaskWithWrongId()
         {
             var controller = new TasksController(unit.Context);
             int id = 140;//Try to delete the task with id (doesn't exist)
 
-            var response = controller.Delete(id) as ObjectResult;
+            var response =await controller.Delete(id) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }

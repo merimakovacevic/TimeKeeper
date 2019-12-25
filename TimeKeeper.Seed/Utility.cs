@@ -64,18 +64,25 @@ namespace TimeKeeper.Seed
             return words[1];
         }
 
-        public static User CreateUserAndHash(this Employee employee)
+        public static string SelectRole(this Employee employee)
+        {
+            if (employee.Position.Id == 1) return "admin";
+            if (employee.Position.Id == 2 || employee.Position.Id == 3 || employee.Position.Id == 4) return "lead";
+            return "user";
+        }
+
+        public static User CreateUser(this Employee employee)
         {
             User user = new User
             {
                 Id = employee.Id,
                 Name = employee.FullName,
                 Username = employee.MakeUsername(),
-                Password = employee.MakeUsername().HashWith("$ch00l"),
-                Role = "user"
+                Password = "$ch00l",//employee.MakeUsername().HashWith("$ch00l"),
+                Role = employee.SelectRole()
             };
+
             return user;
         }
-
     }
 }
