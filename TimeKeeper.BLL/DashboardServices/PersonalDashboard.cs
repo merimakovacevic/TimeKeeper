@@ -34,29 +34,5 @@ namespace TimeKeeper.BLL.DashboardServices
             personalDashboard.BradfordFactor = GetBradfordFactor(rawData[0].EmployeeId, year);
             return personalDashboard;
         }
-
-        public decimal GetBradfordFactor(PersonalDashboardRawModel personalDashboardHours, int year)
-        {
-            
-            int absenceDays = personalDashboardHours.SickYearly;
-
-            List<TeamRawCountModel> rawDataCount = _storedProcedureService.GetStoredProcedure<TeamRawCountModel>("sickByMonths", new int[] { personalDashboardHours.EmployeeId, year});
-            int absenceInstances = rawDataCount.Count;
-
-
-            var cmd = _unit.Context.Database.GetDbConnection().CreateCommand();
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandText = $"select * from sickByMonths({personalDashboardHours.EmployeeId}, {year})";
-            if (cmd.Connection.State == ConnectionState.Closed) cmd.Connection.Open();
-            DbDataReader sql = cmd.ExecuteReader();
-            if (sql.HasRows)
-            {
-                while (sql.Read())
-                {
-                    absenceInstances++;
-                }
-            }
-            return (decimal)Math.Pow(absenceInstances, 2) * absenceDays;
-        }
     }
 }
