@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using TimeKeeper.API.Controllers;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.DTO;
@@ -13,11 +14,11 @@ namespace TimeKeeper.Test.ControllersTest
     public class TestEmployeesController : TestBaseTestDatabase
     {
         [Test, Order(1)]
-        public void GetAllEmployees()
+        public async Task GetAllEmployees()
         {
             var controller = new EmployeesController(unit.Context);
 
-            var response = controller.GetAll() as ObjectResult;
+            var response = await controller.GetAll() as ObjectResult;
             var value = response.Value as List<EmployeeModel>;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -31,11 +32,11 @@ namespace TimeKeeper.Test.ControllersTest
         [TestCase(4, "Karen Gonzalez")]
         [TestCase(5, "Betty Nelson")]
         [TestCase(6, "Jennifer Wright")]
-        public void GetEmployeeById(int id, string name)
+        public async Task GetEmployeeById(int id, string name)
         {
             var controller = new EmployeesController(unit.Context);
 
-            var response = controller.Get(id) as ObjectResult;
+            var response = await controller.Get(id) as ObjectResult;
             var value = response.Value as EmployeeModel;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -43,18 +44,18 @@ namespace TimeKeeper.Test.ControllersTest
         }
 
         [Test, Order(3)]
-        public void GetEmployeeByWrongId()
+        public async Task GetEmployeeByWrongId()
         {
             int id = 40; //Employee with id 40 doesn't exist in the test database
             var controller = new EmployeesController(unit.Context);
 
-            var response = controller.Get(id) as ObjectResult;
+            var response = await controller.Get(id) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }
 
         [Test, Order(4)]
-        public void InsertEmployee()
+        public async Task InsertEmployee()
         {
             var controller = new EmployeesController(unit.Context);
 
@@ -66,7 +67,7 @@ namespace TimeKeeper.Test.ControllersTest
                 Status = unit.EmploymentStatuses.Get(1)
             };
 
-            var response = controller.Post(employee) as ObjectResult;
+            var response = await controller.Post(employee) as ObjectResult;
             var value = response.Value as EmployeeModel;
 
             //Check if the user was added as well
@@ -79,7 +80,7 @@ namespace TimeKeeper.Test.ControllersTest
         }
 
         [Test, Order(5)]
-        public void ChangeEmployeeName()
+        public async Task ChangeEmployeeName()
         {
             var controller = new EmployeesController(unit.Context);
             int id = 3;//Try to change the employee with id 3
@@ -93,7 +94,7 @@ namespace TimeKeeper.Test.ControllersTest
                 Status = unit.EmploymentStatuses.Get(1)
             };
 
-            var response = controller.Put(id, employee) as ObjectResult;
+            var response = await controller.Put(id, employee) as ObjectResult;
             var value = response.Value as EmployeeModel;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -102,7 +103,7 @@ namespace TimeKeeper.Test.ControllersTest
         }
 
         [Test, Order(6)]
-        public void ChangeEmployeeWithWrongId()
+        public async Task ChangeEmployeeWithWrongId()
         {
             var controller = new EmployeesController(unit.Context);
             int id = 40;//Try to change the employee with id (doesn't exist)
@@ -116,13 +117,13 @@ namespace TimeKeeper.Test.ControllersTest
                 Status = unit.EmploymentStatuses.Get(1)
             };
 
-            var response = controller.Put(id, employee) as ObjectResult;
+            var response = await controller.Put(id, employee) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }
 
         [Test, Order(7)]
-        public void ChangeEmployeeStatus()
+        public async Task ChangeEmployeeStatus()
         {
             var controller = new EmployeesController(unit.Context);
             int id = 2;//Try to change the employee with id
@@ -137,7 +138,7 @@ namespace TimeKeeper.Test.ControllersTest
                 Status = unit.EmploymentStatuses.Get(statusId)
             };
 
-            var response = controller.Put(id, employee) as ObjectResult;
+            var response = await controller.Put(id, employee) as ObjectResult;
             var value = response.Value as EmployeeModel;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -145,7 +146,7 @@ namespace TimeKeeper.Test.ControllersTest
         }
 
         [Test, Order(8)]
-        public void ChangeEmployeeEndDate()
+        public async Task ChangeEmployeeEndDate()
         {
             var controller = new EmployeesController(unit.Context);
             int id = 2;//Try to change the employee with id
@@ -161,7 +162,7 @@ namespace TimeKeeper.Test.ControllersTest
                 EndDate=endDate
             };
 
-            var response = controller.Put(id, employee) as ObjectResult;
+            var response = await controller.Put(id, employee) as ObjectResult;
             var value = response.Value as EmployeeModel;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -169,24 +170,24 @@ namespace TimeKeeper.Test.ControllersTest
         }
 
         [Test, Order(9)]
-        public void DeleteEmployee()
+        public async Task DeleteEmployee()
         {
             var controller = new EmployeesController(unit.Context);
             int id = 3;//Try to delete the employee with id 3
 
-            var response = controller.Delete(id) as StatusCodeResult;
+            var response = await controller.Delete(id) as StatusCodeResult;
 
             Assert.AreEqual(204, response.StatusCode);
 
         }
 
         [Test, Order(10)]
-        public void DeleteEmployeeWithWrongId()
+        public async Task DeleteEmployeeWithWrongId()
         {
             var controller = new EmployeesController(unit.Context);
             int id = 40;//Try to delete the employee with id (doesn't exist)
 
-            var response = controller.Delete(id) as ObjectResult;
+            var response = await controller.Delete(id) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }

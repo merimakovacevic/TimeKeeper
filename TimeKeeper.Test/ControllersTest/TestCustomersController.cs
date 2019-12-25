@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using TimeKeeper.API.Controllers;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.DTO;
@@ -15,11 +16,11 @@ namespace TimeKeeper.Test.ControllersTest
     {
         [Test, Order(1)]
         [TestCase(1, 5)]
-        public void GetAllCustomers(int page, int pageSize)
+        public async Task GetAllCustomers(int page, int pageSize)
         {
             var controller = new CustomersController(unit.Context);
 
-            var response = controller.GetAll(page, pageSize) as ObjectResult;
+            var response = await controller.GetAll(page, pageSize) as ObjectResult;
             var value = response.Value as List<CustomerModel>;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -29,11 +30,11 @@ namespace TimeKeeper.Test.ControllersTest
         [Test, Order(2)]
         [TestCase(1, "ImageNet Consulting")]
         [TestCase(2, "Big Data Scoring")]
-        public void GetCustomerById(int id, string name)
+        public async Task GetCustomerById(int id, string name)
         {
             var controller = new CustomersController(unit.Context);
 
-            var response = controller.Get(id) as ObjectResult;
+            var response = await controller.Get(id) as ObjectResult;
             var value = response.Value as CustomerModel;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -41,19 +42,19 @@ namespace TimeKeeper.Test.ControllersTest
         }
 
         [Test, Order(3)]
-        public void GetCustomerByWrongId()
+        public async Task GetCustomerByWrongId()
         {
             var controller = new CustomersController(unit.Context);
             int id = 40; //Customer with id doesn't exist in the test database
 
-            var response = controller.Get(id) as ObjectResult;
+            var response = await controller.Get(id) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }
 
 
         [Test, Order(4)]
-        public void InsertCustomer()
+        public async Task InsertCustomer()
         {
             var controller = new CustomersController(unit.Context);
 
@@ -65,7 +66,7 @@ namespace TimeKeeper.Test.ControllersTest
                 Status = unit.CustomerStatuses.Get(1)
             };
 
-            var response = controller.Post(customer) as ObjectResult;
+            var response = await controller.Post(customer) as ObjectResult;
             var value = response.Value as CustomerModel;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -73,7 +74,7 @@ namespace TimeKeeper.Test.ControllersTest
         }
 
         [Test, Order(5)]
-        public void ChangeCustomersName()
+        public async Task ChangeCustomersName()
         {
             var controller = new CustomersController(unit.Context);
             int id = 2;//Try to change the customer with id
@@ -90,7 +91,7 @@ namespace TimeKeeper.Test.ControllersTest
                 HomeAddress = homeAddress
             };
 
-            var response = controller.Put(id, customer) as ObjectResult;
+            var response = await controller.Put(id, customer) as ObjectResult;
             var value = response.Value as CustomerModel;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -99,7 +100,7 @@ namespace TimeKeeper.Test.ControllersTest
 
 
         [Test, Order(6)]
-        public void ChangeCustomersTown()
+        public async Task ChangeCustomersTown()
         {
             var controller = new CustomersController(unit.Context);
             int id = 2;//Try to change the customer with id
@@ -115,7 +116,7 @@ namespace TimeKeeper.Test.ControllersTest
                 Status = unit.CustomerStatuses.Get(1)
             };
 
-            var response = controller.Put(id, customer) as ObjectResult;
+            var response = await controller.Put(id, customer) as ObjectResult;
             var value = response.Value as CustomerModel;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -123,7 +124,7 @@ namespace TimeKeeper.Test.ControllersTest
         }
 
         [Test, Order(7)]
-        public void ChangeCustomerWithWrongId()
+        public async Task ChangeCustomerWithWrongId()
         {
             var controller = new CustomersController(unit.Context);
             int id = 40;//Try to change the customer with id (doesn't exist)
@@ -136,13 +137,13 @@ namespace TimeKeeper.Test.ControllersTest
                 Status = unit.CustomerStatuses.Get(1)
             };
 
-            var response = controller.Put(id, customer) as ObjectResult;
+            var response = await controller.Put(id, customer) as ObjectResult;
 
             Assert.AreEqual(400, response.StatusCode);
         }
 
         [Test, Order(8)]
-        public void ChangeCustomerStatus()
+        public async Task ChangeCustomerStatus()
         {
             var controller = new CustomersController(unit.Context);
             int id = 2;//Try to change the customer with id
@@ -159,7 +160,7 @@ namespace TimeKeeper.Test.ControllersTest
                 HomeAddress = homeAddress
             };
 
-            var response = controller.Put(id, customer) as ObjectResult;
+            var response = await controller.Put(id, customer) as ObjectResult;
             var value = response.Value as CustomerModel;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -167,23 +168,23 @@ namespace TimeKeeper.Test.ControllersTest
         }
 
         [Test, Order(9)]
-        public void DeleteCustomer()
+        public async Task DeleteCustomer()
         {
             var controller = new CustomersController(unit.Context);
             int id = 2;//Try to delete the customer with id
 
-            var response = controller.Delete(id) as StatusCodeResult;
+            var response = await controller.Delete(id) as StatusCodeResult;
 
             Assert.AreEqual(204, response.StatusCode);
         }
 
         [Test, Order(10)]
-        public void DeleteCustomerWithWrongId()
+        public async Task DeleteCustomerWithWrongId()
         {
             var controller = new CustomersController(unit.Context);
             int id = 40;//Try to delete the customer with id (doesn't exist)
 
-            var response = controller.Delete(id) as StatusCodeResult;
+            var response = await controller.Delete(id) as StatusCodeResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }

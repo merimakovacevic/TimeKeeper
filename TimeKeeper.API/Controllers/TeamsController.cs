@@ -45,22 +45,8 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info($"Try to fetch ${pageSize} teams from page ${page}");
-
-                int userId = int.Parse(GetUserClaim("sub"));
-                string userRole = GetUserClaim("role");
                 Tuple<PaginationModel, List<Team>> teamsPagination;
-                List<Team> query;
-
-                if(userRole == "user" || userRole == "lead")
-                {
-                    var task = await Unit.Teams.GetAsync(x => x.Members.Any(y => y.Employee.Id == userId));
-                    query = task.ToList();                    
-                }
-                else
-                {
-                    var task = await Unit.Teams.GetAsync();
-                    query = task.ToList();
-                }
+                List<Team> query = await resourceAccess.GetAuthorizedTeams(GetUserClaims());
 
                 teamsPagination = _pagination.CreatePagination(page, pageSize, query);
                 HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(teamsPagination.Item1));
@@ -87,21 +73,10 @@ namespace TimeKeeper.API.Controllers
         public async Task<IActionResult> Get(int id)
         {
             try {
-                int userId = int.Parse(GetUserClaim("sub"));
-                string userRole = GetUserClaim("role");
-
                 Logger.Info($"Try to get team with {id}");
                 Team team = await Unit.Teams.GetAsync(id);
-                if (team == null)
-                {
-                    return NotFound($"Requested resource with {id} does not exist");
-                }
-                if (userRole == "user" || (userRole == "lead" && !team.Members.Any(x => x.Employee.Id == userId)))
-                {
-                    return Unauthorized();
-                }
+                if (!resourceAccess.CanGetTeam(GetUserClaims(), team)) ;
                 return Ok(team.Create());
-
             }
             catch (Exception ex)
             {
@@ -117,7 +92,6 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPost]
-        //[Authorize(Policy = "IsAdmin")]
         [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -125,7 +99,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Unit.Teams.InsertAsync(team);
+                await Unit.Teams.InsertAsync(team);
                 await Unit.SaveAsync();
                 Logger.Info($"Team {team.Name} added with id {team.Id}");
                 return Ok(team.Create());
@@ -153,7 +127,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Unit.Teams.UpdateAsync(team, id);
+                await Unit.Teams.UpdateAsync(team, id);
                 await Unit.SaveAsync();
 
                 Logger.Info($"Changed team with id {id}");
@@ -184,7 +158,7 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info($"Attempt to delete team with id {id}");
-                Unit.Teams.DeleteAsync(id);
+                await Unit.Teams.DeleteAsync(id);
                 await Unit.SaveAsync();
 
                 Logger.Info($"Deleted team with id {id}");

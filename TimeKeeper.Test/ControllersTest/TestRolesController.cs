@@ -8,6 +8,7 @@ using System.Text;
 using TimeKeeper.API.Controllers;
 using TimeKeeper.DTO;
 using TimeKeeper.Domain.Entities;
+using System.Threading.Tasks;
 
 namespace TimeKeeper.Test.ControllersTest
 {
@@ -15,11 +16,11 @@ namespace TimeKeeper.Test.ControllersTest
     public class TestRolesController: TestBaseTestDatabase
     {
         [Test, Order(1)]
-        public void GetAllRoles()
+        public async Task GetAllRoles()
         {
             var controller = new RolesController(unit.Context);
 
-            var response = controller.Get() as ObjectResult;
+            var response = await controller.Get() as ObjectResult;
             var value = response.Value as List<RoleModel>;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -32,11 +33,11 @@ namespace TimeKeeper.Test.ControllersTest
         [TestCase(3, "Software Developer")]
         [TestCase(4, "Team Lead")]
         [TestCase(5, "UI / UX Designer")]
-        public void GetRoleById(int id, string name)
+        public async Task GetRoleById(int id, string name)
         {
             var controller = new RolesController(unit.Context);
 
-            var response = controller.Get(id) as ObjectResult;
+            var response = await controller.Get(id) as ObjectResult;
             var value = response.Value as RoleModel;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -44,18 +45,18 @@ namespace TimeKeeper.Test.ControllersTest
         }
 
         [Test, Order(2)]
-        public void GetRoleByWrongId()
+        public async Task GetRoleByWrongId()
         {
             int id = 40; //Role with id 40 doesn't exist in the test database
             var controller = new RolesController(unit.Context);
 
-            var response = controller.Get(id) as ObjectResult;
+            var response = await controller.Get(id) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }
 
         [Test, Order(3)]
-        public void InsertRole()
+        public async Task InsertRole()
         {
             var controller = new RolesController(unit.Context);
 
@@ -64,7 +65,7 @@ namespace TimeKeeper.Test.ControllersTest
                 Name = "Backend developer"
             };
 
-            var response = controller.Post(role) as ObjectResult;
+            var response = await controller.Post(role) as ObjectResult;
             var value = response.Value as RoleModel;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -72,7 +73,7 @@ namespace TimeKeeper.Test.ControllersTest
         }
 
         [Test, Order(4)]
-        public void ChangeRoleName()
+        public async Task ChangeRoleName()
         {
             var controller = new RolesController(unit.Context);
             int id = 3;//Try to change the Role with id 3
@@ -83,7 +84,7 @@ namespace TimeKeeper.Test.ControllersTest
                 Name = "Backend developer"
             };
 
-            var response = controller.Put(id, role) as ObjectResult;
+            var response = await controller.Put(id, role) as ObjectResult;
             var value = response.Value as RoleModel;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -91,7 +92,7 @@ namespace TimeKeeper.Test.ControllersTest
         }
 
         [Test, Order(5)]
-        public void ChangeRoleWithWrongId()
+        public async Task ChangeRoleWithWrongId()
         {
             var controller = new RolesController(unit.Context);
             int id = 40;//Try to change the Role with id (doesn't exist)
@@ -102,30 +103,30 @@ namespace TimeKeeper.Test.ControllersTest
                 Name = "Backend developer"
             };
 
-            var response = controller.Put(id, role) as ObjectResult;
+            var response = await controller.Put(id, role) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }
 
         [Test, Order(6)]
-        public void DeleteRole()
+        public async Task DeleteRole()
         {
             var controller = new RolesController(unit.Context);
             int id = 3;//Try to delete the Role with id 3
 
-            var response = controller.Delete(id) as StatusCodeResult;
+            var response = await controller.Delete(id) as StatusCodeResult;
 
             Assert.AreEqual(204, response.StatusCode);
 
         }
 
         [Test, Order(7)]
-        public void DeleteRoleWithWrongId()
+        public async Task DeleteRoleWithWrongId()
         {
             var controller = new RolesController(unit.Context);
             int id = 40;//Try to delete the Role with id (doesn't exist)
 
-            var response = controller.Delete(id) as ObjectResult;
+            var response = await controller.Delete(id) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }
