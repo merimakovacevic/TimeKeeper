@@ -1,5 +1,4 @@
-
-create function AnnualReport(y int)
+create or replace function AnnualReport(y int)
 returns table(id int, name text, month int, hours dec)
 as 'select p."Id", p."Name", extract(month from c."Date")::integer, sum(t."Hours")::decimal
 from "Calendar" as c join "Tasks" as t on t."DayId"=c."Id" join "Projects" as p on t."ProjectId" =p."Id"
@@ -177,14 +176,14 @@ where e."Id"=empId'
 language sql;
 
 create or replace function GetMemberPTOHours(tId int, y int, mon int)
-returns table(memId int, memName text, PtoHours bigint)
-as 'select m."Id", e."FirstName" || '' '' || e."LastName" as "Full Name", (count(c."DayTypeId")*8) as "PTO"
+returns table(memId int, PtoHours bigint)
+as 'select m."Id", (count(c."DayTypeId")*8) as "PTO"
 from "Calendar" as c join "Employees" as e on c."EmployeeId"=e."Id"
 join "Members" as m on e."Id"= m."EmployeeId"
 join "Teams" as t on m."TeamId"=t."Id"
 where extract(year from c."Date")=y and extract(month from c."Date")= mon and c."DayTypeId" <> 1
       and t."Id"=tId
-group by m."Id", e."FirstName", e."LastName"'
+group by m."Id"'
 language sql;
 
 create or replace function TeamDashboard(tId int, y int, m int)
@@ -247,5 +246,20 @@ where   extract(year from c."Date") = y
         and te."Id" = tId
 group by me."Id") as res
 group by res."MemberId"'
+language sql;
+
+create or replace function DateMonth(tId int, y int, m int)
+returns table(eId int, eName text, n dec)
+as 'select me."Id", e."FirstName" || '' '' || e."LastName" as "EmployeeName", count(c."Date")::dec
+from "Calendar" as c
+      join "Employees" as e on c."EmployeeId" = e."Id"
+      join "Members" as me on me."EmployeeId" = e."Id"
+      join "Teams" as t on t."Id" = me."TeamId"
+where extract(year from c."Date") = y
+        and extract(month from c."Date") = m
+        and t."Id" = tId
+        and 
+        EXTRACT(ISODOW FROM c."Date") IN (1, 2, 3, 4, 5)
+ group by me."Id", e."FirstName", e."LastName"'
 language sql;
 
