@@ -12,6 +12,7 @@ namespace TimeKeeper.DAL.Repositories
         public override void Insert(JobDetail jobDetail)
         {
             jobDetail.Build(_context);
+            jobDetail.Validate();
             base.Insert(jobDetail);
         }
 

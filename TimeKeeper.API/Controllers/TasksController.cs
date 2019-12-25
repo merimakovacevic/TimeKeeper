@@ -101,14 +101,12 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-
                 if (!resourceAccess.CanReadOrWriteTask(GetUserClaims(), jobDetail)) return Unauthorized();
                 //This line will result in an null object reference exception, we cannot access properties of jobDetail.Day because they are null
                 //Logger.Info($"Task for employee {jobDetail.Day.Employee.FullName}, day {jobDetail.Day.Date} added with id {jobDetail.Id}");
-                Logger.Info($"Task with id {jobDetail.Id} was added");
-
                 await Unit.Tasks.InsertAsync(jobDetail);
                 await Unit.SaveAsync();
+                Logger.Info($"Task with id {jobDetail.Id} was added");
                 return Ok(jobDetail.Create());
             }
             catch (Exception ex)
