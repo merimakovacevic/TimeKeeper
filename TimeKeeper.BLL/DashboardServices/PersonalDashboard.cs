@@ -1,0 +1,93 @@
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TimeKeeper.DAL;
+using TimeKeeper.DTO;
+using TimeKeeper.DTO.ReportModels.PersonalDashboard;
+
+namespace TimeKeeper.BLL.DashboardServices
+{
+    public class PersonalDashboard : CalendarService
+    {
+        protected StoredProcedureService _storedProcedureService;
+        public PersonalDashboard(UnitOfWork unit): base(unit)
+        {
+            _storedProcedureService = new StoredProcedureService(unit);
+        }
+
+        //public PersonalDashboardModel GetEmployeeDashboard(int employeeId, int year)
+        //{
+        //    List<DayModel> calendar = GetEmployeeCalendar(employeeId, year);
+        //    decimal totalHours = GetYearlyWorkingDays(year) * 8;
+        //    //overtime is deducted from total monthly hours
+        //    totalHours -= calendar.CalculateOvertime();
+
+        //    return CreatePersonalDashboard(employeeId, year, totalHours, calendar);
+        //}
+
+        //public PersonalDashboardModel GetEmployeeDashboard(int employeeId, int year, int month)
+        //{
+        //    List<DayModel> calendar = GetEmployeeCalendar(employeeId, year, month);
+        //    decimal totalHours = GetMonthlyWorkingDays(year, month) * 8;
+        //    //overtime is deducted from total monthly hours
+        //    totalHours -= calendar.CalculateOvertime();
+
+        //    return CreatePersonalDashboard(employeeId, year, totalHours, calendar);
+        //}
+
+        //private PersonalDashboardModel CreatePersonalDashboard(int employeeId, int year, decimal totalHours, List<DayModel> calendar)
+        //{
+        //    decimal workingHours = calendar.Where(x => x.DayType.Name == "Workday").Sum(x => x.TotalHours);
+
+        //    return new PersonalDashboardModel
+        //    {
+        //        Employee = _unit.Employees.Get(employeeId).Master(),
+        //        TotalHours = totalHours,
+        //        WorkingHours = workingHours,
+        //        BradfordFactor = GetBradfordFactor(employeeId, year)
+
+
+        //    };
+        //}
+
+        public async Task<PersonalDashboardStoredModel> GetPersonalDashboardStored(int empId, int year, int month)
+        {
+            PersonalDashboardStoredModel personalDashboard = new PersonalDashboardStoredModel();
+            List<PersonalDashboardRawModel> rawData = _storedProcedureService.GetStoredProcedure<PersonalDashboardRawModel>("personalDashboard", new int[] { empId, year, month });
+            decimal workingDaysInMonth = GetMonthlyWorkingDays(year, month) * 8;
+            decimal workingDaysInYear = GetYearlyWorkingDays(year) * 8;
+            personalDashboard.PersonalDashboardHours = rawData[0];
+            // What if there's overtime?
+            personalDashboard.UtilizationMonthly = decimal.Round(((rawData[0].WorkingMonthly / workingDaysInMonth) * 100), 2, MidpointRounding.AwayFromZero);
+            personalDashboard.UtilizationYearly = decimal.Round(((rawData[0].WorkingYearly / workingDaysInYear) * 100), 2, MidpointRounding.AwayFromZero);
+            personalDashboard.BradfordFactor = GetBradfordFactor(rawData[0], year).Result;
+            return personalDashboard;
+        }
+
+        public async Task<decimal> GetBradfordFactor(PersonalDashboardRawModel personalDashboardHours, int year)
+        {
+            int absenceInstances = 0;
+            int absenceDays = personalDashboardHours.SickYearly;
+
+            var cmd = _unit.Context.Database.GetDbConnection().CreateCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = $"select * from sickByMonths({personalDashboardHours.EmployeeId}, {year})";
+            if (cmd.Connection.State == ConnectionState.Closed) cmd.Connection.Open();
+            DbDataReader sql = cmd.ExecuteReader();
+            if (sql.HasRows)
+            {
+                while (sql.Read())
+                {
+                    absenceInstances++;
+                }
+            }
+
+            return (decimal)Math.Pow(absenceInstances, 2) * absenceDays;
+        }
+    }
+}

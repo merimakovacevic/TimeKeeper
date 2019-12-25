@@ -15,7 +15,8 @@ namespace TimeKeeper.API.Authorization
         private QueryService queryService;
         public ResouceAccessHandler(UnitOfWork unit)
         {
-            this.unit = unit;
+           this.unit = unit;
+           queryService = new QueryService(unit);
         }
         public bool CanReadOrWriteTask(UserRoleModel userClaims, JobDetail newTask)
         {
@@ -56,18 +57,24 @@ namespace TimeKeeper.API.Authorization
 
         public bool CanReadDay(UserRoleModel userClaims, Day day)
         {
-            if (userClaims.Role == "lead" && !day.JobDetails.Any(x => x.Project.Team.Members.Any(y => y.Employee.Id == userClaims.UserId)) ||
-                    userClaims.Role == "user" && !day.JobDetails.Any(x => x.Project.Team.Members.Any(y => y.Employee.Id == userClaims.UserId)))
+
+            //user can get his day if day.employee.id==userClaims.UserId
+            Day newDay = unit.Calendar.Get(day.Id);
+            Employee employee = unit.Employees.Get(day.Employee.Id);
+            List<EmployeeModel> teamMembers = queryService.GetEmployeeTeamMembers(userClaims.UserId);
+            if (userClaims.Role == "lead" && teamMembers.Any(x => x.Id == employee.Id) ||
+                    userClaims.Role == "user" && day.Employee.Id==userClaims.UserId ||
+                        userClaims.Role == "admin")
+
             {
-                return false;
+                return true;
             }
 
-            return true;
+            return false;
         }
         public bool CanWriteDay(UserRoleModel userClaims, Day newDay)
         {
-            Day day = unit.Calendar.Get(newDay.Id);
-            if (userClaims.Role != "admin" && !(day.Employee.Id == userClaims.UserId))
+            if (userClaims.Role != "admin" && !(newDay.Employee.Id == userClaims.UserId))
             {
                 return false;
             }

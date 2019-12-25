@@ -115,12 +115,12 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 await Unit.Employees.InsertAsync(employee);
-                Unit.Save();
+                await Unit.SaveAsync();
 
                 //User insertion is coupled to employee insertion
                 User user = employee.CreateUser();
 
-                Unit.Users.Insert(user);
+                await Unit.Users.InsertAsync(user);
                 await Unit.SaveAsync();
 
                 Logger.Info($"Employee {employee.FirstName} {employee.LastName} added with id {employee.Id}");
@@ -150,7 +150,7 @@ namespace TimeKeeper.API.Controllers
                 Logger.Info($"Attempt to update employee with id {id}");
                 if (!resourceAccess.CanWriteEmployee(GetUserClaims(), employee)) return Unauthorized();
 
-                Unit.Employees.Update(employee, id);
+                await Unit.Employees.UpdateAsync(employee, id);
                 await Unit.SaveAsync();
                 Logger.Info($"Employee {employee.FirstName} {employee.LastName} with id {employee.Id} updated");
                 return Ok(employee.Create());
@@ -180,7 +180,7 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info($"Attempt to delete employee with id {id}");
-                Unit.Employees.DeleteAsync(id);
+                await Unit.Employees.DeleteAsync(id);
                 await Unit.SaveAsync();
 
                 Logger.Info($"Employee with id {id} deleted");
