@@ -75,7 +75,7 @@ namespace TimeKeeper.API.Controllers
             try {
                 Logger.Info($"Try to get team with {id}");
                 Team team = await Unit.Teams.GetAsync(id);
-                if (!resourceAccess.CanGetTeam(GetUserClaims(), team)) ;
+                if (!resourceAccess.CanReadTeam(GetUserClaims(), team)) ;
                 return Ok(team.Create());
             }
             catch (Exception ex)

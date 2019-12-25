@@ -66,7 +66,7 @@ namespace TimeKeeper.API.Controllers
                 Logger.Info($"Try to get day with {id}");
                 Day day =  Unit.Calendar.Get(id);
 
-                if (!resourceAccess.CanGetDay(GetUserClaims(), day)) return Unauthorized(); 
+                if (!resourceAccess.CanReadDay(GetUserClaims(), day)) return Unauthorized(); 
                 return Ok(day.Create());
             }
             catch (Exception ex)
@@ -90,7 +90,7 @@ namespace TimeKeeper.API.Controllers
             try
             {
 
-                if(!resourceAccess.CanModifyDay(GetUserClaims(), day)) return Unauthorized();
+                if(!resourceAccess.CanWriteDay(GetUserClaims(), day)) return Unauthorized();
                 Unit.Calendar.InsertAsync(day);
                 await Unit.SaveAsync();
                 Logger.Info($"Day {day.Date} added with id {day.Id}");
@@ -118,7 +118,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                if (!resourceAccess.CanModifyDay(GetUserClaims(), day)) return Unauthorized();
+                if (!resourceAccess.CanWriteDay(GetUserClaims(), day)) return Unauthorized();
                 Unit.Calendar.UpdateAsync(day, id);
                 await Unit.SaveAsync();
                 Logger.Info($"Changed day with id {id}");

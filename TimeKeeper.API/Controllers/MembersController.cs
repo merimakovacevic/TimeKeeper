@@ -74,7 +74,7 @@ namespace TimeKeeper.API.Controllers
                 Logger.Info($"Try to get member with {id}");
                 Member member = await Unit.Members.GetAsync(id);
 
-                if (!resourceAccess.CanGetMember(GetUserClaims(), member)) return Unauthorized();                
+                if (!resourceAccess.CanReadMember(GetUserClaims(), member)) return Unauthorized();                
                 return Ok(member.Create());
             }
             catch(Exception ex)
@@ -99,7 +99,7 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info("Trying to post new member");
-                if (!resourceAccess.CanPostMember(GetUserClaims(), member)) return Unauthorized();
+                if (!resourceAccess.CanWriteMember(GetUserClaims(), member)) return Unauthorized();
                 await Unit.Members.InsertAsync(member);
                 await Unit.SaveAsync();
                 Logger.Info($"Member {member.Employee.FirstName} added with id {member.Id}");

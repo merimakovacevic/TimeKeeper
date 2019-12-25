@@ -74,7 +74,7 @@ namespace TimeKeeper.API.Controllers
                 Logger.Info($"Try to fetch project with id {id}");
                 Project project = await Unit.Projects.GetAsync(id);
 
-                if (!resourceAccess.CanGetProject(GetUserClaims(), project)) return Unauthorized();
+                if (!resourceAccess.CanReadProject(GetUserClaims(), project)) return Unauthorized();
                 return Ok(project.Create());
             }
             catch (Exception ex)
