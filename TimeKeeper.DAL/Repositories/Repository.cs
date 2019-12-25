@@ -86,6 +86,7 @@ namespace TimeKeeper.DAL.Repositories
         public async Task UpdateAsync(Entity newEnt, int id)
         {
             Entity oldEnt = await GetAsync(id);
+            ValidateUpdate(newEnt, id);
             if (oldEnt != null)
             {
                 await newEnt.Build(_context);
