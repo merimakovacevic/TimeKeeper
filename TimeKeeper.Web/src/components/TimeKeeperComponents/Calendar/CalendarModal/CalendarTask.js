@@ -30,7 +30,7 @@ const CustomeTextFieldComponent = (props) => <TextField {...props} />;
 const CustomInputComponent = (props) => <Input {...props} fullWidth />;
 
 function CalendarTask(props) {
-	console.log("BUTNOOOOOO", props.day.date);
+	// console.log("BUTNOOOOOO", props.day.date);
 	return (
 		<Formik
 			enableReinitialize
@@ -61,7 +61,7 @@ function CalendarTask(props) {
 						description: values.description,
 						hours: values.hours
 					};
-					console.log(task);
+					// console.log(task);
 					const day = {
 						dayType: {
 							id: 1
@@ -72,6 +72,7 @@ function CalendarTask(props) {
 						date: props.day.date
 					};
 					props.addDayWithTask(day, task);
+					resetForm();
 				} else {
 					// console.log(values);
 					let data = {

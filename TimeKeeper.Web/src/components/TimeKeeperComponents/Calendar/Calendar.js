@@ -17,7 +17,7 @@ function CalendarDisplay(props) {
 	const [projects, setProjects] = useState([]);
 	const [selectedTab, setSelectedTab] = useState(0);
 
-	// console.log(props.reload);
+	//console.log(props.reload);
 
 	useEffect(() => {
 		apiGetAllRequest("http://localhost:8000/api/projects").then((res) => {
@@ -66,12 +66,12 @@ function CalendarDisplay(props) {
 	}
 
 	return (
-		<div>
+		<div style={{ display: "flex" }}>
 			<Calendar onChange={onChange} value={date} />
 			<div>
 				{props.calendarMonth &&
 				moment(props.calendarMonth[day - 1].date).format("YYYY-MM-DD") === moment(date).format("YYYY-MM-DD") ? (
-					<div>
+					<div style={{ width: 750 }}>
 						<CalendarModal
 							selectedTab={selectedTab}
 							handleSelectedTab={handleSelectedTab}

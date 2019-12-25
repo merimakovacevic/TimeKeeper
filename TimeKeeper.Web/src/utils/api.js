@@ -2,17 +2,17 @@ import axios from "axios";
 
 import { store } from "../index";
 
-export const loginUrl = "http://localhost:8000/login";
-// export const employeesUrl = "https://localhost:44321/api/employees";
-export const employeesUrl = "http://localhost:8000/api/employees";
-export const customersUrl = "http://localhost:8000/api/customers";
-//export const customersUrl = "https://localhost:44321/api/customers";
-// export const calendarUrl = "http://localhost:8000/api/calendar";
-export const calendarUrl = "http://localhost:8000/api/calendar";
-export const tasksUrl = "http://localhost:8000/api/tasks";
-export const projectsUrl = "http://localhost:8000/api/projects";
-export const dropDownTeamsUrl = "http://localhost:8000/api/teams";
-export const teamTrackingUrl = "http://localhost:8000/api/reports/team-time-tracking";
+// const url = "http://api-charlie.gigischool.rocks";
+const url = "http://localhost:8000";
+
+export const loginUrl = `${url}/login`;
+export const employeesUrl = `${url}/api/employees`;
+export const customersUrl = `${url}/api/customers`;
+export const calendarUrl = `${url}/api/calendar`;
+export const tasksUrl = `${url}/api/tasks`;
+export const projectsUrl = `${url}/api/projects`;
+export const dropDownTeamsUrl = `${url}/api/teams`;
+export const teamTrackingUrl = `${url}/api/reports/team-time-tracking`;
 
 export const login = (url, credentials) => {
 	return axios

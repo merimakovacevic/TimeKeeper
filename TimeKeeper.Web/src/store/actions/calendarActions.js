@@ -11,7 +11,8 @@ import {
 	ADD_DAY_WITH_TASK_FAIL,
 	ADD_DAY_WITH_TASK_SUCCESS,
 	ADD_DAY_SUCCESS,
-	RELOAD_CALENDAR
+	RELOAD_CALENDAR,
+	ADD_DAY_FAIL
 } from "../actions/actionTypes";
 import { getCalendar, apiPutRequest, tasksUrl, apiPostRequest, apiDeleteRequest, calendarUrl } from "./../../utils/api";
 
@@ -60,12 +61,26 @@ export const deleteTask = (id) => {
 	return (dispatch) => {
 		apiDeleteRequest(tasksUrl, id)
 			.then((res) => {
-				console.log(res);
+				// console.log(res);
 				dispatch({ type: TASK_DELETE_SUCCESS });
 			})
 			.catch((err) => {
-				console.log(err);
+				// console.log(err);
 				dispatch({ type: TASK_DELETE_FAIL });
+			});
+	};
+};
+
+export const addDay = (body) => {
+	return async (dispatch) => {
+		dispatch({ type: LOAD_CALENDAR_MONTH });
+		apiPostRequest(calendarUrl, body)
+			.then((res) => {
+				dispatch({ type: ADD_DAY_SUCCESS, data: res.data });
+			})
+			.catch((err) => {
+				dispatch({ type: ADD_DAY_FAIL });
+				// console.log("err", err);
 			});
 	};
 };

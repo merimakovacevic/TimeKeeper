@@ -51,9 +51,13 @@ export const fetchEmployees = () => {
 		dispatch(employeesFetchStart());
 		apiGetAllRequest(employeesUrl)
 			.then((res) => {
+				console.log(res);
 				dispatch(employeesFetchSuccess(res.data.data));
 			})
-			.catch((err) => dispatch(employeesFetchFail(err)));
+			.catch((err) => {
+				console.log(err);
+				dispatch(employeesFetchFail(err));
+			});
 	};
 };
 
