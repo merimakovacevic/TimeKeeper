@@ -56,7 +56,7 @@ namespace TimeKeeper.BLL
             companyDashboard.Projects = GetCompanyProjectModels(rawData);
             companyDashboard.Roles = GetRoleUtilization(rawData, baseHours);
             companyDashboard.Teams = GetCompanyTeamModels(rawData, employeeHours, activeTeams, overtime);
-            companyDashboard.MissingEntries = GetCompanyMissingEntries(employeeHours, companyDashboard.Teams, baseHours, overtime);        
+            GetCompanyMissingEntries(employeeHours, companyDashboard.Teams, baseHours, overtime);
 
             return companyDashboard;
         }
@@ -66,28 +66,36 @@ namespace TimeKeeper.BLL
             decimal empWorkingHours = workDays.Where(x => x.EmployeeId == employeeId).Sum(x => x.DayTypeHours);
             return empTeamWorkingHours / empWorkingHours;
         }
-        private List<CompanyMissingEntriesModel> GetCompanyMissingEntries(List<CompanyEmployeeHoursModel> employeeHours, List<CompanyTeamModel> teams, decimal baseHours, List<CompanyOvertimeModel> overtime)
+        private void GetCompanyMissingEntries(List<CompanyEmployeeHoursModel> employeeHours, List<CompanyTeamModel> teams, decimal baseHours, List<CompanyOvertimeModel> overtime)
         {
-            List<CompanyMissingEntriesModel> missingEntries = employeeHours.GroupBy(x => new { x.EmployeeId, x.EmployeeName })
-                                                                         .Select(x => new CompanyMissingEntriesModel
-                                                                         {
-                                                                             EmployeeId = x.Key.EmployeeId,
-                                                                             EmployeeName = x.Key.EmployeeName,
-                                                                             MissingEntriesHours = baseHours - x.Sum(y => y.DayTypeHours) + overtime.Where(y => y.EmployeeId == x.Key.EmployeeId).Sum(y => y.OvertimeHours)
-                                                                         }).ToList();
-
-            return missingEntries;
+            List<EmployeeMissingEntriesModel> missingEntriesEmployee = employeeHours.GroupBy(x => new { x.EmployeeId, x.EmployeeName })
+                .Select(x => new EmployeeMissingEntriesModel
+                {
+                    Employee = new MasterModel { Id = x.Key.EmployeeId, Name = x.Key.EmployeeName },
+                    MissingEntries = baseHours - x.Sum(y => y.DayTypeHours) + overtime.Where(y => y.EmployeeId == x.Key.EmployeeId).Sum(y => y.OvertimeHours)
+                }).Where(x => x.MissingEntries > 0).ToList();
+                        
+            foreach(CompanyTeamModel team in teams)
+            {
+                foreach(EmployeeMissingEntriesModel employee in missingEntriesEmployee)
+                {
+                    if (employeeHours.Any(x => x.EmployeeId == employee.Employee.Id && x.TeamId == team.Team.Id))
+                    {
+                        team.MissingEntries += employee.MissingEntries;
+                    }
+                }
+            }
         }
+
         private List<CompanyTeamModel> GetCompanyTeamModels(List<CompanyDashboardRawModel> rawData, List<CompanyEmployeeHoursModel> employeeHours, List<MasterModel> activeTeams, List<CompanyOvertimeModel> overtime)
         {
             List<CompanyTeamModel> teams = new List<CompanyTeamModel>();
             teams.AddRange(activeTeams.Select(x => new CompanyTeamModel
             {
-                TeamId = x.Id,
-                TeamName = x.Name,
+                Team = new MasterModel { Id = x.Id, Name = x.Name},
                 Overtime = 0,
                 PaidTimeOff = 0
-            }).OrderBy(x => x.TeamId).ToList());
+            }).OrderBy(x => x.Team.Id).ToList());
 
             List<CompanyOvertimeModel> overtimeNotNull = overtime.Where(x => x.OvertimeHours > 0).ToList();
             List<CompanyEmployeeHoursModel> paidTimeOff = employeeHours.Where(x => x.DayTypeName != "Workday").ToList();
@@ -114,13 +122,13 @@ namespace TimeKeeper.BLL
         private void GetCompanyOvertime(List<CompanyTeamModel> teams, List<CompanyEmployeeHoursModel> workDays, List<CompanyOvertimeModel> overtime, int teamId, int employeeId)
         {
            decimal empOvertime = overtime.Where(x => x.EmployeeId == employeeId).Sum(x => x.OvertimeHours);
-           teams.FirstOrDefault(x => x.TeamId == teamId).Overtime += empOvertime * EmployeeRatioInTeam(workDays, teamId, employeeId);                 
+           teams.FirstOrDefault(x => x.Team.Id == teamId).Overtime += empOvertime * EmployeeRatioInTeam(workDays, teamId, employeeId);                 
         }
         private void GetCompanyPaidTimeOff(List<CompanyTeamModel> teams, List<CompanyEmployeeHoursModel> workDays, List<CompanyEmployeeHoursModel> paidTimeOff, int teamId, int employeeId)
         {
             decimal empPaidTimeOff = paidTimeOff.Where(x => x.EmployeeId == employeeId).Sum(x => x.DayTypeHours);
             decimal empRatio = EmployeeRatioInTeam(workDays, teamId, employeeId);
-            teams.FirstOrDefault(x => x.TeamId == teamId).PaidTimeOff += empPaidTimeOff * empRatio;         
+            teams.FirstOrDefault(x => x.Team.Id == teamId).PaidTimeOff += empPaidTimeOff * empRatio;         
         }
         private List<CompanyRolesDashboardModel> GetRoleUtilization(List<CompanyDashboardRawModel> rawData, decimal baseHours)
         {
@@ -129,23 +137,23 @@ namespace TimeKeeper.BLL
             //Employee and role are grouped, and the roles utilization model is created
             List<CompanyRolesRawModel> rolesRaw = CreateRolesRaw(rawData);
 
-            CompanyRolesDashboardModel role = new CompanyRolesDashboardModel { RoleName = "" };
+            CompanyRolesDashboardModel role = new CompanyRolesDashboardModel { Role = new MasterModel { Id = 0, Name = "" } };
             foreach (CompanyRolesRawModel row in rolesRaw)
             {
-                if (row.RoleName != role.RoleName)
+                if (row.RoleName != role.Role.Name)
                 {
-                    if (role.RoleName != "") roles.Add(role);
-                    role = new CompanyRolesDashboardModel { RoleName = row.RoleName };
-                    role.WorkingHours = rolesRaw.Where(x => x.RoleName == role.RoleName).Sum(x => x.WorkingHours);
+                    if (role.Role.Name != "") roles.Add(role);
+                    role = new CompanyRolesDashboardModel { Role = new MasterModel { Id = row.RoleId, Name = row.RoleName } };
+                    role.WorkingHours = rolesRaw.Where(x => x.RoleName == role.Role.Name).Sum(x => x.WorkingHours);
                 }
                 /*Calculates the ratio of this employees total working hours 
                  * as this role in employees overall total working hours, 
                  * and uses the ratio to extract a number from the monthly base hours*/
-                decimal hoursEmployeeRole = rolesRaw.Where(x => x.EmployeeId == row.EmployeeId && x.RoleName == role.RoleName).Sum(x => x.WorkingHours);
+                decimal hoursEmployeeRole = rolesRaw.Where(x => x.EmployeeId == row.EmployeeId && x.RoleName == role.Role.Name).Sum(x => x.WorkingHours);
                 decimal hoursEmployee = rolesRaw.Where(x => x.EmployeeId == row.EmployeeId).Sum(x => x.WorkingHours);
                 role.TotalHours += (hoursEmployeeRole / hoursEmployee) * baseHours;
             }
-            if (role.RoleName != "") roles.Add(role);
+            if (role.Role.Name != "") roles.Add(role);
 
             return roles;
         }
