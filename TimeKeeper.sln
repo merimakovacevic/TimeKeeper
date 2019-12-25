@@ -19,11 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeKeeper.Utility", "TimeK
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeKeeper.Mail", "TimeKeeper.Mail\TimeKeeper.Mail.csproj", "{65D98E38-F652-40B5-834A-8B2D0046E04A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeKeeper.IDP", "TimeKeeper.IDP\TimeKeeper.IDP.csproj", "{6A585FA4-E3EA-4FCB-9173-889C2BF021A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeKeeper.DTO", "TimeKeeper.DTO\TimeKeeper.DTO.csproj", "{CDC6A58B-5286-47B5-AE2D-1F11AEC09F2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeKeeper.DTO", "TimeKeeper.DTO\TimeKeeper.DTO.csproj", "{CDC6A58B-5286-47B5-AE2D-1F11AEC09F2B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeKeeper.BLL", "TimeKeeper.BLL\TimeKeeper.BLL.csproj", "{E9B16DE6-4BDF-489A-BB0E-5FE576EF319A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeKeeper.BLL", "TimeKeeper.BLL\TimeKeeper.BLL.csproj", "{E9B16DE6-4BDF-489A-BB0E-5FE576EF319A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,10 +61,6 @@ Global
 		{65D98E38-F652-40B5-834A-8B2D0046E04A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65D98E38-F652-40B5-834A-8B2D0046E04A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65D98E38-F652-40B5-834A-8B2D0046E04A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6A585FA4-E3EA-4FCB-9173-889C2BF021A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6A585FA4-E3EA-4FCB-9173-889C2BF021A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6A585FA4-E3EA-4FCB-9173-889C2BF021A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6A585FA4-E3EA-4FCB-9173-889C2BF021A2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CDC6A58B-5286-47B5-AE2D-1F11AEC09F2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CDC6A58B-5286-47B5-AE2D-1F11AEC09F2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDC6A58B-5286-47B5-AE2D-1F11AEC09F2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
