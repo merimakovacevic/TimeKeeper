@@ -71,14 +71,14 @@ namespace TimeKeeper.Seed
             return "user";
         }
 
-        public static User CreateUserAndHash(this Employee employee)
+        public static User CreateUserAndRole(this Employee employee)
         {
             User user = new User
             {
                 Id = employee.Id,
                 Name = employee.FullName,
                 Username = employee.MakeUsername(),
-                Password = employee.MakeUsername().HashWith("$ch00l"),
+                Password = "$ch00l",
                 Role = employee.SelectRole()
             };
 

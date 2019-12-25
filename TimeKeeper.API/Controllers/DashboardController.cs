@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TimeKeeper.BLL;
+using TimeKeeper.BLL.DashboardServices;
 using TimeKeeper.DAL;
 using TimeKeeper.DTO.ReportModels.CompanyDashboard;
 
@@ -16,10 +17,14 @@ namespace TimeKeeper.API.Controllers
     [ApiController]
     public class DashboardController : BaseController
     {
-        protected DashboardService dashboardService;
+        protected PersonalDashboard personalDashboard;
+        protected TeamDashboard teamDashboard;
+        protected CompanyDashboard companyDashboard;
         public DashboardController(TimeKeeperContext context) : base(context)
         {
-            dashboardService = new DashboardService(Unit);
+            personalDashboard = new PersonalDashboard(Unit);
+            teamDashboard = new TeamDashboard(Unit);
+            companyDashboard = new CompanyDashboard(Unit);
         }
 
         [HttpGet("personal/{employeeId}/{year}/{month}")]
@@ -60,7 +65,7 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
-        
+
         [HttpGet("company/{year}/{month}")]
         public IActionResult GetCompanyDashboard(int year, int month)
         {
