@@ -42,21 +42,7 @@ namespace TimeKeeper.API.Controllers
             {
                 Logger.Info($"Try to fetch ${pageSize} projects from page ${page}");
                 Tuple<PaginationModel, List<Project>> projectsPagination;
-                List<Project> query;
-
-                int userId = int.Parse(GetUserClaim("sub"));
-                string userRole = GetUserClaim("role");
-
-                if (userRole == "lead")
-                {
-                    var task = await Unit.Projects.GetAsync(x => x.Team.Members.Any(y => y.Employee.Id == userId));
-                    query = task.ToList();
-                }
-                else
-                {
-                    var task = await Unit.Projects.GetAsync();
-                    query = task.ToList();
-                }
+                List<Project> query = await resourceAccess.GetAuthorizedProjects(GetUserClaims());
 
                 projectsPagination = _pagination.CreatePagination(page, pageSize, query);
                 HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(projectsPagination.Item1));
@@ -85,18 +71,10 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                int userId = int.Parse(GetUserClaim("sub"));
-                string userRole = GetUserClaim("role");
                 Logger.Info($"Try to fetch project with id {id}");
                 Project project = await Unit.Projects.GetAsync(id);
-                if (project == null)
-                {
-                    return NotFound($"Requested resource with {id} does not exist");
-                }
-                if (userRole == "lead" && !project.Team.Members.Any(x => x.Employee.Id == userId))
-                {
-                    return Unauthorized();
-                }
+
+                if (!resourceAccess.CanGetProject(GetUserClaims(), project)) return Unauthorized();
                 return Ok(project.Create());
             }
             catch (Exception ex)
@@ -121,7 +99,7 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Unit.Projects.Insert(project);
-                Unit.SaveAsync();
+                await Unit.SaveAsync();
 
                 Logger.Info($"Project {project.Name} added with id {project.Id}");
                 return Ok(project.Create());

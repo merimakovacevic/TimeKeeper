@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TimeKeeper.BLL;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.DTO;
@@ -11,6 +12,7 @@ namespace TimeKeeper.API.Authorization
     public class ResouceAccessHandler
     {
         private UnitOfWork _unit;
+        private QueryService queryService;
         public ResouceAccessHandler(UnitOfWork unit)
         {
             _unit = unit;
@@ -107,6 +109,94 @@ namespace TimeKeeper.API.Authorization
         {
             if (_userClaims.Role == "admin" || employee.Id == _userClaims.UserId) return true;
             return false;            
+        }
+
+        public async Task<List<Member>> GetAuthorizedMembers(UserRoleModel _userClaims)
+        {
+            List<Member> query;
+
+            
+            if (_userClaims.Role == "user")
+            {
+                //Gets team memebers?
+                var task = await _unit.Members.GetAsync(x => x.Team.Members.Any(y => y.Employee.Id == _userClaims.UserId));
+                query = task.ToList();
+            }
+            else
+            {
+                //also gets team members?
+                query = queryService.GetTeamMembers(_userClaims.UserId);
+            }
+
+            return query;
+        }
+
+        public bool CanGetMember(UserRoleModel userClaims, Member member)
+        {
+            if (userClaims.Role == "user" && !member.Team.Members.Any(x => x.Employee.Id == userClaims.UserId))
+            {
+                return false;
+            }
+            return true;
+        }
+        public bool CanPostMember(UserRoleModel userClaims, Member member)
+        {
+            Team team = _unit.Teams.Get(member.Team.Id);
+            if (userClaims.Role == "lead" && !team.Members.Any(x => x.Employee.Id == userClaims.UserId))
+            {
+                return false;
+            }
+            return true;
+        }
+        public async Task<List<Project>> GetAuthorizedProjects(UserRoleModel userClaims)
+        {
+            List<Project> query = new List<Project>();
+
+            if (userClaims.Role == "lead")
+            {
+                var task = await _unit.Projects.GetAsync(x => x.Team.Members.Any(y => y.Employee.Id == userClaims.UserId));
+                query = task.ToList();
+            }
+            else
+            {
+                var task = await _unit.Projects.GetAsync();
+                query = task.ToList();
+            }
+
+            return query;
+        }
+        public bool CanGetProject(UserRoleModel userClaims, Project project)
+        {
+            if (userClaims.Role == "lead" && !project.Team.Members.Any(x => x.Employee.Id == userClaims.UserId))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<List<Team>> GetAuthorizedTeams(UserRoleModel userClaims)
+        {
+            List<Team> query = new List<Team>();
+            if (userClaims.Role == "user" || userClaims.Role == "lead")
+            {
+                var task = await _unit.Teams.GetAsync(x => x.Members.Any(y => y.Employee.Id == userClaims.UserId));
+                query = task.ToList();
+            }
+            else
+            {
+                var task = await _unit.Teams.GetAsync();
+                query = task.ToList();
+            }
+
+            return query;
+        }
+        public bool CanGetTeam(UserRoleModel userClaims, Team team)
+        {
+            if (userClaims.Role == "user" || (userClaims.Role == "lead" && !team.Members.Any(x => x.Employee.Id == userClaims.UserId)))
+            {
+                return false;
+            }
+            return true;
         }
 
     }

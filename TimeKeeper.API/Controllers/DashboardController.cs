@@ -32,7 +32,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                return Ok(dashboardService.GetEmployeeDashboard(employeeId, year, month));
+                return Ok(personalDashboard.GetPersonalDashboardStored(employeeId, year, month));
             }
             catch (Exception ex)
             {
@@ -40,25 +40,25 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
-        [HttpGet("personal/{employeeId}/{year}")]
-        public IActionResult GetPersonalYearDashboard(int employeeId, int year)
-        {
-            try
-            {
-                return Ok(dashboardService.GetEmployeeDashboard(employeeId, year));
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
+        //[HttpGet("personal/{employeeId}/{year}")]
+        //public IActionResult GetPersonalYearDashboard(int employeeId, int year)
+        //{
+        //    try
+        //    {
+        //        return Ok(dashboardService.GetEmployeeDashboard(employeeId, year));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return HandleException(ex);
+        //    }
+        //}
 
         [HttpGet("team/{teamId}/{year}/{month}")]
         public IActionResult GetTeamDashboard(int teamId, int year, int month)
         {
             try
             {
-                return Ok(dashboardService.GetTeamDashboard(teamId, year, month));
+                return Ok(teamDashboard.GetTeamDashboardStored(teamId, year, month));
             }
             catch (Exception ex)
             {
@@ -72,7 +72,7 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 DateTime start = DateTime.Now;
-                CompanyDashboardModel dashboard = dashboardService.GetCompanyDashboard(year, month);
+                CompanyDashboardModel dashboard = companyDashboard.GetCompanyDashboard(year, month);
                 DateTime end = DateTime.Now;
                 return Ok(new { (end - start).TotalMilliseconds, dashboard});
             }
