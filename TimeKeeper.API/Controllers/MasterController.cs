@@ -28,7 +28,7 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(200)]
         public async Task<IActionResult> GetTeams()
         {
-            var query = await Unit.Teams.GetAsync();
+            var query = await resourceAccess.GetAuthorizedTeams(GetUserClaims());
             return Ok(query.Select(x => x.Master()).ToList());
         }
 
