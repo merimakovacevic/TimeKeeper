@@ -31,12 +31,21 @@ namespace TimeKeeper.BLL
             return cmd;
         }
 
+        public void CloseConnection(DbCommand cmd)
+        {
+            if (cmd.Connection.State == ConnectionState.Open) cmd.Connection.Close();
+        }
+
         public List<Entity> GetStoredProcedure<Entity>(string procedureName, int[] args)
         {            
             var cmd = CreateSelectProcedure(procedureName, args);
             DbDataReader sql = cmd.ExecuteReader();
-            if (sql.HasRows) return _sqlFactory.BuildSQL<Entity>(sql);
-
+            if (sql.HasRows)
+            {
+                var result = _sqlFactory.BuildSQL<Entity>(sql);
+                CloseConnection(cmd);
+                return result;
+            }
             return new List<Entity>();
         }
     }

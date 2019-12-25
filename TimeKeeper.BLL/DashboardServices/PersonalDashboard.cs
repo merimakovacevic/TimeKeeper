@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using TimeKeeper.DAL;
 using TimeKeeper.DTO;
 using TimeKeeper.DTO.ReportModels.PersonalDashboard;
+using TimeKeeper.DTO.ReportModels.TeamDashboard;
 
 namespace TimeKeeper.BLL.DashboardServices
 {
@@ -20,42 +21,7 @@ namespace TimeKeeper.BLL.DashboardServices
             _storedProcedureService = new StoredProcedureService(unit);
         }
 
-        //public PersonalDashboardModel GetEmployeeDashboard(int employeeId, int year)
-        //{
-        //    List<DayModel> calendar = GetEmployeeCalendar(employeeId, year);
-        //    decimal totalHours = GetYearlyWorkingDays(year) * 8;
-        //    //overtime is deducted from total monthly hours
-        //    totalHours -= calendar.CalculateOvertime();
-
-        //    return CreatePersonalDashboard(employeeId, year, totalHours, calendar);
-        //}
-
-        //public PersonalDashboardModel GetEmployeeDashboard(int employeeId, int year, int month)
-        //{
-        //    List<DayModel> calendar = GetEmployeeCalendar(employeeId, year, month);
-        //    decimal totalHours = GetMonthlyWorkingDays(year, month) * 8;
-        //    //overtime is deducted from total monthly hours
-        //    totalHours -= calendar.CalculateOvertime();
-
-        //    return CreatePersonalDashboard(employeeId, year, totalHours, calendar);
-        //}
-
-        //private PersonalDashboardModel CreatePersonalDashboard(int employeeId, int year, decimal totalHours, List<DayModel> calendar)
-        //{
-        //    decimal workingHours = calendar.Where(x => x.DayType.Name == "Workday").Sum(x => x.TotalHours);
-
-        //    return new PersonalDashboardModel
-        //    {
-        //        Employee = _unit.Employees.Get(employeeId).Master(),
-        //        TotalHours = totalHours,
-        //        WorkingHours = workingHours,
-        //        BradfordFactor = GetBradfordFactor(employeeId, year)
-
-
-        //    };
-        //}
-
-        public async Task<PersonalDashboardStoredModel> GetPersonalDashboardStored(int empId, int year, int month)
+        public PersonalDashboardStoredModel GetPersonalDashboardStored(int empId, int year, int month)
         {
             PersonalDashboardStoredModel personalDashboard = new PersonalDashboardStoredModel();
             List<PersonalDashboardRawModel> rawData = _storedProcedureService.GetStoredProcedure<PersonalDashboardRawModel>("personalDashboard", new int[] { empId, year, month });
@@ -65,14 +31,18 @@ namespace TimeKeeper.BLL.DashboardServices
             // What if there's overtime?
             personalDashboard.UtilizationMonthly = decimal.Round(((rawData[0].WorkingMonthly / workingDaysInMonth) * 100), 2, MidpointRounding.AwayFromZero);
             personalDashboard.UtilizationYearly = decimal.Round(((rawData[0].WorkingYearly / workingDaysInYear) * 100), 2, MidpointRounding.AwayFromZero);
-            personalDashboard.BradfordFactor = GetBradfordFactor(rawData[0], year).Result;
+            personalDashboard.BradfordFactor = GetBradfordFactor(rawData[0].EmployeeId, year);
             return personalDashboard;
         }
 
-        public async Task<decimal> GetBradfordFactor(PersonalDashboardRawModel personalDashboardHours, int year)
+        public decimal GetBradfordFactor(PersonalDashboardRawModel personalDashboardHours, int year)
         {
-            int absenceInstances = 0;
+            
             int absenceDays = personalDashboardHours.SickYearly;
+
+            List<TeamRawCountModel> rawDataCount = _storedProcedureService.GetStoredProcedure<TeamRawCountModel>("sickByMonths", new int[] { personalDashboardHours.EmployeeId, year});
+            int absenceInstances = rawDataCount.Count;
+
 
             var cmd = _unit.Context.Database.GetDbConnection().CreateCommand();
             cmd.CommandType = CommandType.Text;
@@ -86,7 +56,6 @@ namespace TimeKeeper.BLL.DashboardServices
                     absenceInstances++;
                 }
             }
-
             return (decimal)Math.Pow(absenceInstances, 2) * absenceDays;
         }
     }

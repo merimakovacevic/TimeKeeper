@@ -204,31 +204,5 @@ namespace TimeKeeper.BLL.DashboardServices
             }
         }
 
-        private decimal GetBradfordFactor(int employeeId, int year)
-        {
-            List<DayModel> calendar = GetEmployeeCalendar(employeeId, year);
-            //an absence instance are any number of consecutive absence days. 3 consecutive absence days make an instance.
-            int absenceInstances = 0;
-            int absenceDays = 0;
-            calendar = calendar.OrderBy(x => x.Date).ToList();
-
-            //Bradford factor calculates only dates until the present day, because the calendar in argument returns the whole period
-            absenceDays = calendar.Where(x => x.DayType.Name == "Sick" && x.Date < DateTime.Now).Count();
-
-            for (int i = 0; i < calendar.Count; i++)
-            {
-                if (calendar[i].DayType.Name == "Sick" && calendar[i].Date < DateTime.Now)
-                {
-                    if (i == 0) absenceInstances++;
-
-                    else if (calendar[i - 1].DayType.Name != "Sick")
-                    {
-                        absenceInstances++;
-                    }
-                }
-            }
-            return (decimal)Math.Pow(absenceInstances, 2) * absenceDays;
-        }
-
     }
 }
