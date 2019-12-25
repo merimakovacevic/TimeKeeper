@@ -4,16 +4,16 @@ import { store } from "../index";
 
 export const loginUrl = "http://localhost:8000/login";
 // export const employeesUrl = "https://localhost:44321/api/employees";
-export const employeesUrl = "http://localhost:8000/api/employees";
-export const customersUrl = "http://localhost:8000/api/customers";
+export const employeesUrl = "http://api-charlie.gigischool.rocks/api/employees";
+export const customersUrl = "http://api-charlie.gigischool.rocks/customers";
 //export const customersUrl = "https://localhost:44321/api/customers";
 // export const calendarUrl = "http://localhost:8000/api/calendar";
-export const calendarUrl = "http://localhost:8000/api/calendar";
-export const tasksUrl = "http://localhost:8000/api/tasks";
-export const projectsUrl = "http://localhost:8000/api/projects";
-export const dropDownTeamsUrl = "http://localhost:8000/api/teams";
+export const calendarUrl = "http://api-charlie.gigischool.rocks/api/calendar";
+export const tasksUrl = "http://api-charlie.gigischool.rocks/api/tasks";
+export const projectsUrl = "http://api-charlie.gigischool.rocks/api/projects";
+export const dropDownTeamsUrl = "http://api-charlie.gigischool.rocks/api/teams";
 export const teamTrackingUrl =
-  "http://localhost:8000/api/reports/team-time-tracking";
+  "http://api-charlie.gigischool.rocks/api/reports/team-time-tracking";
 
 export const login = (url, credentials) => {
   return axios

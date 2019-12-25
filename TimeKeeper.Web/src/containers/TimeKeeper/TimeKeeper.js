@@ -36,6 +36,8 @@ import EmployeesPage from "../../components/TimeKeeperComponents/EmployeesPage/E
 import CustomersPage from "../../components/TimeKeeperComponents/CustomersPage/CustomersPage";
 import ProjectsPage from "../../components/TimeKeeperComponents/ProjectsPage/ProjectsPage";
 import TeamTimeTracking from "../../containers/TimeKeeper/TeamTimeTracking/TeamTimeTracking";
+import MonthlyReport from "../../components/TimeKeeperComponents/ReportsMonthly/ReportsMonthly";
+import AnnualReport from "../../components/TimeKeeperComponents/ReportsAnnual/ReportsAnnual";
 
 class TimeKeeper extends React.Component {
 	state = {
@@ -291,7 +293,16 @@ class TimeKeeper extends React.Component {
 										</Route>
 										<Route path="/app/team-tracking">
                       <TeamTimeTracking />
+					  </Route>
+
+					  <Route path="/app/monthly-report">
+                      <MonthlyReport/>
                     </Route>
+					<Route path="/app/annual-report">
+                      <AnnualReport/>
+                    </Route>
+                
+
 									</React.Fragment>
 								) : (
 									<React.Fragment>
@@ -305,6 +316,7 @@ class TimeKeeper extends React.Component {
 											<ProjectsPage />
 										</Route>
 									</React.Fragment>
+
 								)}
 							</div>
 						</main>

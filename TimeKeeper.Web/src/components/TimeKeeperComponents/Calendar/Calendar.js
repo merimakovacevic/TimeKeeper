@@ -18,9 +18,11 @@ function CalendarDisplay(props) {
   const [selectedTab, setSelectedTab] = useState(0);
 
   useEffect(() => {
-    apiGetAllRequest("http://localhost:8000/api/projects").then((res) => {
-      setProjects(res.data.data);
-    });
+    apiGetAllRequest("http://api-charlie.gigischool.rocks/api/projects").then(
+      (res) => {
+        setProjects(res.data.data);
+      }
+    );
 
     props.loadCalendar(employeeId, year, month);
     if (props.calendarMonth) {
