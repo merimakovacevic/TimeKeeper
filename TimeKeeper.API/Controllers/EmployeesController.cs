@@ -148,7 +148,7 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info($"Attempt to update employee with id {id}");
-                if (!resourceAccess.CanModifyEmployee(GetUserClaims(), employee)) return Unauthorized();
+                if (!resourceAccess.CanWriteEmployee(GetUserClaims(), employee)) return Unauthorized();
 
                 await Unit.Employees.UpdateAsync(employee, id);
                 await Unit.SaveAsync();

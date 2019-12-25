@@ -11,20 +11,20 @@ namespace TimeKeeper.API.Authorization
 {
     public class ResouceAccessHandler
     {
-        private UnitOfWork _unit;
+        private UnitOfWork unit;
         private QueryService queryService;
         public ResouceAccessHandler(UnitOfWork unit)
         {
-            _unit = unit;
-            queryService = new QueryService(unit);
+           this.unit = unit;
+           queryService = new QueryService(unit);
         }
-        public bool CanAccessTask(UserRoleModel _userClaims, JobDetail newTask)
+        public bool CanReadOrWriteTask(UserRoleModel userClaims, JobDetail newTask)
         {
-            Project project = _unit.Projects.Get(newTask.Project.Id);
-            Day day = _unit.Calendar.Get(newTask.Day.Id);
+            Project project = unit.Projects.Get(newTask.Project.Id);
+            Day day = unit.Calendar.Get(newTask.Day.Id);
 
-            if (_userClaims.Role == "lead" && !project.Team.Members.Any(x => x.Employee.Id == _userClaims.UserId) ||
-                _userClaims.Role == "user" && !(day.Employee.Id == _userClaims.UserId))
+            if (userClaims.Role == "lead" && !project.Team.Members.Any(x => x.Employee.Id == userClaims.UserId) ||
+                userClaims.Role == "user" && !(day.Employee.Id == userClaims.UserId))
             {
                 return false;
             }
@@ -32,67 +32,68 @@ namespace TimeKeeper.API.Authorization
             return true;
         }
 
-        public async Task<List<JobDetail>> GetAuthorizedTasks(UserRoleModel _userClaims)
+        public async Task<List<JobDetail>> GetAuthorizedTasks(UserRoleModel userClaims)
         {
             List<JobDetail> query;
 
-            if (_userClaims.Role == "lead")
+            if (userClaims.Role == "lead")
             {
-                var task = await _unit.Tasks.GetAsync(x => x.Project.Team.Members.Any(y => y.Employee.Id == _userClaims.UserId));
+                var task = await unit.Tasks.GetAsync(x => x.Project.Team.Members.Any(y => y.Employee.Id == userClaims.UserId));
                 query = task.ToList();
             }
-            else if (_userClaims.Role == "user")
+            else if (userClaims.Role == "user")
             {
-                var task = await _unit.Tasks.GetAsync(x => x.Day.Employee.Id == _userClaims.UserId);
+                var task = await unit.Tasks.GetAsync(x => x.Day.Employee.Id == userClaims.UserId);
                 query = task.ToList();
             }
             else
             {
-                var task = await _unit.Tasks.GetAsync();
+                var task = await unit.Tasks.GetAsync();
                 query = task.ToList();
             }
 
             return query;
         }
 
-        public bool CanGetDay(UserRoleModel _userClaims, Day day)
+        public bool CanReadDay(UserRoleModel userClaims, Day day)
         {
-            //user can get his day if day.employee.id==_userClaims.UserId
-            Day newDay = _unit.Calendar.Get(day.Id);
-            Employee employee = _unit.Employees.Get(day.Employee.Id);
-            List<EmployeeModel> teamMembers = queryService.GetEmployeeTeamMembers(_userClaims.UserId);
-            if (_userClaims.Role == "lead" && teamMembers.Any(x => x.Id == employee.Id) ||
-                    _userClaims.Role == "user" && day.Employee.Id==_userClaims.UserId ||
-                        _userClaims.Role == "admin")
+
+            //user can get his day if day.employee.id==userClaims.UserId
+            Day newDay = unit.Calendar.Get(day.Id);
+            Employee employee = unit.Employees.Get(day.Employee.Id);
+            List<EmployeeModel> teamMembers = queryService.GetEmployeeTeamMembers(userClaims.UserId);
+            if (userClaims.Role == "lead" && teamMembers.Any(x => x.Id == employee.Id) ||
+                    userClaims.Role == "user" && day.Employee.Id==userClaims.UserId ||
+                        userClaims.Role == "admin")
+
             {
                 return true;
             }
 
             return false;
         }
-        public bool CanModifyDay(UserRoleModel _userClaims, Day newDay)
+        public bool CanWriteDay(UserRoleModel userClaims, Day newDay)
         {
-            //Day day = _unit.Calendar.Get(newDay.Id);
-            if (_userClaims.Role != "admin" && !(newDay.Employee.Id == _userClaims.UserId))
+            if (userClaims.Role != "admin" && !(newDay.Employee.Id == userClaims.UserId))
             {
                 return false;
             }
             return true;
         }
 
-        public async Task<List<Customer>> GetAuthorizedCustomers(UserRoleModel _userClaims)
+        public async Task<List<Customer>> GetAuthorizedCustomers(UserRoleModel userClaims)
         {
             List<Customer> query;
 
-            if (_userClaims.Role == "lead")
+            if (userClaims.Role == "lead")
             {
-                var employee = await _unit.Employees.GetAsync(_userClaims.UserId);
+                var employee = await unit.Employees.GetAsync(userClaims.UserId);
                 var teams = employee.Members.GroupBy(x => x.Team.Id).Select(y => y.Key).ToList();
                 List<Project> projects = new List<Project>();
 
                 foreach (var team in teams)
                 {
-                    projects.AddRange(_unit.Projects.Get(x => x.Team.Id == team));
+                    projects.AddRange(unit.Projects.Get(x => x.Team.Id == team));
                 }
 
                 query = new List<Customer>();
@@ -104,40 +105,40 @@ namespace TimeKeeper.API.Authorization
             }
             else
             {
-                var task = await _unit.Customers.GetAsync();
+                var task = await unit.Customers.GetAsync();
                 query = task.ToList();
             }
 
             return query;
         }
 
-        public bool CanModifyEmployee(UserRoleModel _userClaims, Employee employee)
+        public bool CanWriteEmployee(UserRoleModel userClaims, Employee employee)
         {
-            if (_userClaims.Role == "admin" || employee.Id == _userClaims.UserId) return true;
+            if (userClaims.Role == "admin" || employee.Id == userClaims.UserId) return true;
             return false;            
         }
 
-        public async Task<List<Member>> GetAuthorizedMembers(UserRoleModel _userClaims)
+        public async Task<List<Member>> GetAuthorizedMembers(UserRoleModel userClaims)
         {
             List<Member> query;
 
             
-            if (_userClaims.Role == "user")
+            if (userClaims.Role == "user")
             {
                 //Gets team memebers?
-                var task = await _unit.Members.GetAsync(x => x.Team.Members.Any(y => y.Employee.Id == _userClaims.UserId));
+                var task = await unit.Members.GetAsync(x => x.Team.Members.Any(y => y.Employee.Id == userClaims.UserId));
                 query = task.ToList();
             }
             else
             {
                 //also gets team members?
-                query = queryService.GetTeamMembers(_userClaims.UserId);
+                query = queryService.GetTeamMembers(userClaims.UserId);
             }
 
             return query;
         }
 
-        public bool CanGetMember(UserRoleModel userClaims, Member member)
+        public bool CanReadMember(UserRoleModel userClaims, Member member)
         {
             if (userClaims.Role == "user" && !member.Team.Members.Any(x => x.Employee.Id == userClaims.UserId))
             {
@@ -145,9 +146,9 @@ namespace TimeKeeper.API.Authorization
             }
             return true;
         }
-        public bool CanPostMember(UserRoleModel userClaims, Member member)
+        public bool CanWriteMember(UserRoleModel userClaims, Member member)
         {
-            Team team = _unit.Teams.Get(member.Team.Id);
+            Team team = unit.Teams.Get(member.Team.Id);
             if (userClaims.Role == "lead" && !team.Members.Any(x => x.Employee.Id == userClaims.UserId))
             {
                 return false;
@@ -160,18 +161,18 @@ namespace TimeKeeper.API.Authorization
 
             if (userClaims.Role == "lead")
             {
-                var task = await _unit.Projects.GetAsync(x => x.Team.Members.Any(y => y.Employee.Id == userClaims.UserId));
+                var task = await unit.Projects.GetAsync(x => x.Team.Members.Any(y => y.Employee.Id == userClaims.UserId));
                 query = task.ToList();
             }
             else
             {
-                var task = await _unit.Projects.GetAsync();
+                var task = await unit.Projects.GetAsync();
                 query = task.ToList();
             }
 
             return query;
         }
-        public bool CanGetProject(UserRoleModel userClaims, Project project)
+        public bool CanReadProject(UserRoleModel userClaims, Project project)
         {
             if (userClaims.Role == "lead" && !project.Team.Members.Any(x => x.Employee.Id == userClaims.UserId))
             {
@@ -185,18 +186,18 @@ namespace TimeKeeper.API.Authorization
             List<Team> query = new List<Team>();
             if (userClaims.Role == "user" || userClaims.Role == "lead")
             {
-                var task = await _unit.Teams.GetAsync(x => x.Members.Any(y => y.Employee.Id == userClaims.UserId));
+                var task = await unit.Teams.GetAsync(x => x.Members.Any(y => y.Employee.Id == userClaims.UserId));
                 query = task.ToList();
             }
             else
             {
-                var task = await _unit.Teams.GetAsync();
+                var task = await unit.Teams.GetAsync();
                 query = task.ToList();
             }
 
             return query;
         }
-        public bool CanGetTeam(UserRoleModel userClaims, Team team)
+        public bool CanReadTeam(UserRoleModel userClaims, Team team)
         {
             if (userClaims.Role == "user" || (userClaims.Role == "lead" && !team.Members.Any(x => x.Employee.Id == userClaims.UserId)))
             {

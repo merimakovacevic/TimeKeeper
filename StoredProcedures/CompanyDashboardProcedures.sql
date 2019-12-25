@@ -119,8 +119,8 @@ from 	"Employees" as e
 		join "DayTypes" as dt on c."DayTypeId" = dt."Id"
 		left join "Tasks" as ta on c."Id" = ta."DayId"
 		left join "Projects" as p on p."Id" = ta."ProjectId"
-where	extract(year from c."Date") = 2019
-		and extract(month from c."Date") = 7
+where	extract(year from c."Date") = y
+		and extract(month from c."Date") = m
 group by p."TeamId", dt."Id", e."Id", c."Id", ta."Id") as res
 group by res."TeamId", res."EmployeeId", res."EmployeeFirstName", res."EmployeeLastName", 
 		res."DayTypeId", res."DayTypeName"

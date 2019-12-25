@@ -6,7 +6,7 @@ namespace TimeKeeper.DTO.ReportModels.CompanyDashboard
 {
     public class CompanyRolesDashboardModel
     {
-        public string RoleName { get; set; }
+        public MasterModel Role { get; set; }
         public decimal TotalHours { get; set; }
         public decimal WorkingHours { get; set; }
     }
