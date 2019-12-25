@@ -4,10 +4,9 @@ using System.Text;
 
 namespace TimeKeeper.DTO.ReportModels.TeamDashboard
 {
-    public class TeamRawModel
+    public class TeamRawNonWorkingHoursModel
     {
-        public int EmployeeId { get; set; }
-        public string EmployeeName { get; set; }
+        public int MemberId { get; set; }
         public decimal Value { get; set; }
     }
 }
