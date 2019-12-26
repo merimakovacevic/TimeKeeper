@@ -54,11 +54,12 @@ const CalendarModal = (props) => {
 
 	const handleChange = (event) => {
 		setValue(event.target.value);
+		console.log(event);
 	};
 
 	useEffect(() => {
 		setValue(props.day.dayType.id && props.day.dayType.id !== 11 ? props.day.dayType.id : 1);
-		// console.log("renderuje se");
+		console.log("renderuje se");
 	}, [props.day.dayType]);
 
 	// console.log(value);
@@ -68,17 +69,14 @@ const CalendarModal = (props) => {
 			<Container>
 				<Grid container>
 					<Grid item sm={12}>
-						<AppBar position="static">
+						<AppBar position="static" style={{ backgroundColor: "#24292e" }}>
 							<Tabs
 								variant="fullWidth"
 								value={props.selectedTab}
 								onChange={props.handleSelectedTab}
 								aria-label="Working Hours Entry"
 							>
-								<Tab
-									label={`Day ${moment(props.day.date).format("DD/MM/YYYY")}`}
-									{...props.a11yProps(0)}
-								/>
+								<Tab label={`${moment(props.day.date).format("DD/MM/YYYY")}`} {...props.a11yProps(0)} />
 							</Tabs>
 						</AppBar>
 						<Paper>

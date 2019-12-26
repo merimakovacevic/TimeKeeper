@@ -8,27 +8,34 @@ import thunk from "redux-thunk";
 // import userManager from "../utils/userManager";
 // const oidcMiddleware = createOidcMiddleware(userManager);
 
-
-import { employeesReducer, customersReducer, projectsReducer, userReducer, calendarReducer,  yearReducer,
-  monthReducer,
-  teamsReducer,
-  teamTrackingReducer } from "./reducers/index";
+import {
+	employeesReducer,
+	customersReducer,
+	projectsReducer,
+	userReducer,
+	calendarReducer,
+	yearReducer,
+	monthReducer,
+	teamsReducer,
+	teamTrackingReducer,
+	personalReportReducer
+} from "./reducers/index";
 
 const rootReducer = combineReducers({
 	employees: employeesReducer,
 	user: userReducer,
 	customers: customersReducer,
 	projects: projectsReducer,
-  calendarMonth: calendarReducer,
-  teams: teamsReducer,
-  teamTracking: teamTrackingReducer,
-  year: yearReducer,
-  month: monthReducer
-
+	calendarMonth: calendarReducer,
+	teams: teamsReducer,
+	teamTracking: teamTrackingReducer,
+	year: yearReducer,
+	month: monthReducer,
+	personalReportReducer
 });
 
 const configureStore = () => {
-  return createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
+	return createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
 };
 
 export default configureStore;

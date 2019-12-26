@@ -3,12 +3,20 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Calendar from "react-calendar";
 import moment from "moment";
+import { LinearProgress, Typography, Modal, CircularProgress, Button, Backdrop } from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
+import { withStyles } from "@material-ui/core/styles";
 
+import "./Calendar.css";
 import CalendarModal from "./CalendarModal/CalendarModal";
-import { apiGetAllRequest } from "../../../utils/api";
-import { loadCalendar, rldCal } from "../../../store/actions";
+import { apiGetAllRequest, projectsUrl } from "../../../utils/api";
+import { loadCalendar, rldCal, getPersonalReport } from "../../../store/actions";
+import styles from "../../../styles/EmployeesPageStyles";
+import PersonalReport from "../PersonalReport/PersonalReport";
+import Wrapper from "../UI/Wrapper";
 
 function CalendarDisplay(props) {
+	const { classes } = props;
 	const [date, setDate] = useState(new Date(2019, 5, 6, 10, 33, 30, 0));
 	const [year, setYear] = useState(moment(date).format("YYYY"));
 	const [month, setMonth] = useState(moment(date).format("MM"));
@@ -16,11 +24,15 @@ function CalendarDisplay(props) {
 	const [employeeId] = useState(props.user.user.id);
 	const [projects, setProjects] = useState([]);
 	const [selectedTab, setSelectedTab] = useState(0);
+	const [editday, setEditDay] = useState(false);
 
 	//console.log(props.reload);
+	useEffect(() => {
+		props.getPersonalReport(employeeId, year, month);
+	}, [month]);
 
 	useEffect(() => {
-		apiGetAllRequest("http://localhost:8000/api/projects").then((res) => {
+		apiGetAllRequest(projectsUrl).then((res) => {
 			setProjects(res.data.data);
 		});
 
@@ -43,8 +55,9 @@ function CalendarDisplay(props) {
 		const selectedYear = moment(selectedDate).format("YYYY");
 		const selectedMonth = moment(selectedDate).format("MM");
 		const selectedDay = moment(selectedDate).format("DD");
+		// props.getPersonalReport(employeeId, year, month);
 		if (selectedYear !== year || selectedMonth !== month) {
-			props.loadCalendar(employeeId, selectedYear, selectedMonth);
+			// props.loadCalendar(employeeId, selectedYear, selectedMonth);
 			setDate(selectedDate);
 			setYear(selectedYear);
 			setMonth(selectedMonth);
@@ -54,8 +67,12 @@ function CalendarDisplay(props) {
 			setDay(selectedDay);
 		}
 	};
+	// console.log(year169);
+	// console.log(month);
+	// console.log(employeeId);
 	function onChange(date) {
 		changeData(date);
+		setEditDay(true);
 	}
 
 	function a11yProps(index) {
@@ -66,26 +83,83 @@ function CalendarDisplay(props) {
 	}
 
 	return (
-		<div style={{ display: "flex" }}>
-			<Calendar onChange={onChange} value={date} />
-			<div>
-				{props.calendarMonth &&
-				moment(props.calendarMonth[day - 1].date).format("YYYY-MM-DD") === moment(date).format("YYYY-MM-DD") ? (
-					<div style={{ width: 750 }}>
-						<CalendarModal
-							selectedTab={selectedTab}
-							handleSelectedTab={handleSelectedTab}
-							a11yProps={a11yProps}
-							calendarMonth={props.calendarMonth}
-							projects={projects}
-							day={props.calendarMonth[day - 1]}
-						/>
-					</div>
-				) : (
-					<h2>No data</h2>
-				)}
+		<React.Fragment>
+			<Backdrop open={editday} />
+			<div style={{ display: "flex" }}>
+				<Calendar onChange={onChange} value={date} className="react-calendar" />
+
+				<React.Fragment>
+					{props.personalDataLoader ? (
+						<div style={{ width: 500, margin: "auto 5rem", textAlign: "center" }}>
+							<Typography variant="h6" gutterBottom>
+								Fetching personal report data...
+							</Typography>
+							<LinearProgress />
+						</div>
+					) : (
+						<div
+							style={{
+								display: "flex",
+								justifyContent: "center",
+								alignItems: "center",
+								flexDirection: "column"
+							}}
+						>
+							<Typography variant="h5" gutterBottom>
+								Personal Report
+							</Typography>
+							<PersonalReport personalData={props.personalReportData} />
+						</div>
+					)}
+				</React.Fragment>
+				{console.log(editday)}
+				<Wrapper open={editday}>
+					{props.calendarMonth &&
+					moment(props.calendarMonth[day - 1].date).format("YYYY-MM-DD") ===
+						moment(date).format("YYYY-MM-DD") ? (
+						<div
+							style={{
+								width: 950,
+								position: "absolute",
+								top: "50%",
+								left: "50%",
+								transform: "translate(-50%, -50%)"
+							}}
+						>
+							<CalendarModal
+								selectedTab={selectedTab}
+								handleSelectedTab={handleSelectedTab}
+								a11yProps={a11yProps}
+								calendarMonth={props.calendarMonth}
+								projects={projects}
+								day={props.calendarMonth[day - 1]}
+							/>
+							<div style={{ position: "absolute", top: "5px", right: "36px" }}>
+								<Button variant="contained" color="secondary" onClick={() => setEditDay(false)}>
+									Back
+								</Button>
+							</div>
+						</div>
+					) : (
+						<div
+							style={{
+								width: 500,
+								position: "absolute",
+								top: "50%",
+								left: "50%",
+								transform: "translate(-50%, -50%)",
+								textAlign: "center"
+							}}
+						>
+							<Typography variant="h6" gutterBottom>
+								Fetching day data...
+							</Typography>
+							<CircularProgress />
+						</div>
+					)}
+				</Wrapper>
 			</div>
-		</div>
+		</React.Fragment>
 	);
 }
 
@@ -94,8 +168,12 @@ const mapStateToProps = (state) => {
 		loading: state.calendarMonth.loading,
 		calendarMonth: state.calendarMonth.data.data,
 		user: state.user,
-		reload: state.calendarMonth.reload
+		reload: state.calendarMonth.reload,
+		personalReportData: state.personalReportReducer.data,
+		personalDataLoader: state.personalReportReducer.loading
 	};
 };
 
-export default connect(mapStateToProps, { loadCalendar, rldCal })(withRouter(CalendarDisplay));
+export default connect(mapStateToProps, { loadCalendar, rldCal, getPersonalReport })(
+	withRouter(withStyles(styles)(CalendarDisplay))
+);

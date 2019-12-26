@@ -2,7 +2,7 @@
 	"prettier.arrowParens": "always",
 	"editor.formatOnSave": true,
 	// Enable per-language
-	"[html]": {
+	"[css]": {
 		"editor.formatOnSave": false
 	},
 	"editor.wordWrap": "on",

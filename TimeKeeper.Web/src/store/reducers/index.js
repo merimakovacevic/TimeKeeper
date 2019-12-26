@@ -7,3 +7,4 @@ export { teamTrackingReducer } from "./teamTrackingReducer";
 export { yearReducer } from "./yearReducer";
 export { monthReducer } from "./monthReducer";
 export { teamsReducer } from "./teamsReducer";
+export { personalReportReducer } from "./personalReportReducer";

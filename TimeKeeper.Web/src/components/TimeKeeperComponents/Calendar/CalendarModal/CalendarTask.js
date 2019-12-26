@@ -30,7 +30,7 @@ const CustomeTextFieldComponent = (props) => <TextField {...props} />;
 const CustomInputComponent = (props) => <Input {...props} fullWidth />;
 
 function CalendarTask(props) {
-	// console.log("BUTNOOOOOO", props.day.date);
+	// console.log("BUTNOOOOOO", props);
 	return (
 		<Formik
 			enableReinitialize

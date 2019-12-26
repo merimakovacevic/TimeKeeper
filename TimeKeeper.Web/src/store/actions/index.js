@@ -15,3 +15,4 @@ export { fetchTeamTracking } from "./teamTrackingActions";
 export { fetchDropDownTeam, dropdownTeamSelect } from "./teamsActions";
 export { yearSelect } from "./yearActions";
 export { monthSelect } from "./monthActions";
+export { getPersonalReport } from "./personalReports";

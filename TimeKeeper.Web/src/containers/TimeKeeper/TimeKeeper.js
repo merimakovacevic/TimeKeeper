@@ -36,6 +36,8 @@ import EmployeesPage from "../../components/TimeKeeperComponents/EmployeesPage/E
 import CustomersPage from "../../components/TimeKeeperComponents/CustomersPage/CustomersPage";
 import ProjectsPage from "../../components/TimeKeeperComponents/ProjectsPage/ProjectsPage";
 import TeamTimeTracking from "../../containers/TimeKeeper/TeamTimeTracking/TeamTimeTracking";
+import CompanyDashboard from "../../components/TimeKeeperComponents/CompanyDashboard/CompanyDashboard";
+import PersonalReport from "../../components/TimeKeeperComponents/PersonalReport/PersonalReport";
 
 class TimeKeeper extends React.Component {
 	state = {
@@ -261,7 +263,7 @@ class TimeKeeper extends React.Component {
 						</Drawer>
 						<main className={classes.content}>
 							{/* <div className={classes.toolbar}> */}
-							<div style={{ margin: "10rem 10rem" }}>
+							<div style={{ margin: "4rem 0", display: "flex" }}>
 								<Route exact={true} path="/app">
 									{/* <div
 										style={{
@@ -276,6 +278,8 @@ class TimeKeeper extends React.Component {
 											Welcome back <b>{user.name}</b>
 										</Typography>
 									</div> */}
+								</Route>
+								<Route exact path="/app/personal-report">
 									<Calendar />
 								</Route>
 								{user.role === "admin" || user.role === "lead" ? (
@@ -290,8 +294,11 @@ class TimeKeeper extends React.Component {
 											<ProjectsPage />
 										</Route>
 										<Route path="/app/team-tracking">
-                      <TeamTimeTracking />
-                    </Route>
+											<TeamTimeTracking />
+										</Route>
+										<Route path="/app/dashboard">
+											<CompanyDashboard />
+										</Route>
 									</React.Fragment>
 								) : (
 									<React.Fragment>
