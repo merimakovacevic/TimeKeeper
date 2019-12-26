@@ -166,7 +166,7 @@ create or replace function personalDashboard(empId int, y int, m int)
 returns table (empId int, empName text, workingMonthly dec, workingYearly dec, sickMonthly int, sickYearly int)
 as 
 'select distinct e."Id", e."FirstName" || '' '' || e."LastName" as "Name",
-workingMonthly(empId, y, m)::decimal as "WorkingMonthly",
+coalesce(workingMonthly(empId, y, m),0)::decimal as "WorkingMonthly",
 workingYearly(empId, y)::decimal as "WorkingYearly",
 sickMonthly(empId, y, m)::int as "SickMonthly",
 sickYearly(empId, y)::int as "SickYearly"
