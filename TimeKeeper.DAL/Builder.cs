@@ -27,12 +27,14 @@ namespace TimeKeeper.DAL
 
         private static async Task BuildRelations(Customer entity, TimeKeeperContext context)
         {
+            if (entity.Image == null) entity.Image = "";
             entity.Status = await context.CustomerStatuses.FindAsync(entity.Status.Id);
         }
 
 
         private static async Task BuildRelations(Project entity, TimeKeeperContext context)
         {
+            if (entity.Description == null) entity.Description = "";
             entity.Team = await context.Teams.FindAsync(entity.Team.Id);
             entity.Customer = await context.Customers.FindAsync(entity.Customer.Id);
             entity.Status = await context.ProjectStatuses.FindAsync(entity.Status.Id);
@@ -41,6 +43,8 @@ namespace TimeKeeper.DAL
 
         private static async Task BuildRelations(Employee entity, TimeKeeperContext context)
         {
+            if (entity.Image == null) entity.Image = "";
+            entity.EndDate = new DateTime(1, 1, 1);
             entity.Position = await context.EmployeePositions.FindAsync(entity.Position.Id);
             entity.Status = await context.EmploymentStatuses.FindAsync(entity.Status.Id);
         }
