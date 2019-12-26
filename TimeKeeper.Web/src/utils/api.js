@@ -2,8 +2,8 @@ import axios from "axios";
 
 import { store } from "../index";
 
-// const url = "http://api-charlie.gigischool.rocks";
-const url = "http://localhost:8000";
+const url = "http://api-charlie.gigischool.rocks";
+// const url = "http://localhost:8000";
 
 export const loginUrl = `${url}/login`;
 export const employeesUrl = `${url}/api/employees`;
