@@ -98,7 +98,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Unit.Projects.Insert(project);
+                await Unit.Projects.InsertAsync(project);
                 await Unit.SaveAsync();
 
                 Logger.Info($"Project {project.Name} added with id {project.Id}");

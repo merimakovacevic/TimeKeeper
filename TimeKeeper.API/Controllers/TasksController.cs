@@ -77,7 +77,7 @@ namespace TimeKeeper.API.Controllers
                 Logger.Info($"Try to get task with {id}");
                 JobDetail task = await Unit.Tasks.GetAsync(id);
 
-                if (!resourceAccess.CanReadOrWriteTask(GetUserClaims(), task)) return Unauthorized();
+                if (!resourceAccess.HasRight(GetUserClaims(), task)) return Unauthorized();
                 return Ok(task.Create());
             }
             catch (Exception ex)
@@ -101,7 +101,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                if (!resourceAccess.CanReadOrWriteTask(GetUserClaims(), jobDetail)) return Unauthorized();
+                if (!resourceAccess.HasRight(GetUserClaims(), jobDetail)) return Unauthorized();
                 //This line will result in an null object reference exception, we cannot access properties of jobDetail.Day because they are null
                 //Logger.Info($"Task for employee {jobDetail.Day.Employee.FullName}, day {jobDetail.Day.Date} added with id {jobDetail.Id}");
                 await Unit.Tasks.InsertAsync(jobDetail);
@@ -133,7 +133,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                if (!resourceAccess.CanReadOrWriteTask(GetUserClaims(), jobDetail)) return Unauthorized();
+                if (!resourceAccess.HasRight(GetUserClaims(), jobDetail)) return Unauthorized();
                 Logger.Info($"Modified task with id {id}");
 
                 await Unit.Tasks.UpdateAsync(jobDetail, id);
@@ -158,12 +158,14 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        [Authorize(Policy = "IsAdmin")]
+        [Authorize(Policy = "AdminLeadOrOwner")]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
                 Logger.Info($"Attempt to delete task with id {id}");
+                JobDetail jobDetail = Unit.Tasks.Get(id);
+                if (!resourceAccess.HasRight(GetUserClaims(), jobDetail)) return Unauthorized();
                 await Unit.Tasks.DeleteAsync(id);
                 await Unit.SaveAsync();
 

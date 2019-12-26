@@ -18,13 +18,13 @@ namespace TimeKeeper.API.Authorization
            this.unit = unit;
            queryService = new QueryService(unit);
         }
-        public bool CanReadOrWriteTask(UserRoleModel userClaims, JobDetail newTask)
+        public bool HasRight(UserRoleModel userClaims, JobDetail newTask)
         {
-            Project project = unit.Projects.Get(newTask.Project.Id);
             Day day = unit.Calendar.Get(newTask.Day.Id);
-
-            if (userClaims.Role == "lead" && !project.Team.Members.Any(x => x.Employee.Id == userClaims.UserId) ||
-                userClaims.Role == "user" && !(day.Employee.Id == userClaims.UserId))
+            bool isTeamMember = queryService.GetEmployeeTeamMembers(userClaims.UserId).Any(x => x.Id == day.Employee.Id);
+            bool isUser = day.Employee.Id == userClaims.UserId;
+            if ((userClaims.Role == "lead" && !isTeamMember && !isUser) ||
+                (userClaims.Role == "user" && !isUser))
             {
                 return false;
             }
@@ -74,7 +74,10 @@ namespace TimeKeeper.API.Authorization
         }
         public bool CanWriteDay(UserRoleModel userClaims, Day newDay)
         {
-            if (userClaims.Role != "admin" && !(newDay.Employee.Id == userClaims.UserId))
+            bool isTeamMember = queryService.GetEmployeeTeamMembers(userClaims.UserId).Any(x => x.Id == newDay.Employee.Id);
+            bool isUser = newDay.Employee.Id == userClaims.UserId;
+            if ((userClaims.Role == "lead" && !isTeamMember && !isUser) ||
+                 (userClaims.Role == "user" && !isUser))
             {
                 return false;
             }
