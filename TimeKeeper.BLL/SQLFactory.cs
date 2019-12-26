@@ -22,7 +22,19 @@ namespace TimeKeeper.BLL
             if (typeof(Entity) == typeof(TeamRawModel)) return CreateTeamRawModel(sql) as List<Entity>;
             if (typeof(Entity) == typeof(TeamRawNonWorkingHoursModel)) return CreateTeamRawNonWorkingHours(sql) as List<Entity>;
             if (typeof(Entity) == typeof(TeamRawCountModel)) return TeamRawCountModel(sql) as List<Entity>;
+            if (typeof(Entity) == typeof(DateTime)) return CreateSickDaysList(sql) as List<Entity>;
             else return null;
+        }
+
+        private List<DateTime> CreateSickDaysList(DbDataReader sql)
+        {
+            List<DateTime> rawData = new List<DateTime>();
+            while (sql.Read())
+            {
+                DateTime date = sql.GetDateTime(0);
+                rawData.Add(date);
+            }
+            return rawData;
         }
 
         public List<TeamRawCountModel> TeamRawCountModel(DbDataReader sql)

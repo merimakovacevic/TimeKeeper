@@ -19,6 +19,7 @@ namespace TimeKeeper.BLL
         protected MasterModel empty;
         protected MasterModel weekend;
         protected MasterModel na;
+        protected StoredProcedureService storedProcedureService;
 
         public CalendarService(UnitOfWork unit) : base(unit)
         {
@@ -26,6 +27,7 @@ namespace TimeKeeper.BLL
             empty = new MasterModel { Id = 11, Name = "Empty" };
             weekend = new MasterModel { Id = 12, Name = "Weekend" };
             na = new MasterModel { Id = 13, Name = "N/A" };
+            storedProcedureService = new StoredProcedureService(unit);
         }                                        
 
         public List<DayModel> GetEmployeeMonth(int employeeId, int year, int month)
@@ -144,26 +146,37 @@ namespace TimeKeeper.BLL
 
         public decimal GetBradfordFactor(int employeeId, int year)
         {
-            List<DayModel> calendar = GetEmployeeCalendar(employeeId, year);
+            //List<DayModel> calendar = GetEmployeeCalendar(employeeId, year);
+            List<DateTime> sickDays = storedProcedureService.GetStoredProcedure<DateTime>("SickDays", new int[] { employeeId, year });
             //an absence instance are any number of consecutive absence days. 3 consecutive absence days make an instance.
             int absenceInstances = 0;
             int absenceDays = 0;
-            calendar = calendar.OrderBy(x => x.Date).ToList();
+            //calendar = calendar.OrderBy(x => x.Date).ToList();
 
             //Bradford factor calculates only dates until the present day, because the calendar in argument returns the whole period
-            absenceDays = calendar.Where(x => x.DayType.Name == "Sick" && x.Date < DateTime.Now).Count();
+            //absenceDays = calendar.Where(x => x.DayType.Name == "Sick" && x.Date < DateTime.Now).Count();
+            absenceDays = sickDays.Count();
 
-            for (int i = 0; i < calendar.Count; i++)
-            {
-                if (calendar[i].DayType.Name == "Sick" && calendar[i].Date < DateTime.Now)
+            for (int i = 0; i < sickDays.Count; i++)
+            {              
+                if (i == 0) absenceInstances++;
+                else
                 {
-                    if (i == 0) absenceInstances++;
-
-                    else if (calendar[i - 1].DayType.Name != "Sick")
+                    double dateDiff = (sickDays[i].Date - sickDays[i - 1].Date).TotalDays;
+                    if (dateDiff > 1)
                     {
-                        absenceInstances++;
+                        //checks if the timespan insn't a weekend
+                        if (dateDiff != 2)
+                        {
+                            absenceInstances++;
+                        }
+                        else if(sickDays[i].DayOfWeek == DayOfWeek.Friday)
+                        {
+                            absenceInstances++;
+                        }
                     }
                 }
+                
             }
             return (decimal)Math.Pow(absenceInstances, 2) * absenceDays;
         }
