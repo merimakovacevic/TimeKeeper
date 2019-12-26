@@ -3,7 +3,7 @@ import React from "react";
 import PieChart from "./PieChart";
 
 let data = {
-	totalHours: 168.0,
+	totalHours: 176.0,
 	totalWorkingHours: 0.0
 };
 

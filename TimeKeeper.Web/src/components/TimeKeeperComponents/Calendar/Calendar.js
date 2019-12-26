@@ -39,7 +39,7 @@ function CalendarDisplay(props) {
 	const [selectedTab, setSelectedTab] = useState(0);
 	const [editday, setEditDay] = useState(false);
 
-	console.log(props.reload);
+	// console.log(props.reload);
 	useEffect(() => {
 		props.getPersonalReport(employeeId, year, month);
 		props.loadCalendar(employeeId, year, month);
