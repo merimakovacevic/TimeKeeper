@@ -263,3 +263,13 @@ where extract(year from c."Date") = y
  group by me."Id", e."FirstName", e."LastName"'
 language sql;
 
+create or replace function SickDays(empId int, y int)
+returns table (sickDay date)
+as 
+'select  c."Date"::date as "Date"
+from 	"Calendar" as c
+where 	c."EmployeeId" = empId
+		and extract(year from c."Date") = y
+		and c."DayTypeId" = 5
+order by c."Date"'
+language sql;
