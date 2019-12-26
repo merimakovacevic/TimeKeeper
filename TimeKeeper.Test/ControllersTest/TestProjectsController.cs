@@ -6,6 +6,7 @@ using System.Text;
 using TimeKeeper.API.Controllers;
 using TimeKeeper.DTO;
 using TimeKeeper.Domain.Entities;
+using System.Threading.Tasks;
 
 namespace TimeKeeper.Test.ControllersTest
 {
@@ -13,11 +14,11 @@ namespace TimeKeeper.Test.ControllersTest
     class TestProjectsController : TestBaseTestDatabase
     {
         [Test, Order(1)]
-        public void GetAllProjects()
+        public async Task GetAllProjects()
         {
             var controller = new ProjectsController(unit.Context);
 
-            var response = controller.GetAll() as ObjectResult;
+            var response = await controller.GetAll() as ObjectResult;
             var value = response.Value as List<ProjectModel>;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -28,11 +29,11 @@ namespace TimeKeeper.Test.ControllersTest
         [TestCase(1, "Titanic Data Set")]
         [TestCase(2, "Loan Prediction")]
         [TestCase(3, "Image Net")]
-        public void GetProjectById(int id, string name)
+        public async Task GetProjectById(int id, string name)
         {
             var controller = new ProjectsController(unit.Context);
 
-            var response = controller.Get(id) as ObjectResult;
+            var response = await controller.Get(id) as ObjectResult;
             var value = response.Value as ProjectModel;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -40,18 +41,18 @@ namespace TimeKeeper.Test.ControllersTest
         }
 
         [Test, Order(2)]
-        public void GetProjectByWrongId()
+        public async Task GetProjectByWrongId()
         {
             int id = 40; //project with id 4 doesn't exist in the test database
             var controller = new ProjectsController(unit.Context);
 
-            var response = controller.Get(id) as ObjectResult;
+            var response = await controller.Get(id) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }
 
         [Test, Order(3)]
-        public void InsertProject()
+        public async Task InsertProject()
         {
             var controller = new ProjectsController(unit.Context);
 
@@ -64,7 +65,7 @@ namespace TimeKeeper.Test.ControllersTest
                 Pricing = unit.PricingStatuses.Get(1)
             };
 
-            var response = controller.Post(project) as ObjectResult;
+            var response = await controller.Post(project) as ObjectResult;
             var value = response.Value as ProjectModel;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -72,7 +73,7 @@ namespace TimeKeeper.Test.ControllersTest
         }
 
         [Test, Order(4)]
-        public void ChangeProjectName()
+        public async Task ChangeProjectName()
         {
             var controller = new ProjectsController(unit.Context);
             int id = 3;//Try to change the project with id 3
@@ -87,7 +88,7 @@ namespace TimeKeeper.Test.ControllersTest
                 Pricing=unit.PricingStatuses.Get(1)
             };
 
-            var response = controller.Put(id, project) as ObjectResult;
+            var response = await controller.Put(id, project) as ObjectResult;
             var value = response.Value as ProjectModel;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -95,7 +96,7 @@ namespace TimeKeeper.Test.ControllersTest
         }
 
         [Test, Order(5)]
-        public void ChangeProjectWithWrongId()
+        public async Task ChangeProjectWithWrongId()
         {
             var controller = new ProjectsController(unit.Context);
             int id = 40;//Try to change the project with id (doesn't exist)
@@ -110,13 +111,13 @@ namespace TimeKeeper.Test.ControllersTest
                 Pricing = unit.PricingStatuses.Get(1)
             };
 
-            var response = controller.Put(id, project) as ObjectResult;
+            var response = await controller.Put(id, project) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }
 
         [Test, Order(6)]
-        public void ChangeProjectStatus()
+        public async Task ChangeProjectStatus()
         {
             var controller = new ProjectsController(unit.Context);
             int id = 2;//Try to change the project with id
@@ -132,14 +133,14 @@ namespace TimeKeeper.Test.ControllersTest
                 Pricing = unit.PricingStatuses.Get(1)
             };
 
-            var response = controller.Put(id, project) as ObjectResult;
+            var response = await controller.Put(id, project) as ObjectResult;
             var value = response.Value as ProjectModel;
 
             Assert.AreEqual(200, response.StatusCode);
             Assert.AreEqual(statusId, value.Status.Id);
         }
         [Test, Order(7)]
-        public void ChangeProjectsTeam()
+        public async Task ChangeProjectsTeam()
         {
             var controller = new ProjectsController(unit.Context);
             int id = 2;//Try to change the project with id
@@ -155,14 +156,14 @@ namespace TimeKeeper.Test.ControllersTest
                 Pricing = unit.PricingStatuses.Get(1)
             };
 
-            var response = controller.Put(id, project) as ObjectResult;
+            var response = await controller.Put(id, project) as ObjectResult;
             var value = response.Value as ProjectModel;
 
             Assert.AreEqual(200, response.StatusCode);
             Assert.AreEqual(teamId, value.Team.Id);
         }
         [Test, Order(8)]
-        public void ChangeProjectsEndDate()
+        public async Task ChangeProjectsEndDate()
         {
             var controller = new ProjectsController(unit.Context);
             int id = 2;//Try to change the project with id
@@ -179,7 +180,7 @@ namespace TimeKeeper.Test.ControllersTest
                 EndDate=endDate
             };
 
-            var response = controller.Put(id, project) as ObjectResult;
+            var response = await controller.Put(id, project) as ObjectResult;
             var value = response.Value as ProjectModel;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -187,24 +188,24 @@ namespace TimeKeeper.Test.ControllersTest
         }
 
         [Test, Order(9)]
-        public void DeleteProject()
+        public async Task DeleteProject()
         {
             var controller = new ProjectsController(unit.Context);
             int id = 3;//Try to delete the project with id 3
 
-            var response = controller.Delete(id) as StatusCodeResult;
+            var response = await controller.Delete(id) as StatusCodeResult;
 
             Assert.AreEqual(204, response.StatusCode);
 
         }
 
         [Test, Order(10)]
-        public void DeleteProjectWithWrongId()
+        public async Task DeleteProjectWithWrongId()
         {
             var controller = new ProjectsController(unit.Context);
             int id = 40;//Try to delete the project with id (doesn't exist)
 
-            var response = controller.Delete(id) as ObjectResult;
+            var response = await controller.Delete(id) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }

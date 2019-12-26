@@ -15,6 +15,19 @@ import styles from "../../../styles/EmployeesPageStyles";
 import PersonalReport from "../PersonalReport/PersonalReport";
 import Wrapper from "../UI/Wrapper";
 
+let calendarData = [
+	{ id: 1, name: "Dream Client Site" },
+	{ id: 2, name: "Local Business" },
+	{ id: 3, name: "Improved Mobile Product" },
+	{ id: 4, name: "Theme for WordPress" },
+	{ id: 5, name: "Branding Package" },
+	{ id: 6, name: "Icon Set" },
+	{ id: 7, name: "365 Design" },
+	{ id: 8, name: "Newsletter Template" },
+	{ id: 9, name: "Titanic Data Set" },
+	{ id: 10, name: "Loan Prediction" }
+];
+
 function CalendarDisplay(props) {
 	const { classes } = props;
 	const [date, setDate] = useState(new Date(2019, 5, 6, 10, 33, 30, 0));
@@ -22,19 +35,24 @@ function CalendarDisplay(props) {
 	const [month, setMonth] = useState(moment(date).format("MM"));
 	const [day, setDay] = useState(moment(date).format("DD"));
 	const [employeeId] = useState(props.user.user.id);
-	const [projects, setProjects] = useState([]);
+	const [projects, setProjects] = useState(calendarData);
 	const [selectedTab, setSelectedTab] = useState(0);
 	const [editday, setEditDay] = useState(false);
 
-	//console.log(props.reload);
+	console.log(props.reload);
 	useEffect(() => {
 		props.getPersonalReport(employeeId, year, month);
+		props.loadCalendar(employeeId, year, month);
 	}, [month]);
 
 	useEffect(() => {
-		apiGetAllRequest(projectsUrl).then((res) => {
-			setProjects(res.data.data);
-		});
+		// apiGetAllRequest(projectsUrl).then((res) => {
+		// 	console.log(res.data.data);
+		// 	setProjects(res.data.data);
+		// });
+
+		props.getPersonalReport(employeeId, year, month);
+		// console.log("reload");
 
 		props.loadCalendar(employeeId, year, month);
 		if (props.calendarMonth) {
@@ -84,7 +102,19 @@ function CalendarDisplay(props) {
 
 	return (
 		<React.Fragment>
-			<Backdrop open={editday} />
+			{editday ? (
+				<div
+					style={{
+						width: "98.9vw",
+						height: "98vh",
+						zIndex: "15",
+						position: "absolute",
+						bottom: "0",
+						right: "0",
+						background: "rgba(0,0,0,0.4)"
+					}}
+				></div>
+			) : null}
 			<div style={{ display: "flex" }}>
 				<Calendar onChange={onChange} value={date} className="react-calendar" />
 
@@ -112,7 +142,7 @@ function CalendarDisplay(props) {
 						</div>
 					)}
 				</React.Fragment>
-				{console.log(editday)}
+
 				<Wrapper open={editday}>
 					{props.calendarMonth &&
 					moment(props.calendarMonth[day - 1].date).format("YYYY-MM-DD") ===
@@ -123,7 +153,8 @@ function CalendarDisplay(props) {
 								position: "absolute",
 								top: "50%",
 								left: "50%",
-								transform: "translate(-50%, -50%)"
+								transform: "translate(-50%, -50%)",
+								zIndex: 1000
 							}}
 						>
 							<CalendarModal
@@ -148,13 +179,14 @@ function CalendarDisplay(props) {
 								top: "50%",
 								left: "50%",
 								transform: "translate(-50%, -50%)",
-								textAlign: "center"
+								textAlign: "center",
+								zIndex: 1500
 							}}
 						>
-							<Typography variant="h6" gutterBottom>
-								Fetching day data...
-							</Typography>
-							<CircularProgress />
+							<div className={classes.center}>
+								<CircularProgress size={100} className={classes.loader} />
+								<h1 className={classes.loaderText}>Fetching month data...</h1>
+							</div>
 						</div>
 					)}
 				</Wrapper>

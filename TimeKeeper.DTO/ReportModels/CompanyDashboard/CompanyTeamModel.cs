@@ -6,8 +6,8 @@ namespace TimeKeeper.DTO.ReportModels.CompanyDashboard
 {
     public class CompanyTeamModel
     {
-        public int TeamId { get; set; }
-        public string TeamName { get; set; }
+        public MasterModel Team { get; set; }
+        public decimal MissingEntries { get; set; }
         public decimal PaidTimeOff { get; set; }
         public decimal Overtime { get; set; }
     }

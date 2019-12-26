@@ -12,7 +12,14 @@ import {
 	ADD_DAY_WITH_TASK_SUCCESS,
 	ADD_DAY_SUCCESS,
 	RELOAD_CALENDAR,
-	ADD_DAY_FAIL
+	ADD_DAY_FAIL,
+	DAY_EDITED_FAIL,
+	DAY_EDITED_SUCCESS,
+	TASK_ADD_START,
+	ADD_DAY_WITH_TASK_START,
+	TASK_DELETE_START,
+	TASK_EDITED_START,
+	ADD_DAY_START
 } from "../actions/actionTypes";
 import { getCalendar, apiPutRequest, tasksUrl, apiPostRequest, apiDeleteRequest, calendarUrl } from "./../../utils/api";
 
@@ -33,9 +40,11 @@ export const loadCalendar = (id, year, month) => {
 
 export const editTask = (id, body) => {
 	return (dispatch) => {
+		dispatch({ type: TASK_EDITED_START });
 		apiPutRequest(tasksUrl, id, body)
 			.then((res) => {
 				// console.log(res);
+				dispatch(rldCal(true));
 				dispatch({ type: TASK_EDITED_SUCCESS });
 			})
 			.catch((err) => {
@@ -46,9 +55,11 @@ export const editTask = (id, body) => {
 
 export const addTask = (body) => {
 	return (dispatch) => {
+		dispatch({ type: TASK_ADD_START });
 		apiPostRequest(tasksUrl, body)
 			.then((res) => {
 				// console.log(res);
+				dispatch(rldCal(true));
 				dispatch({ type: TASK_ADD_SUCCESS });
 			})
 			.catch((err) => {
@@ -59,13 +70,15 @@ export const addTask = (body) => {
 
 export const deleteTask = (id) => {
 	return (dispatch) => {
+		dispatch({ type: TASK_DELETE_START });
 		apiDeleteRequest(tasksUrl, id)
 			.then((res) => {
-				// console.log(res);
+				//console.log(res);
+				dispatch(rldCal(true));
 				dispatch({ type: TASK_DELETE_SUCCESS });
 			})
 			.catch((err) => {
-				// console.log(err);
+				//console.log(err);
 				dispatch({ type: TASK_DELETE_FAIL });
 			});
 	};
@@ -74,8 +87,10 @@ export const deleteTask = (id) => {
 export const addDay = (body) => {
 	return async (dispatch) => {
 		dispatch({ type: LOAD_CALENDAR_MONTH });
+		dispatch({ type: ADD_DAY_START });
 		apiPostRequest(calendarUrl, body)
 			.then((res) => {
+				dispatch(rldCal(true));
 				dispatch({ type: ADD_DAY_SUCCESS, data: res.data });
 			})
 			.catch((err) => {
@@ -87,8 +102,10 @@ export const addDay = (body) => {
 
 export const addDayWithTask = (day, task) => {
 	return (dispatch) => {
+		dispatch({ type: ADD_DAY_WITH_TASK_START });
 		apiPostRequest(calendarUrl, day)
 			.then((res) => {
+				dispatch(rldCal(true));
 				console.log("Added day", res.data.data.id);
 				dispatch({ type: ADD_DAY_SUCCESS, data: res.data });
 				let data = {
@@ -103,6 +120,7 @@ export const addDayWithTask = (day, task) => {
 				};
 				apiPostRequest(tasksUrl, data)
 					.then((res) => {
+						dispatch(rldCal(true));
 						dispatch({ type: ADD_DAY_WITH_TASK_SUCCESS, data: res.data });
 					})
 					.catch((err) => {
@@ -121,5 +139,18 @@ export const rldCal = (value) => {
 	return {
 		type: RELOAD_CALENDAR,
 		value
+	};
+};
+
+export const editDay = (id, body) => {
+	return (dispatch) => {
+		apiPutRequest(calendarUrl, id, body)
+			.then((res) => {
+				// console.log("EDITED DAY RES", res);
+				dispatch({ type: DAY_EDITED_SUCCESS });
+			})
+			.catch((err) => {
+				dispatch({ type: DAY_EDITED_FAIL, error: err });
+			});
 	};
 };

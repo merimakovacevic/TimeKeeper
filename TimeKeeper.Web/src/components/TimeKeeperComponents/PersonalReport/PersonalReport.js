@@ -1,6 +1,6 @@
 import React from "react";
 
-import PieChart from "../Charts/PieChart";
+import PieChart from "./PieChart";
 
 let data = {
 	totalHours: 168.0,
@@ -13,6 +13,7 @@ let yearData = {
 };
 
 const TotalHoursChart = (props) => {
+	// console.log(props);
 	if (props.personalData) {
 		// console.log(props.personalData.personalDashboardHours.workingMonthly);
 		data.totalWorkingHours = props.personalData.personalDashboardHours.workingMonthly;

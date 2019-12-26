@@ -1,21 +1,21 @@
 import * as V from "victory";
 import React from "react";
-import data from "../CompanyDashboard/data";
+// import data from "../CompanyDashboard/data";
 import { VictoryBar, VictoryChart, VictoryAxis, VictoryTheme } from "victory";
 
 class BarChart extends React.Component {
 	static defaultProps = {
-		height: 250,
-		width: 250,
+		height: 500,
+		width: 500,
 		domainPadding: 20,
 		horizontal: false,
-		data, // {name: "", value: ""} pairs
 		angle: 45,
 		labelPadding: 40,
 		fontSize: 14
 	};
 	render() {
 		const { height, width, domainPadding, horizontal, data, angle, labelPadding, fontSize } = this.props;
+		//console.log(data)
 		return (
 			<div style={{ height: height + "px", width: width + "px" }}>
 				<VictoryChart
@@ -46,9 +46,10 @@ class BarChart extends React.Component {
 					/>
 					<VictoryBar
 						animate={{
-							duration: 2000,
-							onLoad: { duration: 1000 }
+							duration: 0,
+							onLoad: { duration: 0 }
 						}}
+						label="heheh"
 						data={data}
 						x="name"
 						y="value"

@@ -18,7 +18,8 @@ import {
 	monthReducer,
 	teamsReducer,
 	teamTrackingReducer,
-	personalReportReducer
+	personalReportReducer,
+	companyDashboard
 } from "./reducers/index";
 
 const rootReducer = combineReducers({
@@ -31,7 +32,8 @@ const rootReducer = combineReducers({
 	teamTracking: teamTrackingReducer,
 	year: yearReducer,
 	month: monthReducer,
-	personalReportReducer
+	personalReportReducer,
+	companyDashboard
 });
 
 const configureStore = () => {

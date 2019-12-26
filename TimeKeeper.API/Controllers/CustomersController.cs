@@ -38,7 +38,7 @@ namespace TimeKeeper.API.Controllers
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        [Authorize(Policy = "IsAdmin")]
+        [Authorize(Policy = "AdminOrLeader")]
         public async Task<IActionResult> GetAll(int page = 1, int pageSize = 5)
         {
             try
@@ -46,36 +46,9 @@ namespace TimeKeeper.API.Controllers
                 Logger.Info($"Try to fetch ${pageSize} customers from page ${page}");
 
                 Tuple<PaginationModel, List<Customer>> customersPagination;
-
-                string userRole = GetUserClaim("role");
-                if (userRole == "user") return Unauthorized();
-
+                
                 List<Customer> query;
-
-                if (userRole == "lead")
-                {
-                    var empid = int.Parse(GetUserClaim("sub"));
-                    var employee =await  Unit.Employees.GetAsync(empid);
-                    var teams = employee.Members.GroupBy(x => x.Team.Id).Select(y => y.Key).ToList();
-                    List<Project> projects = new List<Project>();
-
-                    foreach (var team in teams)
-                    {
-                        projects.AddRange(Unit.Projects.Get(x => x.Team.Id == team));
-                    }
-
-                    query = new List<Customer>();
-
-                    foreach (var project in projects)
-                    {
-                        query.Add(project.Customer);
-                    }
-                }
-                else
-                {
-                    var task = await Unit.Customers.GetAsync();
-                    query = task.ToList();
-                }
+                query = await resourceAccess.GetAuthorizedCustomers(GetUserClaims());
 
                 customersPagination = _pagination.CreatePagination(page, pageSize, query);
                 HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(customersPagination.Item1));
@@ -129,7 +102,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Unit.Customers.InsertAsync(customer);
+                await Unit.Customers.InsertAsync(customer);
                 await Unit.SaveAsync();
                 Logger.Info($"Customer {customer.Name} added with id {customer.Id}");
                 return Ok(customer.Create());
@@ -189,8 +162,8 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info($"Attempt to delete customer with id {id}");
-                Unit.Customers.DeleteAsync(id);
-                Unit.SaveAsync();
+                await Unit.Customers.DeleteAsync(id);
+                await Unit.SaveAsync();
 
                 Logger.Info($"Customer with id {id} deleted");
                 return NoContent();

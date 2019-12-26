@@ -4,6 +4,8 @@ using System.Data.Common;
 using System.Text;
 using TimeKeeper.DTO.ReportModels.AnnualOverview;
 using TimeKeeper.DTO.ReportModels.CompanyDashboard;
+using TimeKeeper.DTO.ReportModels.PersonalDashboard;
+using TimeKeeper.DTO.ReportModels.TeamDashboard;
 
 namespace TimeKeeper.BLL
 {
@@ -16,9 +18,72 @@ namespace TimeKeeper.BLL
             if (typeof(Entity) == typeof(CompanyRolesRawModel)) return CreateCompanyRoles(sql) as List<Entity>;
             if (typeof(Entity) == typeof(CompanyOvertimeModel)) return CreateCompanyOvertime(sql) as List<Entity>;
             if (typeof(Entity) == typeof(CompanyEmployeeHoursModel)) return CreateEmployeeHours(sql) as List<Entity>;
-
+            if (typeof(Entity) == typeof(PersonalDashboardRawModel)) return CreatePersonalRawModel(sql) as List<Entity>;
+            if (typeof(Entity) == typeof(TeamRawModel)) return CreateTeamRawModel(sql) as List<Entity>;
+            if (typeof(Entity) == typeof(TeamRawNonWorkingHoursModel)) return CreateTeamRawNonWorkingHours(sql) as List<Entity>;
+            if (typeof(Entity) == typeof(TeamRawCountModel)) return TeamRawCountModel(sql) as List<Entity>;
             else return null;
-        }        
+        }
+
+        public List<TeamRawCountModel> TeamRawCountModel(DbDataReader sql)
+        {
+            List<TeamRawCountModel> rawData = new List<TeamRawCountModel>();
+            while (sql.Read())
+            {
+                rawData.Add(new TeamRawCountModel
+                {
+                    ProjectId = sql.GetInt32(0)
+                });
+            }
+            return rawData;
+        }
+
+        private List<TeamRawNonWorkingHoursModel> CreateTeamRawNonWorkingHours(DbDataReader sql)
+        {
+            List<TeamRawNonWorkingHoursModel> rawData = new List<TeamRawNonWorkingHoursModel>();
+            while (sql.Read())
+            {
+                rawData.Add(new TeamRawNonWorkingHoursModel
+                {
+                    MemberId = sql.GetInt32(0),
+                    Value = sql.GetDecimal(1)
+                });
+            }
+            return rawData;
+        }
+
+        private List<TeamRawModel> CreateTeamRawModel(DbDataReader sql)
+        {
+            List<TeamRawModel> rawData = new List<TeamRawModel>();
+            while (sql.Read())
+            {
+                rawData.Add(new TeamRawModel
+                {
+                    EmployeeId = sql.GetInt32(0),
+                    EmployeeName = sql.GetString(1),
+                    Value = sql.GetDecimal(2)
+                });
+            }
+            return rawData;
+        }
+
+        private List<PersonalDashboardRawModel> CreatePersonalRawModel(DbDataReader sql)
+        {
+            List<PersonalDashboardRawModel> rawData = new List<PersonalDashboardRawModel>();
+            while (sql.Read())
+            {
+                rawData.Add(new PersonalDashboardRawModel
+                {
+                    EmployeeId = sql.GetInt32(0),
+                    EmployeeName = sql.GetString(1),
+                    WorkingMonthly = sql.GetDecimal(2),
+                    WorkingYearly = sql.GetDecimal(3),
+                    SickMonthly = sql.GetInt32(4),
+                    SickYearly = sql.GetInt32(5)
+                });
+            }
+            return rawData;
+        }
 
         private List<CompanyDashboardRawModel> CreateCompanyRawModel(DbDataReader sql)
         {

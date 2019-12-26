@@ -8,7 +8,7 @@ import axios from "axios";
 
 import { apiDeleteRequest, calendarUrl } from "../../../../utils/api";
 
-import { addDay, editTask } from "../../../../store/actions/index";
+import { addDay, editTask, editDay } from "../../../../store/actions/index";
 
 function CalendarAbsent(props) {
 	// useEffect(() => {}, [props.value, props.day]);
@@ -22,34 +22,24 @@ function CalendarAbsent(props) {
 				}}
 				onSubmit={(values) => {
 					console.log("ON SUBMIT", props.value, props.user.id, props.day.date);
-					// const data = {
-					// 	dayType: {
-					// 		id: props.value
-					// 	},
-					// 	employee: {
-					// 		id: props.user.id
-					// 	},
-					// 	date: props.day.date
-					// };
-					//console.log("ADD DAY DATA", data);
-					// props.addDay(data);
-					///////////////////////////////
 					let data = {
-						id: 12603,
-						employee: {
-							id: 1,
-							name: "Michael Jones"
-						},
-						date: "2019-06-06T00:00:00",
 						dayType: {
-							id: 1
+							id: props.value
 						},
-						totalHours: 8.0,
-						jobDetails: []
+						employee: {
+							id: props.user.id
+						},
+						date: props.day.date,
+						totalHours: 0
 					};
-					console.log(data);
-
-					props.editTask(12603, data);
+					console.log("ADD DAY DATA", data);
+					if (props.day.id === 0) {
+						props.addDay(data);
+					} else {
+						data.id = props.day.id;
+						console.log("DATA BEFORE EDITING DAY", data);
+						props.editDay(props.day.id, data);
+					}
 				}}
 			>
 				{true ? (
@@ -80,4 +70,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, { addDay, editTask })(withRouter(CalendarAbsent));
+export default connect(mapStateToProps, { addDay, editTask, editDay })(withRouter(CalendarAbsent));

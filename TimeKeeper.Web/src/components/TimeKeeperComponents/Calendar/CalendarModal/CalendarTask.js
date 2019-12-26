@@ -97,11 +97,6 @@ function CalendarTask(props) {
 			}}
 		>
 			<Form>
-				<Grid container alignItems="center" className="mb-1-5">
-					<span>{moment(props.day.date).format("YYYY-MM-DD")}</span>
-
-					<TodayIcon />
-				</Grid>
 				<Fragment>
 					<Grid container spacing={4} alignItems="center">
 						<Grid item xs={3}>

@@ -39,18 +39,15 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-            //    Logger.Info($"Try to fetch ${pageSize} employees from page ${page}");
-
-            //    Tuple<PaginationModel, List<Employee>> employeesPagination = _pagination.CreatePagination(page, pageSize, Unit.Employees.Get());
-
-            //    HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(employeesPagination.Item1));
-            //    return Ok(employeesPagination.Item2.ToList().Select(x => x.Create()).ToList());
-
-                DateTime start = DateTime.Now;
+                Logger.Info($"Try to fetch ${pageSize} employees from page ${page}");
                 var task = await Unit.Employees.GetAsync();
-                var query = task.ToList().Select(x => x.Create()).ToList();
-                DateTime final = DateTime.Now;
-                return Ok(new { dif = final - start, query });
+                var query = task.ToList();
+
+                Tuple<PaginationModel, List<Employee>> employeesPagination = _pagination.CreatePagination(page, pageSize,query);
+
+                HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(employeesPagination.Item1));
+                return Ok(employeesPagination.Item2.ToList().Select(x => x.Create()).ToList());
+
             }
             catch (Exception ex)
             {
@@ -118,12 +115,12 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 await Unit.Employees.InsertAsync(employee);
-                Unit.Save();
+                await Unit.SaveAsync();
 
                 //User insertion is coupled to employee insertion
                 User user = employee.CreateUser();
 
-                Unit.Users.Insert(user);
+                await Unit.Users.InsertAsync(user);
                 await Unit.SaveAsync();
 
                 Logger.Info($"Employee {employee.FirstName} {employee.LastName} added with id {employee.Id}");
@@ -151,20 +148,13 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info($"Attempt to update employee with id {id}");
-                int userId = int.Parse(GetUserClaim("sub"));
-                string userRole = GetUserClaim("role");
+                if (!resourceAccess.CanWriteEmployee(GetUserClaims(), employee)) return Unauthorized();
 
-                if (userRole == "admin" || employee.Id == userId)
-                {
-                    Unit.Employees.Update(employee, id);
-                    await Unit.SaveAsync();
-                    Logger.Info($"Employee {employee.FirstName} {employee.LastName} with id {employee.Id} updated");
-                    return Ok(employee.Create());
-                }
-                else
-                {
-                    return Unauthorized();
-                }
+                await Unit.Employees.UpdateAsync(employee, id);
+                await Unit.SaveAsync();
+                Logger.Info($"Employee {employee.FirstName} {employee.LastName} with id {employee.Id} updated");
+                return Ok(employee.Create());
+
             }
             catch (Exception ex)
             {
@@ -190,7 +180,7 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info($"Attempt to delete employee with id {id}");
-                Unit.Employees.DeleteAsync(id);
+                await Unit.Employees.DeleteAsync(id);
                 await Unit.SaveAsync();
 
                 Logger.Info($"Employee with id {id} deleted");

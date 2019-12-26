@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TimeKeeper.API.Authorization;
 using TimeKeeper.BLL;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
@@ -62,21 +63,10 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                int userId = int.Parse(GetUserClaim("sub"));
-                string userRole = GetUserClaim("role");
-
                 Logger.Info($"Try to get day with {id}");
-                Day day = Unit.Calendar.Get(id);
-                if (day == null)
-                {
-                    // make extension method and implement it
-                    return NotFound($"Requested resource with {id} does not exist");
-                }
-                if (userRole == "admin" && !day.JobDetails.Any(x => x.Project.Team.Members.Any(y => y.Employee.Id == userId)) ||
-                    userRole == "user" && !day.JobDetails.Any(x => x.Project.Team.Members.Any(y => y.Employee.Id == userId)))
-                {
-                    return Unauthorized();
-                }
+                Day day = await Unit.Calendar.GetAsync(id);
+
+                if (!resourceAccess.CanReadDay(GetUserClaims(), day)) return Unauthorized(); 
                 return Ok(day.Create());
             }
             catch (Exception ex)
@@ -99,14 +89,9 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                int userId = int.Parse(GetUserClaim("sub"));
-                string userRole = GetUserClaim("role");
-                Logger.Info("Try to insert new day");
-                if (userRole != "admin" && !(day.Employee.Id == userId))
-                {
-                    return Unauthorized();
-                }
+                if(!resourceAccess.CanWriteDay(GetUserClaims(), day)) return Unauthorized();
                 await Unit.Calendar.InsertAsync(day);
+
                 await Unit.SaveAsync();
                 Logger.Info($"Day {day.Date} added with id {day.Id}");
                 Day createdDay = Unit.Calendar.Get(day.Id);
@@ -133,15 +118,9 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Logger.Info($"Attempt to update day with id {id}");
-                int userId = int.Parse(GetUserClaim("sub"));
-                string userRole = GetUserClaim("role");
+                if (!resourceAccess.CanWriteDay(GetUserClaims(), day)) return Unauthorized();
+                await Unit.Calendar.UpdateAsync(day, id);
 
-                if (userRole != "admin" && !(day.Employee.Id == userId))
-                {
-                    return Unauthorized();
-                }
-                Unit.Calendar.UpdateAsync(day, id);
                 await Unit.SaveAsync();
                 Logger.Info($"Changed day with id {id}");
                 return Ok(day.Create());
@@ -170,7 +149,7 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info($"Attempt to delete day with id {id}");
-                Unit.Calendar.DeleteAsync(id);
+                await Unit.Calendar.DeleteAsync(id);
                 await Unit.SaveAsync();
 
                 Logger.Info($"Deleted day with id {id}");

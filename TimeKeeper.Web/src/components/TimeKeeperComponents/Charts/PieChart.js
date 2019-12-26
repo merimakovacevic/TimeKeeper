@@ -25,8 +25,8 @@ import { VictoryPie, VictoryChart, VictoryAxis, VictoryTheme, VictoryLabel } fro
 
 class PieChart extends React.Component {
 	static defaultProps = {
-		height: 350,
-		width: 350,
+		height: 250,
+		width: 250,
 		padding: 50,
 		innerRadius: 75,
 		fontSize: 24,
@@ -36,6 +36,7 @@ class PieChart extends React.Component {
 	};
 	render() {
 		const { height, width, padding, innerRadius, fontSize, padAngle, data, title } = this.props;
+		// console.log(data);
 		return (
 			<div style={{ height: height + "px", width: width + "px", position: "relative" }}>
 				<VictoryPie
@@ -48,8 +49,8 @@ class PieChart extends React.Component {
 						}
 					}}
 					animate={{
-						duration: 11500,
-						onLoad: { duration: 10000 }
+						duration: 0,
+						onLoad: { duration: 0 }
 					}}
 					padAngle={padAngle}
 					data={data}

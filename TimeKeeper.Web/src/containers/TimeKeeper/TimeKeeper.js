@@ -36,7 +36,7 @@ import EmployeesPage from "../../components/TimeKeeperComponents/EmployeesPage/E
 import CustomersPage from "../../components/TimeKeeperComponents/CustomersPage/CustomersPage";
 import ProjectsPage from "../../components/TimeKeeperComponents/ProjectsPage/ProjectsPage";
 import TeamTimeTracking from "../../containers/TimeKeeper/TeamTimeTracking/TeamTimeTracking";
-import CompanyDashboard from "../../components/TimeKeeperComponents/CompanyDashboard/CompanyDashboard";
+import CompanyDashboard from "../../components/TimeKeeperComponents/CompanyDashboardReport/CompanyDashboard";
 import PersonalReport from "../../components/TimeKeeperComponents/PersonalReport/PersonalReport";
 
 class TimeKeeper extends React.Component {
@@ -61,12 +61,12 @@ class TimeKeeper extends React.Component {
 			} else if (role === "admin") {
 				this.setState({ database: ["Employees", "Projects", "Customers", "Teams"] });
 				this.setState({
-					reports: ["Personal Report", "Monthly Report", "Annual Report", "Project History", "Dashboard"]
+					reports: ["Personal Report", "Monthly Report", "Annual Report", "Dashboard"]
 				});
 			} else {
 				this.setState({ database: ["Employees", "Teams", "Projects"] });
 				this.setState({
-					reports: ["Personal Report", "Monthly Report", "Annual Report", "Project History", "Dashboard"]
+					reports: ["Personal Report", "Monthly Report", "Annual Report", "Dashboard"]
 				});
 			}
 		}
@@ -159,8 +159,10 @@ class TimeKeeper extends React.Component {
 										style={{ top: "40px" }}
 										className={classes.menu}
 									>
-										<MenuItem onClick={handleClose}>Calendar</MenuItem>
-										<MenuItem onClick={handleClose}>My Profile</MenuItem>
+										<MenuItem onClick={() => this.props.history.replace("/app/personal-report")}>
+											Calendar
+										</MenuItem>
+
 										<MenuItem onClick={logout}>Log Out</MenuItem>
 									</Menu>
 								</div>

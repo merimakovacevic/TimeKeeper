@@ -42,21 +42,9 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                int userId = int.Parse(GetUserClaim("sub"));
-                string userRole = GetUserClaim("role");
-
                 Tuple<PaginationModel, List<Member>> membersPagination;
-                List<Member> query;
+                List<Member> query = await resourceAccess.GetAuthorizedMembers(GetUserClaims());
 
-                if (userRole == "user")
-                {
-                    var task = await Unit.Members.GetAsync(x => x.Team.Members.Any(y => y.Employee.Id == userId));
-                    query = task.ToList();
-                }
-                else
-                {
-                   query = queryService.GetTeamMembers(userId);
-                }
                 membersPagination = _pagination.CreatePagination(page, pageSize, query);
                 HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(membersPagination));
                 return Ok(membersPagination.Item2.Select(x => x.Create()).ToList());
@@ -83,20 +71,10 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                int userId = int.Parse(GetUserClaim("sub"));
-                string userRole = GetUserClaim("role");
-
                 Logger.Info($"Try to get member with {id}");
                 Member member = await Unit.Members.GetAsync(id);
-                if (member == null)
-                {
-                    return NotFound($"Requested resource with {id} does not exist");
-                }
-                if (userRole == "user" && !member.Team.Members.Any(x => x.Employee.Id == userId))
-                {
-                    return Unauthorized();
-                }
-                else
+
+                if (!resourceAccess.CanReadMember(GetUserClaims(), member)) return Unauthorized();                
                 return Ok(member.Create());
             }
             catch(Exception ex)
@@ -120,15 +98,9 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                int userId = int.Parse(GetUserClaim("sub"));
-                string userRole = GetUserClaim("role");
-
                 Logger.Info("Trying to post new member");
-                if (userRole == "lead" && !member.Team.Members.Any(x => x.Employee.Id == userId))
-                {
-                    return Unauthorized();
-                }
-                Unit.Members.InsertAsync(member);
+                if (!resourceAccess.CanWriteMember(GetUserClaims(), member)) return Unauthorized();
+                await Unit.Members.InsertAsync(member);
                 await Unit.SaveAsync();
                 Logger.Info($"Member {member.Employee.FirstName} added with id {member.Id}");
                 return Ok(member.Create());
@@ -155,7 +127,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Unit.Members.UpdateAsync(member, id);
+                await Unit.Members.UpdateAsync(member, id);
                 await Unit.SaveAsync();
 
                 Logger.Info($"Changed member with id {id}");

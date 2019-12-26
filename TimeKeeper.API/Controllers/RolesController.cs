@@ -86,7 +86,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Unit.Roles.InsertAsync(role);
+                await Unit.Roles.InsertAsync(role);
                 await Unit.SaveAsync();
                 Logger.Info($"Role added with id {role.Id}");
                 return Ok(role.Create());
@@ -113,7 +113,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Unit.Roles.UpdateAsync(role, id);
+                await Unit.Roles.UpdateAsync(role, id);
                 await Unit.SaveAsync();
 
                 Logger.Info($"Changed role with id {id}");
@@ -143,7 +143,7 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info($"Attempt to delete role with id {id}");
-                Unit.Roles.DeleteAsync(id);
+                await Unit.Roles.DeleteAsync(id);
                 await Unit.SaveAsync();
 
                 Logger.Info($"Deleted role with id {id}");

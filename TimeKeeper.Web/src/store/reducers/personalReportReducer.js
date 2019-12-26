@@ -1,4 +1,4 @@
-import { PERSONAL_REPORT_START, PERSONAL_REPORT_SUCCESS } from "../actions/actionTypes";
+import { PERSONAL_REPORT_START, PERSONAL_REPORT_SUCCESS, PERSONAL_REPORT_FAIL } from "../actions/actionTypes";
 
 const initialUserState = {
 	data: null,
@@ -18,6 +18,11 @@ export const personalReportReducer = (state = initialUserState, action) => {
 				...state,
 				loading: false,
 				data: action.data
+			};
+		case PERSONAL_REPORT_FAIL:
+			return {
+				...state,
+				loading: false
 			};
 		default:
 			return state;

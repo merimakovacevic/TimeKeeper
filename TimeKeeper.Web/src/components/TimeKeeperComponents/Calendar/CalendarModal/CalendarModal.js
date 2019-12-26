@@ -12,10 +12,11 @@ import {
 	IconButton,
 	MenuItem,
 	Select,
-	FormControl
+	FormControl,
+	LinearProgress
 } from "@material-ui/core";
 import moment from "moment";
-
+import { connect } from "react-redux";
 import CalendarTask from "./CalendarTask";
 import CalendarAbsent from "./CalendarAbsent";
 
@@ -54,18 +55,48 @@ const CalendarModal = (props) => {
 
 	const handleChange = (event) => {
 		setValue(event.target.value);
-		console.log(event);
+		// console.log(event);
 	};
 
 	useEffect(() => {
 		setValue(props.day.dayType.id && props.day.dayType.id !== 11 ? props.day.dayType.id : 1);
-		console.log("renderuje se");
+		// console.log("renderuje se");
 	}, [props.day.dayType]);
 
 	// console.log(value);
 
 	return (
 		<Fragment>
+			{props.modalLoading && (
+				<div
+					style={{
+						position: "absolute",
+						top: "50%",
+						left: "50%",
+						height: "100%",
+						width: "93%",
+						backgroundColor: "rgba(0,0,0,.4)",
+						transform: "translate(-50%, -50%)",
+						zIndex: 500
+					}}
+				>
+					<div
+						style={{
+							position: "absolute",
+							top: "50%",
+							left: "50%",
+							transform: "translate(-50%, -50%)",
+							textAlign: "center",
+							zIndex: 100000,
+							width: 600
+						}}
+					>
+						<Typography variant="h6" gutterBottom style={{ color: "white" }}>
+							Processing...
+						</Typography>
+					</div>
+				</div>
+			)}
 			<Container>
 				<Grid container>
 					<Grid item sm={12}>
@@ -84,6 +115,8 @@ const CalendarModal = (props) => {
 								<FormControl>
 									<CustomeSelectDayTypes value={value} onChange={handleChange} />
 								</FormControl>
+
+								<Divider style={{ width: "100%", margin: "1.5rem 0" }} />
 
 								{value === 1 ? (
 									<Fragment>
@@ -112,4 +145,10 @@ const CalendarModal = (props) => {
 	);
 };
 
-export default CalendarModal;
+const mapStateToProps = (state) => {
+	return {
+		modalLoading: state.calendarMonth.modalLoading
+	};
+};
+
+export default connect(mapStateToProps)(CalendarModal);
