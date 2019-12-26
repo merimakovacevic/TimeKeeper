@@ -26,18 +26,18 @@ namespace TimeKeeper.API.Controllers
         {
         }
 
-        [HttpGet("password")]
-        public IActionResult GetUsersAndUpdate()
-        {
-            var query = Unit.Users.Get();
-            foreach (User user in query)
-            {
-                user.Password = user.Username.HashWith(user.Password);
-                Unit.Context.Entry(user).CurrentValues.SetValues(user);
-            }
-            Unit.Save();
-            return Ok();
-        }
+        //[HttpGet("password")]
+        //public IActionResult GetUsersAndUpdate()
+        //{
+        //    var query = Unit.Users.Get();
+        //    foreach (User user in query)
+        //    {
+        //        user.Password = user.Username.HashWith(user.Password);
+        //        Unit.Context.Entry(user).CurrentValues.SetValues(user);
+        //    }
+        //    Unit.Save();
+        //    return Ok();
+        //}
 
         [HttpGet]
         public IActionResult Get()
