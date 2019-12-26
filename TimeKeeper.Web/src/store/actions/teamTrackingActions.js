@@ -30,6 +30,7 @@ export const fetchTeamTracking = (team, year, month) => {
     dispatch(teamTrackingFetchStart());
     apiGetTeamTracking(teamTrackingUrl, team, year, month)
       .then((res) => {
+        console.log(res)
         dispatch(teamTrackingFetchSuccess(res.data.data));
       })
       .catch((err) => {

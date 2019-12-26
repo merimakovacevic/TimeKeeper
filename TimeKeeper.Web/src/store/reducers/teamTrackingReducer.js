@@ -21,7 +21,7 @@ export const teamTrackingReducer = (state = initialUserState, action) => {
     case TEAMTRACKING_FETCH_SUCCESS:
       return {
         ...state,
-        data: action.data.ar,
+        data: action.data,
         loading: false,
         reload: action.reload
       };
