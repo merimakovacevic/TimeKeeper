@@ -18,13 +18,13 @@ namespace TimeKeeper.API.Authorization
            this.unit = unit;
            queryService = new QueryService(unit);
         }
-        public bool CanReadOrWriteTask(UserRoleModel userClaims, JobDetail newTask)
+        public bool HasRight(UserRoleModel userClaims, JobDetail newTask)
         {
-            Project project = unit.Projects.Get(newTask.Project.Id);
             Day day = unit.Calendar.Get(newTask.Day.Id);
-
-            if (userClaims.Role == "lead" && !project.Team.Members.Any(x => x.Employee.Id == userClaims.UserId) ||
-                userClaims.Role == "user" && !(day.Employee.Id == userClaims.UserId))
+            bool isTeamMember = queryService.GetEmployeeTeamMembers(userClaims.UserId).Any(x => x.Id == day.Employee.Id);
+            bool isUser = day.Employee.Id == userClaims.UserId;
+            if ((userClaims.Role == "lead" && !isTeamMember && !isUser) ||
+                (userClaims.Role == "user" && !isUser))
             {
                 return false;
             }
@@ -74,7 +74,10 @@ namespace TimeKeeper.API.Authorization
         }
         public bool CanWriteDay(UserRoleModel userClaims, Day newDay)
         {
-            if (userClaims.Role != "admin" && !(newDay.Employee.Id == userClaims.UserId))
+            bool isTeamMember = queryService.GetEmployeeTeamMembers(userClaims.UserId).Any(x => x.Id == newDay.Employee.Id);
+            bool isUser = newDay.Employee.Id == userClaims.UserId;
+            if ((userClaims.Role == "lead" && !isTeamMember && !isUser) ||
+                 (userClaims.Role == "user" && !isUser))
             {
                 return false;
             }
@@ -164,7 +167,25 @@ namespace TimeKeeper.API.Authorization
                 var task = await unit.Projects.GetAsync(x => x.Team.Members.Any(y => y.Employee.Id == userClaims.UserId));
                 query = task.ToList();
             }
-            else
+            else if(userClaims.Role == "admin")
+            {
+                var task = await unit.Projects.GetAsync();
+                query = task.ToList();
+            }
+
+            return query;
+        }
+
+        public async Task<List<Project>> GetAuthorizedProjectsMaster(UserRoleModel userClaims)
+        {
+            List<Project> query = new List<Project>();
+
+            if (userClaims.Role == "lead" || userClaims.Role == "user")
+            {
+                var task = await unit.Projects.GetAsync(x => x.Team.Members.Any(y => y.Employee.Id == userClaims.UserId));
+                query = task.ToList();
+            }
+            else if (userClaims.Role == "admin")
             {
                 var task = await unit.Projects.GetAsync();
                 query = task.ToList();
@@ -199,10 +220,31 @@ namespace TimeKeeper.API.Authorization
         }
         public bool CanReadTeam(UserRoleModel userClaims, Team team)
         {
-            if (userClaims.Role == "user" || (userClaims.Role == "lead" && !team.Members.Any(x => x.Employee.Id == userClaims.UserId)))
+            if ((userClaims.Role == "user" || userClaims.Role == "lead") && !team.Members.Any(x => x.Employee.Id == userClaims.UserId))
             {
                 return false;
             }
+            return true;
+        }
+
+        public bool CanGetTeamReports(UserRoleModel userClaims, int teamId)
+        {
+            Team team = unit.Teams.Get(teamId);
+
+            return CanReadTeam(userClaims, team);
+        }
+
+        public bool CanGetPersonalDashboard(UserRoleModel userClaims, int employeeId)
+        {
+            //A user can only access his own personal dashboard
+            //A lead can only access his team members personal dashboards
+            if ((userClaims.Role == "user" && userClaims.UserId != employeeId) 
+                || (userClaims.Role == "lead" 
+                && queryService.GetTeamMembers(employeeId).FirstOrDefault(x => x.Employee.Id == employeeId) == null))
+            {
+                return false;
+            }
+
             return true;
         }
 

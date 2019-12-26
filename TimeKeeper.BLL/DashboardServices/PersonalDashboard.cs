@@ -10,6 +10,7 @@ using TimeKeeper.DAL;
 using TimeKeeper.DTO;
 using TimeKeeper.DTO.ReportModels.PersonalDashboard;
 using TimeKeeper.DTO.ReportModels.TeamDashboard;
+using TimeKeeper.Utility.Factory;
 
 namespace TimeKeeper.BLL.DashboardServices
 {
@@ -27,11 +28,19 @@ namespace TimeKeeper.BLL.DashboardServices
             List<PersonalDashboardRawModel> rawData = _storedProcedureService.GetStoredProcedure<PersonalDashboardRawModel>("personalDashboard", new int[] { empId, year, month });
             decimal workingDaysInMonth = GetMonthlyWorkingDays(year, month) * 8;
             decimal workingDaysInYear = GetYearlyWorkingDays(year) * 8;
-            personalDashboard.PersonalDashboardHours = rawData[0];
-            // What if there's overtime?
-            personalDashboard.UtilizationMonthly = decimal.Round(((rawData[0].WorkingMonthly / workingDaysInMonth) * 100), 2, MidpointRounding.AwayFromZero);
-            personalDashboard.UtilizationYearly = decimal.Round(((rawData[0].WorkingYearly / workingDaysInYear) * 100), 2, MidpointRounding.AwayFromZero);
-            personalDashboard.BradfordFactor = GetBradfordFactor(rawData[0].EmployeeId, year);
+            if(rawData.Count > 0)
+            {
+                personalDashboard.PersonalDashboardHours = rawData[0];
+                // What if there's overtime?
+                personalDashboard.UtilizationMonthly = decimal.Round(((rawData[0].WorkingMonthly / workingDaysInMonth) * 100), 2, MidpointRounding.AwayFromZero);
+                personalDashboard.UtilizationYearly = decimal.Round(((rawData[0].WorkingYearly / workingDaysInYear) * 100), 2, MidpointRounding.AwayFromZero);
+            }
+            else
+            {
+                EmployeeModel employee = _unit.Employees.Get(empId).Create();
+                personalDashboard.PersonalDashboardHours = new PersonalDashboardRawModel { EmployeeId = employee.Id, EmployeeName = employee.FullName };
+            }
+            personalDashboard.BradfordFactor = GetBradfordFactor(empId, year);
             return personalDashboard;
         }
     }

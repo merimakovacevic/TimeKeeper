@@ -56,6 +56,7 @@ namespace TimeKeeper.BLL.DashboardServices
             List<TeamRawCountModel> rawDataProjectsCount = _storedProcedures.GetStoredProcedure<TeamRawCountModel>("CountProjects", new int[] { team.Id, year, month });
             teamDashboard.NumberOfProjects = rawDataProjectsCount.Count;
             decimal baseTotalHours = GetMonthlyWorkingDays(year, month) * 8;
+            teamDashboard.TotalHours = baseTotalHours * teamDashboard.NumberOfEmployees;
             List<TeamRawModel> rawDataMissingEntries = GetMembersMissingEntries(team.Id, year, month, baseTotalHours);
             foreach (TeamRawModel r in rawData)
             {

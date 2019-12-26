@@ -69,7 +69,12 @@ namespace TimeKeeper.DAL.Repositories
 
         public async Task<Entity> GetAsync(int id)
         {
-            return await _dbSet.FindAsync(id);
+            Entity entity = await _dbSet.FindAsync(id);
+            if (entity == null)
+            {
+                throw new ArgumentException($"There is no object with id: {id} in the database");
+            }
+            return entity;
         }
 
         public async Task<IList<Entity>> GetAsync(Expression<Func<Entity, bool>> where)
@@ -80,6 +85,7 @@ namespace TimeKeeper.DAL.Repositories
         public async Task InsertAsync(Entity newEnt)
         {
             await newEnt.Build(_context);
+            newEnt.Validate();
             _dbSet.Add(newEnt);
         }
 
