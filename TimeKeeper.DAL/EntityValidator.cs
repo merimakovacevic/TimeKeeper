@@ -8,12 +8,11 @@ namespace TimeKeeper.DAL
 {
     public static class EntityValidator
     {
-        public static bool Validate<T>(this T entity)
+        public static void Validate<T>(this T entity)
         {
             if (typeof(T) == typeof(JobDetail)) Validate(entity as JobDetail);
-            return true;
         }
-        public static bool Validate(this JobDetail task)
+        public static void Validate(this JobDetail task)
         {
             string exceptionText = "";
             if (task.Hours < 0)
@@ -30,16 +29,22 @@ namespace TimeKeeper.DAL
                 exceptionText += "Total number of recorded hours in a day can't be creater than 12. ";
             }
 
-            if (task.Description == null)
-            {
-                throw new Exception($"Unable to save task. {exceptionText}");
-            }
             else if(task.Description == "")
             {
                 exceptionText += "Please enter a task description. ";
             }
 
-            if(task.Project == null || task.Day == null)
+            if(task.Day.DayType.Name != "Workday")
+            {
+                throw new Exception($"Unable to save task. Tasks can only be assigned to workdays");
+            }
+
+            if (task.Description == null)
+            {
+                throw new Exception($"Unable to save task. {exceptionText}");
+            }
+
+            if (task.Project == null || task.Day == null)
             {
                 throw new Exception($"Unable to save task. {exceptionText}");
             }
@@ -49,7 +54,6 @@ namespace TimeKeeper.DAL
                 throw new Exception($"Unable to save task. {exceptionText}");
             }
 
-            return true;
         }
 
     }
