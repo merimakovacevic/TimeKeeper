@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
 using TimeKeeper.DTO.ReportModels;
 using TimeKeeper.Utility.Factory;
@@ -10,6 +9,7 @@ using TimeKeeper.BLL.Utilities;
 using System.Data.Common;
 using System.Data;
 using Microsoft.EntityFrameworkCore;
+using TimeKeeper.DAL;
 
 namespace TimeKeeper.BLL
 {

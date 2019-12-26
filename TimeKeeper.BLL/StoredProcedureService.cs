@@ -46,6 +46,10 @@ namespace TimeKeeper.BLL
                 CloseConnection(cmd);
                 return result;
             }
+            else
+            {
+                CloseConnection(cmd);
+            }
             return new List<Entity>();
         }
     }
