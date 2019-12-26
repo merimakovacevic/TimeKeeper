@@ -70,6 +70,14 @@ export const projectsReducer = (state = initialUserState, action) => {
         data: action.data,
         reload: action.reload
       };
+    case PROJECT_SELECT:
+      return {
+        ...state,
+        selected: {
+          id: action.id,
+          mode: action.mode
+        }
+      };
     case PROJECT_ADD_START:
       return {
         ...state

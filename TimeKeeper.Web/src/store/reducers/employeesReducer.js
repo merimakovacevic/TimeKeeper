@@ -68,8 +68,10 @@ export const employeesReducer = (state = initialUserState, action) => {
     case EMPLOYEE_EDIT_SUCCESS:
       return {
         ...state,
-        data: action.data.query,
-        reload: action.reload.query
+        //   data: action.data.query,
+        //   reload: action.reload.query
+        //  data: action.data.query,
+        reload: action.reload
       };
     case EMPLOYEE_ADD_START:
       return {
@@ -78,7 +80,8 @@ export const employeesReducer = (state = initialUserState, action) => {
     case EMPLOYEE_ADD_SUCCESS:
       return {
         ...state,
-        data: action.data.query,
+        //   data: action.data.query,
+        //   data: action.data.query,
         reload: action.reload
       };
     case EMPLOYEE_ADD_FAIL:

@@ -2,7 +2,6 @@ import {
   PROJECTS_FETCH_START,
   PROJECTS_FETCH_SUCCESS,
   PROJECTS_FETCH_FAIL,
-  PROJECT_SELECTED,
   PROJECT_FETCH_START,
   PROJECT_FETCH_SUCCESS,
   PROJECT_FETCH_FAIL,
@@ -60,10 +59,11 @@ export const fetchProjects = () => {
   };
 };
 
-export const projectSelect = (id) => {
+export const projectSelect = (id, mode) => {
   return {
-    type: PROJECT_SELECTED,
-    id
+    type: PROJECT_SELECT,
+    id,
+    mode
   };
 };
 
