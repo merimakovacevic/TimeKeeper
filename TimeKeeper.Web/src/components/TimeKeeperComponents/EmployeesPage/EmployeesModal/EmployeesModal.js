@@ -23,7 +23,7 @@ import {
 import styles from "../../../../styles/EmployeesModalStyles";
 import { fetchEmployee, employeeCancel, employeePut, employeeAdd } from "../../../../store/actions/index";
 
-const positions = [
+/* const positions = [
 	{ id: 1, name: "Project Manager" },
 	{ id: 2, name: "Team Lead" },
 	{ id: 3, name: "Software Developer" },
@@ -35,7 +35,24 @@ const statuses = [
 	{ id: 1, name: "Trial" },
 	{ id: 2, name: "Active" },
 	{ id: 3, name: "Leaver" }
-];
+]; */
+
+const positions = [
+	{ id: 1, name: "Chief Executive Officer" },
+	{ id: 2, name: "Chief Technical Officer" },
+	{ id: 3, name: "Chief Operations Officer" },
+	{ id: 4, name: "Manager" },
+	{ id: 5, name: "HR Manager" },
+	{ id: 6, name: "Developer" },
+	{ id: 7, name: "UI/UX Designer" },
+	{ id: 8, name: "QA Enginee" }
+  ];
+  const statuses = [
+	{ id: 1, name: "Waiting for the task" },
+	{ id: 2, name: "Active" },
+	{ id: 3, name: "On hold" },
+	{ id: 4, name: "Leaver" }
+  ];
 
 const test = (membersData) => {
 	let index = membersData.indexOf(",");
@@ -87,7 +104,6 @@ const EmployeesModal = (props) => {
 
 	const CustomInputComponent = (props) => (
 		<Input
-			// required={true}
 			disabled={mode === "view" ? true : null}
 			fullWidth={true}
 			className={classes.input}
@@ -98,11 +114,14 @@ const EmployeesModal = (props) => {
 	const CustomSelectComponent = (props) => {
 		return (
 			<Select fullWidth {...props} className={classes.input} disabled={mode === "view" ? true : null}>
-				<MenuItem value={1}>Project Manager</MenuItem>
-				<MenuItem value={2}>Team Lead</MenuItem>
-				<MenuItem value={3}>Software Developer</MenuItem>
-				<MenuItem value={4}>UI/UX Designer</MenuItem>
-				<MenuItem value={5}>Quality Assurance Engineer</MenuItem>
+				     <MenuItem value={1}>Chief Executive Officer</MenuItem>
+        <MenuItem value={2}>Chief Technical Officer</MenuItem>
+        <MenuItem value={3}>Chief Operations Officer</MenuItem>
+        <MenuItem value={4}>Manager</MenuItem>
+        <MenuItem value={5}>HR Manager</MenuItem>
+        <MenuItem value={6}>Developer</MenuItem>
+        <MenuItem value={7}>UI/UX Designer</MenuItem>
+        <MenuItem value={8}>QA Engineer</MenuItem>
 			</Select>
 		);
 	};
@@ -110,9 +129,10 @@ const EmployeesModal = (props) => {
 	const CustomStatusComponent = (props) => {
 		return (
 			<Select fullWidth {...props} className={classes.input} disabled={mode === "view" ? true : null}>
-				<MenuItem value={1}>Trial</MenuItem>
-				<MenuItem value={2}>Active</MenuItem>
-				<MenuItem value={3}>Leaver</MenuItem>
+			 <MenuItem value={1}>Waiting for the task</MenuItem>
+        <MenuItem value={2}>Active</MenuItem>
+        <MenuItem value={3}>On hold</MenuItem>
+        <MenuItem value={4}>Leaver</MenuItem>
 			</Select>
 		);
 	};
@@ -295,7 +315,8 @@ const EmployeesModal = (props) => {
 											/>
 											<div className={classes.buttons}>
 												{mode !== "view" ? (
-													<Button variant="contained" color="primary" type="submit">
+													<Button variant="contained" color="primary" type="submit"
+														>
 														Submit
 													</Button>
 												) : null}

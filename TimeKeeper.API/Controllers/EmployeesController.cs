@@ -43,7 +43,7 @@ namespace TimeKeeper.API.Controllers
                 var task = await Unit.Employees.GetAsync();
                 var query = task.ToList();
 
-                Tuple<PaginationModel, List<Employee>> employeesPagination = _pagination.CreatePagination(page, pageSize,query);
+                Tuple<PaginationModel, List<Employee>> employeesPagination = _pagination.CreatePagination(page, pageSize, query);
 
                 HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(employeesPagination.Item1));
                 return Ok(employeesPagination.Item2.ToList().Select(x => x.Create()).ToList());

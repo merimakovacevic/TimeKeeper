@@ -21,19 +21,19 @@ import CalendarTask from "./CalendarTask";
 import CalendarAbsent from "./CalendarAbsent";
 
 function TabPanel(props) {
-	const { children, value, index, ...other } = props;
-	return (
-		<Typography
-			component="div"
-			role="tabpanel"
-			hidden={value !== index}
-			id={`tabpanel-${index}`}
-			aria-labelledby={`tab-${index}`}
-			{...other}
-		>
-			<Box p={3}>{children}</Box>
-		</Typography>
-	);
+  const { children, value, index, ...other } = props;
+  return (
+    <Typography
+      component="div"
+      role="tabpanel"
+      hidden={value !== index}
+      id={`tabpanel-${index}`}
+      aria-labelledby={`tab-${index}`}
+      {...other}
+    >
+      <Box p={3}>{children}</Box>
+    </Typography>
+  );
 }
 
 const CustomeSelectDayTypes = (props) => {
