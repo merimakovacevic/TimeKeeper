@@ -41,11 +41,8 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                DateTime start = DateTime.Now;
                 if (!resourceAccess.CanGetTeamReports(GetUserClaims(), teamId)) return Unauthorized();
-                var ar = timeTracking.GetTeamMonthReport(teamId, year, month);
-                DateTime final = DateTime.Now;
-                return Ok(new { dif = final - start, ar });
+                return Ok(timeTracking.GetTeamMonthReport(teamId, year, month));
             }
             catch (Exception ex)
             {
@@ -65,10 +62,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                DateTime start = DateTime.Now;
-                var ar = monthlyOverview.GetMonthlyOverview(year, month);
-                DateTime final = DateTime.Now;
-                return Ok(new { dif = final - start, ar });
+                return Ok(monthlyOverview.GetMonthlyOverview(year, month));
             }
             catch (Exception ex)
             {
@@ -89,11 +83,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Logger.Info($"Try to get project history for project with id:{projectId}");
-                DateTime start = DateTime.Now;
-                var ar = projectHistory.GetProjectHistoryModel(projectId);
-                DateTime final = DateTime.Now;
-                return Ok(new { dif = final - start, ar });
+                return Ok(projectHistory.GetProjectHistoryModel(projectId));
             }
             catch (Exception ex)
             {
@@ -116,10 +106,7 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 Logger.Info($"Try to get project monthly project history for project with id:{projectId} and employee with id:{employeeId}");
-                DateTime start = DateTime.Now;
-                var ar = projectHistory.GetMonthlyProjectHistory(projectId, employeeId);
-                DateTime final = DateTime.Now;
-                return Ok(new { dif = final - start, ar });
+                return Ok(projectHistory.GetMonthlyProjectHistory(projectId, employeeId));
             }
             catch (Exception ex)
             {
@@ -140,10 +127,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                DateTime start = DateTime.Now;
-                var ar = annualOverview.GetAnnualOverview(year);
-                DateTime final = DateTime.Now;
-                return Ok(new { dif = final - start, ar });
+                return Ok(annualOverview.GetAnnualOverview(year));
             }
             catch (Exception ex)
             {
@@ -164,10 +148,6 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                //DateTime start = DateTime.Now;
-                //var ar = annualOverview.GetStored(year);
-                //DateTime final = DateTime.Now;
-                //return Ok(new {dif=final-start, ar });
                 return Ok(annualOverview.GetStored(year));
             }
             catch (Exception ex)
@@ -190,10 +170,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                DateTime start = DateTime.Now;
-                var ar = monthlyOverview.GetStored(year, month);
-                DateTime final = DateTime.Now;
-                return Ok(new { dif = final - start, ar });
+                return Ok(monthlyOverview.GetStored(year, month));
             }
             catch (Exception ex)
             {
@@ -214,69 +191,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                DateTime start = DateTime.Now;
-                var ar = projectHistory.GetStored(projectId);
-                DateTime final = DateTime.Now;
-                return Ok(new { dif = final - start, ar });
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="employeeId"></param>
-        /// <param name="year"></param>
-        /// <param name="month"></param>
-        /// <returns></returns>
-        [Authorize(Policy = "AdminOrLeader")]
-        [HttpGet("employee-month/{employeeId}/{year}/{month}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        public IActionResult GetEmployeeReport(int employeeId, int year, int month)
-        {
-            try
-            {
-                return Ok(timeTracking.GetEmployeeMonthReport(Unit.Employees.Get(employeeId), year, month));
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
-
-        [Authorize(Policy = "AdminOrLeader")]
-        [HttpGet("missing-entries/{employeeid}/{year}/{month}")]
-        public IActionResult GetMissingEntries(int employeeId, int year, int month)
-        {
-            try
-            {
-                DateTime start = DateTime.Now;
-                Employee employee = Unit.Employees.Get(employeeId);
-                var ar = timeTracking.GetEmployeeMissingEntries(employee, year, month);
-                DateTime final = DateTime.Now;
-                return Ok(new { dif = final - start, ar });
-            }
-            catch (Exception ex)
-            {
-                return HandleException(ex);
-            }
-        }
-
-        [Authorize(Policy = "AdminOrLeader")]
-        [HttpGet("team-missing-entries/{teamId}/{year}/{month}")]
-        public IActionResult GetTeamMissingEntries(int teamId, int year, int month)
-        {
-            try
-            {
-                DateTime start = DateTime.Now;
-                Team team = Unit.Teams.Get(teamId);
-                var ar = timeTracking.GetTeamMissingEntries(team, year, month);
-                DateTime final = DateTime.Now;
-                return Ok(new { dif = final - start, ar });
+                return Ok(projectHistory.GetStored(projectId));
             }
             catch (Exception ex)
             {
