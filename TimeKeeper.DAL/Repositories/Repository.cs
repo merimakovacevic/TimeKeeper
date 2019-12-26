@@ -80,6 +80,7 @@ namespace TimeKeeper.DAL.Repositories
         public async Task InsertAsync(Entity newEnt)
         {
             await newEnt.Build(_context);
+            newEnt.Validate();
             _dbSet.Add(newEnt);
         }
 

@@ -40,7 +40,7 @@ namespace TimeKeeper.API.Controllers
             else
             {
                 Logger.Fatal(exception);
-                return BadRequest(exception);
+                return BadRequest(exception.Message);
             }
         }
 
