@@ -46,7 +46,6 @@ const CustomersPage = (props) => {
   const handleSearchInput = (event) => {
     setSearch(event.target.value);
     searchMessages();
-    // console.log(event.target.value);
   };
 
   const searchMessages = () => {

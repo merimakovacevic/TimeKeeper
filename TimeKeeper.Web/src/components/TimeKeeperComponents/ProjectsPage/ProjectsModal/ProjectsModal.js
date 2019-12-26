@@ -53,55 +53,10 @@ const Schema = Yup.object().shape({
   status: Yup.string().required("Status is Required!")
 });
 
-// fetchEmployee = id => {
-//   if (id === 666) {
-//     this.setState({ finish: true });
-//   } else {
-//     axios(`${config.apiUrl}employees/${id}`, {
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: config.token
-//       }
-//     })
-//       .then(res => {
-//         //console.log(res.data.members);
-//         let fetchedName = [];
-//         res.data.members.forEach(r => {
-//           let team = test(r.name);
-//           let id = r.id;
-//           let data = { id, team };
-//           fetchedName.push(data);
-//         });
-//         console.log(fetchedName);
-
-//         this.setState({
-//           employee: res.data,
-//           rows: fetchedName,
-//           finish: true
-//         });
-//       })
-//       .catch(() => this.setState({ finish: true }));
-//   }
-// };
-
 const ProjectsModal = (props) => {
   const { classes, open, project, id, mode } = props;
   const { fetchProject, projectCancel, projectPut, projectAdd } = props;
   let rows = [];
-
-  // if(project) {
-
-  //     let fetchedName = [];
-  //     console.log(project);
-  //     project.members.forEach(r => {
-
-  //       let team = test(r.name);
-  //       let id = r.id;
-  //       let data = { id, team };
-  //       fetchedName.push(data);
-  //     });
-  //     rows = fetchedName
-  // }
 
   useEffect(() => {
     if (id !== null) {
@@ -111,7 +66,6 @@ const ProjectsModal = (props) => {
 
   const CustomInputComponent = (props) => (
     <Input
-      // required={true}
       disabled={mode === "view" ? true : null}
       fullWidth={true}
       className={classes.input}
@@ -171,34 +125,6 @@ const ProjectsModal = (props) => {
               values.image = "image";
               projectAdd(values);
             }
-
-            // if (employee) {
-            //   values.id = employee.id;
-            //   axios
-            //     .put(
-            //       `${config.apiUrl}employees/${id}`,
-            //       values,
-            //       config.authHeader
-            //     )
-            //     .then(res => {
-            //       handleClose();
-            //     })
-            //     .catch(err => {
-            //       this.setState({ loading: false });
-            //       console.log("error");
-            //     });
-            // } else {
-            //   console.log(values);
-            //   axios
-            //     .post(`${config.apiUrl}employees`, values, config.authHeader)
-            //     .then(res => {
-            //       handleClose();
-            //     })
-            //     .catch(err => {
-            //       this.setState({ loading: false });
-            //       console.log("error");
-            //     });
-            // }
           }}
         >
           {({ errors, touched }) => (
@@ -222,7 +148,6 @@ const ProjectsModal = (props) => {
                       <Field
                         name="projectName"
                         autoComplete="off"
-                        //disableUnderline={true}
                         as={CustomInputComponent}
                       />
                       <InputLabel>Description</InputLabel>
@@ -236,7 +161,6 @@ const ProjectsModal = (props) => {
                       <Field
                         autoComplete="off"
                         name="description"
-                        //disableUnderline={true}
                         as={CustomInputComponent}
                       />
                     </div>
@@ -252,7 +176,6 @@ const ProjectsModal = (props) => {
                       <Field
                         name="startDate"
                         autoComplete="off"
-                        //disableUnderline={true}
                         type="date"
                         as={CustomInputComponent}
                       />
@@ -280,7 +203,6 @@ const ProjectsModal = (props) => {
                       <Field
                         name="team"
                         autoComplete="off"
-                        //disableUnderline={true}
                         as={CustomInputComponent}
                       />
                       <InputLabel> End Date</InputLabel>
@@ -294,7 +216,6 @@ const ProjectsModal = (props) => {
                       <Field
                         autoComplete="off"
                         name="endDate"
-                        //disableUnderline={true}
                         type="date"
                         as={CustomInputComponent}
                       />
@@ -310,7 +231,6 @@ const ProjectsModal = (props) => {
                       )}
                       <Field
                         name="customer"
-                        //disableUnderline={true}
                         autoComplete="off"
                         as={CustomInputComponent}
                       />
@@ -324,7 +244,6 @@ const ProjectsModal = (props) => {
                       )}
                       <Field
                         name="pricing"
-                        //disableUnderline={true}
                         type="number"
                         autoComplete="off"
                         as={CustomInputComponent}
@@ -339,7 +258,6 @@ const ProjectsModal = (props) => {
                       )}
                       <Field
                         name="amount"
-                        //disableUnderline={true}
                         type="number"
                         autoComplete="off"
                         as={CustomInputComponent}
@@ -350,7 +268,6 @@ const ProjectsModal = (props) => {
                           <Button
                             className={classes.submitButton}
                             variant="contained"
-                            //color="primary"
                             type="submit"
                           >
                             Submit
@@ -358,7 +275,6 @@ const ProjectsModal = (props) => {
                         ) : null}
                         <Button
                           variant="contained"
-                          //color={mode === 'view' ? 'primary' : 'secondary'}
                           onClick={() => projectCancel()}
                         >
                           {mode === "view" ? "Back" : "Cancel"}

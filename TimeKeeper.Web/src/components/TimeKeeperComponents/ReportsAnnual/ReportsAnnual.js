@@ -55,11 +55,7 @@ function AnnualReport(props) {
       {!props.annualReport.isLoading && (
         <Fragment>
           <YearDropdown />
-          <TableView
-            title={title}
-            //  backgroundImage={backgroundImage}
-            table={props.annualReport.table}
-          />
+          <TableView title={title} table={props.annualReport.table} />
         </Fragment>
       )}
       {props.annualReport.loading && (

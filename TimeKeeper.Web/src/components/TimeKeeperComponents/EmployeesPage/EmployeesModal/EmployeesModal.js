@@ -104,7 +104,6 @@ const EmployeesModal = (props) => {
 
 	const CustomInputComponent = (props) => (
 		<Input
-			// required={true}
 			disabled={mode === "view" ? true : null}
 			fullWidth={true}
 			className={classes.input}
