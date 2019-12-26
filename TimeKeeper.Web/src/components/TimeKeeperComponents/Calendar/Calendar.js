@@ -93,12 +93,12 @@ function CalendarDisplay(props) {
 		setEditDay(true);
 	}
 
-	function a11yProps(index) {
-		return {
-			id: `tab-${index}`,
-			"aria-controls": `tabpanel-${index}`
-		};
-	}
+  function a11yProps(index) {
+    return {
+      id: `tab-${index}`,
+      "aria-controls": `tabpanel-${index}`
+    };
+  }
 
 	return (
 		<React.Fragment>

@@ -48,6 +48,7 @@ const DropDownTeam = (props) => {
         <InputLabel shrink htmlFor="circle" className={classes.label}>
           Team
         </InputLabel>
+        {console.log("TEAMS", teams)}
         <Select
           defaultValue={1}
           classes={{

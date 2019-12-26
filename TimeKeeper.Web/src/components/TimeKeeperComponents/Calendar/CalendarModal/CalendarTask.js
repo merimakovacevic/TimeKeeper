@@ -1,7 +1,14 @@
 import React, { Fragment, useEffect, useState } from "react";
 
 import { connect } from "react-redux";
-import { Grid, Select, MenuItem, TextField, Input, IconButton } from "@material-ui/core";
+import {
+  Grid,
+  Select,
+  MenuItem,
+  TextField,
+  Input,
+  IconButton
+} from "@material-ui/core";
 import { Formik, Form, Field } from "formik";
 
 import { editTask, addTask, deleteTask, addDayWithTask } from "../../../../store/actions/index";
@@ -14,15 +21,15 @@ import TodayIcon from "@material-ui/icons/Today";
 import moment from "moment";
 
 const CustomSelectComponent = (props) => {
-	return (
-		<Select fullWidth {...props}>
-			{props.data.map((p) => (
-				<MenuItem value={p.id} key={p.id}>
-					{p.name}
-				</MenuItem>
-			))}
-		</Select>
-	);
+  return (
+    <Select fullWidth {...props}>
+      {props.data.map((p) => (
+        <MenuItem value={p.id} key={p.id}>
+          {p.name}
+        </MenuItem>
+      ))}
+    </Select>
+  );
 };
 
 const CustomeTextFieldComponent = (props) => <TextField {...props} />;

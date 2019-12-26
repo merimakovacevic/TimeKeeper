@@ -15,9 +15,6 @@ export default function CustomFieldComponent(props) {
       rows={props.rows}
       multiline={props.multiline}
       InputLabelProps={props.type === "date" ? { shrink: true } : {}}
-      // floatingLabelFixed={props.type === "date" ? true : false}
-      // error={Boolean(props.touched && props.error)}
-      // helperText={props.touched && props.error ? props.error : " "}
     />
   );
 }

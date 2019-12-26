@@ -11,7 +11,7 @@ export default function FormikSelect(props) {
         form
       }) => {
         // console.log("status.value", field.value);
-        const handleFieldChange = e => {
+        const handleFieldChange = (e) => {
           form.setFieldValue(field.name, e.target.value, false);
           props.setSelectedValue(e);
         };
@@ -24,14 +24,12 @@ export default function FormikSelect(props) {
             select
             label={props.label}
             value={field.value ? field.value : ""}
-            // REFERENCE EQUALITY ISSUE
-            // value={this.state.selectedEmployeeStatus}
             onChange={handleFieldChange}
             error={Boolean(meta.touched && meta.error)}
             helperText={meta.touched && meta.error ? meta.error : " "}
             margin="normal"
           >
-            {props.items.map(status => (
+            {props.items.map((status) => (
               <MenuItem value={status} key={status.id}>
                 {status.name}
               </MenuItem>

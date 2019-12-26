@@ -15,6 +15,7 @@ export const dropDownTeamsUrl = `${url}/api/teams`;
 export const teamTrackingUrl = `${url}/api/reports/team-time-tracking`;
 export const personalReportUrl = `${url}/api/dashboard/personal`;
 export const companyDashboardUrl = `${url}/api/dashboard/company`;
+export const awsAPI = "http://api-charlie.gigischool.rocks/";
 
 export const login = (url, credentials) => {
 	return axios
@@ -24,24 +25,24 @@ export const login = (url, credentials) => {
 };
 
 export const getCalendar = (id, year, month) => {
-	let newUrl = `${calendarUrl}/${id}/${year}/${month}`;
+  let newUrl = `${calendarUrl}/${id}/${year}/${month}`;
 
-	const token = store.getState().user.token;
+  const token = store.getState().user.token;
 
-	let headers = new Headers();
+  let headers = new Headers();
 
-	headers = {
-		Accept: "application/json",
-		Authorization: `Bearer ${token}`
-	};
+  headers = {
+    Accept: "application/json",
+    Authorization: `Bearer ${token}`
+  };
 
-	const options = {
-		headers
-	};
+  const options = {
+    headers
+  };
 
-	return axios(newUrl, options)
-		.then((data) => ({ data }))
-		.catch((err) => ({ err }));
+  return axios(newUrl, options)
+    .then((data) => ({ data }))
+    .catch((err) => ({ err }));
 };
 
 export const apiGetAllRequest = (url, method = "GET") => {
@@ -113,11 +114,11 @@ export const apiPutRequest = (url, id, body, method = "PUT") => {
 	const token = store.getState().user.token;
 	let headers = new Headers();
 
-	headers = {
-		Accept: "application/json",
-		"Content-Type": "application/json",
-		Authorization: `Bearer ${token}`
-	};
+  headers = {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`
+  };
 
 	const options = {
 		method,
