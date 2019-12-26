@@ -5,7 +5,7 @@ import { store } from "../index";
 export const loginUrl = "http://localhost:8000/login";
 // export const employeesUrl = "https://localhost:44321/api/employees";
 export const employeesUrl = "http://api-charlie.gigischool.rocks/api/employees";
-export const customersUrl = "http://api-charlie.gigischool.rocks/customers";
+export const customersUrl = "http://api-charlie.gigischool.rocks/api/customers";
 //export const customersUrl = "https://localhost:44321/api/customers";
 // export const calendarUrl = "http://localhost:8000/api/calendar";
 export const calendarUrl = "http://api-charlie.gigischool.rocks/api/calendar";

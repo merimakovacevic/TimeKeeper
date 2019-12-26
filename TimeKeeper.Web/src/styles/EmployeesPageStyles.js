@@ -65,6 +65,10 @@ const styles = (theme) => ({
   selectors: {
     display: "flex",
     flexDirection: "row-reverse"
+  },
+
+  textField: {
+    color: "white"
   }
 });
 
