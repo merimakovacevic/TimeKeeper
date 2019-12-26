@@ -43,7 +43,7 @@ namespace TimeKeeper.API.Controllers
                 Logger.Info($"Try to fetch ${pageSize} projects from page ${page}");
                 List<JobDetail> query = await GetAuthorizedTasks();
 
-                Tuple<PaginationModel, List<JobDetail>> tasksPagination;                              
+                Tuple<PaginationModel, List<JobDetail>> tasksPagination;
                 tasksPagination = _pagination.CreatePagination(page, pageSize, query);
 
                 HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(tasksPagination.Item1));
@@ -99,7 +99,6 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-
                 if (!CanAccessTask(jobDetail)) return Unauthorized();
                 //This line will result in an null object reference exception, we cannot access properties of jobDetail.Day because they are null
                 //Logger.Info($"Task for employee {jobDetail.Day.Employee.FullName}, day {jobDetail.Day.Date} added with id {jobDetail.Id}");
@@ -187,7 +186,7 @@ namespace TimeKeeper.API.Controllers
             if (userRole == "lead" && !project.Team.Members.Any(x => x.Employee.Id == userId) ||
                 userRole == "user" && !(day.Employee.Id == userId))
             {
-               return false;
+                return false;
             }
 
             return true;
@@ -218,6 +217,5 @@ namespace TimeKeeper.API.Controllers
 
             return query;
         }
-
     }
 }
