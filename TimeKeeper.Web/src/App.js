@@ -25,7 +25,7 @@ class App extends React.Component {
 		const { token, history } = this.props;
 
 		if (token) {
-			history.push("/app");
+			history.push("/app/personal-report");
 		} else {
 			history.push("/");
 		}

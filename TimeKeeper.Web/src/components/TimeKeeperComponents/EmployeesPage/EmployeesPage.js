@@ -125,7 +125,13 @@ const EmployeesPage = (props) => {
 							</Typography>
 						</div>
 
-						<TextField id="standard-basic" label="Standard" onChange={handleSearchInput} />
+						<TextField
+							id="standard-basic"
+							label="Search"
+							error
+							onChange={handleSearchInput}
+							className={classes.label}
+						/>
 
 						{user.role === "admin" ? (
 							<div>

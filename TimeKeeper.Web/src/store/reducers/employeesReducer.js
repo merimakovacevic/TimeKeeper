@@ -35,7 +35,7 @@ export const employeesReducer = (state = initialUserState, action) => {
 		case EMPLOYEES_FETCH_SUCCESS:
 			return {
 				...state,
-				data: action.data.query,
+				data: action.data,
 				loading: false
 			};
 		case EMPLOYEES_FETCH_FAIL:

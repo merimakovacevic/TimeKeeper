@@ -1,10 +1,10 @@
 import React, { Fragment, useEffect, useState } from "react";
+
 import { connect } from "react-redux";
 import { Grid, Select, MenuItem, TextField, Input, IconButton } from "@material-ui/core";
 import { Formik, Form, Field } from "formik";
 
-import { tasksUrl, apiPutRequest } from "../../../../utils/api";
-import { editTask } from "../../../../store/actions/index";
+import { editTask, addTask, deleteTask, addDayWithTask } from "../../../../store/actions/index";
 
 import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -30,11 +30,11 @@ const CustomeTextFieldComponent = (props) => <TextField {...props} />;
 const CustomInputComponent = (props) => <Input {...props} fullWidth />;
 
 function CalendarTask(props) {
-	// console.log(props);
+	// console.log("BUTNOOOOOO", props);
 	return (
 		<Formik
 			enableReinitialize
-			onSubmit={(values) => {
+			onSubmit={(values, { resetForm }) => {
 				if (props.data) {
 					let data = {
 						id: props.data.id,
@@ -42,17 +42,52 @@ function CalendarTask(props) {
 							id: props.day.id
 						},
 						project: {
-							id: values.project,
-							name: props.projects[values.project - 1].name
+							id: values.project
 						},
 						description: values.description,
 						hours: values.hours
 					};
 
-					console.log(data);
-					//console.log(values);
-
 					props.editTask(props.data.id, data);
+				} else if (props.day.id === 0) {
+					// console.log("0 starting");
+					let task = {
+						day: {
+							id: props.day.id
+						},
+						project: {
+							id: values.project
+						},
+						description: values.description,
+						hours: values.hours
+					};
+					// console.log(task);
+					const day = {
+						dayType: {
+							id: 1
+						},
+						employee: {
+							id: props.user.user.id
+						},
+						date: props.day.date
+					};
+					props.addDayWithTask(day, task);
+					resetForm();
+				} else {
+					// console.log(values);
+					let data = {
+						day: {
+							id: props.day.id
+						},
+						project: {
+							id: values.project
+						},
+						description: values.description,
+						hours: values.hours
+					};
+
+					props.addTask(data);
+					resetForm();
 				}
 			}}
 			initialValues={{
@@ -62,11 +97,6 @@ function CalendarTask(props) {
 			}}
 		>
 			<Form>
-				<Grid container alignItems="center" className="mb-1-5">
-					<span>{moment(props.day.date).format("YYYY-MM-DD")}</span>
-
-					<TodayIcon />
-				</Grid>
 				<Fragment>
 					<Grid container spacing={4} alignItems="center">
 						<Grid item xs={3}>
@@ -109,6 +139,15 @@ function CalendarTask(props) {
 								>
 									{props.data ? <EditIcon /> : <AddIcon />}
 								</IconButton>
+								{props.data ? (
+									<IconButton
+										aria-label="del"
+										color="secondary"
+										onClick={() => props.deleteTask(props.data.id)}
+									>
+										<DeleteIcon />
+									</IconButton>
+								) : null}
 							</Grid>
 						</Grid>
 					</Grid>
@@ -118,4 +157,10 @@ function CalendarTask(props) {
 	);
 }
 
-export default connect(null, { editTask })(CalendarTask);
+const mapStateToProps = (state) => {
+	return {
+		user: state.user
+	};
+};
+
+export default connect(mapStateToProps, { editTask, addTask, deleteTask, addDayWithTask })(CalendarTask);

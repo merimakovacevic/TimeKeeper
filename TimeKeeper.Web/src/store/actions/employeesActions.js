@@ -17,7 +17,14 @@ import {
 	EMPLOYEE_DELETE_FAIL,
 	EMPLOYEE_DELETE_SUCCESS
 } from "./actionTypes";
-import { employeesUrl, apiGetAllRequest, apiGetOneRequest, apiPutRequest, apiPostRequest, apiDeleteRequest } from "../../utils/api";
+import {
+	employeesUrl,
+	apiGetAllRequest,
+	apiGetOneRequest,
+	apiPutRequest,
+	apiPostRequest,
+	apiDeleteRequest
+} from "../../utils/api";
 
 const employeesFetchStart = () => {
 	return {
@@ -44,9 +51,13 @@ export const fetchEmployees = () => {
 		dispatch(employeesFetchStart());
 		apiGetAllRequest(employeesUrl)
 			.then((res) => {
+				console.log(res);
 				dispatch(employeesFetchSuccess(res.data.data));
 			})
-			.catch((err) => dispatch(employeesFetchFail(err)));
+			.catch((err) => {
+				console.log(err);
+				dispatch(employeesFetchFail(err));
+			});
 	};
 };
 
@@ -120,6 +131,7 @@ export const employeePut = (id, body) => {
 		dispatch(employeeEditStart());
 		apiPutRequest(employeesUrl, id, body)
 			.then((res) => {
+				console.log(res);
 				dispatch(employeeEditSuccess());
 				dispatch(employeeCancel());
 			})
@@ -181,12 +193,14 @@ const employeeDeleteSuccess = () => {
 	};
 };
 
-export const employeeDelete =(id) => {
-	return dispatch => {
-		dispatch(employeeDeleteStart())
-		apiDeleteRequest(employeesUrl, id).then(res => {
-			dispatch(employeeDeleteSuccess())
-			dispatch(employeeCancel())
-		}).catch(err => dispatch(employeeDeleteFail(err)))
-	}
-}
+export const employeeDelete = (id) => {
+	return (dispatch) => {
+		dispatch(employeeDeleteStart());
+		apiDeleteRequest(employeesUrl, id)
+			.then((res) => {
+				dispatch(employeeDeleteSuccess());
+				dispatch(employeeCancel());
+			})
+			.catch((err) => dispatch(employeeDeleteFail(err)));
+	};
+};
