@@ -1,6 +1,13 @@
 import React, { Fragment, useState, useEffect } from "react";
+import styles from "../../../styles/EmployeesPageStyles";
+import { withStyles } from "@material-ui/core/styles";
 
-import { MenuItem, TextField } from "@material-ui/core";
+import {
+  MenuItem,
+  TextField,
+  CircularProgress,
+  Backdrop
+} from "@material-ui/core";
 import {
   getAnnualReport,
   startLoading
@@ -10,6 +17,7 @@ import TableView from "../../TimeKeeperComponents/TableView/TableView";
 
 function AnnualReport(props) {
   const [selectedYear, setSelectedYear] = useState(2019);
+  const { classes, loading, isLoading } = props;
   const title = "Annual Overview";
   /*  const backgroundImage =
     "https://images.pexels.com/photos/1629236/pexels-photo-1629236.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940";
@@ -54,17 +62,25 @@ function AnnualReport(props) {
           />
         </Fragment>
       )}
-      {props.annualReport.isLoading && <div>is loading </div>}
+      {props.annualReport.loading && (
+        <Backdrop open={loading}>
+          <div className={classes.center}>
+            <CircularProgress size={100} className={classes.loader} />
+            <h1 className={classes.loaderText}>Loading...</h1>
+          </div>
+        </Backdrop>
+      )}
     </Fragment>
   );
 }
 
 const mapStateToProps = (state) => {
   return {
-    annualReport: state.annualReport
+    annualReport: state.annualReport,
+    loading: state.annualReport.loading
   };
 };
 
 export default connect(mapStateToProps, { getAnnualReport, startLoading })(
-  AnnualReport
+  withStyles(styles)(AnnualReport)
 );

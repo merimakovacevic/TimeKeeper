@@ -1,5 +1,6 @@
 import Axios from "axios";
 import Config from "../../config";
+
 import {
   FETCH_MONTHLY_REPORT,
   FETCH_MONTHLY_REPORT_SUCCESS,
@@ -10,8 +11,11 @@ export const getMonthlyReport = (selectedYear, selectedMonth) => {
   return (dispatch) => {
     dispatch({ type: FETCH_MONTHLY_REPORT });
     Axios.get(
-      "http://192.168.60.74/timekeeper/api/reports/monthly-overview/" +
-        //  "http://api-charlie.gigischool.rocks/api/reports/monthly-overview/" +
+      // "http://192.168.60.74/timekeeper/api/reports/monthly-overview/" +
+      //   "http://api-delta.gigischool.rocks/api/reports/monthly-overview/" +
+      "http://api-charlie.gigischool.rocks/api/reports/monthly-overview-stored/" +
+        /*       awsAPI +
+        "/api/reports/monthly-overview-stored/" + */
         selectedYear +
         "/" +
         selectedMonth,

@@ -11,14 +11,16 @@ const initialState = {
     actions: false
   },
   error: null,
-  isLoading: true
+  isLoading: true,
+  loading: false
 };
 
 export const annualReport = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_ANNUAL_REPORT:
       return Object.assign({}, state, {
-        isLoading: true
+        isLoading: true,
+        loading: true
       });
     // return state;
     case FETCH_ANNUAL_REPORT_SUCCESS:
@@ -28,7 +30,8 @@ export const annualReport = (state = initialState, action) => {
           rows: action.payload,
           actions: false
         },
-        isLoading: false
+        isLoading: false,
+        loading: false
       });
     case FETCH_ANNUAL_REPORT_FAILURE:
       return Object.assign({}, state, {
