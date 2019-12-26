@@ -11,7 +11,7 @@ using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ReportsController : BaseController
@@ -42,6 +42,7 @@ namespace TimeKeeper.API.Controllers
             try
             {
                 DateTime start = DateTime.Now;
+                if (!resourceAccess.CanGetTeamReports(GetUserClaims(), teamId)) return Unauthorized();
                 var ar = timeTracking.GetTeamMonthReport(teamId, year, month);
                 DateTime final = DateTime.Now;
                 return Ok(new { dif = final - start, ar });
@@ -58,6 +59,7 @@ namespace TimeKeeper.API.Controllers
         /// <param name="year"></param>
         /// <param name="month"></param>
         /// <returns></returns>
+        [Authorize(Policy = "AdminOrLeader")]
         [HttpGet("monthly-overview/{year}/{month}")]
         public IActionResult GetMonthlyOverview(int year, int month)
         {
@@ -79,6 +81,7 @@ namespace TimeKeeper.API.Controllers
         /// </summary>
         /// <param name="projectId"></param>
         /// <returns></returns>
+        [Authorize(Policy = "AdminOrLeader")]
         [HttpGet("project-history/{projectId}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -104,6 +107,7 @@ namespace TimeKeeper.API.Controllers
         /// <param name="projectId"></param>
         /// <param name="employeeId"></param>
         /// <returns></returns>
+        [Authorize(Policy = "AdminOrLeader")]
         [HttpGet("project-history/{projectId}/{employeeId}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -128,6 +132,7 @@ namespace TimeKeeper.API.Controllers
         /// </summary>
         /// <param name="year"></param>
         /// <returns></returns>
+        [Authorize(Policy = "AdminOrLeader")]
         [HttpGet("annual-overview/{year}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -151,6 +156,7 @@ namespace TimeKeeper.API.Controllers
         /// </summary>
         /// <param name="year"></param>
         /// <returns></returns>
+        [Authorize(Policy = "AdminOrLeader")]
         [HttpGet("annual-overview-stored/{year}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -176,6 +182,7 @@ namespace TimeKeeper.API.Controllers
         /// <param name="year"></param>
         /// <param name="month"></param>
         /// <returns></returns>
+        [Authorize(Policy = "AdminOrLeader")]
         [HttpGet("monthly-overview-stored/{year}/{month}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -199,6 +206,7 @@ namespace TimeKeeper.API.Controllers
         /// </summary>
         /// <param name="projectId"></param>
         /// <returns></returns>
+        [Authorize(Policy = "AdminOrLeader")]
         [HttpGet("project-history-stored/{projectId}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -224,6 +232,7 @@ namespace TimeKeeper.API.Controllers
         /// <param name="year"></param>
         /// <param name="month"></param>
         /// <returns></returns>
+        [Authorize(Policy = "AdminOrLeader")]
         [HttpGet("employee-month/{employeeId}/{year}/{month}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -239,6 +248,7 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        [Authorize(Policy = "AdminOrLeader")]
         [HttpGet("missing-entries/{employeeid}/{year}/{month}")]
         public IActionResult GetMissingEntries(int employeeId, int year, int month)
         {
@@ -256,6 +266,7 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        [Authorize(Policy = "AdminOrLeader")]
         [HttpGet("team-missing-entries/{teamId}/{year}/{month}")]
         public IActionResult GetTeamMissingEntries(int teamId, int year, int month)
         {

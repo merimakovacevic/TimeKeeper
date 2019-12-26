@@ -32,6 +32,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
+                if (!resourceAccess.CanGetPersonalDashboard(GetUserClaims(), employeeId)) return Unauthorized();
                 return Ok(personalDashboard.GetPersonalDashboardStored(employeeId, year, month));
             }
             catch (Exception ex)
@@ -53,11 +54,13 @@ namespace TimeKeeper.API.Controllers
         //    }
         //}
 
+        [Authorize(Policy = "AdminOrLeader")]
         [HttpGet("team/{teamId}/{year}/{month}")]
         public IActionResult GetTeamDashboard(int teamId, int year, int month)
         {
             try
             {
+                if (!resourceAccess.CanGetTeamReports(GetUserClaims(), teamId)) return Unauthorized();
                 return Ok(teamDashboard.GetTeamDashboardStored(teamId, year, month));
             }
             catch (Exception ex)
@@ -66,6 +69,7 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        [Authorize(Policy = "IsAdmin")]
         [HttpGet("company/{year}/{month}")]
         public IActionResult GetCompanyDashboard(int year, int month)
         {
