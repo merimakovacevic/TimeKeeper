@@ -75,7 +75,7 @@ namespace TimeKeeper.API.Controllers
             try {
                 Logger.Info($"Try to get team with {id}");
                 Team team = await Unit.Teams.GetAsync(id);
-                if (!resourceAccess.CanReadTeam(GetUserClaims(), team)) ;
+                if (!resourceAccess.CanReadTeam(GetUserClaims(), team)) return Unauthorized();
                 return Ok(team.Create());
             }
             catch (Exception ex)
@@ -120,7 +120,6 @@ namespace TimeKeeper.API.Controllers
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
         [Authorize(Policy = "IsAdmin")]
-        [Authorize(Roles = "admin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> Put(int id, [FromBody] Team team)
@@ -148,8 +147,7 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpDelete("{id}")]
-        //[Authorize(Policy = "IsAdmin")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
