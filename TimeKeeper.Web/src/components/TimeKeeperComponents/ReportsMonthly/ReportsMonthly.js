@@ -1,15 +1,24 @@
 import React, { Fragment, useState, useEffect } from "react";
 import TableView from "../../TimeKeeperComponents/TableView/TableView";
-import { MenuItem, TextField } from "@material-ui/core";
+import {
+  MenuItem,
+  TextField,
+  CircularProgress,
+  Backdrop
+} from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
+
 import {
   getMonthlyReport,
   startLoading
 } from "../../../store/actions/monthlyReportActions";
 import { connect } from "react-redux";
+import styles from "../../../styles/EmployeesPageStyles";
 
 function MonthlyReport(props) {
   const [selectedYear, setSelectedYear] = useState(2019);
   const [selectedMonth, setSelectedMonth] = useState(1);
+  const { isLoading, classes } = props;
   const title = "Monthly Overview";
   const backgroundImage =
     "https://images.pexels.com/photos/1629236/pexels-photo-1629236.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940";
@@ -91,8 +100,12 @@ function MonthlyReport(props) {
           />
         </Fragment>
       ) : (
-        <div> Loading </div>
-        // <Loader />
+        <Backdrop open={isLoading}>
+          <div className={classes.center}>
+            <CircularProgress size={100} className={classes.loader} />
+            <h1 className={classes.loaderText}>Loading...</h1>
+          </div>
+        </Backdrop>
       )}
       {props.monthlyReport.isLoading}
     </Fragment>
@@ -101,10 +114,11 @@ function MonthlyReport(props) {
 
 const mapStateToProps = (state) => {
   return {
-    monthlyReport: state.monthlyReport
+    monthlyReport: state.monthlyReport,
+    isLoading: state.monthlyReport.isLoading
   };
 };
 
 export default connect(mapStateToProps, { getMonthlyReport, startLoading })(
-  MonthlyReport
+  withStyles(styles)(MonthlyReport)
 );

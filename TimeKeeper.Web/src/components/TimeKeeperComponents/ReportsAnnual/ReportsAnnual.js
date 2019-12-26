@@ -58,8 +58,8 @@ function AnnualReport(props) {
           <TableView title={title} table={props.annualReport.table} />
         </Fragment>
       )}
-      {props.annualReport.loading && (
-        <Backdrop open={loading}>
+      {props.annualReport.isLoading && (
+        <Backdrop open={isLoading}>
           <div className={classes.center}>
             <CircularProgress size={100} className={classes.loader} />
             <h1 className={classes.loaderText}>Loading...</h1>
@@ -73,7 +73,8 @@ function AnnualReport(props) {
 const mapStateToProps = (state) => {
   return {
     annualReport: state.annualReport,
-    loading: state.annualReport.loading
+    loading: state.annualReport.loading,
+    isLoading: state.annualReport.isLoading
   };
 };
 
