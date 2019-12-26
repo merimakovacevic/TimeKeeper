@@ -220,7 +220,7 @@ namespace TimeKeeper.API.Authorization
         }
         public bool CanReadTeam(UserRoleModel userClaims, Team team)
         {
-            if (userClaims.Role == "user" || (userClaims.Role == "lead" && !team.Members.Any(x => x.Employee.Id == userClaims.UserId)))
+            if ((userClaims.Role == "user" || userClaims.Role == "lead") && !team.Members.Any(x => x.Employee.Id == userClaims.UserId))
             {
                 return false;
             }
