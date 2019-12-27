@@ -69,6 +69,10 @@ const styles = (theme) => ({
 
   textField: {
     color: "white"
+  },
+  dropdown: {
+    width: 100,
+    margin: '.5rem'
   }
 });
 
