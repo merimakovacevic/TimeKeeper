@@ -44,8 +44,9 @@ const DropDownYear = (props) => {
           className={classes.background}
           onChange={(e) => yearSelect(e.target.value)}
           inputProps={{}}
+          className={classes.label}
         >
-          <MenuItem key={2019} value={2019}>
+          <MenuItem key={2019} value={2019} className={classes.label}>
             {"2019"}
           </MenuItem>
           <MenuItem key={2018} value={2018}>

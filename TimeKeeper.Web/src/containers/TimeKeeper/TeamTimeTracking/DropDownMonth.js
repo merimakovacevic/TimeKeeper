@@ -42,6 +42,7 @@ const DropDownMonth = (props) => {
           classes={{
             icon: classes.whiteColor
           }}
+          className={classes.label}
           onChange={(e) => monthSelect(e.target.value)}
           inputProps={{}}
         >
