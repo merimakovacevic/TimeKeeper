@@ -24,6 +24,8 @@ import {
 } from "@material-ui/core";
 import styles from "../../../styles/EmployeesPageStyles";
 
+import './myStyles.css'
+
 import AddIcon from "@material-ui/icons/Add";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import EditIcon from "@material-ui/icons/Edit";
@@ -132,8 +134,21 @@ const EmployeesPage = (props) => {
         </Backdrop>
       ) : (
         <Paper className={classes.root}>
+          <TextField
+            className='myLabel'
+            style={{color: 'white'}}
+              id="standard-basic"
+              label="Search"
+              color='secondary'
+              className={classes.textField}
+              onChange={handleSearchInput}
+              InputProps={{
+                color: 'white'
+            }}
+            />
           {selected ? <EmployeesModal selected={selected} open={true} /> : null}
           <Toolbar className={classes.toolbar}>
+            
             <div>
               <Typography
                 variant="h4"
@@ -144,11 +159,7 @@ const EmployeesPage = (props) => {
               </Typography>
             </div>
 
-            <TextField
-              id="standard-basic"
-              label="Standard"
-              onChange={handleSearchInput}
-            />
+            
 
             {user.role === "admin" ? (
               <div>

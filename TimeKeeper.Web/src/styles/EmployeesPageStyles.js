@@ -66,9 +66,8 @@ const styles = (theme) => ({
     display: "flex",
     flexDirection: "row-reverse"
   },
-
   textField: {
-    color: "white"
+    color: "white !important"
   },
   dropdown: {
     width: 100,

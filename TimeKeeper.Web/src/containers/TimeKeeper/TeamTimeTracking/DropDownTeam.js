@@ -50,6 +50,7 @@ const DropDownTeam = (props) => {
         </InputLabel>
         {console.log("TEAMS", teams)}
         <Select
+         className={classes.label}
           defaultValue={1}
           classes={{
             icon: classes.whiteColor
