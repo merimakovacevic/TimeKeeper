@@ -8,6 +8,7 @@ using System.Text;
 using TimeKeeper.API.Controllers;
 using TimeKeeper.DTO;
 using TimeKeeper.Domain.Entities;
+using System.Threading.Tasks;
 
 namespace TimeKeeper.Test.ControllersTest
 {
@@ -16,11 +17,11 @@ namespace TimeKeeper.Test.ControllersTest
     {
 
         [Test, Order(1)]
-        public void GetAllTeams()
+        public async Task GetAllTeams()
         {
             var controller = new TeamsController(unit.Context);
 
-            var response = controller.GetAll() as ObjectResult;
+            var response = await controller.GetAll() as ObjectResult;
             var value = response.Value as List<TeamModel>;
 
             Assert.AreEqual(200, response.StatusCode); 
@@ -31,11 +32,11 @@ namespace TimeKeeper.Test.ControllersTest
         [TestCase(1, "Delta")]
         [TestCase(2, "Tango")]
         [TestCase(3, "Yankee")]
-        public void GetTeamById(int id, string name)
+        public async Task GetTeamById(int id, string name)
         {
             var controller = new TeamsController(unit.Context);
 
-            var response = controller.Get(id) as ObjectResult;
+            var response = await controller.Get(id) as ObjectResult;
             var value = response.Value as TeamModel;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -43,18 +44,18 @@ namespace TimeKeeper.Test.ControllersTest
         }
 
         [Test, Order(2)]
-        public void GetTeamByWrongId()
+        public async Task GetTeamByWrongId()
         {
             int id = 40; //Team with id 4 doesn't exist in the test database
             var controller = new TeamsController(unit.Context);
 
-            var response = controller.Get(id) as ObjectResult;
+            var response = await controller.Get(id) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }
 
         [Test, Order(3)]
-        public void InsertTeam()
+        public async Task InsertTeam()
         {
             var controller = new TeamsController(unit.Context);
 
@@ -63,7 +64,7 @@ namespace TimeKeeper.Test.ControllersTest
                 Name = "Delta"
             };
 
-            var response = controller.Post(team) as ObjectResult;
+            var response = await controller.Post(team) as ObjectResult;
             var value = response.Value as TeamModel;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -71,7 +72,7 @@ namespace TimeKeeper.Test.ControllersTest
         }
 
         [Test, Order(4)]
-        public void ChangeTeamName()
+        public async Task ChangeTeamName()
         {
             var controller = new TeamsController(unit.Context);
             int id = 3;//Try to change the team with id 3
@@ -82,7 +83,7 @@ namespace TimeKeeper.Test.ControllersTest
                 Name = "Zulu"
             };
 
-            var response = controller.Put(id, team) as ObjectResult;
+            var response = await controller.Put(id, team) as ObjectResult;
             var value = response.Value as TeamModel;
 
             Assert.AreEqual(200, response.StatusCode);
@@ -90,7 +91,7 @@ namespace TimeKeeper.Test.ControllersTest
         }
 
         [Test, Order(5)]
-        public void ChangeTeamWithWrongId()
+        public async Task ChangeTeamWithWrongId()
         {
             var controller = new TeamsController(unit.Context);
             int id = 40;//Try to change the team with id (doesn't exist)
@@ -101,30 +102,30 @@ namespace TimeKeeper.Test.ControllersTest
                 Name = "Zulu"
             };
 
-            var response = controller.Put(id, team) as ObjectResult;
+            var response =await controller.Put(id, team) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }
 
         [Test, Order(6)]
-        public void DeleteTeam()
+        public async Task DeleteTeam()
         {
             var controller = new TeamsController(unit.Context);
             int id = 3;//Try to delete the team with id 3
 
-            var response = controller.Delete(id) as StatusCodeResult;
+            var response = await controller.Delete(id) as StatusCodeResult;
 
             Assert.AreEqual(204, response.StatusCode);
 
         }
 
         [Test, Order(7)]
-        public void DeleteTeamWithWrongId()
+        public async Task DeleteTeamWithWrongId()
         {
             var controller = new TeamsController(unit.Context);
             int id = 40;//Try to delete the team with id (doesn't exist)
 
-            var response = controller.Delete(id) as ObjectResult;
+            var response = await controller.Delete(id) as ObjectResult;
 
             Assert.AreEqual(404, response.StatusCode);
         }

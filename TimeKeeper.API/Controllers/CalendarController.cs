@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TimeKeeper.API.Authorization;
 using TimeKeeper.BLL;
 using TimeKeeper.DAL;
 using TimeKeeper.Domain.Entities;
@@ -8,18 +11,20 @@ using TimeKeeper.Utility.Factory;
 
 namespace TimeKeeper.API.Controllers
 {
-    [Authorize(AuthenticationSchemes = "TokenAuthentication")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CalendarController : BaseController
     {
         protected CalendarService calendarService;
+
         public CalendarController(TimeKeeperContext context) : base(context)
         {
             calendarService = new CalendarService(Unit);
         }
+
         /// <summary>
-        /// This method returns all days
+        /// This method returns monthly calendar for an employee
         /// </summary>
         /// <param name="employeeId">Id of employee who owns the day</param>
         /// <param name="year">Year from the date</param>
@@ -41,6 +46,7 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
+
         /// <summary>
         /// This method returns day with specified id
         /// </summary>
@@ -52,13 +58,15 @@ namespace TimeKeeper.API.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Get(int id)
+        [Authorize(Policy = "AdminLeadOrOwner")]
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
-                Day day = Unit.Calendar.Get(id);
                 Logger.Info($"Try to get day with {id}");
+                Day day = await Unit.Calendar.GetAsync(id);
 
+                if (!resourceAccess.CanReadDay(GetUserClaims(), day)) return Unauthorized(); 
                 return Ok(day.Create());
             }
             catch (Exception ex)
@@ -66,6 +74,7 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
+
         /// <summary>
         /// This method inserts a new day
         /// </summary>
@@ -76,20 +85,24 @@ namespace TimeKeeper.API.Controllers
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Post([FromBody] Day day)
+        public async Task<IActionResult> Post([FromBody] Day day)
         {
             try
             {
-                Unit.Calendar.Insert(day);
-                Unit.Save();
+                if(!resourceAccess.CanWriteDay(GetUserClaims(), day)) return Unauthorized();
+                await Unit.Calendar.InsertAsync(day);
+
+                await Unit.SaveAsync();
                 Logger.Info($"Day {day.Date} added with id {day.Id}");
-                return Ok(day.Create());
+                Day createdDay = Unit.Calendar.Get(day.Id);
+                return Ok(createdDay.Create());
             }
             catch (Exception ex)
             {
                 return HandleException(ex);
             }
         }
+
         /// <summary>
         /// This method updates data for day with specified id
         /// </summary>
@@ -101,14 +114,14 @@ namespace TimeKeeper.API.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Put(int id, [FromBody] Day day)
+        public async Task<IActionResult> Put(int id, [FromBody] Day day)
         {
             try
             {
-                Logger.Info($"Attempt to update day with id {id}");
-                Unit.Calendar.Update(day, id);
-                Unit.Save();
+                if (!resourceAccess.CanWriteDay(GetUserClaims(), day)) return Unauthorized();
+                await Unit.Calendar.UpdateAsync(day, id);
 
+                await Unit.SaveAsync();
                 Logger.Info($"Changed day with id {id}");
                 return Ok(day.Create());
             }
@@ -117,6 +130,7 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
+
         /// <summary>
         /// This method deletes day with specified id
         /// </summary>
@@ -129,13 +143,14 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult Delete(int id)
+        [Authorize(Policy = "IsAdmin")]
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
                 Logger.Info($"Attempt to delete day with id {id}");
-                Unit.Calendar.Delete(id);
-                Unit.Save();
+                await Unit.Calendar.DeleteAsync(id);
+                await Unit.SaveAsync();
 
                 Logger.Info($"Deleted day with id {id}");
                 return NoContent();
@@ -144,6 +159,6 @@ namespace TimeKeeper.API.Controllers
             {
                 return HandleException(ex);
             }
-        }     
+        }
     }
 }

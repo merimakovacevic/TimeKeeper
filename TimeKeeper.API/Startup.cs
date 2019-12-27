@@ -39,48 +39,30 @@ namespace TimeKeeper.API
             services.AddCors();
             services.AddMvc();
 
-            services.AddAuthorization(o => 
+            services.AddAuthorization(o =>
             {
-                o.AddPolicy("IsMemberInTeam", builder =>
-                {
-                    builder.RequireAuthenticatedUser();
-                    builder.AddRequirements(new HasAccessToTeam());
-
-                });/*
                 o.AddPolicy("IsAdmin", builder =>
                 {
-                    builder.RequireRole("admin");
-                });*/
-                o.AddPolicy("IsEmployee", builder =>
-                {
-                    builder.RequireAuthenticatedUser();
-                    builder.AddRequirements(new HasAccessToEmployee());
+                    builder.AddRequirements(new IsRoleRequirement());
                 });
-                o.AddPolicy("IsMemberOnProject", builder =>
+                o.AddPolicy("AdminOrLeader", builder =>
                 {
-                    builder.RequireAuthenticatedUser();
-                    builder.AddRequirements(new HasAccessToProjects());
+                    builder.AddRequirements(new AdminOrLeadRequirement())
+;
                 });
-                o.AddPolicy("IsMember", builder =>
+                o.AddPolicy("AdminLeadOrMember", builder =>
                 {
-                    builder.RequireAuthenticatedUser();
-                    builder.AddRequirements(new HasAccessToMembers());
+                    builder.AddRequirements(new AdminLeadOrMemberRequirement());
                 });
-                o.AddPolicy("HasAccessToCustomer", builder =>
+                o.AddPolicy("AdminLeadOrOwner", builder =>
                 {
-                    builder.RequireAuthenticatedUser();
-                    builder.AddRequirements(new HasAccessToCustomer());
+                    builder.AddRequirements(new AdminLeadOrOwnerRequirement());
                 });
             });
-
-            services.AddScoped<IAuthorizationHandler, IsMemberHandler>();
-            services.AddScoped<IAuthorizationHandler, IsAdminHandler>();
-            services.AddScoped<IAuthorizationHandler, IsLeadHandler>();
-            //services.AddScoped<IAuthorizationHandler, IsPersonHandler>();
-            services.AddScoped<IAuthorizationHandler, IsMemberOnProjectHandler>();
-            services.AddScoped<IAuthorizationHandler, CanViewMembersHandler>();
-            services.AddScoped<IAuthorizationHandler, CanViewCustomerHandler>();
-            services.AddScoped<IAuthorizationHandler, HasAccessToEmployeeHandler>();
+            services.AddScoped<IAuthorizationHandler, RequireAdminRole>();
+            services.AddScoped<IAuthorizationHandler, AdminOrLeadHandler>();
+            services.AddScoped<IAuthorizationHandler, AdminLeadOrMemberHandler>();
+            services.AddScoped<IAuthorizationHandler, AdminLeadOrOwnerHandler>();
             //Enables anonymous access to our application (IIS security is not used) o. AutomaticAuthentication = false
             services.Configure<IISOptions>(o =>
             {
@@ -90,16 +72,16 @@ namespace TimeKeeper.API
             services.AddAuthentication("TokenAuthentication")
                     .AddScheme<AuthenticationSchemeOptions, TokenAuthenticationHandler>("TokenAuthentication", null);
 
-            services.AddAuthentication(o =>
-            {
-                o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(o =>
-            {
-                o.Authority = "https://localhost:44300/";
-                o.Audience = "timekeeper";
-                o.RequireHttpsMetadata = false;
-            });
+            //services.AddAuthentication(o =>
+            //{
+            //    o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //}).AddJwtBearer(o =>
+            //{
+            //    o.Authority = "https://localhost:44300/";
+            //    o.Audience = "timekeeper";
+            //    o.RequireHttpsMetadata = false;
+            //});
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             //AddCookie("Cookies", o =>

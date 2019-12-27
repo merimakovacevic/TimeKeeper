@@ -20,6 +20,7 @@ namespace TimeKeeper.API.Controllers
     public class ProjectsController : BaseController
     {
         private PaginationService<Project> _pagination;
+
         public ProjectsController(TimeKeeperContext context) : base(context)
         {
             _pagination = new PaginationService<Project>();
@@ -34,36 +35,25 @@ namespace TimeKeeper.API.Controllers
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult GetAll(int page = 1, int pageSize = 5)
+        [Authorize(Policy = "AdminOrLeader")]
+        public async Task<IActionResult> GetAll(int page = 1, int pageSize = 100)
         {
             try
             {
                 Logger.Info($"Try to fetch ${pageSize} projects from page ${page}");
                 Tuple<PaginationModel, List<Project>> projectsPagination;
-                List<Project> query;
-
-                int userId = int.Parse(User.Claims.FirstOrDefault(x => x.Type == "sub").Value.ToString());
-                string role = User.Claims.FirstOrDefault(x => x.Type == "role").Value.ToString();
-
-                if (role == "admin" || role == "lead")
-                {
-                    query = Unit.Projects.Get().ToList();
-                }
-                else
-                {
-                    query = Unit.Projects.Get(x => x.Team.Members.Any(y => y.Employee.Id == userId)).ToList();                    
-                }
+                List<Project> query = await resourceAccess.GetAuthorizedProjects(GetUserClaims());
 
                 projectsPagination = _pagination.CreatePagination(page, pageSize, query);
                 HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(projectsPagination.Item1));
                 return Ok(projectsPagination.Item2.Select(x => x.Create()).ToList());
-
             }
             catch (Exception ex)
             {
                 return HandleException(ex);
             }
         }
+
         /// <summary>
         /// This method returns project with specified id
         /// </summary>
@@ -73,24 +63,26 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpGet("{id}")]
-        [Authorize(Policy = "IsMemberOnProject")]
+        [Authorize(Policy = "AdminOrLeader")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
                 Logger.Info($"Try to fetch project with id {id}");
-                Project project = Unit.Projects.Get(id);                
+                Project project = await Unit.Projects.GetAsync(id);
 
-                return Ok(project.Create());                
+                if (!resourceAccess.CanReadProject(GetUserClaims(), project)) return Unauthorized();
+                return Ok(project.Create());
             }
             catch (Exception ex)
             {
                 return HandleException(ex);
             }
         }
+
         /// <summary>
         /// This method inserts a new project
         /// </summary>
@@ -99,15 +91,15 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPost]
-        [Authorize(Roles = "admin")]
+        [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Post([FromBody] Project project)
+        public async Task<IActionResult> Post([FromBody] Project project)
         {
             try
             {
-                Unit.Projects.Insert(project);
-                Unit.Save();
+                await Unit.Projects.InsertAsync(project);
+                await Unit.SaveAsync();
 
                 Logger.Info($"Project {project.Name} added with id {project.Id}");
                 return Ok(project.Create());
@@ -127,17 +119,17 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Put(int id, [FromBody] Project project)
+        public async Task<IActionResult> Put(int id, [FromBody] Project project)
         {
             try
             {
                 Logger.Info($"Attempt to update project with id {id}");
-                Unit.Projects.Update(project, id);
+                await Unit.Projects.UpdateAsync(project, id);
 
-                Unit.Save();
+                await Unit.SaveAsync();
 
                 Logger.Info($"Project {project.Name} with id {project.Id} updated");
                 return Ok(project.Create());
@@ -157,17 +149,17 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpDelete("{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
                 Logger.Info($"Attempt to delete project with id {id}");
-                Unit.Projects.Delete(id);
-                Unit.Save();
+                await Unit.Projects.DeleteAsync(id);
+                await Unit.SaveAsync();
 
                 Logger.Info($"Project with id {id} deleted");
                 return NoContent();

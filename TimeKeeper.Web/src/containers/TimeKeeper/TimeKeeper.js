@@ -17,11 +17,9 @@ import {
 	ListItemIcon,
 	ListItemText,
 	Menu,
-	MenuItem,
-	Switch
+	MenuItem
 } from "@material-ui/core";
 import styles from "../../styles/NavigationStyles";
-import userManager from "../../utils/userManager";
 
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
@@ -32,12 +30,16 @@ import AppsIcon from "@material-ui/icons/Apps";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
+import { logout } from "../../store/actions/index";
+import Calendar from "../../components/TimeKeeperComponents/Calendar/Calendar";
 import EmployeesPage from "../../components/TimeKeeperComponents/EmployeesPage/EmployeesPage";
 import CustomersPage from "../../components/TimeKeeperComponents/CustomersPage/CustomersPage";
 import ProjectsPage from "../../components/TimeKeeperComponents/ProjectsPage/ProjectsPage";
-
-import TeamTimeTracking from "./TeamTimeTracking/TeamTimeTracking";
-import TeamsPage from "./TeamsPage/TeamsPage";
+import TeamTimeTracking from "../../containers/TimeKeeper/TeamTimeTracking/TeamTimeTracking";
+import CompanyDashboard from "../../components/TimeKeeperComponents/CompanyDashboardReport/CompanyDashboard";
+import PersonalReport from "../../components/TimeKeeperComponents/PersonalReport/PersonalReport";
+import MonthlyReport from "../../components/TimeKeeperComponents/ReportsMonthly/ReportsMonthly";
+import AnnualReport from "../../components/TimeKeeperComponents/ReportsAnnual/ReportsAnnual";
 
 class TimeKeeper extends React.Component {
 	state = {
@@ -54,19 +56,19 @@ class TimeKeeper extends React.Component {
 		if (!user) {
 			return this.props.history.replace("/");
 		} else {
-			let role = user.profile.role;
+			let role = user.role;
 			if (role === "user") {
-				this.setState({ database: ["Employees", "Projects"] });
-				this.setState({ reports: ["Personal Report", "Monthly Report"] });
+				this.setState({ database: ["Employees", "Teams"] });
+				this.setState({ reports: ["Personal Report"] });
 			} else if (role === "admin") {
-				this.setState({ database: ["Employees", "Teams", "Customers", "Teams"] });
+				this.setState({ database: ["Employees", "Projects", "Customers", "Teams"] });
 				this.setState({
-					reports: ["Personal Report", "Monthly Report", "Annual Report", "Project History", "Dashboard"]
+					reports: ["Personal Report", "Annual Report", "Dashboard", "Monthly Report"]
 				});
 			} else {
 				this.setState({ database: ["Employees", "Teams", "Projects"] });
 				this.setState({
-					reports: ["Personal Report", "Monthly Report", "Annual Report", "Project History", "Dashboard"]
+					reports: ["Personal Report", "Annual Report",  "Monthly Report"]
 				});
 			}
 		}
@@ -88,18 +90,15 @@ class TimeKeeper extends React.Component {
 		this.props.history.push(`/app/${event.currentTarget.id.toLowerCase()}`);
 	};
 
-	logout = () => {
-		userManager.signoutRedirect();
-	};
-
 	render() {
-		const { classes, theme, user } = this.props;
+		const { classes, theme, user, token, logout } = this.props;
+
 		const { open, anchorDbEl, anchorSrEl, anchorUserEl, reports, database } = this.state;
 		const { handleDrawerOpen, handleDrawerClose, handleSrClick, handleDbClick, handleClose, handleUserEl } = this;
 
 		return (
 			<React.Fragment>
-				{user === null ? (
+				{token === null ? (
 					this.props.history.replace("/")
 				) : (
 					<div className={classes.root}>
@@ -141,7 +140,7 @@ class TimeKeeper extends React.Component {
 										className={classNames(classes.hover, classes.borderRadius)}
 									>
 										<p style={{ fontSize: ".9rem", paddingRight: ".8rem" }}>
-											{user.profile.name} ({user.profile.role})
+											{user.name} ({user.role})
 										</p>
 										<AccountCircleIcon fontSize="large" />
 									</IconButton>
@@ -162,9 +161,11 @@ class TimeKeeper extends React.Component {
 										style={{ top: "40px" }}
 										className={classes.menu}
 									>
-										<MenuItem onClick={handleClose}>Calendar</MenuItem>
-										<MenuItem onClick={handleClose}>My Profile</MenuItem>
-										<MenuItem onClick={this.logout}>Log Out</MenuItem>
+										<MenuItem onClick={() => this.props.history.replace("/app/personal-report")}>
+											Calendar
+										</MenuItem>
+
+										<MenuItem onClick={logout}>Log Out</MenuItem>
 									</Menu>
 								</div>
 							</Toolbar>
@@ -265,9 +266,10 @@ class TimeKeeper extends React.Component {
 							<Divider style={{ backgroundColor: "grey" }} />
 						</Drawer>
 						<main className={classes.content}>
-							<div className={classes.toolbar}>
+							{/* <div className={classes.toolbar}> */}
+							<div style={{ margin: "4rem 0", display: "flex" }}>
 								<Route exact={true} path="/app">
-									<div
+									{/* <div
 										style={{
 											position: "absolute",
 											top: "50%",
@@ -277,11 +279,14 @@ class TimeKeeper extends React.Component {
 										}}
 									>
 										<Typography variant="h3" gutterBottom>
-											Welcome back <b>{user.profile.name}</b>
+											Welcome back <b>{user.name}</b>
 										</Typography>
-									</div>
+									</div> */}
 								</Route>
-								{user.profile.role === "admin" || user.profile.role === "lead" ? (
+								<Route exact path="/app/personal-report">
+									<Calendar />
+								</Route>
+								{user.role === "admin" || user.role === "lead" ? (
 									<React.Fragment>
 										<Route exact={true} path="/app/employees">
 											<EmployeesPage />
@@ -292,12 +297,18 @@ class TimeKeeper extends React.Component {
 										<Route exact={true} path="/app/projects">
 											<ProjectsPage />
 										</Route>
-										{/* <Route path="/app/teams">
-									<TeamsPage />
-								</Route> */}
-										{/* <Route path="/app/team-tracking">
-									<TeamTimeTracking />
-								</Route> */}
+										<Route path="/app/team-tracking">
+											<TeamTimeTracking />
+										</Route>
+										<Route path="/app/dashboard">
+											<CompanyDashboard />
+										</Route>
+										<Route path="/app/monthly-report">
+                      <MonthlyReport/>
+                    </Route>
+					<Route path="/app/annual-report">
+                      <AnnualReport/>
+                    </Route>
 									</React.Fragment>
 								) : (
 									<React.Fragment>
@@ -311,6 +322,7 @@ class TimeKeeper extends React.Component {
 											<ProjectsPage />
 										</Route>
 									</React.Fragment>
+
 								)}
 							</div>
 						</main>
@@ -323,8 +335,9 @@ class TimeKeeper extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		user: state.user.user
+		user: state.user.user,
+		token: state.user.token
 	};
 };
 
-export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(withRouter(TimeKeeper)));
+export default connect(mapStateToProps, { logout })(withStyles(styles, { withTheme: true })(withRouter(TimeKeeper)));

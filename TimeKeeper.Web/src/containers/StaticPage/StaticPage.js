@@ -8,12 +8,12 @@ import ServicesSection from "../../components/StaticPageComponents/ServicesSecti
 import TeamSection from "../../components/StaticPageComponents/TeamSection/TeamSection";
 import ContactSection from "../../components/StaticPageComponents/ContactSection/ContactSection";
 import Footer from "../../components/StaticPageComponents/Footer/Footer.js";
-
+import Login from "../../components/StaticPageComponents/Login/Login";
 class StaticPage extends React.Component {
 	state = {
 		showSideDrawer: false,
 		modalOpen: false,
-
+		isLoggedIn: false,
 		sending: false,
 		sendSuccess: null,
 		sendFail: null
@@ -42,10 +42,11 @@ class StaticPage extends React.Component {
 			sideDrawerClosedHandler,
 			drawerToggleClicked,
 			toggleBackdrop,
-			loginHandler,
+
 			sendStart,
 			failedSend,
-			successfullSend
+			successfullSend,
+			isLoggedIn
 		} = this;
 
 		return (
@@ -53,6 +54,7 @@ class StaticPage extends React.Component {
 				<Backdrop show={modalOpen} clicked={toggleBackdrop}></Backdrop>
 				<Navigation ToggleButtonClicked={drawerToggleClicked} clicked={toggleBackdrop} />
 				<SideDrawer open={showSideDrawer} closed={sideDrawerClosedHandler} clicked={toggleBackdrop} />
+				<Login isLoggedIn={isLoggedIn} show={modalOpen} />
 				<main>
 					<AboutSection passedId="about" />
 					<ServicesSection passedId="services" />

@@ -17,25 +17,27 @@ using TimeKeeper.Utility.Factory;
 
 namespace TimeKeeper.API.Controllers
 {
-    [Authorize(AuthenticationSchemes = "TokenAuthentication")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : BaseController
     {
-        public UsersController(TimeKeeperContext context) : base(context) { }
-
-        [HttpGet("password")]
-        public IActionResult GetUsersAndUpdate()
+        public UsersController(TimeKeeperContext context) : base(context)
         {
-            var query = Unit.Users.Get();
-            foreach (User user in query)
-            {
-                user.Password = user.Username.HashWith(user.Password);
-                Unit.Context.Entry(user).CurrentValues.SetValues(user);
-            }
-            Unit.Save();
-            return Ok();
         }
+
+        //[HttpGet("password")]
+        //public IActionResult GetUsersAndUpdate()
+        //{
+        //    var query = Unit.Users.Get();
+        //    foreach (User user in query)
+        //    {
+        //        user.Password = user.Username.HashWith(user.Password);
+        //        Unit.Context.Entry(user).CurrentValues.SetValues(user);
+        //    }
+        //    Unit.Save();
+        //    return Ok();
+        //}
 
         [HttpGet]
         public IActionResult Get()
@@ -50,6 +52,7 @@ namespace TimeKeeper.API.Controllers
                 return BadRequest(ex);
             }
         }
+
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
@@ -70,6 +73,7 @@ namespace TimeKeeper.API.Controllers
                 return BadRequest(ex);
             }
         }
+
         [HttpPost]
         public IActionResult Post([FromBody] User user)
         {
@@ -84,6 +88,7 @@ namespace TimeKeeper.API.Controllers
                 return BadRequest(ex);
             }
         }
+
         [HttpPut("{id}")]
         public IActionResult Put([FromBody] User user, int id)
         {
@@ -98,6 +103,7 @@ namespace TimeKeeper.API.Controllers
                 return BadRequest(ex);
             }
         }
+
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

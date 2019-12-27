@@ -15,9 +15,10 @@ namespace TimeKeeper.BLL.ReportServices
 {
     public class AnnualOverview : BLLBaseService
     {
+        protected StoredProcedureService _storedProcedures;
         public AnnualOverview(UnitOfWork unit): base(unit)
         {
-
+            _storedProcedures = new StoredProcedureService(unit);
         }
         public List<AnnualTimeModel> GetAnnualOverview(int year)
         {
@@ -52,7 +53,8 @@ namespace TimeKeeper.BLL.ReportServices
         {
             List<AnnualTimeModel> result = new List<AnnualTimeModel>();
             AnnualTimeModel total = new AnnualTimeModel { Project = new MasterModel { Id = 0, Name = "TOTAL" } };
-
+            List<AnnualRawModel> rawData = _storedProcedures.GetStoredProcedure<AnnualRawModel>("AnnualReport", new int[] { year });
+            /*
             var cmd = _unit.Context.Database.GetDbConnection().CreateCommand();
             cmd.CommandType = CommandType.Text;
             cmd.CommandText = $"select * from AnnualReport({year})";
@@ -71,7 +73,7 @@ namespace TimeKeeper.BLL.ReportServices
                         Hours = sql.GetDecimal(3)
                     });
                 }
-
+                */
                 AnnualTimeModel atm = new AnnualTimeModel { Project = new MasterModel { Id = 0 } };
                 foreach (AnnualRawModel item in rawData)
                 {
@@ -87,7 +89,7 @@ namespace TimeKeeper.BLL.ReportServices
                     total.Total += item.Hours;
                 }
                 if (atm.Project.Id != 0) result.Add(atm);
-            }
+            //}
             result.Add(total);
             return result;
         }

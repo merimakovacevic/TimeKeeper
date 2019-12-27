@@ -7,10 +7,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TimeKeeper.BLL.ReportServices;
 using TimeKeeper.DAL;
+using TimeKeeper.Domain.Entities;
 
 namespace TimeKeeper.API.Controllers
 {
-    [Authorize(AuthenticationSchemes = "TokenAuthentication")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ReportsController : BaseController
@@ -28,11 +29,19 @@ namespace TimeKeeper.API.Controllers
             timeTracking = new TimeTracking(Unit);
         }
 
+        /// <summary>
+        /// This methods return team time tracking for an employee
+        /// </summary>
+        /// <param name="teamId"></param>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
         [HttpGet("team-time-tracking/{teamId}/{year}/{month}")]
         public IActionResult GetTimeTracking(int teamId, int year, int month)
         {
             try
             {
+                if (!resourceAccess.CanGetTeamReports(GetUserClaims(), teamId)) return Unauthorized();
                 return Ok(timeTracking.GetTeamMonthReport(teamId, year, month));
             }
             catch (Exception ex)
@@ -41,6 +50,13 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        /// <summary>
+        /// This method returns monthly overview
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        [Authorize(Policy = "AdminOrLeader")]
         [HttpGet("monthly-overview/{year}/{month}")]
         public IActionResult GetMonthlyOverview(int year, int month)
         {
@@ -54,6 +70,12 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        /// <summary>
+        /// This method returns project history
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
+        [Authorize(Policy = "AdminOrLeader")]
         [HttpGet("project-history/{projectId}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -61,7 +83,6 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                Logger.Info($"Try to get project history for project with id:{projectId}");
                 return Ok(projectHistory.GetProjectHistoryModel(projectId));
             }
             catch (Exception ex)
@@ -70,6 +91,13 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        /// <summary>
+        /// This method returns project history 
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        [Authorize(Policy = "AdminOrLeader")]
         [HttpGet("project-history/{projectId}/{employeeId}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -86,6 +114,12 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        /// <summary>
+        /// This method returns annual overview
+        /// </summary>
+        /// <param name="year"></param>
+        /// <returns></returns>
+        [Authorize(Policy = "AdminOrLeader")]
         [HttpGet("annual-overview/{year}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -101,6 +135,12 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        /// <summary>
+        /// This method returns annual overview for an employee
+        /// </summary>
+        /// <param name="year"></param>
+        /// <returns></returns>
+        [Authorize(Policy = "AdminOrLeader")]
         [HttpGet("annual-overview-stored/{year}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -108,10 +148,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                DateTime start = DateTime.Now;
-                var ar = annualOverview.GetStored(year);
-                DateTime final = DateTime.Now;
-                return Ok(new {dif=final-start, ar });
+                return Ok(annualOverview.GetStored(year));
             }
             catch (Exception ex)
             {
@@ -119,6 +156,13 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        /// <summary>
+        /// This method returns monthly overview report using stored procedure
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        [Authorize(Policy = "AdminOrLeader")]
         [HttpGet("monthly-overview-stored/{year}/{month}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -126,10 +170,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                DateTime start = DateTime.Now;
-                var ar = monthlyOverview.GetStored(year, month);
-                DateTime final = DateTime.Now;
-                return Ok(new { dif = final - start, ar });
+                return Ok(monthlyOverview.GetStored(year, month));
             }
             catch (Exception ex)
             {
@@ -137,6 +178,12 @@ namespace TimeKeeper.API.Controllers
             }
         }
 
+        /// <summary>
+        /// This method returns project history report using stored procedure
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
+        [Authorize(Policy = "AdminOrLeader")]
         [HttpGet("project-history-stored/{projectId}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -144,10 +191,7 @@ namespace TimeKeeper.API.Controllers
         {
             try
             {
-                DateTime start = DateTime.Now;
-                var ar = projectHistory.GetStored(projectId);
-                DateTime final = DateTime.Now;
-                return Ok(new { dif = final - start, ar });
+                return Ok(projectHistory.GetStored(projectId));
             }
             catch (Exception ex)
             {

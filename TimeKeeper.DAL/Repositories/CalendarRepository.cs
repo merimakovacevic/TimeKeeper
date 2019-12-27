@@ -10,15 +10,9 @@ namespace TimeKeeper.DAL.Repositories
     {
         public CalendarRepository(TimeKeeperContext context) : base(context) { }
 
-        private void Build(Day day)
-        {
-            day.Employee = _context.Employees.Find(day.Employee.Id);
-            day.DayType = _context.DayTypes.Find(day.DayType.Id);
-        }
-
         public override void Insert(Day day)
         {
-            Build(day);
+            day.Build(_context);
             base.Insert(day);
         }
         public override void Update(Day day, int id)
@@ -28,10 +22,9 @@ namespace TimeKeeper.DAL.Repositories
 
             if (old != null)
             {
-                Build(day);
+                day.Build(_context);
                 _context.Entry(old).CurrentValues.SetValues(day);
-                old.Employee = day.Employee;
-                old.DayType = day.DayType;
+                old.Update(day);
             }
         }
 
@@ -39,7 +32,7 @@ namespace TimeKeeper.DAL.Repositories
         {
             Day old = Get(id);
 
-            if (old.JobDetails.Count != 0)
+            if (!old.CanDelete())
             {
                 Services.ThrowChildrenPresentException();
             }

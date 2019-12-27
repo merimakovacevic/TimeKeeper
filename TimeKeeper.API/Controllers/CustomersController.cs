@@ -38,42 +38,17 @@ namespace TimeKeeper.API.Controllers
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult GetAll(int page = 1, int pageSize = 5)
+        [Authorize(Policy = "AdminOrLeader")]
+        public async Task<IActionResult> GetAll(int page = 1, int pageSize = 100)
         {
             try
             {
                 Logger.Info($"Try to fetch ${pageSize} customers from page ${page}");
 
                 Tuple<PaginationModel, List<Customer>> customersPagination;
-
-                var role = User.Claims.FirstOrDefault(c => c.Type == "role").Value.ToString();
-                if (role == "user") return Unauthorized();
-
+                
                 List<Customer> query;
-
-                if (role == "lead")
-                {
-                    var empid = User.Claims.FirstOrDefault(c => c.Type == "sub").Value.ToString();
-                    var employee = Unit.Employees.Get(int.Parse(empid));
-                    var teams = employee.Members.GroupBy(x => x.Team.Id).Select(y => y.Key).ToList();
-                    List<Project> projects = new List<Project>();
-
-                    foreach (var team in teams)
-                    {
-                        projects.AddRange(Unit.Projects.Get(x => x.Team.Id == team));
-                    }
-
-                    query = new List<Customer>();
-
-                    foreach (var project in projects)
-                    {
-                        query.Add(project.Customer);
-                    }
-                }
-                else
-                {
-                    query = Unit.Customers.Get().ToList();
-                }
+                query = await resourceAccess.GetAuthorizedCustomers(GetUserClaims());
 
                 customersPagination = _pagination.CreatePagination(page, pageSize, query);
                 HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(customersPagination.Item1));
@@ -94,15 +69,15 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpGet("{id}")]
-        [Authorize(Policy = "HasAccessToCustomer")]
+        [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
                 Logger.Info($"Try to fetch customer with id {id}");
-                Customer customer = Unit.Customers.Get(id);
+                Customer customer = await Unit.Customers.GetAsync(id);
 
                 return Ok(customer.Create());                
             }
@@ -120,15 +95,15 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPost]
-        [Authorize (Roles = "admin")]
+        [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Post([FromBody] Customer customer)
+        public async Task<IActionResult> Post([FromBody] Customer customer)
         {
             try
             {
-                Unit.Customers.Insert(customer);
-                Unit.Save();
+                await Unit.Customers.InsertAsync(customer);
+                await Unit.SaveAsync();
                 Logger.Info($"Customer {customer.Name} added with id {customer.Id}");
                 return Ok(customer.Create());
             }
@@ -148,16 +123,16 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Put(int id, [FromBody] Customer customer)
+        public async Task<IActionResult> Put(int id, [FromBody] Customer customer)
         {
             try
             {
                 Logger.Info($"Attempt to update customer with id {id}");
-                Unit.Customers.Update(customer, id);
-                Unit.Save();
+                await Unit.Customers.UpdateAsync(customer, id);
+                await Unit.SaveAsync();
 
                 Logger.Info($"Customer {customer.Name} with id {customer.Id} updated");
                 return Ok(customer.Create());
@@ -178,17 +153,17 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpDelete("{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
                 Logger.Info($"Attempt to delete customer with id {id}");
-                Unit.Customers.Delete(id);
-                Unit.Save();
+                await Unit.Customers.DeleteAsync(id);
+                await Unit.SaveAsync();
 
                 Logger.Info($"Customer with id {id} deleted");
                 return NoContent();

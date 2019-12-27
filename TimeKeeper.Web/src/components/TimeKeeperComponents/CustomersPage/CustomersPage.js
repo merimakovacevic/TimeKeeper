@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { fetchCustomers, customerSelect } from "../../../store/actions/index";
+import { customerSelect } from "../../../store/actions/index";
 import { withStyles } from "@material-ui/core/styles";
 import {
   Table,
@@ -15,25 +15,93 @@ import {
   CircularProgress,
   Backdrop,
   Toolbar,
-  Typography
+  Typography,
+  TextField
 } from "@material-ui/core";
-import styles from "../../../styles/CustomersPageStyles";
+import styles from "../../../styles/EmployeesPageStyles";
 
 import AddIcon from "@material-ui/icons/Add";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { fetchCustomers } from "../../../store/actions/index";
+
+import CustomersModal from "./CustomersModal/CustomersModal";
 
 const CustomersPage = (props) => {
   const { classes } = props;
-  const { data, loading, error } = props;
-  const { fetchCustomers, customerSelect } = props;
+  const { data, loading, error, selected, user, reload } = props;
+  const { fetchCustomers, customerSelect, customerDelete } = props;
+  const [searchCustomers, setSearchedEmp] = useState([]);
+  const [search, setSearch] = useState("");
+
   let customers = data;
 
   useEffect(() => {
     fetchCustomers();
+    setSearch("");
     customers = data;
-  }, []);
+  }, [reload]);
+
+  const handleSearchInput = (event) => {
+    setSearch(event.target.value);
+    searchMessages();
+  };
+
+  const searchMessages = () => {
+    const regex = new RegExp(search, "gi");
+    const searchResults = customers.reduce((accumulator, event) => {
+      if (
+        (event.firstName && event.firstName.match(regex)) ||
+        (event.lastName && event.lastName.match(regex))
+      ) {
+        accumulator.push(event);
+      }
+      return accumulator;
+    }, []);
+
+    setSearchedEmp(searchResults);
+  };
+
+  const AllCustomers = (customers) =>
+    customers.map((e, i) => (
+      <TableRow key={e.id}>
+        <CustomTableCell>{i + 1}</CustomTableCell>
+        <CustomTableCell>{e.name}</CustomTableCell>
+        <CustomTableCell>{e.contactName}</CustomTableCell>
+        <CustomTableCell>{e.emailAddress}</CustomTableCell>
+        <CustomTableCell>{e.homeAddress.city}</CustomTableCell>
+        <CustomTableCell>{e.status.name}</CustomTableCell>
+
+        {user.role === "admin" ? (
+          <CustomTableCell align="center">
+            <IconButton
+              aria-label="Edit"
+              className={classes.editButton}
+              onClick={() => customerSelect(e.id, "edit")}
+            >
+              <EditIcon style={{ fill: "green" }} />
+            </IconButton>
+            <IconButton
+              aria-label="Delete"
+              className={classes.deleteButton}
+              onClick={() => customerDelete(e.id)}
+            >
+              <DeleteIcon color="error" />
+            </IconButton>
+          </CustomTableCell>
+        ) : (
+          <CustomTableCell align="center">
+            <IconButton
+              aria-label="View"
+              onClick={() => customerSelect(e.id, "view")}
+            >
+              <VisibilityIcon />
+            </IconButton>
+          </CustomTableCell>
+        )}
+      </TableRow>
+    ));
 
   return (
     <React.Fragment>
@@ -62,6 +130,7 @@ const CustomersPage = (props) => {
         </Backdrop>
       ) : (
         <Paper className={classes.root}>
+          {selected ? <CustomersModal selected={selected} open={true} /> : null}
           <Toolbar className={classes.toolbar}>
             <div>
               <Typography
@@ -73,29 +142,38 @@ const CustomersPage = (props) => {
               </Typography>
             </div>
 
-            <div>
-              <Tooltip title="Add">
-                <IconButton
-                  aria-label="Add"
-                  onClick={() => this.handleOpen(666, false)}
-                  className={classes.hover}
-                >
-                  <AddIcon fontSize="large" style={{ fill: "white" }} />
-                </IconButton>
-              </Tooltip>
-            </div>
+            <TextField
+              id="standard-basic"
+              className={classes.textField}
+              label="Standard"
+              onChange={handleSearchInput}
+            />
+
+            {user.role === "admin" ? (
+              <div>
+                <Tooltip title="Add">
+                  <IconButton
+                    aria-label="Add"
+                    onClick={() => customerSelect(null, "add")}
+                    className={classes.hover}
+                  >
+                    <AddIcon fontSize="large" style={{ fill: "white" }} />
+                  </IconButton>
+                </Tooltip>
+              </div>
+            ) : null}
           </Toolbar>
           <Table className={classes.table}>
             <TableHead>
               <TableRow>
                 <CustomTableCell
                   className={classes.tableHeadFontsize}
-                  style={{ width: "8%" }}
+                  style={{ width: "9%" }}
                 >
                   No.
                 </CustomTableCell>
                 <CustomTableCell className={classes.tableHeadFontsize}>
-                  Business Name
+                  Business Name{" "}
                 </CustomTableCell>
                 <CustomTableCell className={classes.tableHeadFontsize}>
                   Contact Name
@@ -105,11 +183,13 @@ const CustomersPage = (props) => {
                 </CustomTableCell>
                 <CustomTableCell
                   className={classes.tableHeadFontsize}
-                  style={{ width: "13%" }}
+                  style={{ width: "16%" }}
                 >
+                  City
+                </CustomTableCell>
+                <CustomTableCell className={classes.tableHeadFontsize}>
                   Status
                 </CustomTableCell>
-
                 <CustomTableCell
                   className={classes.tableHeadFontsize}
                   align="center"
@@ -119,34 +199,9 @@ const CustomersPage = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {customers.map((e, i) => (
-                <TableRow key={e.id}>
-                  <CustomTableCell>{i + 1}</CustomTableCell>
-                  <CustomTableCell>{e.name}</CustomTableCell>
-                  <CustomTableCell>{e.contactName}</CustomTableCell>
-                  <CustomTableCell>{e.emailAddress}</CustomTableCell>
-                  <CustomTableCell>{e.status.name}</CustomTableCell>
-
-                  <CustomTableCell align="center">
-                    <IconButton aria-label="View">
-                      <VisibilityIcon />
-                    </IconButton>
-                    <IconButton
-                      aria-label="Edit"
-                      className={classes.editButton}
-                      onClick={() => customerSelect(e.id)}
-                    >
-                      <EditIcon style={{ fill: "green" }} />
-                    </IconButton>
-                    <IconButton
-                      aria-label="Delete"
-                      className={classes.deleteButton}
-                    >
-                      <DeleteIcon color="error" />
-                    </IconButton>
-                  </CustomTableCell>
-                </TableRow>
-              ))}
+              {search === ""
+                ? AllCustomers(customers)
+                : AllCustomers(searchCustomers)}
             </TableBody>
           </Table>
         </Paper>
@@ -170,10 +225,14 @@ const mapStateToProps = (state) => {
   return {
     data: state.customers.data,
     loading: state.customers.loading,
-    error: state.customers.error
+    error: state.customers.error,
+    selected: state.customers.selected,
+    user: state.user.user,
+    reload: state.customers.reload
   };
 };
 
-export default connect(mapStateToProps, { fetchCustomers, customerSelect })(
-  withStyles(styles)(CustomersPage)
-);
+export default connect(mapStateToProps, {
+  fetchCustomers,
+  customerSelect
+})(withStyles(styles)(CustomersPage));

@@ -10,15 +10,22 @@ using TimeKeeper.Domain.Entities;
 using TimeKeeper.BLL;
 using TimeKeeper.DTO;
 using TimeKeeper.Utility.Factory;
+using Newtonsoft.Json;
+using TimeKeeper.API.Authorization;
 
 namespace TimeKeeper.API.Controllers
 {
-    [Authorize(AuthenticationSchemes = "TokenAuthentication")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TasksController : BaseController
     {
-        public TasksController(TimeKeeperContext context) : base(context) { }
+        private PaginationService<JobDetail> _pagination;
+
+        public TasksController(TimeKeeperContext context) : base(context)
+        {
+            _pagination = new PaginationService<JobDetail>();
+        }
 
         /// <summary>
         /// This method returns all tasks
@@ -29,19 +36,27 @@ namespace TimeKeeper.API.Controllers
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Get()
+        [Authorize(Policy = "AdminLeadOrMember")]
+        public async Task<IActionResult> Get(int page = 1, int pageSize = 10)
         {
             try
             {
-                Logger.Info($"Try to get all tasks");
-                var result = Unit.Tasks.Get().ToList().Select(x => x.Create()).ToList();                
-                return Ok(result);
+                Logger.Info($"Try to fetch ${pageSize} projects from page ${page}");
+                //List<JobDetail> query = await GetAuthorizedTasks();
+                List<JobDetail> query = await resourceAccess.GetAuthorizedTasks(GetUserClaims());
+
+                Tuple<PaginationModel, List<JobDetail>> tasksPagination;
+                tasksPagination = _pagination.CreatePagination(page, pageSize, query);
+
+                HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(tasksPagination.Item1));
+                return Ok(tasksPagination.Item2.Select(x => x.Create()).ToList());
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return HandleException(ex);
             }
         }
+
         /// <summary>
         /// This method returns a task with specified id
         /// </summary>
@@ -54,16 +69,18 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult Get(int id)
+        [Authorize(Policy = "AdminLeadOrMember")]
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
                 Logger.Info($"Try to get task with {id}");
-                var task = Unit.Tasks.Get(id);
+                JobDetail task = await Unit.Tasks.GetAsync(id);
 
+                if (!resourceAccess.HasRight(GetUserClaims(), task)) return Unauthorized();
                 return Ok(task.Create());
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return HandleException(ex);
             }
@@ -79,14 +96,17 @@ namespace TimeKeeper.API.Controllers
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Post([FromBody] JobDetail jobDetail)
+        [Authorize(Policy = "AdminLeadOrOwner")]
+        public async Task<IActionResult> Post([FromBody] JobDetail jobDetail)
         {
             try
             {
-                Unit.Tasks.Insert(jobDetail);
-                Unit.Save();
-
-                Logger.Info($"Task for employee {jobDetail.Day.Employee.FullName}, day {jobDetail.Day.Date} added with id {jobDetail.Id}");
+                if (!resourceAccess.HasRight(GetUserClaims(), jobDetail)) return Unauthorized();
+                //This line will result in an null object reference exception, we cannot access properties of jobDetail.Day because they are null
+                //Logger.Info($"Task for employee {jobDetail.Day.Employee.FullName}, day {jobDetail.Day.Date} added with id {jobDetail.Id}");
+                await Unit.Tasks.InsertAsync(jobDetail);
+                await Unit.SaveAsync();
+                Logger.Info($"Task with id {jobDetail.Id} was added");
                 return Ok(jobDetail.Create());
             }
             catch (Exception ex)
@@ -108,14 +128,16 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
-        public IActionResult Put(int id, [FromBody] JobDetail jobDetail)
+        [Authorize(Policy = "AdminLeadOrOwner")]
+        public async Task<IActionResult> Put(int id, [FromBody] JobDetail jobDetail)
         {
             try
             {
-                Unit.Tasks.Update(jobDetail, id);
-                Unit.Save();
+                if (!resourceAccess.HasRight(GetUserClaims(), jobDetail)) return Unauthorized();
+                Logger.Info($"Modified task with id {id}");
 
-                Logger.Info($"Changed task with id {id}");
+                await Unit.Tasks.UpdateAsync(jobDetail, id);
+                await Unit.SaveAsync();
                 return Ok(jobDetail.Create());
             }
             catch (Exception ex)
@@ -136,13 +158,16 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult Delete(int id)
+        [Authorize(Policy = "AdminLeadOrOwner")]
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
                 Logger.Info($"Attempt to delete task with id {id}");
-                Unit.Tasks.Delete(id);
-                Unit.Save();
+                JobDetail jobDetail = Unit.Tasks.Get(id);
+                if (!resourceAccess.HasRight(GetUserClaims(), jobDetail)) return Unauthorized();
+                await Unit.Tasks.DeleteAsync(id);
+                await Unit.SaveAsync();
 
                 Logger.Info($"Deleted task with id {id}");
                 return NoContent();
@@ -152,5 +177,6 @@ namespace TimeKeeper.API.Controllers
                 return HandleException(ex);
             }
         }
+
     }
 }

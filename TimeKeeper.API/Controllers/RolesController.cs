@@ -29,12 +29,14 @@ namespace TimeKeeper.API.Controllers
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Get()
+        [Authorize(Policy = "IsAdmin")]
+        public async Task<IActionResult> Get()
         {
             try
             {
                 Logger.Info($"Try to get all roles");
-                return Ok(Unit.Roles.Get().ToList().Select(x => x.Create()).ToList());
+                var query = await Unit.Roles.GetAsync();
+                return Ok(query.ToList().Select(x => x.Create()).ToList());
             }
             catch(Exception ex)
             {
@@ -53,12 +55,13 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult Get(int id)
+        [Authorize(Policy = "IsAdmin")]
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
                 Logger.Info($"Try to get roles with {id}");
-                Role role = Unit.Roles.Get(id);
+                Role role = await Unit.Roles.GetAsync(id);
 
                 return Ok(role.Create());
             }
@@ -78,12 +81,13 @@ namespace TimeKeeper.API.Controllers
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Post([FromBody] Role role)
+        [Authorize(Policy = "IsAdmin")]
+        public async Task<IActionResult> Post([FromBody] Role role)
         {
             try
             {
-                Unit.Roles.Insert(role);
-                Unit.Save();
+                await Unit.Roles.InsertAsync(role);
+                await Unit.SaveAsync();
                 Logger.Info($"Role added with id {role.Id}");
                 return Ok(role.Create());
             }
@@ -104,12 +108,13 @@ namespace TimeKeeper.API.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Put(int id, [FromBody] Role role)
+        [Authorize(Policy = "IsAdmin")]
+        public async Task<IActionResult> Put(int id, [FromBody] Role role)
         {
             try
             {
-                Unit.Roles.Update(role, id);
-                Unit.Save();
+                await Unit.Roles.UpdateAsync(role, id);
+                await Unit.SaveAsync();
 
                 Logger.Info($"Changed role with id {id}");
                 return Ok(role.Create());
@@ -132,13 +137,14 @@ namespace TimeKeeper.API.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult Delete(int id)
+        [Authorize(Policy = "IsAdmin")]
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
                 Logger.Info($"Attempt to delete role with id {id}");
-                Unit.Roles.Delete(id);
-                Unit.Save();
+                await Unit.Roles.DeleteAsync(id);
+                await Unit.SaveAsync();
 
                 Logger.Info($"Deleted role with id {id}");
                 return NoContent();

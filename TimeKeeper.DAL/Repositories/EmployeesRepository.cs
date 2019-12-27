@@ -13,14 +13,8 @@ namespace TimeKeeper.DAL.Repositories
 
         public override void Insert(Employee employee)
         {
-            Build(employee);
+            employee.Build(_context);
             base.Insert(employee);
-        }
-
-        private void Build(Employee employee)
-        {
-            employee.Status = _context.EmploymentStatuses.Find(employee.Status.Id);
-            employee.Position = _context.EmployeePositions.Find(employee.Position.Id);
         }
 
         public override void Update(Employee employee, int id)
@@ -30,10 +24,9 @@ namespace TimeKeeper.DAL.Repositories
 
             if (old != null)
             {
-                Build(employee);
+                employee.Build(_context);
                 _context.Entry(old).CurrentValues.SetValues(employee);
-                old.Position = employee.Position;
-                old.Status = employee.Status;
+                old.Update(employee);
             }
             else throw new ArgumentNullException();
         }
@@ -42,7 +35,7 @@ namespace TimeKeeper.DAL.Repositories
         {
             Employee old = Get(id);
 
-            if (old.Calendar.Count != 0 || old.Members.Count != 0)
+            if (!old.CanDelete())
             {
                 Services.ThrowChildrenPresentException();
             }

@@ -35,20 +35,42 @@ namespace TimeKeeper.API.Controllers
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult GetAll(int page = 1, int pageSize = 100)
+        public async Task<IActionResult> GetAll(int page = 1, int pageSize = 100)
         {
             try
             {
                 Logger.Info($"Try to fetch ${pageSize} employees from page ${page}");
+                var task = await Unit.Employees.GetAsync();
+                var query = task.ToList();
 
-                Tuple<PaginationModel, List<Employee>> employeesPagination = _pagination.CreatePagination(page, pageSize, Unit.Employees.Get());
+                Tuple<PaginationModel, List<Employee>> employeesPagination = _pagination.CreatePagination(page, pageSize, query);
 
                 HttpContext.Response.Headers.Add("pagination", JsonConvert.SerializeObject(employeesPagination.Item1));
                 return Ok(employeesPagination.Item2.ToList().Select(x => x.Create()).ToList());
+
             }
             catch (Exception ex)
             {
                 return HandleException(ex);
+            }
+        }
+
+        [HttpGet("async")]
+        public async Task<IActionResult> GetAsync()
+        {
+            try
+            {
+                //var query = await Unit.Employees.GetAsync();
+                //return Ok(query.Select(x => x.Create()).ToList());
+                DateTime start = DateTime.Now;
+                var query = await Unit.Employees.GetAsync();
+                var result = query.Select(x => x.Create()).ToList();
+                DateTime final = DateTime.Now;
+                return Ok(new { dif = final - start, result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
             }
         }
 
@@ -63,12 +85,12 @@ namespace TimeKeeper.API.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
                 Logger.Info($"Try to fetch employee with id {id}");
-                Employee employee = Unit.Employees.Get(id);
+                Employee employee = await Unit.Employees.GetAsync(id);
                 return Ok(employee.Create());
             }
             catch (Exception ex)
@@ -85,21 +107,21 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPost]
-        // [Authorize(Roles = "admin")]
+        [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Post([FromBody] Employee employee)
+        public async Task<IActionResult> Post([FromBody] Employee employee)
         {
             try
             {
-                Unit.Employees.Insert(employee);
-                Unit.Save();
+                await Unit.Employees.InsertAsync(employee);
+                await Unit.SaveAsync();
 
                 //User insertion is coupled to employee insertion
                 User user = employee.CreateUser();
 
-                Unit.Users.Insert(user);
-                Unit.Save();
+                await Unit.Users.InsertAsync(user);
+                await Unit.SaveAsync();
 
                 Logger.Info($"Employee {employee.FirstName} {employee.LastName} added with id {employee.Id}");
                 return Ok(employee.Create());
@@ -119,19 +141,20 @@ namespace TimeKeeper.API.Controllers
         /// <response status="200">OK</response>
         /// <response status="400">Bad request</response>
         [HttpPut("{id}")]
-        [Authorize(Policy = "IsEmployee")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Put(int id, [FromBody] Employee employee)
+        public async Task<IActionResult> Put(int id, [FromBody] Employee employee)
         {
             try
             {
                 Logger.Info($"Attempt to update employee with id {id}");
-                Unit.Employees.Update(employee, id);
-                Unit.Save();
+                if (!resourceAccess.CanWriteEmployee(GetUserClaims(), employee)) return Unauthorized();
 
+                await Unit.Employees.UpdateAsync(employee, id);
+                await Unit.SaveAsync();
                 Logger.Info($"Employee {employee.FirstName} {employee.LastName} with id {employee.Id} updated");
                 return Ok(employee.Create());
+
             }
             catch (Exception ex)
             {
@@ -148,17 +171,17 @@ namespace TimeKeeper.API.Controllers
         /// <response status="404">Not found</response>
         /// <response status="400">Bad request</response>
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "admin")]
+        [Authorize(Policy = "IsAdmin")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
                 Logger.Info($"Attempt to delete employee with id {id}");
-                Unit.Employees.Delete(id);
-                Unit.Save();
+                await Unit.Employees.DeleteAsync(id);
+                await Unit.SaveAsync();
 
                 Logger.Info($"Employee with id {id} deleted");
                 return NoContent();
