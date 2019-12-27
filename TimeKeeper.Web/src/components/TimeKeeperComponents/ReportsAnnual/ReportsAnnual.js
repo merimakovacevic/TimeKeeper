@@ -29,6 +29,7 @@ function AnnualReport(props) {
 
   const YearDropdown = () => (
     <TextField
+    className={classes.dropdown}
       variant="outlined"
       id="Selected Year"
       select
@@ -54,7 +55,7 @@ function AnnualReport(props) {
     <Fragment>
       {!props.annualReport.isLoading && (
         <Fragment>
-          <YearDropdown />
+          <YearDropdown  />
           <TableView title={title} table={props.annualReport.table} />
         </Fragment>
       )}

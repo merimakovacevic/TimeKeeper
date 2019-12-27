@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { store } from "../index";
 
-const url = "http://api-charlie.gigischool.rocks";
+const url = "https://api-charlie.gigischool.rocks";
 // const url = "http://localhost:8000";
 
 export const loginUrl = `${url}/login`;
@@ -15,7 +15,7 @@ export const dropDownTeamsUrl = `${url}/api/teams`;
 export const teamTrackingUrl = `${url}/api/reports/team-time-tracking`;
 export const personalReportUrl = `${url}/api/dashboard/personal`;
 export const companyDashboardUrl = `${url}/api/dashboard/company`;
-export const awsAPI = "http://api-charlie.gigischool.rocks/";
+export const awsAPI = "https://api-charlie.gigischool.rocks/";
 
 export const login = (url, credentials) => {
 	return axios
